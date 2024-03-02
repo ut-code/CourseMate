@@ -47,7 +47,6 @@ async function getUsersByCourse(courseName) {
     await prisma.$disconnect(); // Prismaクライアントの切断
   }
 }
-
 // 使用例
 const course = "基礎統計"    //欲しいデータの授業をとる
 getUsersByCourse(course)
@@ -79,7 +78,6 @@ async function getFollowingRequestsSentByUser(userId) {
     throw error;
   }
 }
-
 // 使用例
 const userId = 7; // 取得したいユーザーのユーザーIDを入れる
 getFollowingRequestsSentByUser(userId)
@@ -89,8 +87,8 @@ getFollowingRequestsSentByUser(userId)
   .catch((error) => {
     console.error('Error:', error);
   });
-
 console.log(getFollowingRequestsSentByUser(userId))
+
 
 //誰が誰にフォローリクエストしたというデータを登録
 async function createFollowingRequest(senderId, receiverId) {
@@ -129,44 +127,48 @@ createFollowingRequest(senderId, receiverId)
     console.error('Error:', error);
   });
 
-
-//フォローリクエストを受けるか受けないかを決めれる
-
-async function updateFollowingRequestStatus(senderIdToUpdate, newStatus, receiverIdToUpdate) {
-  try {
-    // フォローリクエストが存在するか確認
-    const existingRequest = await prisma.followingRequest.findFirst({
-      where: {
-        senderId: senderIdToUpdate,
-        receiverId: receiverIdToUpdate
+//フォローリクエストを受けるかどうか決めれて、拒否した場合フォローリクエストの情報を消去する機能
+  async function updateFollowingRequestStatus(senderIdToUpdate, newStatus, receiverIdToUpdate) {
+    try {
+      // フォローリクエストが存在するか確認
+      const existingRequest = await prisma.followingRequest.findFirst({
+        where: {
+          senderId: senderIdToUpdate,
+          receiverId: receiverIdToUpdate
+        }
+      });
+  
+      if (!existingRequest) {
+        throw new Error('Following request not found');
       }
-    });
-
-    if (!existingRequest) {
-      throw new Error('Following request not found');
+  
+      // フォローリクエストの状態を更新
+      const updatedRequest = await prisma.followingRequest.update({
+        where: { id: existingRequest.id },
+        data: { isAccepted: newStatus },
+      });
+  
+      // フォローリクエストを拒否した場合、フォローリクエストを削除
+      if (!newStatus) {
+        await prisma.followingRequest.delete({ where: { id: existingRequest.id } });
+      }
+  
+      return updatedRequest;
+    } catch (error) {
+      console.error('Error updating following request status:', error);
+      throw error;
     }
-
-    // フォローリクエストの状態を更新
-    const updatedRequest = await prisma.followingRequest.update({
-      where: { id: existingRequest.id },
-      data: { isAccepted: newStatus },
-    });
-
-    return updatedRequest;
-  } catch (error) {
-    console.error('Error updating following request status:', error);
-    throw error;
   }
-}
-
-// 使用例
-const senderIdToUpdate = 1; // フォローリクエストを送った人のユーザーID
-const newStatus = true; // 新しい状態 (true: 承認, false: 拒否)
-const receiverIdToUpdate = 9; // リクエストを受け取った人のユーザーID
-updateFollowingRequestStatus(senderIdToUpdate, newStatus, receiverIdToUpdate)
-  .then((updatedRequest) => {
-    console.log('Following request updated:', updatedRequest);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+  
+  // 使用例
+  const senderIdToUpdate = 1; // フォローリクエストを送った人のユーザーID
+  const newStatus = false; // 新しい状態 (true: 承認, false: 拒否)
+  const receiverIdToUpdate = 9; // リクエストを受け取った人のユーザーID
+  updateFollowingRequestStatus(senderIdToUpdate, newStatus, receiverIdToUpdate)
+    .then((updatedRequest) => {
+      console.log('Following request updated:', updatedRequest);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  
