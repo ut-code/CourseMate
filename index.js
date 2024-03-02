@@ -58,7 +58,7 @@ getUsersByCourse(course)
     console.error("Error:", error);
   });
 
-  console.log(getUsersByCourse(course));
+console.log(getUsersByCourse(course));
 
 
 //誰が誰に対してフォローリクエストをしているのかというデータを取得できる
@@ -90,46 +90,83 @@ getFollowingRequestsSentByUser(userId)
     console.error('Error:', error);
   });
 
-  console.log(getFollowingRequestsSentByUser(userId))
+console.log(getFollowingRequestsSentByUser(userId))
 
+//誰が誰にフォローリクエストしたというデータを登録
+async function createFollowingRequest(senderId, receiverId) {
+  try {
+    // 送信者と受信者のユーザーが存在することを確認
+    const sender = await prisma.user.findUnique({ where: { id: senderId } });
+    const receiver = await prisma.user.findUnique({ where: { id: receiverId } });
 
-  async function createFollowingRequest(senderId, receiverId) {
-    try {
-      // 送信者と受信者のユーザーが存在することを確認
-      const sender = await prisma.user.findUnique({ where: { id: senderId } });
-      const receiver = await prisma.user.findUnique({ where: { id: receiverId } });
-  
-      if (!sender || !receiver) {
-        throw new Error('Sender or receiver not found');
-      }
-  
-      // フォローリクエストを作成してデータベースに保存
-      const followingRequest = await prisma.followingRequest.create({
-        data: {
-          sender: { connect: { id: senderId } },
-          receiver: { connect: { id: receiverId } },
-        },
-      });
-  
-      return followingRequest;
-    } catch (error) {
-      console.error('Error creating following request:', error);
-      throw error;
+    if (!sender || !receiver) {
+      throw new Error('Sender or receiver not found');
     }
-  }
-  
-  // 使用例
-  const senderId = 1; // 送信者のユーザーIDを加える
-  const receiverId = 9; // 受信者のユーザーIDを加える
-  createFollowingRequest(senderId, receiverId)
-    .then((followingRequest) => {
-      console.log('Following request created:', followingRequest);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
+
+    // フォローリクエストを作成してデータベースに保存
+    const followingRequest = await prisma.followingRequest.create({
+      data: {
+        sender: { connect: { id: senderId } },
+        receiver: { connect: { id: receiverId } },
+      },
     });
 
-    console.log(createFollowingRequest(senderId, receiverId))
+    return followingRequest;
+  } catch (error) {
+    console.error('Error creating following request:', error);
+    throw error;
+  }
+}
+
+// 使用例
+const senderId = 7; // 送信者のユーザーIDを加える
+const receiverId = 9; // 受信者のユーザーIDを加える
+createFollowingRequest(senderId, receiverId)
+  .then((followingRequest) => {
+    console.log('Following request created:', followingRequest);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 
 
+//フォローリクエストを受けるか受けないかを決めれる
 
+async function updateFollowingRequestStatus(senderIdToUpdate, newStatus, receiverIdToUpdate) {
+  try {
+    // フォローリクエストが存在するか確認
+    const existingRequest = await prisma.followingRequest.findFirst({
+      where: {
+        senderId: senderIdToUpdate,
+        receiverId: receiverIdToUpdate
+      }
+    });
+
+    if (!existingRequest) {
+      throw new Error('Following request not found');
+    }
+
+    // フォローリクエストの状態を更新
+    const updatedRequest = await prisma.followingRequest.update({
+      where: { id: existingRequest.id },
+      data: { isAccepted: newStatus },
+    });
+
+    return updatedRequest;
+  } catch (error) {
+    console.error('Error updating following request status:', error);
+    throw error;
+  }
+}
+
+// 使用例
+const senderIdToUpdate = 1; // フォローリクエストを送った人のユーザーID
+const newStatus = true; // 新しい状態 (true: 承認, false: 拒否)
+const receiverIdToUpdate = 9; // リクエストを受け取った人のユーザーID
+updateFollowingRequestStatus(senderIdToUpdate, newStatus, receiverIdToUpdate)
+  .then((updatedRequest) => {
+    console.log('Following request updated:', updatedRequest);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
