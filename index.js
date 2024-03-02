@@ -48,7 +48,7 @@ async function getUsersByCourse(courseName) {
   }
 }
 
-// その授業を履修している人のデータを取得する
+// 使用例
 const course = "基礎統計"    //欲しいデータの授業をとる
 getUsersByCourse(course)
   .then(users => {
@@ -61,7 +61,7 @@ getUsersByCourse(course)
   console.log(getUsersByCourse(course));
 
 
-
+//誰が誰に対してフォローリクエストをしているのかというデータを取得できる
 async function getFollowingRequestsSentByUser(userId) {
   try {
     const user = await prisma.user.findUnique({
@@ -81,7 +81,7 @@ async function getFollowingRequestsSentByUser(userId) {
 }
 
 // 使用例
-const userId = 1; // ユーザーIDを適切な値に置き換える
+const userId = 7; // 取得したいユーザーのユーザーIDを入れる
 getFollowingRequestsSentByUser(userId)
   .then((followingRequests) => {
     console.log('Following requests sent by user:', followingRequests);
@@ -91,6 +91,45 @@ getFollowingRequestsSentByUser(userId)
   });
 
   console.log(getFollowingRequestsSentByUser(userId))
+
+
+  async function createFollowingRequest(senderId, receiverId) {
+    try {
+      // 送信者と受信者のユーザーが存在することを確認
+      const sender = await prisma.user.findUnique({ where: { id: senderId } });
+      const receiver = await prisma.user.findUnique({ where: { id: receiverId } });
+  
+      if (!sender || !receiver) {
+        throw new Error('Sender or receiver not found');
+      }
+  
+      // フォローリクエストを作成してデータベースに保存
+      const followingRequest = await prisma.followingRequest.create({
+        data: {
+          sender: { connect: { id: senderId } },
+          receiver: { connect: { id: receiverId } },
+        },
+      });
+  
+      return followingRequest;
+    } catch (error) {
+      console.error('Error creating following request:', error);
+      throw error;
+    }
+  }
+  
+  // 使用例
+  const senderId = 1; // 送信者のユーザーIDを加える
+  const receiverId = 9; // 受信者のユーザーIDを加える
+  createFollowingRequest(senderId, receiverId)
+    .then((followingRequest) => {
+      console.log('Following request created:', followingRequest);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+
+    console.log(createFollowingRequest(senderId, receiverId))
 
 
 
