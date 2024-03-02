@@ -50,15 +50,47 @@ async function getUsersByCourse(courseName) {
 
 // その授業を履修している人のデータを取得する
 const course = "基礎統計"    //欲しいデータの授業をとる
-
-getUsersByCourse(`${course}`)
+getUsersByCourse(course)
   .then(users => {
-    console.log("Users enrolled in `${course}`:", users);
+    console.log("Users enrolled in", course + ":", users);
   })
   .catch(error => {
     console.error("Error:", error);
   });
 
-  console.log(getUsersByCourse(`${course}`));
+  console.log(getUsersByCourse(course));
+
+
+
+async function getFollowingRequestsSentByUser(userId) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { followingRequests: true },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user.followingRequests;
+  } catch (error) {
+    console.error('Error retrieving following requests:', error);
+    throw error;
+  }
+}
+
+// 使用例
+const userId = 1; // ユーザーIDを適切な値に置き換える
+getFollowingRequestsSentByUser(userId)
+  .then((followingRequests) => {
+    console.log('Following requests sent by user:', followingRequests);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+
+  console.log(getFollowingRequestsSentByUser(userId))
+
 
 
