@@ -8,27 +8,31 @@ datasource db {
 }
 
 model User {
-  id                 Int      @id @default(autoincrement())
-  name               String
-  courses            Course[]
-  followingRequests  FollowingRequest[] @relation("FollowingRequestSender")
-  followerRequests   FollowingRequest[] @relation("FollowingRequestReceiver")
+  id                Int                @id @default(autoincrement())
+  name              String
+  courses           Course[]
+  followingRequests FollowingRequest[] @relation("FollowingRequestSender")
+  followerRequests  FollowingRequest[] @relation("FollowingRequestReceiver")
 }
 
 model Course {
-  id     Int     @id @default(autoincrement())
-  name   String
-  users  User[]
+  id    Int    @id @default(autoincrement())
+  name  String
+  users User[]
 }
 
 model FollowingRequest {
-  id        Int     @id @default(autoincrement())
-  sender    User    @relation("FollowingRequestSender", fields: [senderId], references: [id])
-  senderId  Int
-  receiver  User    @relation("FollowingRequestReceiver", fields: [receiverId], references: [id])
-  receiverId Int
-  isAccepted     Boolean  @default(false)
+  id            Int      @id @default(autoincrement())
+  sender        User     @relation("FollowingRequestSender", fields: [senderId], references: [id])
+  senderId      Int
+  receiver      User     @relation("FollowingRequestReceiver", fields: [receiverId], references: [id])
+  receiverId    Int
+  status        FollowingStatus
 }
 
-
+enum FollowingStatus {
+  REQUESTED
+  ACCEPTED
+  NOT_FOLLOWING
+}
 
