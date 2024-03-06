@@ -1,9 +1,18 @@
 import express from "express";
+import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const app = express();
 const port = 3000;
+
+app.use(
+  cors({
+    origin: "http://localhost:8081", // React Native Expo
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("static"));
@@ -17,7 +26,7 @@ app.post("/user", async (req, res) => {
 
 app.get("/users", async (req, res) => {
   const users = await prisma.user.findMany();
-  res.send(`All users: ${users.map((user) => user.name).join(", ")}`);
+  res.json(users);
 });
 
 app.listen(port, () => {
