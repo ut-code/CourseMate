@@ -139,42 +139,42 @@ async function updateFollowingRequestStatus(senderIdToUpdate, newStatus, receive
 
 
 
-// // getFollowingRequestsSentByUser関数の使用例
-// const userId = 8; // 取得したいユーザーのユーザーIDを入れる
-// getFollowingRequestsSentByUser(userId)
-//   .then((followingRequests) => {
-//     console.log('Following requests sent by user:', followingRequests);
-//   })
-//   .catch((error) => {
-//     console.error('Error:', error);
-//   });
-// console.log(getFollowingRequestsSentByUser(userId))
+// getFollowingRequestsSentByUser関数の使用例
+const userId = 1; // 取得したいユーザーのユーザーIDを入れる
+getFollowingRequestsSentByUser(userId)
+  .then((followingRequests) => {
+    console.log('Following requests sent by user:', followingRequests);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+console.log(getFollowingRequestsSentByUser(userId))
 
 
-// // createFollowingRequest関数の使用例
-// const senderId = 14; // 送信者のユーザーID
-// const receiverId = 18; // 受信者のユーザーID
+// createFollowingRequest関数の使用例
+const senderId = 18; // 送信者のユーザーID
+const receiverId = 8; // 受信者のユーザーID
 
-// createFollowingRequest(senderId, receiverId)
-//   .then((followingRequest) => {
-//     console.log('Following request created:', followingRequest);
-//   })
-//   .catch((error) => {
-//     console.error('Error:', error);
-//   });
+createFollowingRequest(senderId, receiverId)
+  .then((followingRequest) => {
+    console.log('Following request created:', followingRequest);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 
 
 
-// // updateFollowingRequestStatus関数の使用例
-// const senderIdToUpdate = 8; // フォローリクエストを送った人のユーザーID
-// const newStatus = false; // 新しい状態 (true: 承認, false: 拒否)
-// const receiverIdToUpdate = 19; // リクエストを受け取った人のユーザーID
+// updateFollowingRequestStatus関数の使用例
+const senderIdToUpdate = 19; // フォローリクエストを送った人のユーザーID
+const newStatus = false; // 新しい状態 (true: 承認, false: 拒否)
+const receiverIdToUpdate = 21; // リクエストを受け取った人のユーザーID
 
-// updateFollowingRequestStatus(senderIdToUpdate, newStatus, receiverIdToUpdate)
-//   .then((updatedRequest) => {
-//     console.log('Following request updated:', updatedRequest);
-//   })
-//   .catch((error) => {
-//     console.error('Error:', error);
-//   });
+updateFollowingRequestStatus(senderIdToUpdate, newStatus, receiverIdToUpdate)
+  .then((updatedRequest) => {
+    console.log('Following request updated:', updatedRequest);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 

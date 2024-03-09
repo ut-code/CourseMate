@@ -31,8 +31,8 @@ model FollowingRequest {
 }
 
 enum FollowingStatus {
-  REQUESTED
+  PENDING
   ACCEPTED
-  NOT_FOLLOWING
+  REJECTED
 }
 
