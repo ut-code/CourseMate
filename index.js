@@ -1,7 +1,7 @@
 // index.js
 
 import express from "express";
-import { createUser, getUser,updateUser,deleteUser, createCourse, getCourse, createFollowingRequest, getFollowingRequests, updateFollowingRequestStatus } from './helpers/prismaHelpers.js';
+import { createUser, getUser,updateUser,deleteUser, createCourse, getCourse, createFollowingRequest, getFollowingRequests, updateFollowingRequestStatus,getMatches,deleteMatch } from './helpers/prismaHelpers.js';
 import userRoutes from './routes/userRoutes.js';
 import followingRequestRoutes from './routes/followingRequestRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
@@ -62,11 +62,75 @@ app.listen(port, () => {
 // //ユーザー削除の例
 // deleteUser(13)
 //   .then(user => {
-//       console.log("ユーザー削除しました:", user);
+//       console.log("ユーザーを削除しました:", user);
 //   })
 //   .catch(error => {
 //     console.error("ユーザーの取得中にエラーが発生しました:", error);
 //   });
+
+// // AがBにフォローリクエストを送信する
+// createFollowingRequest(1, 25)
+//   .then(request => {
+//     console.log(`${request.senderId}が${request.receiverId}にフォローリクエストをしました。`);
+//   })
+//   .catch(error => {
+//     console.error("フォローリクエストの作成中にエラーが発生しました:", error);
+//   });
+
+//   // ユーザーAがフォローリクエストしている人を取得する
+// getFollowingRequests(14)
+// .then(user => {
+//   const followingRequests = user.followingRequests.map(request => request.receiver.name);
+//   console.log(`${user.name}がフォローリクエストしている人は${followingRequests.join(', ')}です。`);
+// })
+// .catch(error => {
+//   console.error("フォローリクエストの取得中にエラーが発生しました:", error);
+// });
+
+// // フォローリクエストのステータスを更新する
+// let newStatus ;
+// updateFollowingRequestStatus(1, false, 25)
+//   .then(() => {
+//     const message = newStatus ? 'フォローリクエストが承諾されました。' : 'フォローリクエストが拒否されました。';
+//     console.log(message);
+//   })
+//   .catch(error => {
+//     console.error("フォローリクエストの更新中にエラーが発生しました:", error);
+//   });
+
+
+
+
+
+// // マッチング関係を読み込む
+// getMatches()
+//   .then(matches => {
+//     matches.forEach(match => {
+//       // user1とuser2が存在するかチェックする
+//       if (match.user1 && match.user2) {
+//         const user1Name = match.user1.name;
+//         const user2Name = match.user2.name;
+//         console.log(`${user1Name}と${user2Name}はマッチングしています`);
+//       } else {
+//         console.error("マッチング関係のユーザーが見つかりません");
+//       }
+//     });
+//   })
+//   .catch(error => {
+//     console.error("マッチング関係の読み込み中にエラーが発生しました:", error);
+//   });
+
+
+
+//   // マッチング関係を削除する
+// deleteMatch(2)
+// .then(deletedMatch => {
+//   console.log("マッチング関係を削除しました:", deletedMatch);
+// })
+// .catch(error => {
+//   console.error("マッチング関係の削除中にエラーが発生しました:", error);
+// });
+
 
 
 

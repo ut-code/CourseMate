@@ -49,8 +49,6 @@ async function deleteUser(userId) {
 }
 
 
-
-
 // コースの作成
 async function createCourse(name) {
   return await prisma.course.create({
@@ -84,7 +82,7 @@ async function createFollowingRequest(senderId, receiverId) {
 async function getFollowingRequests(userId) {
   return await prisma.user.findUnique({
     where: { id: userId },
-    include: { followingRequests: true },
+    include: {followingRequests: { include: { receiver: true } }  },
   });
 }
 
@@ -101,9 +99,41 @@ async function updateFollowingRequestStatus(senderIdToUpdate, newStatus, receive
     throw new Error('Following request not found');
   }
 
-  return await prisma.followingRequest.update({
+  // フォローリクエストのステータスを更新
+  await prisma.followingRequest.update({
     where: { id: existingRequest.id },
     data: { status: newStatus ? 'ACCEPTED' : 'REJECTED' },
+  });
+
+  // フォローリクエストがACCEPTEDの場合、マッチング関係を作成
+  if (newStatus) {
+    const user1Id = senderIdToUpdate < receiverIdToUpdate ? senderIdToUpdate : receiverIdToUpdate;
+    const user2Id = senderIdToUpdate > receiverIdToUpdate ? senderIdToUpdate : receiverIdToUpdate;
+    
+    // マッチング関係を作成
+    await prisma.match.create({
+      data: {
+        user1: { connect: { id: user1Id } },
+        user2: { connect: { id: user2Id } },
+        status: 'ACCEPTED',
+      },
+    });
+  }
+}
+// マッチ関係を読み込む
+async function getMatches() {
+  return prisma.match.findMany({
+    include: {
+      user1: true,
+      user2: true,
+    }
+  });
+}
+
+// マッチ関係を削除する
+async function deleteMatch(matchId) {
+  return prisma.match.delete({
+    where: { id: matchId }
   });
 }
 
@@ -116,5 +146,7 @@ export {
   getCourse,
   createFollowingRequest,
   getFollowingRequests,
-  updateFollowingRequestStatus
+  updateFollowingRequestStatus,
+  getMatches,
+  deleteMatch
 };
