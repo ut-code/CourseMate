@@ -1,7 +1,7 @@
 // index.js
 
 import express from "express";
-import { createUser, getUser, createCourse, getCourse, createFollowingRequest, getFollowingRequests, updateFollowingRequestStatus } from './helpers/prismaHelpers.js';
+import { createUser, getUser,updateUser,deleteUser, createCourse, getCourse, createFollowingRequest, getFollowingRequests, updateFollowingRequestStatus } from './helpers/prismaHelpers.js';
 import userRoutes from './routes/userRoutes.js';
 import followingRequestRoutes from './routes/followingRequestRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
@@ -50,6 +50,23 @@ app.listen(port, () => {
 //     console.error("ユーザーの取得中にエラーが発生しました:", error);
 //   });
 
+// //ユーザー更新の例
+// updateUser(1,"砂糖")
+//   .then(user => {
+//       console.log("ユーザー情報を更新しました:", user);
+//   })
+//   .catch(error => {
+//     console.error("ユーザーの取得中にエラーが発生しました:", error);
+//   });
+
+// //ユーザー削除の例
+// deleteUser(13)
+//   .then(user => {
+//       console.log("ユーザー削除しました:", user);
+//   })
+//   .catch(error => {
+//     console.error("ユーザーの取得中にエラーが発生しました:", error);
+//   });
 
 
 

@@ -23,6 +23,34 @@ async function getUser(userId) {
   });
 }
 
+// ユーザーの更新
+async function updateUser(userId, name, email) {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { name, email }
+    });
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// ユーザーの削除
+async function deleteUser(userId) {
+  try {
+    const deletedUser = await prisma.user.delete({
+      where: { id: userId }
+    });
+    return deletedUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
+
 // コースの作成
 async function createCourse(name) {
   return await prisma.course.create({
@@ -82,6 +110,8 @@ async function updateFollowingRequestStatus(senderIdToUpdate, newStatus, receive
 export {
   createUser,
   getUser,
+  updateUser,
+  deleteUser,
   createCourse,
   getCourse,
   createFollowingRequest,
