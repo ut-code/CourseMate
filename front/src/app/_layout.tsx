@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router'
 
 const Layout = (): JSX.Element => {
-  return <Stack screenOptions={{
+  return (<Stack screenOptions={{
     headerStyle: {
       backgroundColor: '#467fd3'
     },
@@ -11,6 +11,7 @@ const Layout = (): JSX.Element => {
       fontWeight: 'bold'
     }
   }} />
+  )
 }
 
 export default Layout
