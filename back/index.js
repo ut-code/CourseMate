@@ -1,7 +1,7 @@
 // index.js
 
 import express from "express";
-import { createUser, getUser,updateUser,deleteUser, createCourse, getCourse, createFollowingRequest, getFollowingRequests, updateFollowingRequestStatus,getMatches,deleteMatch } from './helpers/prismaHelpers.js';
+// import { createUser, getUser,updateUser,deleteUser, createCourse, getCourse, createFollowingRequest, getFollowingRequests, updateFollowingRequestStatus,getMatches,deleteMatch } from './helpers/prismaHelpers.js';
 import userRoutes from './routes/userRoutes.js';
 import followingRequestRoutes from './routes/followingRequestRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';

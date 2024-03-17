@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 // 全てのコースの取得エンドポイント
-router.get('/courses', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const courses = await prisma.course.findMany();
     res.json(courses);
@@ -18,9 +18,8 @@ router.get('/courses', async (req, res) => {
 });
 
 // 特定のコースの取得エンドポイント
-router.get('/courses/:courseId', async (req, res) => {
+router.get('/:courseId', async (req, res) => {
   const { courseId } = req.params;
-
   try {
     const course = await prisma.course.findUnique({
       where: { id: parseInt(courseId) }
@@ -33,9 +32,8 @@ router.get('/courses/:courseId', async (req, res) => {
 });
 
 // 新しいコースの作成エンドポイント
-router.post('/courses', async (req, res) => {
+router.post('/', async (req, res) => {
   const { name } = req.body;
-
   try {
     const newCourse = await prisma.course.create({
       data: {
@@ -50,10 +48,9 @@ router.post('/courses', async (req, res) => {
 });
 
 // コースの更新エンドポイント
-router.put('/courses/:courseId', async (req, res) => {
+router.put('/:courseId', async (req, res) => {
   const { courseId } = req.params;
   const { name } = req.body;
-
   try {
     const updatedCourse = await prisma.course.update({
       where: { id: parseInt(courseId) },
@@ -67,7 +64,7 @@ router.put('/courses/:courseId', async (req, res) => {
 });
 
 // コースの削除エンドポイント
-router.delete('/courses/:courseId', async (req, res) => {
+router.delete('/:courseId', async (req, res) => {
   const { courseId } = req.params;
 
   try {

@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 // ユーザーの取得（全ユーザーの取得）
-router.get('/users', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const users = await prisma.user.findMany();
     res.json(users);
@@ -18,7 +18,7 @@ router.get('/users', async (req, res) => {
 });
 
 // ユーザーの取得（特定のユーザーの取得）
-router.get('/users/:userId', async (req, res) => {
+router.get('/:userId', async (req, res) => {
   const { userId } = req.params;
 
   try {
@@ -33,7 +33,7 @@ router.get('/users/:userId', async (req, res) => {
 });
 
 // ユーザーの作成エンドポイント
-router.post('/users', async (req, res) => {
+router.post('/', async (req, res) => {
   const { name, email } = req.body;
 
   try {
@@ -51,7 +51,7 @@ router.post('/users', async (req, res) => {
 });
 
 // ユーザーの更新エンドポイント
-router.put('/users/:userId', async (req, res) => {
+router.put('/:userId', async (req, res) => {
   const { userId } = req.params;
   const { name, email } = req.body;
 
@@ -68,7 +68,7 @@ router.put('/users/:userId', async (req, res) => {
 });
 
 // ユーザーの削除エンドポイント
-router.delete('/users/:userId', async (req, res) => {
+router.delete('/:userId', async (req, res) => {
   const { userId } = req.params;
 
   try {

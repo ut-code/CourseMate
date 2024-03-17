@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 // 特定のユーザーが送信したフォローリクエストの取得
-router.get('/followingRequests/:userId', async (req, res) => {
+router.get('/:userId', async (req, res) => {
   const { userId } = req.params;
 
   try {
@@ -21,7 +21,7 @@ router.get('/followingRequests/:userId', async (req, res) => {
 });
 
 // フォローリクエストの作成エンドポイント
-router.post('/followingRequests', async (req, res) => {
+router.post('/', async (req, res) => {
   const { senderId, receiverId } = req.body;
 
   try {
@@ -34,7 +34,7 @@ router.post('/followingRequests', async (req, res) => {
 });
 
 // フォローリクエストの更新エンドポイント（受信者がフォローリクエストを受け入れるか拒否する）
-router.put('/followingRequests/:senderId/:receiverId', async (req, res) => {
+router.put('/:senderId/:receiverId', async (req, res) => {
   const { senderId, receiverId } = req.params;
   const { newStatus } = req.body;
 
