@@ -1,6 +1,7 @@
 // index.js
 
 import express from "express";
+import cors from "cors";
 // import { createUser, getUser,updateUser,deleteUser, createCourse, getCourse, createFollowingRequest, getFollowingRequests, updateFollowingRequestStatus,getMatches,deleteMatch } from './helpers/prismaHelpers.js';
 import userRoutes from './routes/userRoutes.js';
 import followingRequestRoutes from './routes/followingRequestRoutes.js';
@@ -11,6 +12,7 @@ const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors({origin:process.env.WEB_ORIGIN}));
 
 // ルートハンドラー
 app.get('/', (req, res) => {
