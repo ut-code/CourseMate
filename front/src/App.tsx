@@ -1,5 +1,4 @@
-import  { useState, useEffect } from 'react';
-
+import { useState, useEffect } from "react";
 
 // ユーザーの型を定義
 interface User {
@@ -13,14 +12,16 @@ function App() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/users`);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_ENDPOINT}/api/users`,
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch users');
+          throw new Error("Failed to fetch users");
         }
         const userData = await response.json();
         setUsers(userData);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error("Error fetching users:", error);
         // エラー処理を行う
       }
     };
@@ -43,4 +44,3 @@ function App() {
 }
 
 export default App;
-
