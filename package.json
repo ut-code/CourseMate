@@ -18,8 +18,7 @@
   },
   "lint-staged": {
     "front/src/**/*.{ts,tsx}": [
-      "npm run lint:front",
-      "npm run format:front"
+      "npm run lint:front"
     ]
   }
 }

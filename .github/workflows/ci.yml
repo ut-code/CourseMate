@@ -52,29 +52,6 @@ jobs:
         working-directory: front
         shell: bash
 
-  prettier:
-    name: Prettier
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: latest
-          cache: npm
-
-      - name: Install Node Packages
-        run: npm ci
-        working-directory: front
-        shell: bash
-
-      - name: Run Prettier
-        run: npm run format
-        working-directory: front
-        shell: bash
-
   type-check-frontend:
     name: Type Check
     runs-on: ubuntu-latest
