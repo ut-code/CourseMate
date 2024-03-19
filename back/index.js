@@ -25,8 +25,8 @@ app.use('/api/followingRequests', followingRequestRoutes);
 app.use('/api/courses', courseRoutes);
 
 // サーバーの起動
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.listen(port ,() =>{
+  console.log("running");
 });
 
 
