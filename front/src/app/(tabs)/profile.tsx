@@ -1,15 +1,18 @@
 import {
-  View, Text, ScrollView, StyleSheet, ImageBackground
-} from 'react-native'
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  ImageBackground,
+} from "react-native";
 
-const image = { uri: 'https://legacy.reactjs.org/logo-og.png' }
+const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
 
 const Profile = (): JSX.Element => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <ImageBackground source={image} style={styles.backGroundImage}>
-        </ImageBackground>
+        <ImageBackground source={image} style={styles.backGroundImage} />
       </View>
       <ScrollView style={styles.container}>
         <View style={styles.profileContainer}>
@@ -54,43 +57,43 @@ const Profile = (): JSX.Element => {
         </View>
       </ScrollView>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   imageContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: '100%',
-    flex: 1
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "100%",
+    flex: 1,
   },
   backGroundImage: {
     flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    width: '100%',
-    height: '100%'
+    justifyContent: "flex-end",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
   },
   profileContainer: {
-    flexDirection: 'row',
-    alignItems: 'center'
+    flexDirection: "row",
+    alignItems: "center",
   },
   profileLabel: {
     fontSize: 24,
-    color: '#000000',
+    color: "#000000",
     padding: 10,
-    flex: 1
+    flex: 1,
   },
   profileText: {
     fontSize: 20,
-    color: '#000000',
+    color: "#000000",
     padding: 10,
-    flex: 3
-  }
-})
+    flex: 3,
+  },
+});
 
-export default Profile
+export default Profile;
