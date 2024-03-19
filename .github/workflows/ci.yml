@@ -50,6 +50,7 @@ jobs:
       - name: Run ESLint
         run: npx eslint --max-warnings 0 .
         working-directory: front
+        shell: bash
 
   prettier:
     name: Prettier
@@ -66,10 +67,12 @@ jobs:
 
       - name: Install Node Packages
         run: npm ci
+        working-directory: front
         shell: bash
 
-      - name: Prettier
+      - name: Run Prettier
         run: npx prettier --check .
+        working-directory: front
         shell: bash
 
   type-check-frontend:
