@@ -30,7 +30,7 @@ jobs:
         shell: bash
 
   eslint:
-    name: ESLint
+    name: ESLint (including Prettier)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
