@@ -44,7 +44,6 @@ model Relationship {
 }
 
 enum MatchingStatus {
-  requestToLater
-  requestToEarlier
-  Matched
+  PENDING
+  MATCHED
 }
