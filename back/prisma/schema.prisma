@@ -12,8 +12,12 @@ model User {
   id                     Int            @id @default(autoincrement())
   name                   String
   enrollments            Enrollement[]
-  relationshipsAsEarlier Relationship[] @relation("relationshipsAsEarlier")
-  relationshipsAsLater   Relationship[] @relation("relationshipsAsLater")
+
+  //自分がマッチリクエストしている相手
+  requestingUsers        Relationship[] @relation("requesting")
+
+  //自分をマッチリクエストしている相手
+  requestedUsers         Relationship[] @relation("requested")
 }
 
 model Course {
@@ -33,10 +37,10 @@ model Enrollement {
 model Relationship {
   id           Int            @id @default(autoincrement())
   status       MatchingStatus
-  earlierUser  User           @relation("relationshipsAsEarlier", fields: [earlierUserId], references: [id])
-  earlierUserId Int
-  laterUser    User           @relation("relationshipsAsLater", fields: [laterUserId], references: [id])
-  laterUserId  Int
+  requestingUser  User           @relation("requesting", fields: [requestingUserId], references: [id])
+  requestingUserId Int //マッチリクエストを送っている人
+  requestedUser    User           @relation("requested", fields: [requestedUserId], references: [id])
+  requestedUserId  Int //マッチリクエストを送られている人
 }
 
 enum MatchingStatus {
