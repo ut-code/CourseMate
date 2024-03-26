@@ -7,6 +7,7 @@ import userRoutes from './routes/userRoutes.js';
 import followingRequestRoutes from './routes/followingRequestRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import enrollmentRoutes from './routes/enrollmentRoutes.js'
+import relationshipRoutes from './routes/relationshipRoutes.js'
 
 const app = express();
 const port = 3000;
