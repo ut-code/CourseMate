@@ -1,4 +1,5 @@
 import { Link } from "expo-router";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -14,13 +15,51 @@ const handlePress = (): void => {
 };
 
 const SignUp = (): JSX.Element => {
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
-        <Text style={styles.title}>Sign Up</Text>
-        <TextInput style={styles.input} value="Email" />
-        <TextInput style={styles.input} value="Password" />
-        <Button label="Submit" onPress={handlePress} />
+        <Text style={styles.title}>Log In</Text>
+        <TextInput
+          style={styles.input}
+          value={userName}
+          onChangeText={(text) => {
+            setUserName(text);
+          }}
+          keyboardType="default"
+          placeholder="User Name"
+          textContentType="username"
+        />
+        <TextInput
+          style={styles.input}
+          value={email}
+          onChangeText={(text) => {
+            setEmail(text);
+          }}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          placeholder="Email"
+          textContentType="emailAddress"
+        />
+        <TextInput
+          style={styles.input}
+          value={password}
+          onChangeText={(text) => {
+            setPassword(text);
+          }}
+          autoCapitalize="none"
+          secureTextEntry
+          placeholder="Password"
+          textContentType="password"
+        />
+        <Button
+          label="Submit"
+          onPress={() => {
+            handlePress();
+          }}
+        />
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already registered?</Text>
           <Link href="/log_in" asChild>
