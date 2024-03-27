@@ -103,3 +103,4 @@ async function acceptMatchRequest(requestingUserId, requestedUserId) {
   })
 }
 
+export default router;
