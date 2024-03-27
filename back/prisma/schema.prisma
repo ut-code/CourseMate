@@ -9,49 +9,41 @@ datasource db {
 }
 
 model User {
-  id                Int                @id @default(autoincrement())
-  name              String
-  courses           Course[]
-  followingRequests FollowingRequest[] @relation("FollowingRequestSender")
-  followerRequests  FollowingRequest[] @relation("FollowingRequestReceiver")
-  matches1          Match[]           @relation("User1Match")
-  matches2          Match[]           @relation("User2Match")
+  id                     Int            @id @default(autoincrement())
+  name                   String
+  enrollments            Enrollement[]
+
+  //自分がマッチリクエストしている相手
+  requestingUsers        Relationship[] @relation("requesting")
+
+  //自分をマッチリクエストしている相手
+  requestedUsers         Relationship[] @relation("requested")
 }
 
 model Course {
-  id    Int    @id @default(autoincrement())
-  name  String
-  users User[]
+  id          Int           @id @default(autoincrement())
+  name        String
+  enrollments Enrollement[]
 }
 
-model FollowingRequest {
-  id         Int             @id @default(autoincrement())
-  sender     User            @relation("FollowingRequestSender", fields: [senderId], references: [id])
-  senderId   Int
-  receiver   User            @relation("FollowingRequestReceiver", fields: [receiverId], references: [id])
-  receiverId Int
-  status     FollowingStatus
+model Enrollement {
+  id       Int    @id @default(autoincrement())
+  user     User   @relation(fields: [userId], references: [id])
+  userId   Int
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId Int
 }
 
-enum FollowingStatus {
+model Relationship {
+  id           Int            @id @default(autoincrement())
+  status       MatchingStatus
+  requestingUser  User           @relation("requesting", fields: [requestingUserId], references: [id])
+  requestingUserId Int //マッチリクエストを送っている人
+  requestedUser    User           @relation("requested", fields: [requestedUserId], references: [id])
+  requestedUserId  Int //マッチリクエストを送られている人
+}
+
+enum MatchingStatus {
   PENDING
-  ACCEPTED
-  REJECTED
+  MATCHED
 }
-
-model Match {
-  id             Int       @id @default(autoincrement())
-  user1          User      @relation("User1Match", fields: [user1Id], references: [id])
-  user1Id        Int
-  user2          User      @relation("User2Match", fields: [user2Id], references: [id])
-  user2Id        Int
-  status         FollowingStatus
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-}
-
-
-
-
-
-
