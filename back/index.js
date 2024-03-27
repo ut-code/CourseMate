@@ -18,7 +18,7 @@ app.use(cors({origin:process.env.WEB_ORIGIN}));
 
 // ルートハンドラー
 app.get('/', (req, res) => {
-  res.send('konnnitiha');
+  res.json('konnnitiha');
 });
 
 // ルーティング
