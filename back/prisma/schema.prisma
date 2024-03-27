@@ -11,6 +11,8 @@ datasource db {
 model User {
   id                     Int            @id @default(autoincrement())
   name                   String
+  emailAddress           String
+  password               String
   enrollments            Enrollement[]
 
   //自分がマッチリクエストしている相手
