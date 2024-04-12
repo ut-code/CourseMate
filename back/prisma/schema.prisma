@@ -10,7 +10,9 @@ datasource db {
 
 model User {
   id                     Int            @id @default(autoincrement())
-  name                   String
+  name                   String @default("名無し")
+  email                  String @default("")
+  password               String @default("")
   enrollments            Enrollement[]
 
   //自分がマッチリクエストしている相手

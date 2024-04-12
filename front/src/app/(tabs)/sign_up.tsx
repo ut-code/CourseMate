@@ -10,23 +10,36 @@ import {
 
 import Button from "../../components/Button";
 
-const handlePress = (): void => {
-  // SignUp
-};
-
 const SignUp = (): JSX.Element => {
-  const [userName, setUserName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handlePress = async (): Promise<void> => {
+    // SignUp
+    try {
+      await fetch("http://localhost:3000/api/users/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+    } catch (error) {
+      console.error("Failed to create user:", error);
+      throw new Error("Failed to create user");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
-        <Text style={styles.title}>Log In</Text>
+        <Text style={styles.title}>Sign Up</Text>
         <TextInput
           style={styles.input}
-          value={userName}
+          value={name}
           onChangeText={(text) => {
-            setUserName(text);
+            setName(text);
           }}
           keyboardType="default"
           placeholder="User Name"
