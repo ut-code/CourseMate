@@ -34,13 +34,14 @@ router.get('/:userId', async (req, res) => {
 
 // ユーザーの作成エンドポイント
 router.post('/', async (req, res) => {
-  const { name, email } = req.body;
+  const { name, email, password } = req.body;
 
   try {
     const newUser = await prisma.user.create({
       data: {
         name,
-        email
+        email,
+        password
       }
     });
     res.json(newUser);

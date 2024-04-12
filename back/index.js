@@ -6,6 +6,8 @@ import cors from "cors";
 import userRoutes from './routes/userRoutes.js';
 import followingRequestRoutes from './routes/followingRequestRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
+import enrollmentRoutes from './routes/enrollmentRoutes.js'
+import relationshipRoutes from './routes/relationshipRoutes.js'
 
 const app = express();
 const port = 3000;
@@ -16,13 +18,14 @@ app.use(cors({origin:process.env.WEB_ORIGIN}));
 
 // ルートハンドラー
 app.get('/', (req, res) => {
-  res.send('konnnitiha');
+  res.json('konnnitiha');
 });
 
 // ルーティング
 app.use('/api/users', userRoutes);
 app.use('/api/followingRequests', followingRequestRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/enrollment',enrollmentRoutes);
 
 // サーバーの起動
 app.listen(port ,() =>{
