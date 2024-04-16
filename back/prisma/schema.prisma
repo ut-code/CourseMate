@@ -9,17 +9,18 @@ datasource db {
 }
 
 model User {
-  id                     Int            @id @default(autoincrement())
-  name                   String @default("名無し")
-  email                  String @default("")
-  password               String @default("")
-  enrollments            Enrollement[]
+  id          Int           @id @default(autoincrement())
+  uid         String        @unique
+  name        String        @default("名無し")
+  email       String        @default("")
+  password    String        @default("")
+  enrollments Enrollement[]
 
   //自分がマッチリクエストしている相手
-  requestingUsers        Relationship[] @relation("requesting")
+  requestingUsers Relationship[] @relation("requesting")
 
   //自分をマッチリクエストしている相手
-  requestedUsers         Relationship[] @relation("requested")
+  requestedUsers Relationship[] @relation("requested")
 }
 
 model Course {
@@ -37,9 +38,9 @@ model Enrollement {
 }
 
 model Relationship {
-  id           Int            @id @default(autoincrement())
-  status       MatchingStatus
-  requestingUser  User           @relation("requesting", fields: [requestingUserId], references: [id])
+  id               Int            @id @default(autoincrement())
+  status           MatchingStatus
+  requestingUser   User           @relation("requesting", fields: [requestingUserId], references: [id])
   requestingUserId Int //マッチリクエストを送っている人
   requestedUser    User           @relation("requested", fields: [requestedUserId], references: [id])
   requestedUserId  Int //マッチリクエストを送られている人
