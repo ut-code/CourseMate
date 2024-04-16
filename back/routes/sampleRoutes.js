@@ -13,7 +13,7 @@ router.post("/myName", async (req, res) => {
     });
     res.json({ myName: userData.name });
   } catch (error) {
-    console.error("Error fetching courses:", error);
-    res.status(500).json({ error: "Failed to fetch courses" });
+    console.error("Error fetching username:", error);
+    res.status(500).json({ error: "Failed to fetch username" });
   }
 });
