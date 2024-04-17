@@ -17,3 +17,5 @@ router.post("/myName", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch username" });
   }
 });
+
+export default router;
