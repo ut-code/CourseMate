@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 // ルーティング
 app.use("/users", usersRoutes);
 // app.use("/followingRequests", followingRequestRoutes);
-// app.use("/courses", coursesRoutes);
+app.use("/courses", coursesRoutes);
 // app.use("/enrollment", enrollmentRoutes);
 // app.use("/requests", requestsRoutes);
 

@@ -1,46 +1,29 @@
-// courseRoutes.js
+import express, { Request, Response } from "express";
+import { createCourse, deleteCourse, getCourse, updateCourse } from "../helpers/courseHelper";
 
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 const router = express.Router();
 
-// 全てのコースの取得エンドポイント
-router.get('/', async (req, res) => {
-  try {
-    const courses = await prisma.course.findMany();
-    res.json(courses);
-  } catch (error) {
-    console.error("Error fetching courses:", error);
-    res.status(500).json({ error: "Failed to fetch courses" });
-  }
-});
-
-// 特定のコースの取得エンドポイント
-router.get('/:courseId', async (req, res) => {
+// コースの取得エンドポイント
+router.get("/:courseId", async (req: Request, res: Response) => {
   const { courseId } = req.params;
   try {
-    const course = await prisma.course.findUnique({
-      where: { id: parseInt(courseId) }
-    });
-    res.json(course);
+    const course = await getCourse(parseInt(courseId));
+    if (!course) {
+      return res.status(404).json({ error: "Course not found" });
+    }
+    res.status(200).json(course);
   } catch (error) {
     console.error("Error fetching course:", error);
     res.status(500).json({ error: "Failed to fetch course" });
   }
 });
 
-// 新しいコースの作成エンドポイント
-router.post('/', async (req, res) => {
+// コースの作成エンドポイント
+router.post("/", async (req: Request, res: Response) => {
   const { name } = req.body;
   try {
-    const newCourse = await prisma.course.create({
-      data: {
-        name
-      }
-    });
-    res.json(newCourse);
+    const newCourse = await createCourse(name);
+    res.status(201).json(newCourse);
   } catch (error) {
     console.error("Error creating course:", error);
     res.status(500).json({ error: "Failed to create course" });
@@ -48,15 +31,18 @@ router.post('/', async (req, res) => {
 });
 
 // コースの更新エンドポイント
-router.put('/:courseId', async (req, res) => {
+router.put("/:courseId", async (req: Request, res: Response) => {
   const { courseId } = req.params;
   const { name } = req.body;
+  if (!name) {
+    return res.status(400).json({ error: "Name is required" });
+  }
   try {
-    const updatedCourse = await prisma.course.update({
-      where: { id: parseInt(courseId) },
-      data: { name }
+    const updatedCourse = await updateCourse({
+      courseId: parseInt(courseId),
+      name,
     });
-    res.json(updatedCourse);
+    res.status(200).json(updatedCourse);
   } catch (error) {
     console.error("Error updating course:", error);
     res.status(500).json({ error: "Failed to update course" });
@@ -64,14 +50,11 @@ router.put('/:courseId', async (req, res) => {
 });
 
 // コースの削除エンドポイント
-router.delete('/:courseId', async (req, res) => {
+router.delete("/:courseId", async (req, res) => {
   const { courseId } = req.params;
-
   try {
-    await prisma.course.delete({
-      where: { id: parseInt(courseId) }
-    });
-    res.json({ message: "Course deleted successfully" });
+    await deleteCourse(parseInt(courseId));
+    res.status(204).send();
   } catch (error) {
     console.error("Error deleting course:", error);
     res.status(500).json({ error: "Failed to delete course" });
