@@ -1,11 +1,11 @@
 import express from "express";
 import cors from "cors";
-import usersRoutes from "./routes/users.js";
-import followingRequestRoutes from "./routes/followingRequestRoutes.js";
-import coursesRoutes from "./routes/courses.js";
-import enrollmentRoutes from "./routes/enrollmentRoutes.js";
-import samplesRoutes from "./routes/samples.js";
-import requestsRoutes from "./routes/requests.js";
+import usersRoutes from "./routes/users";
+import followingRequestRoutes from "./routes/followingRequestRoutes";
+import coursesRoutes from "./routes/courses";
+import enrollmentRoutes from "./routes/enrollmentRoutes";
+import samplesRoutes from "./routes/samples";
+import requestsRoutes from "./routes/requests";
 
 const app = express();
 const port = 3000;
@@ -21,13 +21,13 @@ app.get("/", (req, res) => {
 
 // ルーティング
 app.use("/users", usersRoutes);
-app.use("/followingRequests", followingRequestRoutes);
-app.use("/courses", coursesRoutes);
-app.use("/enrollment", enrollmentRoutes);
-app.use("/requests", requestsRoutes);
+// app.use("/followingRequests", followingRequestRoutes);
+// app.use("/courses", coursesRoutes);
+// app.use("/enrollment", enrollmentRoutes);
+// app.use("/requests", requestsRoutes);
 
 // サンプル
-app.use("/samples", samplesRoutes);
+// app.use("/samples", samplesRoutes);
 
 // サーバーの起動
 app.listen(port, () => {
