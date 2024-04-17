@@ -2,7 +2,7 @@
 
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
-import { getFollowingRequests, createFollowingRequest, updateFollowingRequestStatus } from '../../helpers/prismaHelpers.js';
+import { getFollowingRequests, createFollowingRequest, updateFollowingRequestStatus } from '../helpers/prismaHelpers.js';
 
 const prisma = new PrismaClient();
 const router = express.Router();
