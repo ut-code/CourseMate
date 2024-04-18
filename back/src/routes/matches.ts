@@ -1,102 +1,33 @@
-import express from 'express';
+import express, { Request, Response } from "express";
+import { deleteMatch, getMatchesByUserId } from "../helpers/matchHelper";
 
 const router = express.Router();
 
-// マッチリクエストの取得
-router.get('/requesting/:userId', async (req, res) => {
-  try {
-  const { userId } = req.params;
-  return await prisma.relationship.findMany({
-    where: {
-      AND: [
-      {status: 'PENDING'},
-      {requestingUserId: userId}
-      ]
-    },
-  });
-  } catch(error) {
-    console.error("Error fetching requests:", error);
-    res.status(500).json({ error: "Failed to fetch requests" });
+// 特定のユーザIDを含むマッチの取得
+router.get("/", async (req: Request, res: Response) => {
+  const { userId } = req.query;
+  if (!userId) {
+    return res.status(400).json({ error: "userId is required" });
   }
-})
-
-//ユーザーに送信されたマッチリクエストの取得
-router.get('/requested/:userId', async (req, res) => {
   try {
-  const { userId } = req.params;
-  return await prisma.relationship.findMany({
-    where: {
-      AND: [
-        {status: 'PENDING'},
-        {requestedUserId: userId}
-        ]
-    },
-  });
-  } catch(error) {
-    console.error("Error fetching requests:", error);
-    res.status(500).json({ error: "Failed to fetch requests" });
-  } 
-})
-
-//マッチしたユーザーの取得
-router.get('/matched/:userId', async (req, res) => {
-  try {
-    const {userId} = req.params;
-    return await prisma.relationship.findMany({
-      where: {
-        AND:[
-          {OR:[
-            {requestingUserId: userId},
-            {requestedUserId: userId}
-          ]},
-          {status: 'MATCHED'} 
-        ]
-        
-      }
-    });
-  } catch(error) {
-    console.error("Error fetching matched requests:", error);
-    res.status(500).json({ error: "Failed to fetch matched requests" });
+    const matches = await getMatchesByUserId(parseInt(userId as string));
+    res.status(200).json(matches);
+  } catch (error) {
+    console.error("Error fetching matches:", error);
+    res.status(500).json({ error: "Failed to fetch matches" });
   }
-})
+});
 
-//マッチリクエストを送る
-async function sendMatchRequest(requestingUserId, requestedUserId) {
-  await prisma.relationship.create({
-    data: {
-      requestingUserId: requestingUserId,
-      requestedUserId: requestedUserId,
-      status: 'PENDING'
-    }
-  })
-}
-
-//マッチリクエストを断る
-async function rejectMatchRequest(requestingUserId, requestedUserId) {
-   await prisma.relationship.delete({
-    where: {
-      AND:[
-        {requestingUserId: requestingUserId},
-        {requestedUserId: requestedUserId},
-      ]
-    }
-   })
-}
-
-//マッチする(マッチリクエストを受け入れる)
-
-async function acceptMatchRequest(requestingUserId, requestedUserId) {
-  await prisma.relationship.update({
-    where: {
-      AND:[
-        {requestingUserId: requestingUserId},
-        {requestedUserId: requestedUserId},
-      ]
-    },
-    data: {
-      status: 'MATCHED'
-    }
-  })
-}
+// マッチの削除
+router.delete("/:relationshipId", async (req: Request, res: Response) => {
+  const { relationshipId } = req.params;
+  try {
+    await deleteMatch(parseInt(relationshipId));
+    res.status(204).send();
+  } catch (error) {
+    console.error("Error deleting match:", error);
+    res.status(500).json({ error: "Failed to delete match" });
+  }
+});
 
 export default router;
