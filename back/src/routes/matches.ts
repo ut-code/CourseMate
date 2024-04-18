@@ -1,12 +1,8 @@
-//relationshipRoutes.js
-
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
 const router = express.Router();
 
-// ユーザーが送信したマッチリクエストの取得
+// マッチリクエストの取得
 router.get('/requesting/:userId', async (req, res) => {
   try {
   const { userId } = req.params;
