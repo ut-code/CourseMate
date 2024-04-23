@@ -1,13 +1,6 @@
-import { Link } from "expo-router";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+// import { useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
 
 import Button from "../../components/Button";
 import { auth } from "../../firebase/firebaseconfig";
@@ -41,58 +34,20 @@ const handlePress = (): void => {
 };
 
 const LogIn = (): JSX.Element => {
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
         <Text style={styles.title}>Log In</Text>
-        <TextInput
-          style={styles.input}
-          value={userName}
-          onChangeText={(text) => {
-            setUserName(text);
-          }}
-          keyboardType="default"
-          placeholder="User Name"
-          textContentType="username"
-        />
-        <TextInput
-          style={styles.input}
-          value={email}
-          onChangeText={(text) => {
-            setEmail(text);
-          }}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          placeholder="Email"
-          textContentType="emailAddress"
-        />
-        <TextInput
-          style={styles.input}
-          value={password}
-          onChangeText={(text) => {
-            setPassword(text);
-          }}
-          autoCapitalize="none"
-          secureTextEntry
-          placeholder="Password"
-          textContentType="password"
-        />
         <Button
-          label="Submit"
+          label="Log In"
           onPress={() => {
             handlePress();
           }}
         />
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Not registered?</Text>
-          <Link href="/sign_up" asChild>
-            <TouchableOpacity>
-              <Text style={styles.footerLink}>Sign Up here!</Text>
-            </TouchableOpacity>
-          </Link>
+          <Text style={styles.footerText}>
+            東京大学のGoogleアカウントを用いてログインしてください
+          </Text>
         </View>
       </View>
     </View>
