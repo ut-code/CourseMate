@@ -1,5 +1,4 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-// import { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 import Button from "../../components/Button";
