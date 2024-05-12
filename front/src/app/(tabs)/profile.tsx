@@ -13,6 +13,7 @@ const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
 const Profile = (): JSX.Element => {
   // sample
   console.log(useAuthContext());
+  const user = useAuthContext();
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -21,7 +22,7 @@ const Profile = (): JSX.Element => {
       <ScrollView style={styles.container}>
         <View style={styles.profileContainer}>
           <Text style={styles.profileLabel}>Name:</Text>
-          <Text style={styles.profileText}>Michael</Text>
+          <Text style={styles.profileText}>{user?.displayName}</Text>
         </View>
         <View style={styles.profileContainer}>
           <Text style={styles.profileLabel}>Sex:</Text>
