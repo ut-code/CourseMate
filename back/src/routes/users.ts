@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { createUser, deleteUser, getUser, updateUser } from "../helpers/userHelper";
+import { createUser, deleteUser, getUser, updateUser, getAllUsers } from "../helpers/userHelper";
 
 const router = express.Router();
 
@@ -89,6 +89,16 @@ router.delete("/:userId", async (req, res) => {
   } catch (error) {
     console.error("Error deleting user:", error);
     res.status(500).json({ error: "Failed to delete user" });
+  }
+});
+
+router.get("/", async (req: Request, res: Response) => {
+  try {
+    const users = await getAllUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Failed to fetch users" });
   }
 });
 
