@@ -9,6 +9,10 @@ interface Props {
   buttonType?: string;
 }
 
+//フォローリクエストを拒否するリクエストをサーバーに送る
+// const reject = (): void => {}
+// const accept = (): void => {}
+
 const followerListItem = (props: Props): JSX.Element => {
   const { name, imageUri, buttonType } = props;
   const image = { uri: imageUri };
