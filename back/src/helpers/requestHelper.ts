@@ -85,8 +85,8 @@ export async function searchRequestedUser(userId: number):Promise<Relationship[]
     return await prisma.relationship.findMany({
       where: {
         requestedUserId: userId,
-        NOT: {
-          status: "REJECTED",
+        AND: {
+          status: "PENDING",
         }
       }
     });
