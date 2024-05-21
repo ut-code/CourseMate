@@ -7,20 +7,40 @@ interface Props {
   name: string;
   imageUri: string;
   buttonType?: string;
+  matchId: number;
 }
 
 //フォローリクエストを拒否するリクエストをサーバーに送る
-// const reject = (): void => {}
+const reject = (matchId: number): void => {
+  fetch("http://localhost:3000/requests/reject/" + matchId.toString(), {
+    method: "put",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("reject request Failed");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+    });
+};
 // const accept = (): void => {}
 
 const followerListItem = (props: Props): JSX.Element => {
-  const { name, imageUri, buttonType } = props;
+  const { name, imageUri, buttonType, matchId } = props;
   const image = { uri: imageUri };
 
   const deleteButton = <Button label="Delete" onPress={(): void => {}} />;
   const acceptButton = <Button label="Accept" onPress={(): void => {}} />;
-  const rejectButton = <Button label="Reject" onPress={(): void => {}} />;
-
+  const rejectButton = (
+    <Button
+      label="Reject"
+      onPress={(): void => {
+        reject(matchId);
+      }}
+    />
+  );
   const button =
     buttonType === "delete" ? (
       deleteButton

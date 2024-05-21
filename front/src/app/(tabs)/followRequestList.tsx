@@ -31,15 +31,12 @@ const List = (): JSX.Element => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <FollowerListItem
-          name="Mike"
-          imageUri="https://legacy.reactjs.org/logo-og.png"
-        />
         {matchRequests.map((matchRequest) => (
           <div key={matchRequest.requestingUserId.toString()}>
             <FollowerListItem
               name={matchRequest.requestingUserId.toString()}
               imageUri="https://legacy.reactjs.org/logo-og.png"
+              matchId={matchRequest.id}
             />
           </div>
         ))}
