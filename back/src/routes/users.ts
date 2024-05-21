@@ -4,11 +4,11 @@ import { createUser, deleteUser, getUser, updateUser } from "../helpers/userHelp
 const router = express.Router();
 
 // ユーザーの取得エンドポイント
-router.get("/:userId", async (req: Request, res: Response) => {
-  const { userId } = req.params;
+router.get("/:uid", async (req: Request, res: Response) => {
+  const { uid } = req.params;
 
   try {
-    const user = await getUser(parseInt(userId));
+    const user = await getUser(uid);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
