@@ -14,6 +14,7 @@ const Profile = (): JSX.Element => {
   // sample
   console.log(useAuthContext());
   const user = useAuthContext();
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -22,11 +23,11 @@ const Profile = (): JSX.Element => {
       <ScrollView style={styles.container}>
         <View style={styles.profileContainer}>
           <Text style={styles.profileLabel}>Name:</Text>
-          <Text style={styles.profileText}>{user?.displayName}</Text>
+          <Text style={styles.profileText}>{user?.name}</Text>
         </View>
         <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sex:</Text>
-          <Text style={styles.profileText}>Male</Text>
+          <Text style={styles.profileLabel}>ID:</Text>
+          <Text style={styles.profileText}>{user?.id}</Text>
         </View>
         <View style={styles.profileContainer}>
           <Text style={styles.profileLabel}>Sample:</Text>
