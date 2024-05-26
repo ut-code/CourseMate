@@ -6,9 +6,13 @@ import {
   ImageBackground,
 } from "react-native";
 
+import { useAuthContext } from "../../provider/AuthProvider";
+
 const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
 
 const Profile = (): JSX.Element => {
+  // sample
+  console.log(useAuthContext());
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
