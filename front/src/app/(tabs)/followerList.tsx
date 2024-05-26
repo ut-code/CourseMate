@@ -1,51 +1,21 @@
 import { View, ScrollView, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-// import FollowerListItem from "../../components/FollowerListItem";
+import Button from "../../components/Button";
+import ListItem from "../../components/ListItem";
 
 const List = (): JSX.Element => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        {/* <FollowerListItem
-          name="John"
+        <ListItem
+          name="John Doe"
           imageUri="https://legacy.reactjs.org/logo-og.png"
-          buttonType="delete"
-        />
-        <FollowerListItem
-          name="User Name"
-          imageUri="https://legacy.reactjs.org/logo-og.png"
-          buttonType="delete"
-        />
-        <FollowerListItem
-          name="User Name"
-          imageUri="https://legacy.reactjs.org/logo-og.png"
-          buttonType="delete"
-        />
-        <FollowerListItem
-          name="User Name"
-          imageUri="https://legacy.reactjs.org/logo-og.png"
-          buttonType="delete"
-        />
-        <FollowerListItem
-          name="User Name"
-          imageUri="https://legacy.reactjs.org/logo-og.png"
-          buttonType="delete"
-        />
-        <FollowerListItem
-          name="User Name"
-          imageUri="https://legacy.reactjs.org/logo-og.png"
-          buttonType="delete"
-        />
-        <FollowerListItem
-          name="User Name"
-          imageUri="https://legacy.reactjs.org/logo-og.png"
-          buttonType="delete"
-        />
-        <FollowerListItem
-          name="User Name"
-          imageUri="https://legacy.reactjs.org/logo-og.png"
-          buttonType="delete"
-        /> */}
+        >
+          <TouchableOpacity>
+            <Button label="Delete" onPress={(): void => {}} />
+          </TouchableOpacity>
+        </ListItem>
       </ScrollView>
     </View>
   );
