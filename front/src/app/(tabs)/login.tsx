@@ -1,11 +1,11 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup ,signOut} from "firebase/auth";
 import { View, Text, StyleSheet } from "react-native";
 
 import Button from "../../components/Button";
 import { auth } from "../../firebase/firebaseconfig";
 const provider = new GoogleAuthProvider();
 
-const handlePress = (): void => {
+const signIn = (): void => {
   signInWithPopup(auth, provider)
     .then((result) => {
       // This gives you a Google Access Token. You can use it to access the Google API.
@@ -31,6 +31,15 @@ const handlePress = (): void => {
       console.error(error);
     });
 };
+const signOutUser = (): void => {
+  signOut(auth)
+    .then(() => {
+      console.log('サインアウトしました');
+    })
+    .catch((error) => {
+      console.error('サインアウトエラー: ', error);
+    });
+};
 
 const LogIn = (): JSX.Element => {
   return (
@@ -40,7 +49,13 @@ const LogIn = (): JSX.Element => {
         <Button
           label="Log In"
           onPress={() => {
-            handlePress();
+            signIn();
+          }}
+        />
+        <Button
+          label="Log Out"
+          onPress={() => {
+            signOutUser();
           }}
         />
         <View style={styles.footer}>
@@ -52,6 +67,7 @@ const LogIn = (): JSX.Element => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
