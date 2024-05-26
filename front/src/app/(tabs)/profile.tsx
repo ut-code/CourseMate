@@ -49,18 +49,7 @@ const Profile = (): JSX.Element => {
           <Text style={styles.profileLabel}>Sample:</Text>
           <Text style={styles.profileText}>Sample Text</Text>
         </View>
-        <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sample:</Text>
-          <Text style={styles.profileText}>Sample Text</Text>
-        </View>
-        <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sample:</Text>
-          <Text style={styles.profileText}>Sample Text</Text>
-        </View>
-        <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sample:</Text>
-          <Text style={styles.profileText}>Sample Text</Text>
-        </View>
+
       </ScrollView>
     </View>
   );
