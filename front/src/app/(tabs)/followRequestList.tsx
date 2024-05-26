@@ -1,5 +1,6 @@
 import { View, ScrollView, StyleSheet } from "react-native";
 
+import { API_ENDPOINT } from "../../env";
 import FollowerListItem from "../../components/FollowerListItem";
 
 //今は適当にユーザーを羅列しているだけだが、実際はログイン時点で、「ログインしたユーザーにまつわるリクエスト」を基に画面を構成しなければならない
@@ -12,7 +13,7 @@ let matchRequests: {
   requestingUserId: number;
   requestedUserId: number;
 }[];
-fetch("http://localhost:3000/requests/" + currentUserId.toString(), {
+fetch(`${API_ENDPOINT}/requests/${currentUserId.toString()}`, {
   method: "post",
 })
   .then((response) => {

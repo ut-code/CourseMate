@@ -1,6 +1,8 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 
+import { API_ENDPOINT } from "../env";
+
 interface User {
   id: number;
   uid: string;
@@ -18,7 +20,7 @@ export default function AuthProvider({
   const [user, setUser] = useState<User | null | undefined>(undefined);
   async function getUserData(uid: string): Promise<User> {
     try {
-      const response = await fetch(`http://localhost:3000/users/${uid}`);
+      const response = await fetch(`${API_ENDPOINT}/users/${uid}`);
       const data = await response.json();
       return data;
     } catch (error) {
