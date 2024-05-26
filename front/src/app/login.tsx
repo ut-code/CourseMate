@@ -1,8 +1,8 @@
-import { GoogleAuthProvider, signInWithPopup ,signOut} from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { View, Text, StyleSheet } from "react-native";
 
-import Button from "../../components/Button";
-import { auth } from "../../firebase/firebaseconfig";
+import Button from "../components/Button";
+import { auth } from "../firebase/firebaseconfig";
 const provider = new GoogleAuthProvider();
 
 const signIn = (): void => {
@@ -31,15 +31,6 @@ const signIn = (): void => {
       console.error(error);
     });
 };
-const signOutUser = (): void => {
-  signOut(auth)
-    .then(() => {
-      console.log('サインアウトしました');
-    })
-    .catch((error) => {
-      console.error('サインアウトエラー: ', error);
-    });
-};
 
 const LogIn = (): JSX.Element => {
   return (
@@ -52,12 +43,6 @@ const LogIn = (): JSX.Element => {
             signIn();
           }}
         />
-        <Button
-          label="Log Out"
-          onPress={() => {
-            signOutUser();
-          }}
-        />
         <View style={styles.footer}>
           <Text style={styles.footerText}>
             東京大学のGoogleアカウントを用いてログインしてください
@@ -67,7 +52,6 @@ const LogIn = (): JSX.Element => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
