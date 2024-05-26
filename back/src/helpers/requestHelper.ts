@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Relationship } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -65,12 +65,45 @@ export async function approveRequest(matchId: number) {
 // マッチリクエストの拒否
 export async function rejectRequest(matchId: number) {
   try {
-    return await prisma.relationship.delete({
+    return await prisma.relationship.update({
       where: {
         id: matchId,
+      },
+      data: {
+        status: "REJECTED"
       },
     });
   } catch (error) {
     throw error;
   }
 }
+
+//ユーザーにまつわるリクエストを探す
+export async function searchRequestedUser(userId: number):Promise<Relationship[]> {
+  //俺をリクエストしているのは誰だ
+  try {
+    return await prisma.relationship.findMany({
+      where: {
+        requestedUserId: userId,
+        AND: {
+          status: "PENDING",
+        }
+      }
+    });
+  } catch(error) {
+    console.log("failed to search requestedUsers")
+    throw error;
+  }
+}
+// export async function searchRequestingUser(userId: number):Promise<Relationship[]> {
+//   //俺がリクエストしているのは誰だ
+//   try {
+//     return await prisma.relationship.findMany({
+//       where: {requestingUserId: userId}
+//     });
+//   } catch(error) {
+//     console.log("failed to search requestingUsers")
+//     throw error;
+//   }
+// }
+

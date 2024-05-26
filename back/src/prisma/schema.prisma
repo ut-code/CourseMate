@@ -49,4 +49,5 @@ model Relationship {
 enum MatchingStatus {
   PENDING
   MATCHED
+  REJECTED
 }

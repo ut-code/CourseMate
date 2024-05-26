@@ -30,11 +30,11 @@ export async function createUser({
 }
 
 // ユーザーの取得
-export async function getUser(userId: number) {
+export async function getUser(uid: string) {
   try {
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        uid: uid,
       },
     });
     return user;

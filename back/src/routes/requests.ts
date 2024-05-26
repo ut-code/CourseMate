@@ -5,12 +5,14 @@ import {
   getRequestsByUserId,
   rejectRequest,
   sendRequest,
+  searchRequestedUser
 } from "../helpers/requestHelper";
+import { Relationship } from "@prisma/client";
 
 const router = express.Router();
 
-// 特定のユーザが送信・受信したマッチリクエストの取得
-router.get("/", async (req: Request, res: Response) => {
+// 特定のユーザ同士が送信・受信したマッチリクエストの取得
+router.get("/:matchId", async (req: Request, res: Response) => {
   const { senderId, receiverId } = req.query;
   if (!senderId && !receiverId) {
     return res.status(400).json({ error: "SenderID or ReceiverID is required" });
@@ -27,8 +29,20 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+//特定のユーザーにまつわるマッチリクエストを取得
+router.post("/:userId", async (req:Request, res:Response) => {
+  const { userId } = req.params;
+  try {
+    const matchRequests: Relationship[] = await searchRequestedUser(parseInt(userId));
+    res.status(201).json(matchRequests);
+  } catch(error) {
+    console.error("Error fetching matching requests", error);
+    res.status(500).json({error: "Failed to fetch matching requests"});
+  }
+})
+
 // マッチリクエストの送信
-router.post("/", async (req: Request, res: Response) => {
+router.post("/sendMatchRequest", async (req: Request, res: Response) => {
   const { senderId, receiverId } = req.body;
   try {
     const sentRequest = await sendRequest({
@@ -43,7 +57,7 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 // マッチリクエストの承認
-router.put("/:matchId", async (req: Request, res: Response) => {
+router.put("/accept/:matchId", async (req: Request, res: Response) => {
   const { matchId } = req.params;
   try {
     const approvedRequest = await approveRequest(parseInt(matchId));
@@ -55,7 +69,7 @@ router.put("/:matchId", async (req: Request, res: Response) => {
 });
 
 // マッチリクエストの拒否
-router.delete("/:matchId", async (req: Request, res: Response) => {
+router.put("/reject/:matchId", async (req: Request, res: Response) => {
   const { matchId } = req.params;
   try {
     await rejectRequest(parseInt(matchId));
