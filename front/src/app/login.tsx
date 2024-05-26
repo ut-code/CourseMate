@@ -1,8 +1,10 @@
+import { useRouter } from "expo-router";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { View, Text, StyleSheet } from "react-native";
 
 import Button from "../components/Button";
 import { auth } from "../firebase/firebaseconfig";
+
 const provider = new GoogleAuthProvider();
 
 const signIn = (): void => {
@@ -17,6 +19,7 @@ const signIn = (): void => {
         // IdP data available using getAdditionalUserInfo(result)
         // ...
         console.log(user.metadata);
+        console.log("ログインに成功しました");
       }
     })
     .catch((error) => {
@@ -29,10 +32,13 @@ const signIn = (): void => {
       // const credential = GoogleAuthProvider.credentialFromError(error);
       // ...
       console.error(error);
+      console.log("ログインに失敗しました");
     });
 };
 
 const LogIn = (): JSX.Element => {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
@@ -41,8 +47,10 @@ const LogIn = (): JSX.Element => {
           label="Log In"
           onPress={() => {
             signIn();
+            router.push("/");
           }}
         />
+
         <View style={styles.footer}>
           <Text style={styles.footerText}>
             東京大学のGoogleアカウントを用いてログインしてください

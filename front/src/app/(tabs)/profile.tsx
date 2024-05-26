@@ -6,6 +6,7 @@ import {
   ImageBackground,
 } from "react-native";
 
+import LogOutButton from "../../components/LogOutButton";
 import { useAuthContext } from "../../provider/AuthProvider";
 
 const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
@@ -45,10 +46,7 @@ const Profile = (): JSX.Element => {
           <Text style={styles.profileLabel}>Sample:</Text>
           <Text style={styles.profileText}>Sample Text</Text>
         </View>
-        <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sample:</Text>
-          <Text style={styles.profileText}>Sample Text</Text>
-        </View>
+        <LogOutButton />
       </ScrollView>
     </View>
   );
