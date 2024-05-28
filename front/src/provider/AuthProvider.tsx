@@ -1,5 +1,6 @@
+import { useRouter } from "expo-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface User {
   id: number;
@@ -16,6 +17,8 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState<User | null | undefined>(undefined);
+  const router = useRouter();
+
   async function getUserData(uid: string): Promise<User> {
     try {
       const response = await fetch(`http://localhost:3000/users/${uid}`);
@@ -30,13 +33,20 @@ export default function AuthProvider({
     try {
       const auth = getAuth();
       return onAuthStateChanged(auth, (firebaseUser) => {
-        getUserData(firebaseUser!.uid).then((user) => setUser(user));
+        if (firebaseUser) {
+          getUserData(firebaseUser.uid).then((user) => setUser(user));
+        } else {
+          setUser(null);
+          router.replace("/login"); // ログインされていない場合にリダイレクト
+          console.log("リダイレクトされました");
+        }
       });
-    } catch (error) {
+    } catch {
       setUser(null);
-      throw error;
+      router.replace("/login"); // エラー発生時にリダイレクト
+      console.log("エラーです");
     }
-  }, []);
+  }, [router]);
 
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 }
