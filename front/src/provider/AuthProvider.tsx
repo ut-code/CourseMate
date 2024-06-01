@@ -37,14 +37,14 @@ export default function AuthProvider({
           getUserData(firebaseUser.uid).then((user) => setUser(user));
         } else {
           setUser(null);
-          router.replace("/login"); // ログインされていない場合にリダイレクト
-          console.log("リダイレクトされました");
+          router.replace("/login");
+          console.log("リダイレクトしました。");
         }
       });
-    } catch {
+    } catch (error) {
       setUser(null);
-      router.replace("/login"); // エラー発生時にリダイレクト
-      console.log("エラーです");
+      router.replace("/login");
+      console.log("ログイン時にエラー出ました。");
     }
   }, [router]);
 
