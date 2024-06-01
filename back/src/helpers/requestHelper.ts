@@ -84,8 +84,8 @@ export async function searchRequestedUser(userId: number):Promise<Relationship[]
   try {
     return await prisma.relationship.findMany({
       where: {
-        requestedUserId: userId,
         AND: {
+          requestedUserId: userId,
           status: "PENDING",
         }
       }
@@ -107,3 +107,26 @@ export async function searchRequestedUser(userId: number):Promise<Relationship[]
 //   }
 // }
 
+//マッチした人の取得
+export async function searchMatchedUser(userId: number):Promise<Relationship[]> {
+  try {
+    return await prisma.relationship.findMany({
+      where: {
+        AND: {
+          status: "MATCHED",
+          OR: [
+            {
+              requestedUserId: userId,
+            },
+            {
+              requestingUserId: userId,
+            },
+          ]
+        }
+      }
+    });
+  } catch(error) {
+    console.log("failed to search matched Users")
+    throw error;
+  }
+}
