@@ -4,7 +4,6 @@ import { View, Text, StyleSheet } from "react-native";
 
 import Button from "../components/Button";
 import { auth } from "../firebase/firebaseconfig";
-import SignUpButton from "../components/signUpButton";
 
 const provider = new GoogleAuthProvider();
 
@@ -43,19 +42,7 @@ const LogIn = (): JSX.Element => {
     <View style={styles.container}>
       <View style={styles.inner}>
         <Text style={styles.title}>Log In</Text>
-        <Button
-          label="Log In"
-          onPress={async () => {
-            await signIn();
-            router.push("/");
-          }}
-        />
-        <SignUpButton />
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            東京大学のGoogleアカウントを用いてログインしてください
-          </Text>
-        </View>
+        <Text style={styles.footerText}>サインアップページです</Text>
       </View>
     </View>
   );
