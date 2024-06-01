@@ -1,9 +1,6 @@
 import { useRouter } from "expo-router";
-import { signOut } from "firebase/auth";
-import { TouchableOpacity } from "react-native";
 
 import Button from "./Button";
-import { auth } from "../firebase/firebaseconfig";
 import signInWithGoogle from "../utils/signInWithGoogle";
 
 const SignUpButton = (): JSX.Element => {

@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TextInput } from "react-native";
 
 import Button from "../components/Button";
 import { auth } from "../firebase/firebaseconfig";
@@ -43,6 +43,13 @@ const SignUp = (): JSX.Element => {
       <View style={styles.inner}>
         <Text style={styles.title}>Sign UP</Text>
         <Text style={styles.footerText}>サインアップページです</Text>
+        <Text style={styles.footerText}>名前を設定してください</Text>
+        <TextInput
+          style={styles.input}
+          // onChangeText={onChangeText}
+          // value={text}
+        />
+        <Button label={"設定"} />
       </View>
     </View>
   );
@@ -65,6 +72,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
+    width: 128,
     height: 48,
     borderColor: "#dddddd",
     borderWidth: 1,

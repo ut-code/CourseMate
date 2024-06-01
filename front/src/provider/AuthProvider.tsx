@@ -35,7 +35,6 @@ export default function AuthProvider({
       return onAuthStateChanged(auth, (firebaseUser) => {
         if (firebaseUser) {
           getUserData(firebaseUser.uid).then((user) => setUser(user));
-
         } else {
           setUser(null);
           router.replace("/login");
