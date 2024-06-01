@@ -4,7 +4,6 @@ import { useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 
 import Button from "../components/Button";
-import { useAuthContext } from "../provider/AuthProvider";
 import signUp from "../utils/signUp";
 
 const SignUp = (): JSX.Element => {

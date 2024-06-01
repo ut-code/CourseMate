@@ -45,6 +45,7 @@ export default function AuthProvider({
       setUser(null);
       router.replace("/login");
       console.log("ログイン時にエラー出ました。");
+      throw error;
     }
   }, [router]);
 
