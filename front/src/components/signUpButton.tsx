@@ -10,7 +10,7 @@ const SignUpButton = (): JSX.Element => {
       label="Sign Up"
       onPress={async () => {
         await signInWithGoogle();
-        router.push("/signUp");
+        router.push("/signUpPage");
       }}
     />
   );
