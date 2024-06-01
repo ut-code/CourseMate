@@ -37,13 +37,13 @@ export default function AuthProvider({
           getUserData(firebaseUser.uid).then((user) => setUser(user));
         } else {
           setUser(null);
-          router.replace("/login");
+          router.replace("/");
           console.log("リダイレクトしました。");
         }
       });
     } catch (error) {
       setUser(null);
-      router.replace("/login");
+      router.replace("/");
       console.log("ログイン時にエラー出ました。");
       throw error;
     }

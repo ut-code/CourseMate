@@ -1,9 +1,11 @@
+import { router } from "expo-router";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 import { auth } from "../firebase/firebaseconfig";
+
 const provider = new GoogleAuthProvider();
 
-const signInWithGoogle = async (): Promise<void> => {
+const signInWithGoogle = async (signup: boolean): Promise<void> => {
   try {
     const result = await signInWithPopup(auth, provider);
     // This gives you a Google Access Token. You can use it to access the Google API.
@@ -16,6 +18,11 @@ const signInWithGoogle = async (): Promise<void> => {
       // ...
       console.log(user.metadata);
       console.log("ログインに成功しました");
+      if (signup) {
+        router.push("/signUpPage");
+      } else {
+        router.push("/home");
+      }
     }
   } catch (error) {
     // Handle Errors here.

@@ -24,11 +24,11 @@ const signUp = async (
     }
     const data = await response.json();
     console.log("User registered successfully:", data);
-    router.push("/");
+    router.push("/home");
   } catch (error) {
     console.error("Error during sign-up:", error);
     console.log("サインアップに失敗しました");
-    router.replace("/login");
+    router.replace("/");
     console.log("リダイレクトしました。");
   }
 };
