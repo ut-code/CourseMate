@@ -22,6 +22,10 @@ export default function AuthProvider({
   async function getUserData(uid: string): Promise<User> {
     try {
       const response = await fetch(`http://localhost:3000/users/${uid}`);
+      if (response.status === 404) {
+        router.push("/");
+        console.log("データがありません。");
+      }
       const data = await response.json();
       return data;
     } catch (error) {
