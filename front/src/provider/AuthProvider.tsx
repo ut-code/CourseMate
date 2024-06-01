@@ -1,5 +1,5 @@
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "expo-router";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface User {
@@ -29,57 +29,22 @@ export default function AuthProvider({
     }
   }
 
-  async function registerNewUser(firebaseUser: any) {
-    try {
-      const response = await fetch('http://localhost:3000/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          uid: firebaseUser.uid,
-          name: firebaseUser.displayName,
-          email: firebaseUser.email,
-        }),
-      });
-      console.log(response);
-
-      if (!response.ok) {
-        throw new Error('Failed to register new user');
-      }
-
-      const newUser = await response.json();
-      setUser(newUser);
-    } catch (error) {
-      console.error('Error registering new user:', error);
-    }
-  }
-
   useEffect(() => {
     try {
       const auth = getAuth();
       return onAuthStateChanged(auth, (firebaseUser) => {
         if (firebaseUser) {
-          getUserData(firebaseUser.uid)
-            .then((existingUser) => {
-              if (existingUser) {
-                setUser(existingUser);
-              } else {
-                registerNewUser(firebaseUser);
-              }
-            })
-            .catch(() => {
-              registerNewUser(firebaseUser);
-            });
+          getUserData(firebaseUser.uid).then((user) => setUser(user));
+
         } else {
           setUser(null);
-          router.replace('/login');
+          router.replace("/login");
           console.log("リダイレクトしました。");
         }
       });
     } catch (error) {
       setUser(null);
-      router.replace('/login');
+      router.replace("/login");
       console.log("ログイン時にエラー出ました。");
     }
   }, [router]);

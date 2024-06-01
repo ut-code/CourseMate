@@ -35,13 +35,13 @@ const signIn = async (): Promise<void> => {
   }
 };
 
-const LogIn = (): JSX.Element => {
+const SignUp = (): JSX.Element => {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
-        <Text style={styles.title}>Log In</Text>
+        <Text style={styles.title}>Sign UP</Text>
         <Text style={styles.footerText}>サインアップページです</Text>
       </View>
     </View>
@@ -87,4 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogIn;
+export default SignUp;
