@@ -45,8 +45,7 @@ const SignUp = (): JSX.Element => {
           onPress={async () => {
             const uid = user?.uid;
             await signUp(uid!, name, password, email);
-            console.log("設定ボタン押した際：", uid, name, password, email);
-            router.push("/");
+
           }}
         />
       </View>
