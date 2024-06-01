@@ -5,7 +5,8 @@ import {
   getRequestsByUserId,
   rejectRequest,
   sendRequest,
-  searchRequestedUser
+  searchRequestedUser,
+  searchMatchedUser
 } from "../helpers/requestHelper";
 import { Relationship } from "@prisma/client";
 
@@ -34,6 +35,18 @@ router.post("/:userId", async (req:Request, res:Response) => {
   const { userId } = req.params;
   try {
     const matchRequests: Relationship[] = await searchRequestedUser(parseInt(userId));
+    res.status(201).json(matchRequests);
+  } catch(error) {
+    console.error("Error fetching matching requests", error);
+    res.status(500).json({error: "Failed to fetch matching requests"});
+  }
+})
+
+//特定のユーザーとマッチしたユーザーを取得
+router.post("/matched/:userId", async (req:Request, res:Response) => {
+  const { userId } = req.params;
+  try {
+    const matchRequests: Relationship[] = await searchMatchedUser(parseInt(userId));
     res.status(201).json(matchRequests);
   } catch(error) {
     console.error("Error fetching matching requests", error);

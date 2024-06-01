@@ -25,14 +25,34 @@ const reject = (matchId: number): void => {
       console.log(data);
     });
 };
-// const accept = (): void => {}
+const accept = (matchId: number): void => {
+  fetch("http://localhost:3000/requests/accept/" + matchId.toString(),{
+    method: "put",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("reject request Failed");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+    });
+}
 
 const followerListItem = (props: Props): JSX.Element => {
   const { name, imageUri, buttonType, matchId } = props;
   const image = { uri: imageUri };
 
   const deleteButton = <Button label="Delete" onPress={(): void => {}} />;
-  const acceptButton = <Button label="Accept" onPress={(): void => {}} />;
+  const acceptButton = (
+    <Button
+      label="Accept"
+      onPress={(): void => {
+        accept(matchId)
+      }}
+    />
+  );
   const rejectButton = (
     <Button
       label="Reject"
