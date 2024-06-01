@@ -6,6 +6,7 @@ import {
   ImageBackground,
 } from "react-native";
 
+import LogOutButton from "../../components/LogOutButton";
 import { useAuthContext } from "../../provider/AuthProvider";
 
 const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
@@ -13,6 +14,8 @@ const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
 const Profile = (): JSX.Element => {
   // sample
   console.log(useAuthContext());
+  const user = useAuthContext();
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -21,15 +24,11 @@ const Profile = (): JSX.Element => {
       <ScrollView style={styles.container}>
         <View style={styles.profileContainer}>
           <Text style={styles.profileLabel}>Name:</Text>
-          <Text style={styles.profileText}>Michael</Text>
+          <Text style={styles.profileText}>{user?.name}</Text>
         </View>
         <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sex:</Text>
-          <Text style={styles.profileText}>Male</Text>
-        </View>
-        <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sample:</Text>
-          <Text style={styles.profileText}>Sample Text</Text>
+          <Text style={styles.profileLabel}>ID:</Text>
+          <Text style={styles.profileText}>{user?.id}</Text>
         </View>
         <View style={styles.profileContainer}>
           <Text style={styles.profileLabel}>Sample:</Text>
@@ -47,18 +46,7 @@ const Profile = (): JSX.Element => {
           <Text style={styles.profileLabel}>Sample:</Text>
           <Text style={styles.profileText}>Sample Text</Text>
         </View>
-        <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sample:</Text>
-          <Text style={styles.profileText}>Sample Text</Text>
-        </View>
-        <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sample:</Text>
-          <Text style={styles.profileText}>Sample Text</Text>
-        </View>
-        <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sample:</Text>
-          <Text style={styles.profileText}>Sample Text</Text>
-        </View>
+        <LogOutButton />
       </ScrollView>
     </View>
   );

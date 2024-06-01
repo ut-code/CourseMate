@@ -1,22 +1,31 @@
-import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+import { signOut } from "firebase/auth";
+import { TouchableOpacity } from "react-native";
+
+import { auth } from "../firebase/firebaseconfig";
 
 const LogOutButton = (): JSX.Element => {
+  const router = useRouter();
   return (
-    <TouchableOpacity>
-      <Text style={styles.logOutButtonLabel}>ログアウト</Text>
+    <TouchableOpacity
+      onPress={() => {
+        signOutUser();
+        router.replace("/login");
+      }}
+    >
+      ログアウト
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
-  logOutButtonLabel: {
-    color: "rgba(255, 255, 255, 0.7)",
-    fontSize: 16,
-    lineHeight: 32,
-    fontWeight: "bold",
-    paddingVertical: 8,
-    paddingHorizontal: 24,
-  },
-});
+const signOutUser = (): void => {
+  signOut(auth)
+    .then(() => {
+      console.log("サインアウトしました");
+    })
+    .catch((error) => {
+      console.error("サインアウトエラー: ", error);
+    });
+};
 
 export default LogOutButton;
