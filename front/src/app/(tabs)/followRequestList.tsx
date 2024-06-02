@@ -1,63 +1,10 @@
-import { useEffect, useState } from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 
 import Button from "../../components/Button";
 import ListItem from "../../components/ListItem";
-
-//今は適当にユーザーを羅列しているだけだが、実際はログイン時点で、「ログインしたユーザーにまつわるリクエスト」を基に画面を構成しなければならない
-
-//ログインしたユーザーのuid
-const currentUserId: number = 33;
-//uidを基に、リクエストを探す
-let matchRequests: {
-  id: number;
-  requestingUserId: number;
-  requestedUserId: number;
-}[];
-fetch("http://localhost:3000/requests/" + currentUserId.toString(), {
-  method: "post",
-})
-  .then((response) => {
-    if (response.status === 201) {
-      return response.json();
-    } else {
-      throw new Error("Failed to fetch matchRequests");
-    }
-  })
-  .then((data) => {
-    console.log("success: fetching matchRequests");
-    matchRequests = data;
-  })
-  .catch((error) => {
-    // Handle Errors here.
-    // const errorCode = error.code;
-    // const errorMessage = error.message;
-    // The email of the user's account used.
-    // const email = error.customData.email;
-    // The AuthCredential type that was used.
-    // const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-    console.error(error);
-  });
-
-async function fetchMatchRequests() {
-  try {
-    const response = await fetch(
-      `http://localhost:3000/requests/${currentUserId.toString()}`,
-      {
-        method: "post",
-      },
-    );
-    const data = (await response.json()) as {
-      id: number;
-      requestingUserId: number;
-      requestedUserId: number;
-    }[];
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-}
+import { useData } from "../../hooks/useData";
+import { useAuthContext } from "../../provider/AuthProvider";
+import { Relationship } from "../../types";
 
 async function rejectMatchRequest(matchId: number) {
   try {
@@ -74,47 +21,41 @@ async function rejectMatchRequest(matchId: number) {
   }
 }
 
-const List = () => {
-  const [matchRequests, setMatchRequests] = useState<
-    | {
-        id: number;
-        requestingUserId: number;
-        requestedUserId: number;
-      }[]
-    | null
-  >(null);
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchMatchRequests();
-      if (data !== undefined) {
-        setMatchRequests(data);
-      }
-    };
-    fetchData();
-  }, []);
+const FollowRequestList = () => {
+  const currentUserId = useAuthContext()?.id;
+  const url = `http://localhost:3000/requests/${currentUserId}`;
+
+  const { data, isLoading, error } = useData<Relationship[]>(url);
+
   return (
     <View style={styles.container}>
-      <ScrollView>
-        {matchRequests !== undefined &&
-          matchRequests?.map((matchRequest) => (
-            <div key={matchRequest.requestingUserId.toString()}>
-              <ListItem
-                name={matchRequest.requestingUserId.toString()}
-                imageUri="https://legacy.reactjs.org/logo-og.png"
-              >
-                <View>
-                  <Button label="Accept" onPress={(): void => {}} />
-                  <Button
-                    label="Reject"
-                    onPress={(): void => {
-                      rejectMatchRequest(matchRequest.id);
-                    }}
-                  />
-                </View>
-              </ListItem>
-            </div>
-          ))}
-      </ScrollView>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>Error: {error.message}</p>
+      ) : (
+        <ScrollView>
+          {data !== undefined &&
+            data?.map((matchRequest) => (
+              <div key={matchRequest.requestingUserId.toString()}>
+                <ListItem
+                  name={matchRequest.requestingUserId.toString()}
+                  imageUri="https://legacy.reactjs.org/logo-og.png"
+                >
+                  <View>
+                    <Button label="Accept" onPress={(): void => {}} />
+                    <Button
+                      label="Reject"
+                      onPress={(): void => {
+                        rejectMatchRequest(matchRequest.id);
+                      }}
+                    />
+                  </View>
+                </ListItem>
+              </div>
+            ))}
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -126,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default List;
+export default FollowRequestList;
