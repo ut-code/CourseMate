@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 
 import Button from "../../components/Button";
