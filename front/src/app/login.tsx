@@ -1,16 +1,9 @@
-import { useRouter } from "expo-router";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { View, Text, StyleSheet } from "react-native";
 
-import Button from "../components/Button";
 import LogInButton from "../components/logInButtion";
 import SignUpButton from "../components/signUpButton";
-import { auth } from "../firebase/firebaseconfig";
-import signInWithGoogle from "../utils/signInWithGoogle";
 
 const LogIn = (): JSX.Element => {
-  const router = useRouter();
-
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
