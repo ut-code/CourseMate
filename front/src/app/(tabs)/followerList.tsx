@@ -3,7 +3,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 import Button from "../../components/Button";
 import ListItem from "../../components/ListItem";
-import { useData } from "../../hooks/useData";
+import useData from "../../hooks/useData";
 import { useAuthContext } from "../../provider/AuthProvider";
 import { User } from "../../types";
 

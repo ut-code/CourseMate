@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-export function useData<T>(url: string) {
+export default function useData<T>(url: string) {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);

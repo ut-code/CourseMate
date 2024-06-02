@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 
 import Button from "../../components/Button";
 import ListItem from "../../components/ListItem";
-import { useData } from "../../hooks/useData";
+import useData from "../../hooks/useData";
 import { useAuthContext } from "../../provider/AuthProvider";
 import { User } from "../../types";
 
