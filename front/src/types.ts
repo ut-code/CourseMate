@@ -6,3 +6,10 @@ export type Relationship = {
   requestedUserId: number;
   status: RelationshipStatus;
 };
+
+export type User = {
+  id: number;
+  uid: string;
+  name: string;
+  email: string;
+};
