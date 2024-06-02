@@ -4,12 +4,12 @@ import Button from "../../components/Button";
 import ListItem from "../../components/ListItem";
 import { useData } from "../../hooks/useData";
 import { useAuthContext } from "../../provider/AuthProvider";
-import { Relationship } from "../../types";
+import { User } from "../../types";
 
-async function rejectMatchRequest(matchId: number) {
+async function rejectMatchRequest(senderId: number, receiverId: number) {
   try {
     const response = await fetch(
-      `http://localhost:3000/requests/reject/${matchId.toString()}`,
+      `http://localhost:3000/requests/reject/${senderId.toString()}/${receiverId.toString()}`,
       {
         method: "PUT",
       },
@@ -23,9 +23,9 @@ async function rejectMatchRequest(matchId: number) {
 
 const FollowRequestList = () => {
   const currentUserId = useAuthContext()?.id;
-  const url = `http://localhost:3000/requests/${currentUserId}`;
+  const url = `http://localhost:3000/requests/receiverId/${currentUserId}`;
 
-  const { data, isLoading, error } = useData<Relationship[]>(url);
+  const { data, isLoading, error } = useData<User[]>(url);
 
   return (
     <View style={styles.container}>
@@ -36,10 +36,10 @@ const FollowRequestList = () => {
       ) : (
         <ScrollView>
           {data !== undefined &&
-            data?.map((matchRequest) => (
-              <div key={matchRequest.requestingUserId.toString()}>
+            data?.map((matchedUser) => (
+              <div key={matchedUser.id.toString()}>
                 <ListItem
-                  name={matchRequest.requestingUserId.toString()}
+                  name={matchedUser.name.toString()}
                   imageUri="https://legacy.reactjs.org/logo-og.png"
                 >
                   <View>
@@ -47,7 +47,7 @@ const FollowRequestList = () => {
                     <Button
                       label="Reject"
                       onPress={(): void => {
-                        rejectMatchRequest(matchRequest.id);
+                        rejectMatchRequest(matchedUser.id, currentUserId!); // TODO: Fix this
                       }}
                     />
                   </View>

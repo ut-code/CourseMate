@@ -5,7 +5,7 @@ import {
   getRequestsByUserId,
   rejectRequest,
   sendRequest,
-  searchRequestedUser,
+  searchSenderByReceiverId,
   searchMatchedUser
 } from "../helpers/requestHelper";
 import { Relationship } from "@prisma/client";
@@ -31,11 +31,16 @@ router.get("/id/:matchId", async (req: Request, res: Response) => {
 });
 
 //特定のユーザーにまつわるマッチリクエストを取得
-router.get("/:userId", async (req:Request, res:Response) => {
+router.get("/receiverId/:userId", async (req:Request, res:Response) => {
   const { userId } = req.params;
   try {
-    const matchRequests: Relationship[] = await searchRequestedUser(parseInt(userId));
-    res.status(200).json(matchRequests);
+    const senders = await searchSenderByReceiverId(parseInt(userId));
+    // パスワード以外を返す
+    const sendersWithoutPassword = senders.map((sender) => {
+      const { password, ...senderWithoutPassword } = sender;
+      return senderWithoutPassword;
+    });
+    res.status(200).json(sendersWithoutPassword);
   } catch(error) {
     console.error("Error fetching matching requests", error);
     res.status(500).json({error: "Failed to fetch matching requests"});
@@ -46,8 +51,13 @@ router.get("/:userId", async (req:Request, res:Response) => {
 router.get("/matched/:userId", async (req:Request, res:Response) => {
   const { userId } = req.params;
   try {
-    const matchRequests: Relationship[] = await searchMatchedUser(parseInt(userId));
-    res.status(200).json(matchRequests);
+    const matchedUsers = await searchMatchedUser(parseInt(userId));
+    // パスワード以外を返す
+    const matchedUsersWithoutPassword = matchedUsers.map((user) => {
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    });
+    res.status(200).json(matchedUsersWithoutPassword);
   } catch(error) {
     console.error("Error fetching matching requests", error);
     res.status(500).json({error: "Failed to fetch matching requests"});
@@ -82,10 +92,10 @@ router.put("/accept/:matchId", async (req: Request, res: Response) => {
 });
 
 // マッチリクエストの拒否
-router.put("/reject/:matchId", async (req: Request, res: Response) => {
-  const { matchId } = req.params;
+router.put("/reject/:senderId/:receiverId", async (req: Request, res: Response) => {
+  const { senderId, receiverId} = req.params;
   try {
-    await rejectRequest(parseInt(matchId));
+    await rejectRequest(parseInt(senderId), parseInt(receiverId));
     res.status(204).send();
   } catch (error) {
     console.error("Error rejecting match request:", error);
