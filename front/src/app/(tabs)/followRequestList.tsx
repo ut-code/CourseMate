@@ -1,57 +1,61 @@
 import { View, ScrollView, StyleSheet } from "react-native";
 
-import FollowerListItem from "../../components/FollowerListItem";
+import Button from "../../components/Button";
+import ListItem from "../../components/ListItem";
+import useData from "../../hooks/useData";
+import { useAuthContext } from "../../provider/AuthProvider";
+import { User } from "../../types";
 
-//今は適当にユーザーを羅列しているだけだが、実際はログイン時点で、「ログインしたユーザーにまつわるリクエスト」を基に画面を構成しなければならない
-
-//ログインしたユーザーのuid
-const currentUserId: number = 33;
-//uidを基に、リクエストを探す
-let matchRequests: {
-  id: number;
-  requestingUserId: number;
-  requestedUserId: number;
-}[];
-fetch("http://localhost:3000/requests/" + currentUserId.toString(), {
-  method: "post",
-})
-  .then((response) => {
-    if (response.status === 201) {
-      return response.json();
-    } else {
-      throw new Error("Failed to fetch matchRequests");
-    }
-  })
-  .then((data) => {
-    console.log("success: fetching matchRequests");
-    matchRequests = data;
-  })
-  .catch((error) => {
-    // Handle Errors here.
-    // const errorCode = error.code;
-    // const errorMessage = error.message;
-    // The email of the user's account used.
-    // const email = error.customData.email;
-    // The AuthCredential type that was used.
-    // const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
+async function rejectMatchRequest(senderId: number, receiverId: number) {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/requests/reject/${senderId.toString()}/${receiverId.toString()}`,
+      {
+        method: "PUT",
+      },
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
     console.error(error);
-  });
+  }
+}
 
-const List = (): JSX.Element => {
+const FollowRequestList = () => {
+  const currentUserId = useAuthContext()?.id;
+  const url = `http://localhost:3000/requests/receiverId/${currentUserId}`;
+
+  const { data, isLoading, error } = useData<User[]>(url);
+
   return (
     <View style={styles.container}>
-      <ScrollView>
-        {matchRequests.map((matchRequest) => (
-          <div key={matchRequest.requestingUserId.toString()}>
-            <FollowerListItem
-              name={matchRequest.requestingUserId.toString()}
-              imageUri="https://legacy.reactjs.org/logo-og.png"
-              matchId={matchRequest.id}
-            />
-          </div>
-        ))}
-      </ScrollView>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>Error: {error.message}</p>
+      ) : (
+        <ScrollView>
+          {data !== undefined &&
+            data?.map((matchedUser) => (
+              <div key={matchedUser.id.toString()}>
+                <ListItem
+                  name={matchedUser.name.toString()}
+                  imageUri="https://legacy.reactjs.org/logo-og.png"
+                >
+                  <View>
+                    <Button label="Accept" onPress={(): void => {}} />
+                    <Button
+                      label="Reject"
+                      onPress={(): void => {
+                        rejectMatchRequest(matchedUser.id, currentUserId!); // TODO: Fix this
+                      }}
+                    />
+                  </View>
+                </ListItem>
+              </div>
+            ))}
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -63,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default List;
+export default FollowRequestList;
