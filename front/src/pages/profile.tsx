@@ -6,8 +6,8 @@ import {
   ImageBackground,
 } from "react-native";
 
-import LogOutButton from "../../components/LogOutButton";
-import { useAuthContext } from "../../provider/AuthProvider";
+import LogOutButton from "../components/LogOutButton";
+import { useAuthContext } from "../provider/AuthProvider";
 
 const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
 

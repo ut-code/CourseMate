@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, ImageBackground } from "react-native";
-
-import Button from "../../components/Button";
+import { Button } from "react-native-paper";
 
 const handlePress = (): void => {};
 
@@ -21,8 +20,8 @@ const Index = (): JSX.Element => {
         </ImageBackground>
       </View>
       <View style={styles.buttonContainer}>
-        <Button label="X" onPress={handlePress} />
-        <Button label="O" onPress={handlePress} />
+        <Button onPress={handlePress}>X</Button>
+        <Button onPress={handlePress}>O</Button>
       </View>
     </View>
   );

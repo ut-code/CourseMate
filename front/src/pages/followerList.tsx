@@ -1,11 +1,10 @@
 import { View, ScrollView, StyleSheet, Text } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Button } from "react-native-paper";
 
-import Button from "../../components/Button";
-import ListItem from "../../components/ListItem";
-import useData from "../../hooks/useData";
-import { useAuthContext } from "../../provider/AuthProvider";
-import { User } from "../../types";
+import ListItem from "../components/ListItem";
+import useData from "../hooks/useData";
+import { useAuthContext } from "../provider/AuthProvider";
+import { User } from "../types";
 
 const FollowerList = () => {
   const currentUserId = useAuthContext()?.id;
@@ -27,9 +26,7 @@ const FollowerList = () => {
               imageUri="https://legacy.reactjs.org/logo-og.png"
               key={matchedUser.id.toString()}
             >
-              <TouchableOpacity>
-                <Button label="Delete" onPress={(): void => {}} />
-              </TouchableOpacity>
+              <Button onPress={(): void => {}}>Delete</Button>
             </ListItem>
           ))}
         </ScrollView>
