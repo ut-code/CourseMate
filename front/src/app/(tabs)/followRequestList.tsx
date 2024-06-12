@@ -1,7 +1,7 @@
 import { View, ScrollView, StyleSheet } from "react-native";
 
-import { API_ENDPOINT } from "../../env";
 import FollowerListItem from "../../components/FollowerListItem";
+import { API_ENDPOINT } from "../../env";
 
 //今は適当にユーザーを羅列しているだけだが、実際はログイン時点で、「ログインしたユーザーにまつわるリクエスト」を基に画面を構成しなければならない
 
