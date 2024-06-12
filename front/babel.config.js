@@ -1,14 +1,8 @@
 module.exports = function (api) {
-  api.cache(true);
   const isEnvFile = (filename) => filename && filename.includes("env.js");
+  api.cache((file) => !isEnvFile(file));
   return {
     presets: ["babel-preset-expo"],
-    overrides: [
-      {
-        test: isEnvFile,
-        cache: false,
-      },
-    ],
     plugins: [
       [
         "module:react-native-dotenv",
