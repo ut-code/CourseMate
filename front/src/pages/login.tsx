@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import LogInButton from "../components/logInButtion";
 import SignUpButton from "../components/signUpButton";
 
-const LogIn = (): JSX.Element => {
+const Login = (): JSX.Element => {
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
@@ -59,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogIn;
+export default Login;

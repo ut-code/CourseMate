@@ -5,7 +5,7 @@ const handlePress = (): void => {};
 
 const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
 
-const Index = (): JSX.Element => {
+const Home = (): JSX.Element => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -68,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+export default Home;

@@ -7,10 +7,10 @@ import {
 } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import FollowRequestList from "./pages/followRequestList";
-import FollowerList from "./pages/followerList";
-import Home from "./pages/index";
-import Profile from "./pages/profile";
+import FollowRequestList from "./pages/FollowRequestList";
+import FollowerList from "./pages/FollowerList";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 
 const theme = {
   ...DefaultTheme,
