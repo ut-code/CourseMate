@@ -1,3 +1,4 @@
+import { NavigationContainer } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import {
   MD3LightTheme as DefaultTheme,
@@ -13,14 +14,16 @@ const theme = {
   },
 };
 
-const Layout = (): JSX.Element => {
+const App = (): JSX.Element => {
   return (
     <PaperProvider theme={theme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <NavigationContainer>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </NavigationContainer>
     </PaperProvider>
   );
 };
 
-export default Layout;
+export default App;
