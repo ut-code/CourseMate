@@ -1,5 +1,10 @@
 import express, { Request, Response } from "express";
-import { createUser, deleteUser, getUser, updateUser } from "../helpers/userHelper";
+import {
+  createUser,
+  deleteUser,
+  getUser,
+  updateUser,
+} from "../helpers/userHelper";
 
 const router = express.Router();
 
@@ -13,11 +18,13 @@ router.get("/:uid", async (req: Request, res: Response) => {
       return res.status(404).json({ error: "User not found" });
     }
     res.status(200).json({
-      // パスワード以外の情報
       id: user.id,
       uid: user.uid,
       name: user.name,
       email: user.email,
+      sex: user.sex,
+      selfIntro: user.selfIntro,
+      photoUrl: user.photoUrl,
     });
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -27,21 +34,24 @@ router.get("/:uid", async (req: Request, res: Response) => {
 
 // ユーザーの作成エンドポイント
 router.post("/", async (req: Request, res: Response) => {
-  const { uid, name, email, password } = req.body;
+  const { uid, name, email, sex, selfIntro, photoUrl } = req.body;
 
   try {
     const newUser = await createUser({
       uid,
       name,
       email,
-      password,
+      sex,
+      selfIntro,
+      photoUrl,
     });
     res.status(201).json({
-      // パスワード以外の情報
-      id: newUser.id,
-      uid: newUser.uid,
-      name: newUser.name,
-      email: newUser.email,
+      uid: uid.newUser,
+      name: name.newUser,
+      email,
+      sex,
+      selfIntro,
+      photoUrl,
     });
   } catch (error) {
     console.error("Error creating user:", error);
@@ -65,7 +75,10 @@ router.put("/:userId", async (req: Request, res: Response) => {
   }
 
   try {
-    const updatedUser = await updateUser({ userId: parseInt(userId), ...updateData });
+    const updatedUser = await updateUser({
+      userId: parseInt(userId),
+      ...updateData,
+    });
     res.status(200).json({
       // パスワード以外の情報
       id: updatedUser.id,

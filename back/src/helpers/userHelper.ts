@@ -7,12 +7,16 @@ export async function createUser({
   uid,
   name,
   email,
-  password,
+  sex,
+  selfIntro,
+  photoUrl,
 }: {
   uid: string;
   name: string;
   email: string;
-  password: string;
+  sex: string;
+  selfIntro: string;
+  photoUrl: string;
 }) {
   try {
     const newUser = await prisma.user.create({
@@ -20,7 +24,9 @@ export async function createUser({
         uid,
         name,
         email,
-        password,
+        sex,
+        selfIntro,
+        photoUrl,
       },
     });
     return newUser;
@@ -48,17 +54,15 @@ export async function updateUser({
   userId,
   name,
   email,
-  password,
 }: {
   userId: number;
   name?: string;
   email?: string;
-  password?: string;
 }) {
   try {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { name, email, password },
+      data: { name, email, },
     });
     return updatedUser;
   } catch (error) {
