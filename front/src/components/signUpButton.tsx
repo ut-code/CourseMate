@@ -9,7 +9,7 @@ const SignUpButton = (): JSX.Element => {
     <Button
       label="Sign Up"
       onPress={async () => {
-        await signInWithGoogle();
+        await signInWithGoogle(true);
         router.push("/signUpPage");
       }}
     />

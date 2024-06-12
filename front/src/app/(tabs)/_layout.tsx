@@ -9,7 +9,7 @@ export default function TabLayout(): JSX.Element {
     <AuthProvider>
       <Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>
         <Tabs.Screen
-          name="index"
+          name="home"
           options={{
             title: "Home",
             tabBarIcon: ({ color }) => (

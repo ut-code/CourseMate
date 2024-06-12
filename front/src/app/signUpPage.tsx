@@ -1,4 +1,3 @@
-import { useRouter } from "expo-router";
 import { getAuth } from "firebase/auth";
 import { useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
@@ -7,7 +6,6 @@ import Button from "../components/Button";
 import signUp from "../utils/signUp";
 
 const SignUp = (): JSX.Element => {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,8 +43,6 @@ const SignUp = (): JSX.Element => {
           onPress={async () => {
             const uid = user?.uid;
             await signUp(uid!, name, password, email);
-            console.log("設定ボタン押した際：", uid, name, password, email);
-            router.push("/");
           }}
         />
       </View>

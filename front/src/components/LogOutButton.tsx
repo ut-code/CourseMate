@@ -10,7 +10,7 @@ const LogOutButton = (): JSX.Element => {
     <TouchableOpacity
       onPress={() => {
         signOutUser();
-        router.replace("/login");
+        router.replace("/");
       }}
     >
       ログアウト
