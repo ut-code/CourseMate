@@ -19,6 +19,10 @@ export default function AuthProvider({
   async function getUserData(uid: string): Promise<User> {
     try {
       const response = await fetch(`http://localhost:3000/users/${uid}`);
+      if (response.status === 404) {
+        // router.push("/");
+        console.log("データがありません。");
+      }
       const data = await response.json();
       return data;
     } catch (error) {
@@ -35,13 +39,13 @@ export default function AuthProvider({
             getUserData(firebaseUser.uid).then((user) => setUser(user));
           } else {
             setUser(null);
-            // router.replace("/login");
+            // router.replace("/");
             console.log("リダイレクトしました。");
           }
         });
       } catch (error) {
         setUser(null);
-        // router.replace("/login");
+        // router.replace("/");
         console.log("ログイン時にエラー出ました。");
         throw error;
       }
