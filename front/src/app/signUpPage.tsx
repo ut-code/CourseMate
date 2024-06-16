@@ -1,7 +1,8 @@
 import { getAuth } from "firebase/auth";
-import { useState } from "react";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TextInput, Image } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import { launchImageLibrary } from "react-native-image-picker";
 
 import Button from "../components/Button";
 import signUp from "../utils/signUp";
@@ -12,6 +13,7 @@ const SignUp = (): JSX.Element => {
   const [selfIntro, setSelfIntro] = useState("");
   const [sex, setSex] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
+  const [photo, setPhoto] = useState<any>(null); // 画像の状態を管理
 
   const user = getAuth().currentUser;
   console.log("私のuidは", user?.uid);
@@ -21,6 +23,15 @@ const SignUp = (): JSX.Element => {
     { label: "女", value: "女" },
     { label: "その他", value: "その他" },
   ];
+
+  const handleChoosePhoto = () => {
+    launchImageLibrary({ mediaType: "photo" }, (response) => {
+      if (response.assets && response.assets.length > 0) {
+        setPhoto(response.assets[0]);
+        setPhotoUrl(response.assets[0].uri ?? ""); // URLを保存
+      }
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -58,12 +69,13 @@ const SignUp = (): JSX.Element => {
             setSex(item.value);
           }}
         />
-        <TextInput
-          style={styles.input}
-          onChangeText={setPhotoUrl}
-          value={photoUrl}
-          placeholder="写真URL"
-        />
+        <Button label="画像を選択" onPress={handleChoosePhoto} />
+        {photo && (
+          <Image
+            source={{ uri: photo.uri }}
+            style={{ width: 100, height: 100, marginVertical: 16 }}
+          />
+        )}
         <Button
           label="設定"
           onPress={async () => {
@@ -93,7 +105,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
-    width: 128,
+    width: "100%", // 幅を全体に変更
     height: 48,
     borderColor: "#dddddd",
     borderWidth: 1,
@@ -102,7 +114,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   dropdown: {
-    width: 128,
+    width: "100%", // 幅を全体に変更
     height: 48,
     borderColor: "#dddddd",
     borderWidth: 1,
