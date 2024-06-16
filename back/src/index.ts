@@ -4,6 +4,7 @@ import usersRoutes from "./routes/users";
 import coursesRoutes from "./routes/courses";
 import requestsRoutes from "./routes/requests";
 import matchesRoutes from "./routes/matches";
+require("dotenv").config();
 
 const app = express();
 const port = 3000;
