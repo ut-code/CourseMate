@@ -1,7 +1,8 @@
 import { View, ScrollView, StyleSheet } from "react-native";
-import { API_ENDPOINT } from "../../env";
+
 import Button from "../../components/Button";
 import ListItem from "../../components/ListItem";
+import { API_ENDPOINT } from "../../env";
 import useData from "../../hooks/useData";
 import { useAuthContext } from "../../provider/AuthProvider";
 import { User } from "../../types";
@@ -22,16 +23,16 @@ async function rejectMatchRequest(senderId: number, receiverId: number) {
 }
 
 async function acceptMatchRequest(senderId: number, receiverId: number) {
-  try{
+  try {
     const response = await fetch(
       `${API_ENDPOINT}/requests/accept/${senderId.toString()}/${receiverId.toString()}`,
       {
         method: "PUT",
       },
     );
-    const data = await response.json()
+    const data = await response.json();
     return data;
-  } catch(error) {
+  } catch (error) {
     console.error(error);
   }
 }
@@ -58,11 +59,11 @@ const FollowRequestList = () => {
                   imageUri="https://legacy.reactjs.org/logo-og.png"
                 >
                   <View>
-                    <Button 
-                      label="Accept" 
+                    <Button
+                      label="Accept"
                       onPress={(): void => {
-                        acceptMatchRequest(matchedUser.id, currentUserId!)
-                      }} 
+                        acceptMatchRequest(matchedUser.id, currentUserId!);
+                      }}
                     />
                     <Button
                       label="Reject"
