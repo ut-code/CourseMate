@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { signOut } from "firebase/auth";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Text } from "react-native";
 
 import { auth } from "../firebase/firebaseconfig";
 
@@ -13,7 +13,7 @@ const LogOutButton = (): JSX.Element => {
         router.replace("/");
       }}
     >
-      ログアウト
+      <Text>ログアウト</Text>
     </TouchableOpacity>
   );
 };
