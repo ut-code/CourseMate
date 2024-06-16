@@ -23,7 +23,7 @@ const Profile = (): JSX.Element => {
       </View>
       <ScrollView style={styles.container}>
         <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Name:</Text>
+          <Text style={styles.profileLabel}>名前:</Text>
           <Text style={styles.profileText}>{user?.name}</Text>
         </View>
         <View style={styles.profileContainer}>
@@ -31,20 +31,16 @@ const Profile = (): JSX.Element => {
           <Text style={styles.profileText}>{user?.id}</Text>
         </View>
         <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sample:</Text>
-          <Text style={styles.profileText}>Sample Text</Text>
+          <Text style={styles.profileLabel}>Email:</Text>
+          <Text style={styles.profileText}>{user?.email}</Text>
         </View>
         <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sample:</Text>
-          <Text style={styles.profileText}>Sample Text</Text>
+          <Text style={styles.profileLabel}>性別:</Text>
+          <Text style={styles.profileText}>{user?.sex}</Text>
         </View>
         <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sample:</Text>
-          <Text style={styles.profileText}>Sample Text</Text>
-        </View>
-        <View style={styles.profileContainer}>
-          <Text style={styles.profileLabel}>Sample:</Text>
-          <Text style={styles.profileText}>Sample Text</Text>
+          <Text style={styles.profileLabel}>自己紹介:</Text>
+          <Text style={styles.profileText}>{user?.selfIntro}</Text>
         </View>
         <LogOutButton />
       </ScrollView>

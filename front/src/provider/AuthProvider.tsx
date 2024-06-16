@@ -7,6 +7,9 @@ interface User {
   uid: string;
   name: string;
   email: string;
+  sex: string;
+  selfIntro: string;
+  photoUrl: string;
 }
 
 const AuthContext = createContext<User | null | undefined>(undefined);
