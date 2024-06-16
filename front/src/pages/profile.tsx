@@ -6,12 +6,13 @@ import {
   ImageBackground,
 } from "react-native";
 
-import LogOutButton from "../../components/LogOutButton";
-import { useAuthContext } from "../../provider/AuthProvider";
+import LogOutButton from "../components/LogOutButton";
+import { useAuthContext } from "../provider/AuthProvider";
 
 const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
 
-const Profile = (): JSX.Element => {
+const Profile = ({ navigation }: { navigation: any }): JSX.Element => {
+  // FIXME: any
   // sample
   console.log(useAuthContext());
   const user = useAuthContext();
@@ -46,7 +47,7 @@ const Profile = (): JSX.Element => {
           <Text style={styles.profileLabel}>Sample:</Text>
           <Text style={styles.profileText}>Sample Text</Text>
         </View>
-        <LogOutButton />
+        <LogOutButton navigation={navigation} />
       </ScrollView>
     </View>
   );

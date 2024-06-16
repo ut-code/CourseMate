@@ -1,10 +1,10 @@
 import { View, ScrollView, StyleSheet } from "react-native";
+import { Button } from "react-native-paper";
 
-import Button from "../../components/Button";
-import ListItem from "../../components/ListItem";
-import useData from "../../hooks/useData";
-import { useAuthContext } from "../../provider/AuthProvider";
-import { User } from "../../types";
+import ListItem from "../components/ListItem";
+import useData from "../hooks/useData";
+import { useAuthContext } from "../provider/AuthProvider";
+import { User } from "../types";
 
 async function rejectMatchRequest(senderId: number, receiverId: number) {
   try {
@@ -43,13 +43,14 @@ const FollowRequestList = () => {
                   imageUri="https://legacy.reactjs.org/logo-og.png"
                 >
                   <View>
-                    <Button label="Accept" onPress={(): void => {}} />
+                    <Button onPress={(): void => {}}>Accept</Button>
                     <Button
-                      label="Reject"
                       onPress={(): void => {
                         rejectMatchRequest(matchedUser.id, currentUserId!); // TODO: Fix this
                       }}
-                    />
+                    >
+                      Reject
+                    </Button>
                   </View>
                 </ListItem>
               </div>

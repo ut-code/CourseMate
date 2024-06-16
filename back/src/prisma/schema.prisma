@@ -5,7 +5,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // url      = env("DATABASE_URL")
+  url = "postgres://postgres:mysecretpassword@localhost:5432/coursemate_db"
 }
 
 model User {

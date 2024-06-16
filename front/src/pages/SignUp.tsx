@@ -1,11 +1,12 @@
 import { getAuth } from "firebase/auth";
 import { useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
+import { Button } from "react-native-paper";
 
-import Button from "../components/Button";
 import signUp from "../utils/signUp";
 
-const SignUp = (): JSX.Element => {
+const SignUp = ({navigation}: {navigation: any}): JSX.Element => {
+  // FIXME: any
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,12 +40,13 @@ const SignUp = (): JSX.Element => {
           secureTextEntry
         />
         <Button
-          label="設定"
           onPress={async () => {
             const uid = user?.uid;
-            await signUp(uid!, name, password, email);
+            await signUp(uid!, name, password, email, navigation);
           }}
-        />
+        >
+          設定
+        </Button>
       </View>
     </View>
   );

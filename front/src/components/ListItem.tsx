@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link } from "@react-navigation/native";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 
 interface Props {
@@ -19,7 +19,7 @@ const ListItem = (props: Props) => {
   const image = { uri: imageUri };
 
   return (
-    <Link href="/profile" asChild>
+    <Link to={{ screen: "Profile" }}>
       <TouchableOpacity style={styles.followerListItem}>
         <View>
           <Image source={image} style={styles.followerListItemImage} />

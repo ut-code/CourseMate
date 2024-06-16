@@ -1,12 +1,12 @@
 import { View, Text, StyleSheet, ImageBackground } from "react-native";
-
-import Button from "../../components/Button";
+import { Button } from "react-native-paper";
 
 const handlePress = (): void => {};
 
 const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
 
-const Index = (): JSX.Element => {
+const Home = ({ navigation }: { navigation: any }): JSX.Element => {
+  // FIXME: any
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -21,8 +21,8 @@ const Index = (): JSX.Element => {
         </ImageBackground>
       </View>
       <View style={styles.buttonContainer}>
-        <Button label="X" onPress={handlePress} />
-        <Button label="O" onPress={handlePress} />
+        <Button onPress={handlePress}>X</Button>
+        <Button onPress={handlePress}>O</Button>
       </View>
     </View>
   );
@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+export default Home;

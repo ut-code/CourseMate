@@ -1,4 +1,3 @@
-import { useRouter } from "expo-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
@@ -9,17 +8,17 @@ const AuthContext = createContext<User | null | undefined>(undefined);
 
 export default function AuthProvider({
   children,
+  navigation,
 }: {
   children: React.ReactNode;
+  navigation: any; // FIXME: any
 }) {
   const [user, setUser] = useState<User | null | undefined>(undefined);
-  const router = useRouter();
-
   async function getUserData(uid: string): Promise<User> {
     try {
       const response = await fetch(`${API_ENDPOINT}/users/${uid}`);
       if (response.status === 404) {
-        router.push("/");
+        navigation.navigate("Login");
         console.log("データがありません。");
       }
       const data = await response.json();
@@ -37,17 +36,17 @@ export default function AuthProvider({
           getUserData(firebaseUser.uid).then((user) => setUser(user));
         } else {
           setUser(null);
-          router.replace("/");
+          navigation.navigate("Login");
           console.log("リダイレクトしました。");
         }
       });
     } catch (error) {
       setUser(null);
-      router.replace("/");
+      navigation.navitate("Login");
       console.log("ログイン時にエラー出ました。");
       throw error;
     }
-  }, [router]);
+  }, [navigation]);
 
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 }
