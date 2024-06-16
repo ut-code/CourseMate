@@ -5,7 +5,8 @@ const handlePress = (): void => {};
 
 const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
 
-const Home = (): JSX.Element => {
+const Home = ({ navigation }: { navigation: any }): JSX.Element => {
+  // FIXME: any
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>

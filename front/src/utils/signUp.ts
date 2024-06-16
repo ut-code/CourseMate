@@ -1,10 +1,9 @@
-import { router } from "expo-router";
-
 const signUp = async (
   uid: string,
   name: string,
   email: string,
   password: string,
+  navigation: any, // FIXME: any
 ): Promise<void> => {
   console.log("こんにちは");
   try {
@@ -24,11 +23,11 @@ const signUp = async (
     }
     const data = await response.json();
     console.log("User registered successfully:", data);
-    router.push("/home");
+    navigation.navigate("AppHome");
   } catch (error) {
     console.error("Error during sign-up:", error);
     console.log("サインアップに失敗しました");
-    router.replace("/");
+    navigation.navigate("Login");
     console.log("リダイレクトしました。");
   }
 };

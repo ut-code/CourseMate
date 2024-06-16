@@ -1,6 +1,3 @@
-// TODO: expo-router から react navigation に変更
-
-// import { useRouter } from "expo-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
@@ -10,17 +7,17 @@ const AuthContext = createContext<User | null | undefined>(undefined);
 
 export default function AuthProvider({
   children,
+  navigation,
 }: {
   children: React.ReactNode;
+  navigation: any; // FIXME: any
 }) {
   const [user, setUser] = useState<User | null | undefined>(undefined);
-  // const router = useRouter();
-
   async function getUserData(uid: string): Promise<User> {
     try {
       const response = await fetch(`http://localhost:3000/users/${uid}`);
       if (response.status === 404) {
-        // router.push("/");
+        navigation.navigate("Login");
         console.log("データがありません。");
       }
       const data = await response.json();
@@ -30,30 +27,25 @@ export default function AuthProvider({
     }
   }
 
-  useEffect(
-    () => {
-      try {
-        const auth = getAuth();
-        return onAuthStateChanged(auth, (firebaseUser) => {
-          if (firebaseUser) {
-            getUserData(firebaseUser.uid).then((user) => setUser(user));
-          } else {
-            setUser(null);
-            // router.replace("/");
-            console.log("リダイレクトしました。");
-          }
-        });
-      } catch (error) {
-        setUser(null);
-        // router.replace("/");
-        console.log("ログイン時にエラー出ました。");
-        throw error;
-      }
-    },
-    [
-      // router
-    ],
-  );
+  useEffect(() => {
+    try {
+      const auth = getAuth();
+      return onAuthStateChanged(auth, (firebaseUser) => {
+        if (firebaseUser) {
+          getUserData(firebaseUser.uid).then((user) => setUser(user));
+        } else {
+          setUser(null);
+          navigation.navigate("Login");
+          console.log("リダイレクトしました。");
+        }
+      });
+    } catch (error) {
+      setUser(null);
+      navigation.navitate("Login");
+      console.log("ログイン時にエラー出ました。");
+      throw error;
+    }
+  }, [navigation]);
 
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 }

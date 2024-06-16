@@ -10,7 +10,8 @@ const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: process.env.WEB_ORIGIN }));
+// app.use(cors({ origin: process.env.WEB_ORIGIN }));
+app.use(cors({ origin: "http://localhost:8081" }));
 
 app.get("/", (req, res) => {
   res.json("Hello from Express!");

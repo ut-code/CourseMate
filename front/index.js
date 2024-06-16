@@ -1,4 +1,4 @@
-// https://docs.expo.dev/guides/monorepos/#change-default-entrypoint
+import "react-native-gesture-handler";
 
 import { registerRootComponent } from "expo";
 

@@ -1,18 +1,18 @@
-import { useRouter } from "expo-router";
+import { Button } from "react-native-paper";
 
-import Button from "./Button";
 import signInWithGoogle from "../utils/signInWithGoogle";
 
-const SignUpButton = (): JSX.Element => {
-  const router = useRouter();
+const SignUpButton = ({ navigation }: { navigation: any }): JSX.Element => {
+  // FIXME: any
   return (
     <Button
-      label="Sign Up"
       onPress={async () => {
-        await signInWithGoogle(true);
-        router.push("/signUpPage");
+        await signInWithGoogle(true, navigation);
+        navigation.navigate("SignUp");
       }}
-    />
+    >
+      Sign Up
+    </Button>
   );
 };
 

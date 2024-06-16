@@ -1,14 +1,17 @@
-import Button from "./Button";
+import { Button } from "react-native-paper";
+
 import signInWithGoogle from "../utils/signInWithGoogle";
 
-const LogInButton = (): JSX.Element => {
+const LogInButton = (navigation: any): JSX.Element => {
+  // FIXME: any
   return (
     <Button
-      label="Log In"
       onPress={() => {
-        signInWithGoogle(false);
+        signInWithGoogle(false, navigation);
       }}
-    />
+    >
+      Login
+    </Button>
   );
 };
 

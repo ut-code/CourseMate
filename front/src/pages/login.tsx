@@ -3,13 +3,14 @@ import { View, Text, StyleSheet } from "react-native";
 import LogInButton from "../components/logInButtion";
 import SignUpButton from "../components/signUpButton";
 
-const Login = (): JSX.Element => {
+const Login = ({ navigation }: { navigation: any }): JSX.Element => {
+  // FIXME: any
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
         <Text style={styles.title}>ログインかサインインか選択してください</Text>
-        <LogInButton />
-        <SignUpButton />
+        <LogInButton navigation={navigation} />
+        <SignUpButton navigation={navigation} />
         <View style={styles.footer}>
           <Text style={styles.footerText}>
             東京大学のGoogleアカウントを用いてください
