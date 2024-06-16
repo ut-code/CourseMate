@@ -44,6 +44,8 @@ model Relationship {
   requestingUserId Int //マッチリクエストを送っている人
   requestedUser    User           @relation("requested", fields: [requestedUserId], references: [id])
   requestedUserId  Int //マッチリクエストを送られている人
+
+  @@unique([requestingUserId, requestedUserId])
 }
 
 enum MatchingStatus {

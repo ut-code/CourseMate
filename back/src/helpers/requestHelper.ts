@@ -63,11 +63,14 @@ export async function approveRequest(matchId: number) {
 }
 
 // マッチリクエストの拒否
-export async function rejectRequest(matchId: number) {
+export async function rejectRequest(senderId: number, receiverId: number) {
   try {
     return await prisma.relationship.update({
       where: {
-        id: matchId,
+        requestingUserId_requestedUserId: {
+          requestingUserId: senderId,
+          requestedUserId: receiverId,
+        },
       },
       data: {
         status: "REJECTED"
@@ -79,19 +82,21 @@ export async function rejectRequest(matchId: number) {
 }
 
 //ユーザーにまつわるリクエストを探す
-export async function searchRequestedUser(userId: number):Promise<Relationship[]> {
+export async function searchSenderByReceiverId(userId: number) {
   //俺をリクエストしているのは誰だ
   try {
-    return await prisma.relationship.findMany({
+    return await prisma.user.findMany({
       where: {
-        requestedUserId: userId,
-        AND: {
-          status: "PENDING",
-        }
-      }
+        requestingUsers: {
+          some: {
+            requestedUserId: userId,
+            status: "PENDING",
+          },
+        },
+      },
     });
-  } catch(error) {
-    console.log("failed to search requestedUsers")
+  } catch (error) {
+    console.log("failed to search requestedUsers");
     throw error;
   }
 }
@@ -107,3 +112,34 @@ export async function searchRequestedUser(userId: number):Promise<Relationship[]
 //   }
 // }
 
+//マッチした人の取得
+export async function searchMatchedUser(userId: number) {
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        OR: [
+          {
+            requestingUsers: {
+              some: {
+                requestedUserId: userId,
+                status: "MATCHED",
+              },
+            },
+          },
+          {
+            requestedUsers: {
+              some: {
+                requestingUserId: userId,
+                status: "MATCHED",
+              },
+            },
+          },
+        ],
+      },
+    });
+    return users;
+  } catch (error) {
+    console.log("failed to search matched Users");
+    throw error;
+  }
+}
