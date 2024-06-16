@@ -4,7 +4,9 @@ const signUp = async (
   uid: string,
   name: string,
   email: string,
-  password: string,
+  selfIntro: string,
+  sex: string,
+  photoUrl: string,
 ): Promise<void> => {
   console.log("こんにちは");
   try {
@@ -16,7 +18,9 @@ const signUp = async (
         uid,
         name,
         email,
-        password,
+        selfIntro,
+        sex,
+        photoUrl,
       }),
     });
     if (!response.ok) {

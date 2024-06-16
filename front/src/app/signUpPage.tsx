@@ -1,6 +1,7 @@
 import { getAuth } from "firebase/auth";
 import { useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
 
 import Button from "../components/Button";
 import signUp from "../utils/signUp";
@@ -8,10 +9,19 @@ import signUp from "../utils/signUp";
 const SignUp = (): JSX.Element => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  // const user = useAuthContext();
+  const [selfIntro, setSelfIntro] = useState("");
+  const [sex, setSex] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
+
   const user = getAuth().currentUser;
   console.log("私のuidは", user?.uid);
+
+  const sexOptions = [
+    { label: "男", value: "男" },
+    { label: "女", value: "女" },
+    { label: "その他", value: "その他" },
+  ];
+
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
@@ -33,16 +43,32 @@ const SignUp = (): JSX.Element => {
         />
         <TextInput
           style={styles.input}
-          onChangeText={setPassword}
-          value={password}
-          placeholder="パスワード"
-          secureTextEntry
+          onChangeText={setSelfIntro}
+          value={selfIntro}
+          placeholder="自己紹介"
+        />
+        <Dropdown
+          style={styles.dropdown}
+          data={sexOptions}
+          labelField="label"
+          valueField="value"
+          placeholder="性別"
+          value={sex}
+          onChange={(item) => {
+            setSex(item.value);
+          }}
+        />
+        <TextInput
+          style={styles.input}
+          onChangeText={setPhotoUrl}
+          value={photoUrl}
+          placeholder="写真URL"
         />
         <Button
           label="設定"
           onPress={async () => {
             const uid = user?.uid;
-            await signUp(uid!, name, password, email);
+            await signUp(uid!, name, email, selfIntro, sex, photoUrl);
           }}
         />
       </View>
@@ -68,6 +94,15 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 16,
     width: 128,
+    height: 48,
+    borderColor: "#dddddd",
+    borderWidth: 1,
+    backgroundColor: "#ffffff",
+    padding: 8,
+    marginBottom: 16,
+  },
+  dropdown: {
+    width: "100%",
     height: 48,
     borderColor: "#dddddd",
     borderWidth: 1,
