@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
+import { API_ENDPOINT } from "../env";
 import { User } from "../types";
 
 const AuthContext = createContext<User | null | undefined>(undefined);
@@ -16,7 +17,7 @@ export default function AuthProvider({
 
   async function getUserData(uid: string): Promise<User> {
     try {
-      const response = await fetch(`http://localhost:3000/users/${uid}`);
+      const response = await fetch(`${API_ENDPOINT}/users/${uid}`);
       if (response.status === 404) {
         router.push("/");
         console.log("データがありません。");

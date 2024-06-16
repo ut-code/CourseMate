@@ -1,3 +1,6 @@
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+
 import {
   API_KEY,
   AUTH_DOMAIN,
@@ -6,10 +9,9 @@ import {
   MESSAGING_SENDER_ID,
   APP_ID,
   MEASUREMENT_ID,
-} from "@env";
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-const firebaseConfig = {
+} from "../env";
+
+export const firebaseConfig = {
   apiKey: API_KEY,
   authDomain: AUTH_DOMAIN,
   projectId: PROJECT_ID,
