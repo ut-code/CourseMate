@@ -37,8 +37,29 @@ const Index = (): JSX.Element => {
     }
   }, [users]);
 
-  const handlePress = (): void => {
+  const handlePressCross = (): void => {
     if (!users || !displayedUser) return;
+    const newUsers = users?.filter((user) => user.id !== displayedUser?.id);
+    setUsers(newUsers);
+  };
+
+  const handlePressCircle = (): void => {
+    if (!displayedUser) return;
+    try {
+      fetch(`${API_ENDPOINT}/requests/sendMatchRequest`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          senderId: currentUserId,
+          receiverId: displayedUser.id,
+        }),
+      });
+    } catch (error) {
+      console.error("Error liking user:", error);
+    }
+    if (!users) return;
     const newUsers = users?.filter((user) => user.id !== displayedUser?.id);
     setUsers(newUsers);
   };
@@ -60,8 +81,8 @@ const Index = (): JSX.Element => {
         </ImageBackground>
       </View>
       <View style={styles.buttonContainer}>
-        <Button label="X" onPress={handlePress} />
-        <Button label="O" onPress={handlePress} />
+        <Button label="X" onPress={handlePressCross} />
+        <Button label="O" onPress={handlePressCircle} />
       </View>
     </View>
   );

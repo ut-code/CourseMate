@@ -9,14 +9,29 @@ export async function sendRequest({
 }: {
   senderId: number;
   receiverId: number;
-}) {
-  return await prisma.relationship.create({
+}) : Promise<Relationship> {
+  // 既存の関係をチェック
+  const existingRelationship = await prisma.relationship.findFirst({
+    where: {
+      OR: [
+        { requestingUserId: senderId, requestedUserId: receiverId },
+        { requestingUserId: receiverId, requestedUserId: senderId }, // 逆の関係もチェック
+      ],
+    },
+  });
+  // 既存の関係がある場合はそのまま返す
+  if (existingRelationship) {
+    return existingRelationship;
+  }
+  // 既存の関係がない場合は新しい関係を作成
+  const newRelationship = await prisma.relationship.create({
     data: {
       requestingUser: { connect: { id: senderId } },
       requestedUser: { connect: { id: receiverId } },
-      status: "PENDING",
+      status: 'PENDING',
     },
   });
+  return newRelationship;
 }
 
 // 特定のユーザが送信・受信したマッチリクエストの取得

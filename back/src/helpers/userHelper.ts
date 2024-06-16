@@ -77,3 +77,13 @@ export async function deleteUser(userId: number) {
     throw error;
   }
 }
+
+// ユーザーの全取得
+export async function getAllUsers() {
+  try {
+    const users = await prisma.user.findMany();
+    return users;
+  } catch (error) {
+    throw error;
+  }
+}
