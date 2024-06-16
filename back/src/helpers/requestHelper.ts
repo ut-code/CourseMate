@@ -47,11 +47,14 @@ export async function getRequestsByUserId({
 }
 
 // マッチリクエストの承認
-export async function approveRequest(matchId: number) {
+export async function approveRequest(senderId: number, receiverId: number) {
   try {
     return await prisma.relationship.update({
       where: {
-        id: matchId,
+        requestingUserId_requestedUserId: {
+          requestingUserId: senderId,
+          requestedUserId: receiverId,
+        },
       },
       data: {
         status: "MATCHED",

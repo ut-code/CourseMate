@@ -80,16 +80,17 @@ router.post("/sendMatchRequest", async (req: Request, res: Response) => {
 });
 
 // マッチリクエストの承認
-router.put("/accept/:matchId", async (req: Request, res: Response) => {
-  const { matchId } = req.params;
+router.put("/accept/:senderId/:receiverId", async (req: Request, res: Response) => {
+  const { senderId, receiverId} = req.params;
   try {
-    const approvedRequest = await approveRequest(parseInt(matchId));
-    res.status(200).json(approvedRequest);
+    await approveRequest(parseInt(senderId), parseInt(receiverId));
+    res.status(204).send();
   } catch (error) {
     console.error("Error approving match request:", error);
     res.status(500).json({ error: "Failed to approve match request" });
   }
 });
+
 
 // マッチリクエストの拒否
 router.put("/reject/:senderId/:receiverId", async (req: Request, res: Response) => {

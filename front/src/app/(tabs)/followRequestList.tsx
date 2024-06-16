@@ -1,5 +1,5 @@
 import { View, ScrollView, StyleSheet } from "react-native";
-
+import { API_ENDPOINT } from "../../env";
 import Button from "../../components/Button";
 import ListItem from "../../components/ListItem";
 import useData from "../../hooks/useData";
@@ -9,7 +9,7 @@ import { User } from "../../types";
 async function rejectMatchRequest(senderId: number, receiverId: number) {
   try {
     const response = await fetch(
-      `http://localhost:3000/requests/reject/${senderId.toString()}/${receiverId.toString()}`,
+      `${API_ENDPOINT}/requests/reject/${senderId.toString()}/${receiverId.toString()}`,
       {
         method: "PUT",
       },
@@ -21,9 +21,24 @@ async function rejectMatchRequest(senderId: number, receiverId: number) {
   }
 }
 
+async function acceptMatchRequest(senderId: number, receiverId: number) {
+  try{
+    const response = await fetch(
+      `${API_ENDPOINT}/requests/accept/${senderId.toString()}/${receiverId.toString()}`,
+      {
+        method: "PUT",
+      },
+    );
+    const data = await response.json()
+    return data;
+  } catch(error) {
+    console.error(error);
+  }
+}
+
 const FollowRequestList = () => {
   const currentUserId = useAuthContext()?.id;
-  const url = `http://localhost:3000/requests/receiverId/${currentUserId}`;
+  const url = `${API_ENDPOINT}/requests/receiverId/${currentUserId}`;
 
   const { data, isLoading, error } = useData<User[]>(url);
 
@@ -43,7 +58,12 @@ const FollowRequestList = () => {
                   imageUri="https://legacy.reactjs.org/logo-og.png"
                 >
                   <View>
-                    <Button label="Accept" onPress={(): void => {}} />
+                    <Button 
+                      label="Accept" 
+                      onPress={(): void => {
+                        acceptMatchRequest(matchedUser.id, currentUserId!)
+                      }} 
+                    />
                     <Button
                       label="Reject"
                       onPress={(): void => {
