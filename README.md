@@ -9,12 +9,13 @@
 ### 環境変数
 
 * `mobile`
+* `web`
 * `server`
   * `DATABASE_URL` : `postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample` の形式
 
 ### 環境構築
 
-プロジェクトルート・`mobile`・`server` の各ディレクトリで次のコマンドを実行してください
+プロジェクトルート・`mobile`・`web`・`server` の各ディレクトリで次のコマンドを実行してください
 
 ```shell
 npm ci
@@ -26,6 +27,14 @@ npm ci
 
 ```shell
 npm run web
+```
+
+## `web`
+
+次のコマンドで開発環境が起動します
+
+```shell
+npm run dev
 ```
 
 ### `server`
