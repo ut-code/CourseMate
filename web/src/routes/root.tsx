@@ -1,36 +1,47 @@
+import { BottomNavigation, BottomNavigationAction } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import EmailIcon from "@mui/icons-material/Email";
+import PeopleIcon from "@mui/icons-material/People";
+import { useState } from "react";
+import { Link, Outlet } from "react-router-dom";
+
 export default function Root() {
+  const [value, setValue] = useState(0);
+
   return (
     <>
-      <div id="sidebar">
-        <h1>React Router Contacts</h1>
-        <div>
-          <form id="search-form" role="search">
-            <input
-              id="q"
-              aria-label="Search contacts"
-              placeholder="Search"
-              type="search"
-              name="q"
-            />
-            <div id="search-spinner" aria-hidden hidden={true} />
-            <div className="sr-only" aria-live="polite"></div>
-          </form>
-          <form method="post">
-            <button type="submit">New</button>
-          </form>
-        </div>
-        <nav>
-          <ul>
-            <li>
-              <a href={`/contacts/1`}>Your Name</a>
-            </li>
-            <li>
-              <a href={`/contacts/2`}>Your Friend</a>
-            </li>
-          </ul>
-        </nav>
+      <div>
+        <Outlet />
       </div>
-      <div id="detail"></div>
+      <BottomNavigation
+        showLabels
+        value={value}
+        onChange={(_event, newValue) => {
+          setValue(newValue);
+        }}
+        sx={{ width: "100%", position: "fixed", bottom: 0 }}
+      >
+        <BottomNavigationAction component={Link} to="/home" label="Home" icon={<HomeIcon />} />
+        <BottomNavigationAction
+          component={Link}
+          to="/profile"
+          label="Profile"
+          icon={<AccountCircleIcon />}
+        />
+        <BottomNavigationAction
+          component={Link}
+          to="/followers"
+          label="Followers"
+          icon={<PeopleIcon />}
+        />
+        <BottomNavigationAction
+          component={Link}
+          to="/requests"
+          label="Requests"
+          icon={<EmailIcon />}
+        />
+      </BottomNavigation>
     </>
   );
 }
