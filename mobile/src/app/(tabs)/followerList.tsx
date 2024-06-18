@@ -1,12 +1,12 @@
 import { View, ScrollView, StyleSheet, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
+import { User } from "../../../../common/types";
 import Button from "../../components/Button";
 import ListItem from "../../components/ListItem";
 import { API_ENDPOINT } from "../../env";
 import useData from "../../hooks/useData";
 import { useAuthContext } from "../../provider/AuthProvider";
-import { User } from "../../types";
 
 async function deleteMatch(senderId: number, receiverId: number) {
   try {

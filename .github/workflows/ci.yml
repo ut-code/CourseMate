@@ -21,12 +21,12 @@ jobs:
 
       - name: Install Node Packages
         run: npm ci
-        working-directory: front
+        working-directory: mobile
         shell: bash
 
       - name: Build
         run: npm run build
-        working-directory: front
+        working-directory: mobile
         shell: bash
 
   eslint:
@@ -44,12 +44,12 @@ jobs:
 
       - name: Install Node Packages
         run: npm ci
-        working-directory: front
+        working-directory: mobile
         shell: bash
 
       - name: Run ESLint
         run: npm run lint
-        working-directory: front
+        working-directory: mobile
         shell: bash
 
   type-check-frontend:
@@ -67,10 +67,10 @@ jobs:
 
       - name: Install Node Packages
         run: npm ci
-        working-directory: front
+        working-directory: mobile
         shell: bash
 
       - name: Type Check
         run: npx tsc --noEmit
-        working-directory: front
+        working-directory: mobile
         shell: bash

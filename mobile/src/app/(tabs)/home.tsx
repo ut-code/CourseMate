@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ImageBackground } from "react-native";
 
+import { User } from "../../../../common/types";
 import Button from "../../components/Button";
 import { API_ENDPOINT } from "../../env";
 import { useAuthContext } from "../../provider/AuthProvider";
-import type { User } from "../../types";
 
 const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
 
