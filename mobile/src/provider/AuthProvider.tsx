@@ -2,8 +2,8 @@ import { useRouter } from "expo-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
+import { User } from "../../../common/types";
 import { API_ENDPOINT } from "../env";
-import { User } from "../types";
 
 const AuthContext = createContext<User | null | undefined>(undefined);
 
