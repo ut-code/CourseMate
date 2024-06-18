@@ -2,6 +2,7 @@ import { View, ScrollView, StyleSheet } from "react-native";
 
 import Button from "../../components/Button";
 import ListItem from "../../components/ListItem";
+import { API_ENDPOINT } from "../../env";
 import useData from "../../hooks/useData";
 import { useAuthContext } from "../../provider/AuthProvider";
 import { User } from "../../types";
@@ -9,7 +10,22 @@ import { User } from "../../types";
 async function rejectMatchRequest(senderId: number, receiverId: number) {
   try {
     const response = await fetch(
-      `http://localhost:3000/requests/reject/${senderId.toString()}/${receiverId.toString()}`,
+      `${API_ENDPOINT}/requests/reject/${senderId.toString()}/${receiverId.toString()}`,
+      {
+        method: "PUT",
+      },
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function acceptMatchRequest(senderId: number, receiverId: number) {
+  try {
+    const response = await fetch(
+      `${API_ENDPOINT}/requests/accept/${senderId.toString()}/${receiverId.toString()}`,
       {
         method: "PUT",
       },
@@ -23,7 +39,7 @@ async function rejectMatchRequest(senderId: number, receiverId: number) {
 
 const FollowRequestList = () => {
   const currentUserId = useAuthContext()?.id;
-  const url = `http://localhost:3000/requests/receiverId/${currentUserId}`;
+  const url = `${API_ENDPOINT}/requests/receiverId/${currentUserId}`;
 
   const { data, isLoading, error } = useData<User[]>(url);
 
@@ -43,7 +59,12 @@ const FollowRequestList = () => {
                   imageUri="https://legacy.reactjs.org/logo-og.png"
                 >
                   <View>
-                    <Button label="Accept" onPress={(): void => {}} />
+                    <Button
+                      label="Accept"
+                      onPress={(): void => {
+                        acceptMatchRequest(matchedUser.id, currentUserId!);
+                      }}
+                    />
                     <Button
                       label="Reject"
                       onPress={(): void => {

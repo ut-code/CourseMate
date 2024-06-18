@@ -19,10 +19,10 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 // マッチの削除
-router.delete("/:relationshipId", async (req: Request, res: Response) => {
-  const { relationshipId } = req.params;
+router.delete("/:senderId/:receiverId", async (req: Request, res: Response) => {
+  const { senderId, receiverId } = req.params;
   try {
-    await deleteMatch(parseInt(relationshipId));
+    await deleteMatch(parseInt(senderId), parseInt(receiverId));
     res.status(204).send();
   } catch (error) {
     console.error("Error deleting match:", error);

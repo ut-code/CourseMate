@@ -3,13 +3,29 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 import Button from "../../components/Button";
 import ListItem from "../../components/ListItem";
+import { API_ENDPOINT } from "../../env";
 import useData from "../../hooks/useData";
 import { useAuthContext } from "../../provider/AuthProvider";
 import { User } from "../../types";
 
+async function deleteMatch(senderId: number, receiverId: number) {
+  try {
+    const response = await fetch(
+      `${API_ENDPOINT}/matches/${senderId}/${receiverId}`,
+      {
+        method: "DELETE",
+      },
+    );
+    const data = await response.json();
+    return data;
+  } catch {
+    console.error();
+  }
+}
+
 const FollowerList = () => {
   const currentUserId = useAuthContext()?.id;
-  const url = `http://localhost:3000/requests/matched/${currentUserId}`;
+  const url = `${API_ENDPOINT}/requests/matched/${currentUserId}`;
 
   const { data, isLoading, error } = useData<User[]>(url);
 
@@ -28,7 +44,12 @@ const FollowerList = () => {
               key={matchedUser.id.toString()}
             >
               <TouchableOpacity>
-                <Button label="Delete" onPress={(): void => {}} />
+                <Button
+                  label="Delete"
+                  onPress={(): void => {
+                    deleteMatch(currentUserId!, matchedUser.id);
+                  }}
+                />
               </TouchableOpacity>
             </ListItem>
           ))}
