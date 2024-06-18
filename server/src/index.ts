@@ -8,10 +8,23 @@ require("dotenv").config();
 
 const app = express();
 const port = 3000;
+const allowedOrigins = [process.env.WEB_ORIGIN, process.env.MOBILE_ORIGIN];
+const corsOptions = {
+  origin: function (
+    origin: string | undefined,
+    callback: (error: Error | null, flag?: boolean) => void
+  ) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: process.env.WEB_ORIGIN }));
+app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.json("Hello from Express!");
