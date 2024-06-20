@@ -37,7 +37,7 @@ router.get("/receiverId/:userId", async (req:Request, res:Response) => {
     const senders = await searchSenderByReceiverId(parseInt(userId));
     // パスワード以外を返す
     const sendersWithoutPassword = senders.map((sender) => {
-      const { password, ...senderWithoutPassword } = sender;
+      const {  ...senderWithoutPassword } = sender;
       return senderWithoutPassword;
     });
     res.status(200).json(sendersWithoutPassword);
@@ -54,7 +54,7 @@ router.get("/matched/:userId", async (req:Request, res:Response) => {
     const matchedUsers = await searchMatchedUser(parseInt(userId));
     // パスワード以外を返す
     const matchedUsersWithoutPassword = matchedUsers.map((user) => {
-      const { password, ...userWithoutPassword } = user;
+      const {...userWithoutPassword } = user;
       return userWithoutPassword;
     });
     res.status(200).json(matchedUsersWithoutPassword);

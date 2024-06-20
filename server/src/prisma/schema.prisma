@@ -13,7 +13,9 @@ model User {
   uid         String        @unique
   name        String        @default("名無し")
   email       String        @default("")
-  password    String        @default("")
+  selfIntro   String        @default("")
+  sex         String        @default("")
+  photoUrl    String        @default("")
   enrollments Enrollement[]
 
   //自分がマッチリクエストしている相手
