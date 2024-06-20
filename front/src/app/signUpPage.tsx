@@ -12,7 +12,6 @@ const SignUp = (): JSX.Element => {
   const [email, setEmail] = useState("");
   const [selfIntro, setSelfIntro] = useState("");
   const [sex, setSex] = useState("");
-  const [photoUrl, setPhotoUrl] = useState("");
   const [photo, setPhoto] = useState<any>(null); // 画像の状態を管理
 
   const user = getAuth().currentUser;
@@ -28,7 +27,6 @@ const SignUp = (): JSX.Element => {
     launchImageLibrary({ mediaType: "photo" }, (response) => {
       if (response.assets && response.assets.length > 0) {
         setPhoto(response.assets[0]);
-        setPhotoUrl(response.assets[0].uri ?? ""); // URLを保存
       }
     });
   };
@@ -80,7 +78,9 @@ const SignUp = (): JSX.Element => {
           label="設定"
           onPress={async () => {
             const uid = user?.uid;
-            await signUp(uid!, name, email, selfIntro, sex, photoUrl);
+            if (uid) {
+              await signUp(uid, name, email, selfIntro, sex, photo);
+            }
           }}
         />
       </View>
