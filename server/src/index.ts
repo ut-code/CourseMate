@@ -38,5 +38,5 @@ app.use("/matches", matchesRoutes);
 
 // サーバーの起動
 app.listen(port, () => {
-  console.log("running");
+  console.log("running on port" ,port);
 });

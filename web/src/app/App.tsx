@@ -15,7 +15,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 
-export default function Root() {
+export default function App() {
   const [value, setValue] = useState(0);
   const labels = ["Home", "Profile", "Followers", "Requests"];
 

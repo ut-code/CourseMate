@@ -7,6 +7,8 @@ import {
   messagingSenderId,
   appId,
   measurementId,
+  supabaseUrl,
+  supabaseKey,
 } from "@env";
 
 export const API_KEY = apiKey;
@@ -18,3 +20,5 @@ export const APP_ID = appId;
 export const MEASUREMENT_ID = measurementId;
 
 export const API_ENDPOINT = apiEndpoint;
+export const SUPABASE_URL = supabaseUrl;
+export const SUPABASE_KEY = supabaseKey;

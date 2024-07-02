@@ -13,6 +13,7 @@
   "dependencies": {
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",
+    "@supabase/supabase-js": "^2.44.0",
     "expo": "~50.0.11",
     "expo-constants": "~15.4.5",
     "expo-linking": "~6.2.2",
@@ -24,13 +25,18 @@
     "react-native-dotenv": "^3.4.11",
     "react-native-element-dropdown": "^2.12.0",
     "react-native-gesture-handler": "~2.14.0",
+    "react-native-image-picker": "^7.1.2",
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "supabase": "^1.178.2",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/node": "^18.11.13",
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.45",
+    "@types/uuid": "^10.0.0",
     "eslint": "^8.57.0",
     "eslint-config-universe": "^12.0.0",
     "prettier": "^3.2.5",

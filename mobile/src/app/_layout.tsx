@@ -1,4 +1,5 @@
 import { Stack } from "expo-router";
+<script src="http://localhost:8097"></script>
 
 const Layout = (): JSX.Element => {
   return (
