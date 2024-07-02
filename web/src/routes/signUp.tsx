@@ -1,8 +1,9 @@
-import { Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 async function signUp(uid: string, name: string, email: string, password: string) {
   try {
@@ -34,14 +35,15 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
 
   return (
-    <div>
-      <Typography component="h1" variant="h3">
-        Sign Up
-      </Typography>
+    <Box>
+      <Header title="Sign Up" />
+      <Box mt={2} mx={2} display="flex" gap={2}>
       <TextField value={name} onChange={(e) => setName(e.target.value)} label="Name" />
       <TextField value={email} onChange={(e) => setEmail(e.target.value)} label="Email" />
       <TextField value={password} onChange={(e) => setPassword(e.target.value)} label="Password" />
       <Button
+        variant="outlined"
+        sx={{ textTransform: "none" }}
         onClick={async () => {
           const uid = user?.uid;
           if (!uid) {
@@ -61,6 +63,7 @@ export default function SignUp() {
       >
         Sign Up
       </Button>
-    </div>
+      </Box>
+    </Box>
   );
 }

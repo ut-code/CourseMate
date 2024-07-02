@@ -1,8 +1,9 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebaseconfig";
 import { useSnackbar } from "notistack";
+import Header from "../components/Header";
 
 const provider = new GoogleAuthProvider();
 
@@ -29,8 +30,11 @@ export default function Login() {
   const { enqueueSnackbar } = useSnackbar();
   return (
     <Box>
-      <Typography component="h1" variant="h3">Login</Typography>
+      <Header title="Login" />
+      <Box mt={2} mx={2} display="flex" gap={1}>
       <Button
+        variant="outlined"
+        sx={{textTransform: "none"}}
         onClick={async () => {
           try {
             await signInWithGoogle();
@@ -44,6 +48,8 @@ export default function Login() {
         Login
       </Button>
       <Button
+        variant="outlined"
+        sx={{textTransform: "none"}}
         onClick={async () => {
           try {
             const uid = await signInWithGoogle();
@@ -63,6 +69,7 @@ export default function Login() {
       >
         Sign Up
       </Button>
+      </Box>
     </Box>
   );
 }
