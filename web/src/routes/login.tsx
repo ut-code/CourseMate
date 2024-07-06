@@ -53,9 +53,11 @@ export default function Login() {
         onClick={async () => {
           try {
             const uid = await signInWithGoogle();
+            console.log(uid);
             const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users/${uid}`);
 
-            if (response.status !== 404) {
+            const user = await response.json();
+              if (user === null) {
               enqueueSnackbar("この Google アカウントはすでに登録されています", { variant: "error" });
               navigate("/login");
             } else {
