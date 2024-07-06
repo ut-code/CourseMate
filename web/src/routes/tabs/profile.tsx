@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { User } from "../../../../common/types";
 import EditUserDialog from "../../components/EditUserDialog";
-import { useAuthContext } from "../../providers/AuthProvider";
 
 export default function Profile() {
   const [user, setUser] = useState<User | null>(null);
