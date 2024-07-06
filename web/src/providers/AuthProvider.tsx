@@ -1,32 +1,28 @@
-import { useRouter } from "expo-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import { API_ENDPOINT } from "../env";
-import { User } from "../types";
+import { User } from "../../../common/types";
+import { redirect } from "react-router-dom";
 
 const AuthContext = createContext<User | null | undefined>(undefined);
 
-export default function AuthProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null | undefined>(undefined);
-  const router = useRouter();
+//   const navigate = useNavigate();
 
+  /**
+   * Google アカウントの uid を用いて CourseMate ユーザの情報を取得する。
+   * @param uid Google アカウントの uid
+   * @returns ユーザの情報
+   */
   async function getUserData(uid: string): Promise<User> {
-    try {
-      const response = await fetch(`${API_ENDPOINT}/users/${uid}`);
+      const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users/${uid}`);
       if (response.status === 404) {
-        router.push("/");
         console.log("データがありません。");
+        redirect("/login")
       }
       const data = await response.json();
       return data;
-    } catch (error) {
-      throw error;
-    }
   }
 
   useEffect(() => {
@@ -37,17 +33,17 @@ export default function AuthProvider({
           getUserData(firebaseUser.uid).then((user) => setUser(user));
         } else {
           setUser(null);
-          router.replace("/");
-          console.log("リダイレクトしました。");
+          console.log("ログイン画面に移動します");
+          redirect("/login")
         }
       });
     } catch (error) {
       setUser(null);
-      router.replace("/");
-      console.log("ログイン時にエラー出ました。");
+      console.log("エラーが発生しました。ログイン画面に移動します");
+      redirect("/login")
       throw error;
     }
-  }, [router]);
+  }, []);
 
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 }

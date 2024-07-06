@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint:front": "cd front && npm run lint",
-    "format:front": "cd front && npm run format"
+    "lint:mobile": "cd mobile && npm run lint",
+    "format:mobile": "cd mobile && npm run format"
   },
   "keywords": [],
   "author": "",
