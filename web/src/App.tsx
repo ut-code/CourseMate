@@ -8,7 +8,6 @@ import Login from "./routes/login";
 import SignUp from "./routes/signUp";
 import { getAuth } from "firebase/auth";
 import { SnackbarProvider } from "notistack";
-import PhotoUpload from "./routes/photoUpload";
 
 export default function App() {
   const PrivateRoute = () => {
@@ -51,10 +50,6 @@ export default function App() {
     {
       path: "/signup",
       element: <SignUp />,
-    },
-    {
-      path: "/photoUpload",
-      element: <PhotoUpload />,
     },
   ]);
 
