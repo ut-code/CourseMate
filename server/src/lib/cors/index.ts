@@ -60,7 +60,7 @@ function serverSideBlocking(config: CorsConfig) {
       return
     }
     const reqOrigin = req.header("Origin");
-    if (!config.allowedOrigins.some((o) => reqOrigin === o) || config.allowedOrigins[0] === "*") {
+    if (!config.allowedOrigins.some((o) => reqOrigin === o) && config.allowedOrigins[0] !== "*") {
       res.status(403).send("unknown origin header: " + reqOrigin);
       return
     }
