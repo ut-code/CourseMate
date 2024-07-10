@@ -47,9 +47,6 @@ function corsPolicy(config: CorsConfig): RequestHandler {
       }
     }
 
-    if (req.method === "OPTIONS") {
-      return void res.status(204).send();
-    }
     next();
   }
 }
