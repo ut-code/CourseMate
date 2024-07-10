@@ -1,4 +1,5 @@
-const methods = ["get", "head", "post", "put", "delete", "patch"] as const;
+const methods = ["get", "head", "post", "put", "delete", "patch", "link", "unlink"] as const;
+
 const $ = (id: string) => document.getElementById(id)!;
 const _ = (name: string) => {
   const li = document.createElement("li");

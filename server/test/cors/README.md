@@ -3,7 +3,8 @@
 # how to run test
 
 0. cd into test/cors
-1. run `./compile.sh`. this compiles ./static/script.ts -> ./static/script.js
-2. run `npx ts-node servers/origin.ts`. this serves as the base server (localhost:3000)
-3. run `npx ts-node servers/qualified.ts` and check all buttons work.
-4. run `npx ts-node servers/unqualified.ts` and check all buttons fail.
+1. run `./test.sh`. this compiles ts to js and runs all the servers necessary.
+2. access localhost:8080 and check all buttons work.
+3. access localhost:12345 and check all buttons don't work.
+4. check terminal afterward and make sure no requests from localhost:12345 made it.
+

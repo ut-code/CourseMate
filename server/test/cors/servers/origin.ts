@@ -1,5 +1,5 @@
 import * as express from "express";
-import methods from "../static/methods"; 
+import methods from "../methods"; 
 import type { Request, Response } from "express";
 import cors from "../../../src/lib/cors/index";
 
