@@ -17,6 +17,7 @@ const allowedOrigins = [
 const corsOptions = {
   origins: allowedOrigins.map(s => s || "").filter(s => s !== ""),
   methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
 app.use(cors.clientSide(corsOptions));
 app.use(cors.serverSide(corsOptions));

@@ -36,6 +36,8 @@ function corsPolicy(config: CorsConfig): RequestHandler {
     }
     res.header("Access-Control-Max-Age", "86400"); // allow caching this for 1 day
     res.header("Access-Control-Allow-Methods", allowMethods); // allow methods
+    if (config.credentials) 
+      res.header("Access-Control-Allow-Credentials", "true"); // allow credentials
 
     if (origins.length === 1) {
       res.header("Access-Control-Allow-Origin", origins[0]);
