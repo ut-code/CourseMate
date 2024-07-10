@@ -12,8 +12,9 @@ app.use(cors.serverSide(corsConfig));
 */
 
 type CorsConfig = {
-  allowedOrigins: string[];
-  allowMethods?: string[];
+  origins: string[];
+  methods?: string[];
+  credentials?: boolean;
 };
 
 // express middlewares.
@@ -22,10 +23,11 @@ type CorsConfig = {
 function corsPolicy(config: CorsConfig): RequestHandler {
   validate(config);
   const {
-    allowedOrigins,
-    allowMethods,
+    origins,
+    methods,
   } = config;
-  const methods = allowMethods!.join(",");
+
+  const allowMethods = methods!.join(",");
   return function(req: Request, res: Response, next: () => void) {
     // no origin header == no cors == same origin
     if (!req.header("Origin")) {
@@ -33,21 +35,21 @@ function corsPolicy(config: CorsConfig): RequestHandler {
       return
     }
     res.header("Access-Control-Max-Age", "86400"); // allow caching this for 1 day
-    res.header("Access-Control-Allow-Methods", methods); // allow methods
+    res.header("Access-Control-Allow-Methods", allowMethods); // allow methods
 
-    if (allowedOrigins.length === 1) {
-      res.header("Access-Control-Allow-Origin", allowedOrigins[0]);
+    if (origins.length === 1) {
+      res.header("Access-Control-Allow-Origin", origins[0]);
     } else {
       // more than 1 allowed origin is given; must determine which one to send
       const reqOrigin = req.header("Origin");
-      const origin = allowedOrigins.find((s) => s === reqOrigin);
+      const origin = origins.find((s) => s === reqOrigin);
       if (origin) {
         // allowed origin
         res.header("Access-Control-Allow-Origin", origin);
         res.header("Vary", "origin");
       } else {
         // not allowed origin
-        res.header("Access-Control-Allow-Origin", allowedOrigins[0]);
+        res.header("Access-Control-Allow-Origin", origins[0]);
         res.header("Vary", "origin");
       }
     }
@@ -65,7 +67,7 @@ function serverSideBlocking(config: CorsConfig) {
       return
     }
     const reqOrigin = req.header("Origin");
-    if (!config.allowedOrigins.some((o) => reqOrigin === o) && config.allowedOrigins[0] !== "*") {
+    if (!config.origins.some((o) => reqOrigin === o) && config.origins[0] !== "*") {
       res.status(403).send("unknown origin header: " + reqOrigin);
       return
     }
@@ -76,8 +78,10 @@ function serverSideBlocking(config: CorsConfig) {
 // make the cors config valid.
 // throws error if unrecoverable.
 function validate(config: CorsConfig) {
+  config.credentials = !!config.credentials; // make it boolean. not using Boolean() or new Boolean() because I don't trust JS
+  
   // normalize allowOrigin URLs
-  config.allowedOrigins = config.allowedOrigins.map(origin => {
+  config.origins= config.origins.map(origin => {
     const url = new URL(origin)
     if (url.origin === "null") {
       console.log(`invalid URL: ${origin}. Please prefix this with http:// or https:// if you haven't.`);
@@ -87,12 +91,12 @@ function validate(config: CorsConfig) {
   });
 
   const defaultAllowedMethods = ["GET", "HEAD", "POST"];
-  if (!config.allowMethods) {
-    config.allowMethods = defaultAllowedMethods;
+  if (!config.methods) {
+    config.methods= defaultAllowedMethods;
   }
   for (const defaultMethod of defaultAllowedMethods) {
-    if (!config.allowMethods.some((m => m === defaultMethod))) {
-      config.allowMethods.push(defaultMethod);
+    if (!config.methods.some((m => m === defaultMethod))) {
+      config.methods.push(defaultMethod);
     }
   }
   assertValidConfig(config);
@@ -100,7 +104,7 @@ function validate(config: CorsConfig) {
 
 // this throws error if config is not good
 function assertValidConfig(config: CorsConfig) {
-  if (config.allowedOrigins.length === 0) {
+  if (config.origins.length === 0) {
     throw new Error("Empty allowedOrigins in CORS config: " + JSON.stringify(config));
   }
 }
