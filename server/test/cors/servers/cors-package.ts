@@ -25,6 +25,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use(express.static("./static"));
+
 methods
   .forEach((kind) => {
     const callback = (req: Request, res: Response) => {

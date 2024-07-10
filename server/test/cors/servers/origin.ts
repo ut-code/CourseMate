@@ -7,7 +7,7 @@ import cors from "../../../src/lib/cors/index";
 const expressCaller: () => express.Application = (express as any).default as any;
 const app = expressCaller();
 
-const allowedOrigins = ["http://localhost:3001", "http://localhost:8080"];
+const allowedOrigins = ["http://localhost:3000", "http://localhost:8080"];
 const corsConfig = {
   allowedOrigins,
   allowMethods: methods.map(s => s.toUpperCase()),
@@ -15,6 +15,8 @@ const corsConfig = {
 
 app.use(cors.serverSide(corsConfig));
 app.use(cors.clientSide(corsConfig));
+
+app.use(express.static("./static"));
 
 methods
   .forEach((kind) => {
