@@ -1,5 +1,5 @@
 import express from "express";
-import cors from "cors";
+import cors from "./lib/cors/index";
 import usersRoutes from "./routes/users";
 import coursesRoutes from "./routes/courses";
 import requestsRoutes from "./routes/requests";
@@ -14,21 +14,14 @@ const allowedOrigins = [
   process.env.WEB_ORIGIN_BUILD,
 ];
 const corsOptions = {
-  origin: function (
-    origin: string | undefined,
-    callback: (error: Error | null, flag?: boolean) => void
-  ) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      return callback(null, true);
-    } else {
-      return callback(new Error("Not allowed by CORS"));
-    }
-  },
+  allowedOrigins: allowedOrigins.map(s => s || ""),
+  allowMethods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
 };
+app.use(cors.clientSide(corsOptions));
+app.use(cors.serverSide(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.json("Hello from Express!");
