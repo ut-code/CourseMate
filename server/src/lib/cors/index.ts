@@ -27,6 +27,11 @@ function corsPolicy(config: CorsConfig): RequestHandler {
   } = config;
   const methods = allowMethods!.join(",");
   return function(req: Request, res: Response, next: () => void) {
+    // no origin header == no cors == same origin
+    if (!req.header("Origin")) {
+      next();
+      return
+    }
     res.header("Access-Control-Max-Age", "86400"); // allow caching this for 1 day
     res.header("Access-Control-Allow-Methods", methods); // allow methods
 
@@ -55,7 +60,7 @@ function serverSideBlocking(config: CorsConfig) {
   validate(config);
   return function(req: Request, res: Response, next: () => void) {
     if (!req.header("Origin")) {
-      // no origin header means it's same origin request
+      // no origin header == no cors == same origin
       next();
       return
     }
