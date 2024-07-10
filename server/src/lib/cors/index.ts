@@ -56,6 +56,11 @@ function corsPolicy(config: CorsConfig): RequestHandler {
       }
     }
 
+    if (req.method === "OPTIONS") {
+      res.status(204).send();
+      return
+    }
+
     next();
   }
 }
