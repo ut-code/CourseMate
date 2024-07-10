@@ -1,4 +1,5 @@
 import * as express from "express";
+import methods from "../static/methods"; 
 import type { Request, Response } from "express";
 import cors from "../../../src/lib/cors/index";
 
@@ -9,13 +10,13 @@ const app = expressCaller();
 const allowedOrigins = ["http://localhost:3001", "http://localhost:8080"];
 const corsConfig = {
   allowedOrigins,
-  allowMethods: ["GET", "POST", "PUT", "DELETE"], // try deleting some!
+  allowMethods: methods.map(s => s.toUpperCase()),
 };
 
 app.use(cors.serverSide(corsConfig));
 app.use(cors.clientSide(corsConfig));
 
-(["get", "post", "put", "delete"] as const)
+methods
   .forEach((kind) => {
     const callback = (req: Request, res: Response) => {
       const origin = req.header("Origin");
