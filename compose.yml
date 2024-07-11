@@ -7,9 +7,15 @@ services:
       - "5432:5432"
     volumes:
       - coursemate_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready --username postgres --dbname postgres --port 5432 --quiet
+      interval: 5s
+      timeout: 1s
+      retries: 3
+      start_period: 10s
   server:
     build:
-      context: .
+      context: ./server/
       dockerfile: ./Dockerfile
     ports:
       - "3000:3000"
@@ -18,6 +24,10 @@ services:
         - action: sync
           path: ./src
           target: /coursemate/builder/server
+    depends_on:
+      coursemate_db:
+        condition: service_healthy
+      
 
 volumes:
   coursemate_data:
