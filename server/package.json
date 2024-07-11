@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "precommit": "npx prettier . --write && npx eslint . --fix",
+    "check": "npx tsc --noEmit && npx prettier . --check && npx eslint ."
   },
   "keywords": [],
   "author": "",
