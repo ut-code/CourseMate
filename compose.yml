@@ -23,11 +23,21 @@ services:
       watch:
         - action: sync
           path: ./src
-          target: /coursemate/builder/server
+          target: /coursemate/dev/server
     depends_on:
       coursemate_db:
         condition: service_healthy
-      
+  web:
+    build:
+      context: ./web/
+      dockerfile: ./Dockerfile
+    ports:
+      - "5173:5173"
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /coursemate/dev/web/src
 
 volumes:
   coursemate_data:
