@@ -1,0 +1,23 @@
+services:
+  coursemate_db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - coursemate_data:/var/lib/postgresql/data
+  server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /coursemate/builder/server
+
+volumes:
+  coursemate_data:
