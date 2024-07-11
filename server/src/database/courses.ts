@@ -4,55 +4,45 @@ const prisma = new PrismaClient();
 
 // コースの作成
 export async function createCourse(name: string) {
-  try {
-    return await prisma.course.create({
-      data: {
-        name,
-      },
-    });
-  } catch (error) {
-    throw error;
-  }
+  return await prisma.course.create({
+    data: {
+      name,
+    },
+  });
 }
 
 // コースの取得
 export async function getCourse(courseId: number) {
-  try {
-    return await prisma.course.findUnique({
-      where: {
-        id: courseId,
-      },
-    });
-  } catch (error) {
-    throw error;
-  }
+  return await prisma.course.findUnique({
+    where: {
+      id: courseId,
+    },
+  });
 }
 
 // コースの更新
-export async function updateCourse({ courseId, name }: { courseId: number; name: string }) {
-  try {
-    return await prisma.course.update({
-      where: {
-        id: courseId,
-      },
-      data: {
-        name,
-      },
-    });
-  } catch (error) {
-    throw error;
-  }
+export async function updateCourse({
+  courseId,
+  name,
+}: {
+  courseId: number;
+  name: string;
+}) {
+  return await prisma.course.update({
+    where: {
+      id: courseId,
+    },
+    data: {
+      name,
+    },
+  });
 }
 
 // コースの削除
 export async function deleteCourse(courseId: number) {
-  try {
-    return await prisma.course.delete({
-      where: {
-        id: courseId,
-      },
-    });
-  } catch (error) {
-    throw error;
-  }
+  return await prisma.course.delete({
+    where: {
+      id: courseId,
+    },
+  });
 }

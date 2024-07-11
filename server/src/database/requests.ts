@@ -9,7 +9,7 @@ export async function sendRequest({
 }: {
   senderId: number;
   receiverId: number;
-}) : Promise<Relationship> {
+}): Promise<Relationship> {
   // 既存の関係をチェック
   const existingRelationship = await prisma.relationship.findFirst({
     where: {
@@ -28,7 +28,7 @@ export async function sendRequest({
     data: {
       requestingUser: { connect: { id: senderId } },
       requestedUser: { connect: { id: receiverId } },
-      status: 'PENDING',
+      status: "PENDING",
     },
   });
   return newRelationship;
@@ -45,39 +45,32 @@ export async function getRequestsByUserId({
   if (senderId === undefined && receiverId === undefined) {
     throw new Error("Either senderId or receiverId must be provided");
   }
-  const whereClause: { requestingUserId?: number; requestedUserId?: number } = {};
+  const whereClause: { requestingUserId?: number; requestedUserId?: number } =
+    {};
   if (senderId !== undefined) {
     whereClause.requestingUserId = senderId;
   }
   if (receiverId !== undefined) {
     whereClause.requestedUserId = receiverId;
   }
-  try {
-    return await prisma.relationship.findMany({
-      where: whereClause,
-    });
-  } catch (error) {
-    throw error;
-  }
+  return await prisma.relationship.findMany({
+    where: whereClause,
+  });
 }
 
 // マッチリクエストの承認
 export async function approveRequest(senderId: number, receiverId: number) {
-  try {
-    return await prisma.relationship.update({
-      where: {
-        requestingUserId_requestedUserId: {
-          requestingUserId: senderId,
-          requestedUserId: receiverId,
-        },
+  return await prisma.relationship.update({
+    where: {
+      requestingUserId_requestedUserId: {
+        requestingUserId: senderId,
+        requestedUserId: receiverId,
       },
-      data: {
-        status: "MATCHED",
-      },
-    });
-  } catch (error) {
-    throw error;
-  }
+    },
+    data: {
+      status: "MATCHED",
+    },
+  });
 }
 
 // マッチリクエストの拒否
@@ -91,7 +84,7 @@ export async function rejectRequest(senderId: number, receiverId: number) {
         },
       },
       data: {
-        status: "REJECTED"
+        status: "REJECTED",
       },
     });
   } catch (error) {
@@ -102,21 +95,16 @@ export async function rejectRequest(senderId: number, receiverId: number) {
 //ユーザーにまつわるリクエストを探す
 export async function searchSenderByReceiverId(userId: number) {
   //俺をリクエストしているのは誰だ
-  try {
-    return await prisma.user.findMany({
-      where: {
-        requestingUsers: {
-          some: {
-            requestedUserId: userId,
-            status: "PENDING",
-          },
+  return await prisma.user.findMany({
+    where: {
+      requestingUsers: {
+        some: {
+          requestedUserId: userId,
+          status: "PENDING",
         },
       },
-    });
-  } catch (error) {
-    console.log("failed to search requestedUsers");
-    throw error;
-  }
+    },
+  });
 }
 // export async function searchRequestingUser(userId: number):Promise<Relationship[]> {
 //   //俺がリクエストしているのは誰だ
@@ -132,32 +120,27 @@ export async function searchSenderByReceiverId(userId: number) {
 
 //マッチした人の取得
 export async function searchMatchedUser(userId: number) {
-  try {
-    const users = await prisma.user.findMany({
-      where: {
-        OR: [
-          {
-            requestingUsers: {
-              some: {
-                requestedUserId: userId,
-                status: "MATCHED",
-              },
+  const users = await prisma.user.findMany({
+    where: {
+      OR: [
+        {
+          requestingUsers: {
+            some: {
+              requestedUserId: userId,
+              status: "MATCHED",
             },
           },
-          {
-            requestedUsers: {
-              some: {
-                requestingUserId: userId,
-                status: "MATCHED",
-              },
+        },
+        {
+          requestedUsers: {
+            some: {
+              requestingUserId: userId,
+              status: "MATCHED",
             },
           },
-        ],
-      },
-    });
-    return users;
-  } catch (error) {
-    console.log("failed to search matched Users");
-    throw error;
-  }
+        },
+      ],
+    },
+  });
+  return users;
 }

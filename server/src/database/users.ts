@@ -14,33 +14,25 @@ export async function createUser({
   email: string;
   password: string;
 }) {
-  try {
-    const newUser = await prisma.user.create({
-      data: {
-        uid,
-        name,
-        email,
-        password,
-      },
-    });
-    return newUser;
-  } catch (error) {
-    throw error;
-  }
+  const newUser = await prisma.user.create({
+    data: {
+      uid,
+      name,
+      email,
+      password,
+    },
+  });
+  return newUser;
 }
 
 // ユーザーの取得
 export async function getUser(uid: string) {
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        uid: uid,
-      },
-    });
-    return user;
-  } catch (error) {
-    throw error;
-  }
+  const user = await prisma.user.findUnique({
+    where: {
+      uid: uid,
+    },
+  });
+  return user;
 }
 
 // ユーザーの更新
@@ -55,35 +47,23 @@ export async function updateUser({
   email?: string;
   password?: string;
 }) {
-  try {
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: { name, email, password },
-    });
-    return updatedUser;
-  } catch (error) {
-    throw error;
-  }
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: { name, email, password },
+  });
+  return updatedUser;
 }
 
 // ユーザーの削除
 export async function deleteUser(userId: number) {
-  try {
-    const deletedUser = await prisma.user.delete({
-      where: { id: userId },
-    });
-    return deletedUser;
-  } catch (error) {
-    throw error;
-  }
+  const deletedUser = await prisma.user.delete({
+    where: { id: userId },
+  });
+  return deletedUser;
 }
 
 // ユーザーの全取得
 export async function getAllUsers() {
-  try {
-    const users = await prisma.user.findMany();
-    return users;
-  } catch (error) {
-    throw error;
-  }
+  const users = await prisma.user.findMany();
+  return users;
 }
