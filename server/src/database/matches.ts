@@ -34,7 +34,7 @@ export async function deleteMatch(senderId: number, receiverId: number) {
       },
     });
     console.log(
-      `Deleted record with senderId=${senderId} and receiverId=${receiverId}`
+      `Deleted record with senderId=${senderId} and receiverId=${receiverId}`,
     );
     return;
   }
@@ -56,12 +56,12 @@ export async function deleteMatch(senderId: number, receiverId: number) {
       },
     });
     console.log(
-      `Deleted record with senderId=${receiverId} and receiverId=${senderId}`
+      `Deleted record with senderId=${receiverId} and receiverId=${senderId}`,
     );
     return;
   }
 
   console.log(
-    `No matching records found for senderId=${senderId} and receiverId=${receiverId}`
+    `No matching records found for senderId=${senderId} and receiverId=${receiverId}`,
   );
 }

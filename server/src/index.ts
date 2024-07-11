@@ -16,7 +16,7 @@ const allowedOrigins = [
 const corsOptions = {
   origin: function (
     origin: string | undefined,
-    callback: (error: Error | null, flag?: boolean) => void
+    callback: (error: Error | null, flag?: boolean) => void,
   ) {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       return callback(null, true);
