@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { createUser, deleteUser, getUser, updateUser, getAllUsers } from "../helpers/userHelper";
+import { createUser, deleteUser, getUser, updateUser, getAllUsers } from "../database/users";
 
 const router = express.Router();
 

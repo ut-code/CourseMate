@@ -7,7 +7,7 @@ import {
   sendRequest,
   searchSenderByReceiverId,
   searchMatchedUser
-} from "../helpers/requestHelper";
+} from "../database/requests";
 import { Relationship } from "@prisma/client";
 
 const router = express.Router();
