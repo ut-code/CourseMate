@@ -20,6 +20,11 @@ type CorsConfig = {
 // express middlewares.
 // ref: https://expressjs.com/ja/guide/using-middleware.html
 
+// CORS is a method to bypass client-side SOP.
+// NOTE: even if CORS is enabled, the server is still vulnerable to CSRF attacks.
+// use the serverSideBlocking() below for CSRF.
+// more about CORS:
+// - https://developer.mozilla.org/ja/docs/Web/HTTP/CORS
 function corsPolicy(config: CorsConfig): RequestHandler {
   validate(config);
   const {
@@ -30,13 +35,15 @@ function corsPolicy(config: CorsConfig): RequestHandler {
   const allowMethods = methods!.join(",");
   return function(req: Request, res: Response, next: () => void) {
     // no origin header == no cors == same origin
+    // even if it's same origin, it will send Origin header when the method is not a 'safe' method.
+    // so it's good to skip when no Origin header is found.
     if (!req.header("Origin")) {
       next();
       return
     }
     res.header("Access-Control-Max-Age", "86400"); // allow caching this for 1 day
     res.header("Access-Control-Allow-Methods", allowMethods); // allow methods
-    if (config.credentials) 
+    if (config.credentials)
       res.header("Access-Control-Allow-Credentials", "true"); // allow credentials
 
     if (origins.length === 1) {
@@ -86,9 +93,12 @@ function serverSideBlocking(config: CorsConfig) {
 // throws error if unrecoverable.
 function validate(config: CorsConfig) {
   config.credentials = !!config.credentials; // make it boolean. not using Boolean() or new Boolean() because I don't trust JS
-  
+
+  if (config.methods)
+    config.methods = config.methods.map(s => s.toUpperCase());
+
   // normalize allowOrigin URLs
-  config.origins= config.origins.map(origin => {
+  config.origins = config.origins.map(origin => {
     const url = new URL(origin)
     if (url.origin === "null") {
       console.log(`invalid URL: ${origin}. Please prefix this with http:// or https:// if you haven't.`);
@@ -97,9 +107,11 @@ function validate(config: CorsConfig) {
     return url.origin
   });
 
+  // GET and HEAD must be in this field. POST is for convenience.
+  // ref: not found
   const defaultAllowedMethods = ["GET", "HEAD", "POST"];
   if (!config.methods) {
-    config.methods= defaultAllowedMethods;
+    config.methods = defaultAllowedMethods;
   }
   for (const defaultMethod of defaultAllowedMethods) {
     if (!config.methods.some((m => m === defaultMethod))) {
