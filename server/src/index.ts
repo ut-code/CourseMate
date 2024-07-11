@@ -9,7 +9,7 @@ require("dotenv").config();
 const app = express();
 const port = 3000;
 const allowedOrigins = [
-  process.env.SERVER_ORIGIN ?? "http://localhost:3000", // delete this when you think everyone has set their API_ENDPOINT.
+  process.env.SERVER_ORIGIN ?? "http://localhost:3000", // delete this fallback when you think everyone has set updated their .env
   process.env.WEB_ORIGIN,
   process.env.MOBILE_ORIGIN,
   process.env.WEB_ORIGIN_BUILD,
