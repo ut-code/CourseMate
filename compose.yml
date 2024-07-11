@@ -1,3 +1,5 @@
+# Dockerfile that is intended to be used for development.
+
 services:
   coursemate_db:
     image: postgres
