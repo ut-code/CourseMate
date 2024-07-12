@@ -76,9 +76,9 @@ jobs:
         working-directory: server
         shell: bash
 
-      - name: "Prettier (TODO: RUN THIS AT PROJ ROOT)"
+      - name: "Prettier"
         run: npx prettier . --check
-        working-directory: server
+        working-directory: .
         shell: bash
 
   type-check:

@@ -8,10 +8,10 @@
 
 ### 環境変数
 
-* `mobile`
-* `web`
-* `server`
-  * `DATABASE_URL` : `postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample` の形式
+- `mobile`
+- `web`
+- `server`
+  - `DATABASE_URL` : `postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample` の形式
 
 ### 環境構築
 

@@ -6,9 +6,13 @@ import { redirect } from "react-router-dom";
 
 const AuthContext = createContext<User | null | undefined>(undefined);
 
-export default function AuthProvider({ children }: { children: React.ReactNode }) {
+export default function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [user, setUser] = useState<User | null | undefined>(undefined);
-//   const navigate = useNavigate();
+  //   const navigate = useNavigate();
 
   /**
    * Google アカウントの uid を用いて CourseMate ユーザの情報を取得する。
@@ -16,13 +20,15 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
    * @returns ユーザの情報
    */
   async function getUserData(uid: string): Promise<User> {
-      const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users/${uid}`);
-      if (response.status === 404) {
-        console.log("データがありません。");
-        redirect("/login")
-      }
-      const data = await response.json();
-      return data;
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ENDPOINT}/users/${uid}`,
+    );
+    if (response.status === 404) {
+      console.log("データがありません。");
+      redirect("/login");
+    }
+    const data = await response.json();
+    return data;
   }
 
   useEffect(() => {
@@ -34,13 +40,13 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         } else {
           setUser(null);
           console.log("ログイン画面に移動します");
-          redirect("/login")
+          redirect("/login");
         }
       });
     } catch (error) {
       setUser(null);
       console.log("エラーが発生しました。ログイン画面に移動します");
-      redirect("/login")
+      redirect("/login");
       throw error;
     }
   }, []);

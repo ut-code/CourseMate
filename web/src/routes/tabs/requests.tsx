@@ -1,4 +1,12 @@
-import { Box, List, ListItem, Button, ListItemAvatar, Avatar, Stack } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItem,
+  Button,
+  ListItemAvatar,
+  Avatar,
+  Stack,
+} from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { User } from "../../../../common/types";
 import useData from "../../hooks/useData";
@@ -11,7 +19,7 @@ async function rejectMatchRequest(senderId: number, receiverId: number) {
       }/requests/reject/${senderId.toString()}/${receiverId.toString()}`,
       {
         method: "PUT",
-      }
+      },
     );
     const data = await response.json();
     return data;
@@ -28,7 +36,7 @@ async function acceptMatchRequest(senderId: number, receiverId: number) {
       }/requests/accept/${senderId.toString()}/${receiverId.toString()}`,
       {
         method: "PUT",
-      }
+      },
     );
     const data = await response.json();
     return data;
@@ -61,15 +69,24 @@ export default function Requests() {
                   <Stack direction={"row"}>
                     <Button
                       onClick={() => {
-                        acceptMatchRequest(matchedUser.id, currentUserId!).then(() => fetchData());
+                        acceptMatchRequest(matchedUser.id, currentUserId!).then(
+                          () => fetchData(),
+                        );
                       }}
                     >
                       受け入れ
                     </Button>
                     <Button
                       onClick={() => {
-                        if (!window.confirm("本当にこのマッチリクエストを拒否しますか?")) return;
-                        rejectMatchRequest(matchedUser.id, currentUserId!).then(() => fetchData());
+                        if (
+                          !window.confirm(
+                            "本当にこのマッチリクエストを拒否しますか?",
+                          )
+                        )
+                          return;
+                        rejectMatchRequest(matchedUser.id, currentUserId!).then(
+                          () => fetchData(),
+                        );
                       }}
                     >
                       拒否
