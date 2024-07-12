@@ -56,6 +56,19 @@ jobs:
     name: Code style check
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+          cache: npm
+
+      - name: install
+        run: npm ci
+        working-directory: server
+
       - name: "ESLint (TODO: RUN THIS AT PROJ ROOT)"
         run: npx eslint .
         working-directory: server
@@ -66,8 +79,8 @@ jobs:
         working-directory: server
         shell: bash
 
-  type-check-frontend:
-    name: Type Check
+  type-check-web:
+    name: Type Check / web
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -90,7 +103,7 @@ jobs:
         shell: bash
 
   type-check-server:
-    name: Type Check (server)
+    name: Type Check / server
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
