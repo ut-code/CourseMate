@@ -88,8 +88,10 @@ jobs:
           node-version: latest
           cache: npm
 
-      - name: Install Node Packages
-        run: npm ci
+      - name: Setup
+        run: |
+          npm ci
+          npx prisma generate
         working-directory: server
         shell: bash
 
