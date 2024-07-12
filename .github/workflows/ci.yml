@@ -29,8 +29,8 @@ jobs:
         working-directory: mobile
         shell: bash
 
-  eslint:
-    name: ESLint (including Prettier)
+  mobile:
+    name: mobile code style checks
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -50,6 +50,20 @@ jobs:
       - name: Run ESLint
         run: npm run lint
         working-directory: mobile
+        shell: bash
+
+  style-check:
+    name: Code style check
+    runs-on: ubuntu-latest
+    steps:
+      # - name: "ESLint (TODO: RUN THIS AT PROJ ROOT)"
+      #  run: npx eslint .
+      #  working-directory: ./server
+      #  shell: bash
+
+      - name: "Prettier (TODO: RUN THIS AT PROJ ROOT)"
+        run: npx prettier . --check
+        working-directory: ./server
         shell: bash
 
   type-check-frontend:
