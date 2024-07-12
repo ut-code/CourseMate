@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { app } from "../firebase/firebaseconfig";
 
-async function registerInfo(
+async function registerUserInfo(
   uid: string,
   name: string,
   email: string,
@@ -65,7 +65,6 @@ export default function SignUp() {
       const storage = getStorage(app);
       const filePath = `${uid}/${pictureFile.name}`;
       const storageRef = ref(storage, filePath);
-
       try {
         const snapshot = await uploadBytes(storageRef, pictureFile);
         pictureUrl = await getDownloadURL(snapshot.ref);
@@ -80,7 +79,7 @@ export default function SignUp() {
     }
 
     try {
-      await registerInfo(uid, name, email, password, pictureUrl);
+      await registerUserInfo(uid, name, email, password, pictureUrl);
       enqueueSnackbar("サインアップに成功しました", {
         variant: "success",
       });
