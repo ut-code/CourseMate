@@ -6,52 +6,54 @@ on:
   pull_request:
 
 jobs:
-  build-frontend:
-    name: Build Frontend
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+  # mobile はもういないじゃない。
+  # build-frontend:
+  #   name: Build Frontend
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: latest
-          cache: npm
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: latest
+  #         cache: npm
 
-      - name: Install Node Packages
-        run: npm ci
-        working-directory: mobile
-        shell: bash
+  #     - name: Install Node Packages
+  #       run: npm ci
+  #       working-directory: mobile
+  #       shell: bash
 
-      - name: Build
-        run: npm run build
-        working-directory: mobile
-        shell: bash
+  #     - name: Build
+  #       run: npm run build
+  #       working-directory: mobile
+  #       shell: bash
 
-  mobile:
-    name: mobile code style checks
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+  # mobile:
+  #   name: mobile code style checks
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: latest
-          cache: npm
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: latest
+  #         cache: npm
 
-      - name: Install Node Packages
-        run: npm ci
-        working-directory: mobile
-        shell: bash
+  #     - name: Install Node Packages
+  #       run: npm ci
+  #       working-directory: mobile
+  #       shell: bash
 
-      - name: Run ESLint
-        run: npm run lint
-        working-directory: mobile
-        shell: bash
+  #     - name: Run ESLint
+  #       run: npm run lint
+  #       working-directory: mobile
+  #       shell: bash
 
+  # Prettier + ESLint
   style-check:
     name: Code style check
     runs-on: ubuntu-latest
@@ -65,8 +67,8 @@ jobs:
           node-version: latest
           cache: npm
 
-      - name: install
-        run: npm ci
+      - name: setup
+        run: ./setup.sh
         working-directory: server
 
       - name: "ESLint (TODO: RUN THIS AT PROJ ROOT)"
@@ -79,8 +81,8 @@ jobs:
         working-directory: server
         shell: bash
 
-  type-check-web:
-    name: Type Check / web
+  type-check:
+    name: Type Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -92,37 +94,17 @@ jobs:
           node-version: latest
           cache: npm
 
-      - name: Install Node Packages
-        run: npm ci
-        working-directory: mobile
+      - name: setup
+        run: ./setup.sh
+        working-directory: .
         shell: bash
 
-      - name: Type Check
+      - name: Type Check web
         run: npx tsc --noEmit
-        working-directory: mobile
+        working-directory: web
         shell: bash
 
-  type-check-server:
-    name: Type Check / server
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: latest
-          cache: npm
-
-      - name: Setup
-        run: |
-          npm ci
-          npx prisma generate
-        working-directory: server
-        shell: bash
-
-      - name: Type Check
+      - name: Type Check server
         run: npx tsc --noEmit
-        working-directory: server
+        working-directory: web
         shell: bash
