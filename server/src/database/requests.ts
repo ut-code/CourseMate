@@ -75,17 +75,17 @@ export async function approveRequest(senderId: number, receiverId: number) {
 
 // マッチリクエストの拒否
 export async function rejectRequest(senderId: number, receiverId: number) {
-    return await prisma.relationship.update({
-      where: {
-        requestingUserId_requestedUserId: {
-          requestingUserId: senderId,
-          requestedUserId: receiverId,
-        },
+  return await prisma.relationship.update({
+    where: {
+      requestingUserId_requestedUserId: {
+        requestingUserId: senderId,
+        requestedUserId: receiverId,
       },
-      data: {
-        status: "REJECTED",
-      },
-    });
+    },
+    data: {
+      status: "REJECTED",
+    },
+  });
 }
 
 //ユーザーにまつわるリクエストを探す
