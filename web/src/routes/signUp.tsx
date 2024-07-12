@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { app } from "../firebase/firebaseconfig";
 
+//ユーザー情報をデータベースに登録する関数
 async function registerUserInfo(
   uid: string,
   name: string,
@@ -33,6 +34,26 @@ async function registerUserInfo(
     console.error("Error during sign-up:", error);
   }
 }
+//画像をアップロードする関数
+async function handleImageUpload(uid: string, pictureFile: File) {
+  if (!pictureFile) {
+    return "";
+  }
+
+  const storage = getStorage(app);
+  const filePath = `${uid}/${pictureFile.name}`;
+  const storageRef = ref(storage, filePath);
+
+  try {
+    const snapshot = await uploadBytes(storageRef, pictureFile);
+    const pictureUrl = await getDownloadURL(snapshot.ref);
+    console.log("File available at", pictureUrl);
+    return pictureUrl;
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    throw new Error("画像のアップロードに失敗しました");
+  }
+}
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -42,11 +63,14 @@ export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [pictureFile, setPictureFile] = useState<File | null>(null);
+  const [pictureFile, setPictureFile] = useState<File>();
 
+  //画像を選択する関数
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files && event.target.files.length > 0) {
       setPictureFile(event.target.files[0]);
+    } else {
+      return;
     }
   };
 
@@ -59,26 +83,8 @@ export default function SignUp() {
       return;
     }
 
-    let pictureUrl = "";
-
-    if (pictureFile) {
-      const storage = getStorage(app);
-      const filePath = `${uid}/${pictureFile.name}`;
-      const storageRef = ref(storage, filePath);
-      try {
-        const snapshot = await uploadBytes(storageRef, pictureFile);
-        pictureUrl = await getDownloadURL(snapshot.ref);
-        console.log("File available at", pictureUrl);
-      } catch (error) {
-        console.error("Error uploading file:", error);
-        enqueueSnackbar("画像のアップロードに失敗しました", {
-          variant: "error",
-        });
-        return;
-      }
-    }
-
     try {
+      const pictureUrl = await handleImageUpload(uid, pictureFile!);
       await registerUserInfo(uid, name, email, password, pictureUrl);
       enqueueSnackbar("サインアップに成功しました", {
         variant: "success",
@@ -86,7 +92,7 @@ export default function SignUp() {
       navigate("/home");
     } catch (error) {
       console.error("Sign-up failed:", error);
-      enqueueSnackbar("サインアップに失敗しました", {
+      enqueueSnackbar( "サインアップに失敗しました", {
         variant: "error",
       });
       navigate("/", { replace: true });
