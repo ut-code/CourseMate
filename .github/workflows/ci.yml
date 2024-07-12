@@ -56,10 +56,10 @@ jobs:
     name: Code style check
     runs-on: ubuntu-latest
     steps:
-      # - name: "ESLint (TODO: RUN THIS AT PROJ ROOT)"
-      #  run: npx eslint .
-      #  working-directory: ./server
-      #  shell: bash
+      - name: "ESLint (TODO: RUN THIS AT PROJ ROOT)"
+        run: npx eslint .
+        working-directory: ./server
+        shell: bash
 
       - name: "Prettier (TODO: RUN THIS AT PROJ ROOT)"
         run: npx prettier . --check
