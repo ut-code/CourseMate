@@ -2,19 +2,9 @@
 
 cd `dirname -- $0`
 
-npm install typescript
-(
-  cd server
-  npm ci
-  npx prisma generate
-  cp ./.env.sample ./.env
-)
-# (cd mobile; npm ci) # DO THIS LATER
-(
-  cd web
-  npm ci
-  cp ./.env.sample ./.env
-)
+server/setup.sh
+# mobile/setup.sh
+web/setup.sh
 
 echo "
 auto setup is done. now do:
