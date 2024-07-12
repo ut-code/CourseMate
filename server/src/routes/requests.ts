@@ -8,7 +8,7 @@ import {
   searchSenderByReceiverId,
   searchMatchedUser,
 } from "../database/requests";
-import { Relationship } from "@prisma/client";
+// import { Relationship } from "@prisma/client"; // ... not used?
 
 const router = express.Router();
 
@@ -40,6 +40,7 @@ router.get("/receiverId/:userId", async (req: Request, res: Response) => {
     // パスワード以外を返す
     const sendersWithoutPassword = senders.map((sender) => {
       const { password, ...senderWithoutPassword } = sender;
+      password; // against eslint; drop password
       return senderWithoutPassword;
     });
     res.status(200).json(sendersWithoutPassword);
@@ -57,6 +58,7 @@ router.get("/matched/:userId", async (req: Request, res: Response) => {
     // パスワード以外を返す
     const matchedUsersWithoutPassword = matchedUsers.map((user) => {
       const { password, ...userWithoutPassword } = user;
+      password; // drop password for eslint
       return userWithoutPassword;
     });
     res.status(200).json(matchedUsersWithoutPassword);

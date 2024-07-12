@@ -75,7 +75,6 @@ export async function approveRequest(senderId: number, receiverId: number) {
 
 // マッチリクエストの拒否
 export async function rejectRequest(senderId: number, receiverId: number) {
-  try {
     return await prisma.relationship.update({
       where: {
         requestingUserId_requestedUserId: {
@@ -87,9 +86,6 @@ export async function rejectRequest(senderId: number, receiverId: number) {
         status: "REJECTED",
       },
     });
-  } catch (error) {
-    throw error;
-  }
 }
 
 //ユーザーにまつわるリクエストを探す
