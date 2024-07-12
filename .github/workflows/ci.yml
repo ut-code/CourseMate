@@ -96,6 +96,6 @@ jobs:
         shell: bash
 
       - name: Type Check
-        run: npx tsc
+        run: npx tsc --noEmit
         working-directory: server
         shell: bash
