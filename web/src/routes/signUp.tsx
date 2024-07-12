@@ -34,7 +34,8 @@ async function registerUserInfo(
     console.error("Error during sign-up:", error);
   }
 }
-//画像をアップロードする関数
+
+//画像をfirestoreにアップロードする関数
 async function handleImageUpload(uid: string, pictureFile: File) {
   if (!pictureFile) {
     return "";
@@ -55,6 +56,18 @@ async function handleImageUpload(uid: string, pictureFile: File) {
   }
 }
 
+//画像をファイルから選択する関数
+const handleImageChange = (
+  event: ChangeEvent<HTMLInputElement>,
+  setPictureFile: (file: File) => void
+): void => {
+  if (event.target.files && event.target.files.length > 0) {
+    setPictureFile(event.target.files[0]);
+  } else {
+    return;
+  }
+};
+
 export default function SignUp() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -65,15 +78,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [pictureFile, setPictureFile] = useState<File>();
 
-  //画像を選択する関数
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    if (event.target.files && event.target.files.length > 0) {
-      setPictureFile(event.target.files[0]);
-    } else {
-      return;
-    }
-  };
-
+  //サインアップの処理
   const handleSignUp = async () => {
     const uid = user?.uid;
     if (!uid) {
@@ -82,7 +87,6 @@ export default function SignUp() {
       });
       return;
     }
-
     try {
       const pictureUrl = await handleImageUpload(uid, pictureFile!);
       await registerUserInfo(uid, name, email, password, pictureUrl);
@@ -92,7 +96,7 @@ export default function SignUp() {
       navigate("/home");
     } catch (error) {
       console.error("Sign-up failed:", error);
-      enqueueSnackbar( "サインアップに失敗しました", {
+      enqueueSnackbar("サインアップに失敗しました", {
         variant: "error",
       });
       navigate("/", { replace: true });
@@ -118,7 +122,10 @@ export default function SignUp() {
           onChange={(e) => setPassword(e.target.value)}
           label="Password"
         />
-        <input type="file" onChange={handleImageChange} />
+        <input
+          type="file"
+          onChange={(e) => handleImageChange(e, setPictureFile)}
+        />
         <Button
           variant="outlined"
           sx={{ textTransform: "none" }}
