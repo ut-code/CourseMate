@@ -1,3 +1,5 @@
 node_modules
 .env
+# deprecated, delete /dist if you have one
 /dist
+/target
