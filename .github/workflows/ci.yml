@@ -74,3 +74,26 @@ jobs:
         run: npx tsc --noEmit
         working-directory: mobile
         shell: bash
+
+  type-check-server:
+    name: Type Check (server)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+          cache: npm
+
+      - name: Install Node Packages
+        run: npm ci
+        working-directory: server
+        shell: bash
+
+      - name: Type Check
+        run: npx tsc --noEmit ./src/index.ts
+        working-directory: server
+        shell: bash
