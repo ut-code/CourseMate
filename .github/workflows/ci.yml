@@ -53,6 +53,33 @@ jobs:
   #       working-directory: mobile
   #       shell: bash
 
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+          cache: npm
+
+      - name: setup
+        run: ./setup.sh
+        working-directory: .
+
+      - name: build server
+        run: npm run build
+        working-directory: server
+        shell: bash
+
+      - name: build web
+        run: npm run build
+        working-directory: web
+        shell: bash
+
   # Prettier + ESLint
   style-check:
     name: Code style check
