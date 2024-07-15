@@ -36,7 +36,11 @@ function forceNumber(v: unknown): number {
 
 // may throw.
 function forceInt(v: unknown): number {
-  return parseInt(forceNumber(v).toString(), 10);
+  const n = forceNumber(v);
+  if (Math.floor(n) === Math.ceil(n)) {
+    return n;
+  }
+  throw new Error("forceInt called on non-int value: "+n);
 }
 
 // may throw.
