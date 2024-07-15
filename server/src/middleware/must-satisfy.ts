@@ -1,11 +1,11 @@
 import type { Request, Response } from "express";
 
 function must(
-  boolFunc: (req: Request) => boolean,
+  validate: (req: Request) => boolean,
   onError: ((res: Response) => void) | string,
 ): (req: Request, res: Response, next: () => void) => void {
   return function (req: Request, res: Response, next: () => void) {
-    if (!boolFunc(req)) {
+    if (!validate(req)) {
       if (typeof onError === "string") {
         res.send(onError);
       } else {
