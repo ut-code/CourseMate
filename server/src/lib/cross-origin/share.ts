@@ -1,7 +1,7 @@
 type Config = {
-  origins: string[];
-  methods?: string[];
-  credentials?: boolean;
+  origins: string[]; // allowed origins
+  methods?: string[]; // Access-Control-Allow-Methods
+  credentials?: boolean; // Access-Control-Allow-Credentials
 };
 
 // make the cors config valid.
