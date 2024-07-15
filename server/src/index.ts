@@ -1,5 +1,6 @@
 import express from "express";
-import cors from "./lib/cors/index";
+import cors from "./lib/cross-origin/multiorigin-cors";
+import nocsrf from "./lib/cross-origin/block-unknown-origin";
 import usersRoutes from "./routes/users";
 import coursesRoutes from "./routes/courses";
 import requestsRoutes from "./routes/requests";
@@ -19,8 +20,9 @@ const corsOptions = {
   methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
   credentials: true,
 };
-app.use(cors.clientSide(corsOptions));
-app.use(cors.serverSide(corsOptions));
+
+app.use(cors(corsOptions));
+app.use(nocsrf(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
