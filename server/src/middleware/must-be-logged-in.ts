@@ -4,6 +4,8 @@ import mustSatisfy from "./must-satisfy";
 const maxAge = 5 * 1000; // its unit is ms in express.
 
 // requires cookieParser before this middleware.
+// NOTE: applying this doesn't make sure all request JSONs are valid.
+// it just makes sure the request is from the user where user.id = cookie.id
 const mustBeLoggedIn = mustSatisfy(
   (req: express.Request) => {
     if (
