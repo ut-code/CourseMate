@@ -12,7 +12,9 @@ prisma.user.findUnique({where: {
 ````
 will return the user object without password verification.
 
-TODO: consider using some third party validator such as [Zod](https://github.com/colinhacks/zod)
+TODO: consider using some third party validator such as:
+- [Zod](https://github.com/colinhacks/zod)
+- [Typia](https://github.com/samchon/typia)
 
 
 btw this is one of the reasons I don't like TypeScript
