@@ -23,7 +23,7 @@ function forceString(v: unknown): string {
   if (typeof v === "string") {
     return v;
   }
-  return new String(v).valueOf();
+  return String(v);
 }
 
 // may throw if given `number` is not formatted well.
