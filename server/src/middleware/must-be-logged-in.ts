@@ -20,7 +20,8 @@ const mustBeLoggedIn = mustSatisfy(
     return true;
   },
   function (res: express.Response) {
-    // TODO: res.redirect(302, "http://localhost:3000/path/to/login/page");
+    // TODO: res.status(401).send("must be logged in as a valid user");
+    // and let the fetch function at frontend to handle this error
     res.cookie("id", "you are", { maxAge });
     res.cookie("session", "not logged in", { maxAge });
     res.send("granted cookie");
