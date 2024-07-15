@@ -31,7 +31,7 @@ function forceNumber(v: unknown): number {
   if (typeof v === "number") {
     return v
   }
-  return parseInt(forceString(v), 10);
+  return Number(forceString(v));
 }
 
 // may throw.
