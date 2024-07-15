@@ -4,6 +4,8 @@ import usersRoutes from "./routes/users";
 import coursesRoutes from "./routes/courses";
 import requestsRoutes from "./routes/requests";
 import matchesRoutes from "./routes/matches";
+import cookieParser from "cookie-parser";
+import mustBeLoggedIn from "./middleware/must-be-logged-in";
 require("dotenv").config();
 
 const app = express();
@@ -14,7 +16,7 @@ const allowedOrigins = [
   process.env.WEB_ORIGIN_BUILD,
 ];
 const corsOptions = {
-  origin: function (
+  origin: function(
     origin: string | undefined,
     callback: (error: Error | null, flag?: boolean) => void
   ) {
@@ -29,6 +31,8 @@ const corsOptions = {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
+app.use(cookieParser());
+app.use(mustBeLoggedIn);
 
 app.get("/", (req, res) => {
   res.json("Hello from Express!");
