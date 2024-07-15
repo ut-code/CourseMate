@@ -48,7 +48,7 @@ function forceUint(v: unknown): number {
   const n = forceInt(v);
   if (n < 0) {
     // I'm no JavaScript, I won't convert negative value to positive for no reason
-    throw new Error("forceUint called on negative value");
+    throw new Error("forceUint called on negative value: "+n);
   }
   return n
 }
