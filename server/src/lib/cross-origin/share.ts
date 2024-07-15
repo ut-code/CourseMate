@@ -29,7 +29,7 @@ function validate(config: Config) {
     config.methods = defaultAllowedMethods;
   }
   for (const defaultMethod of defaultAllowedMethods) {
-    if (!config.methods.some((m => m === defaultMethod))) {
+    if (!config.methods.includes(defaultMethod)) {
       config.methods.push(defaultMethod);
     }
   }

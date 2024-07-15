@@ -4,17 +4,18 @@ import { validate, Config } from "./share";
 function serverSideBlocking(config: Config) {
   validate(config);
   return function(req: Request, res: Response, next: () => void) {
-    if (!req.header("Origin")) {
+    const reqOrigin = req.header("Origin");
+    if (!reqOrigin) {
       // no origin header == no cors == same origin
       next();
       return
     }
-    const reqOrigin = req.header("Origin");
-    if (!config.origins.some((o) => reqOrigin === o) && config.origins[0] !== "*") {
-      res.status(403).send("unknown origin header: " + reqOrigin);
+    if (config.origins.includes(reqOrigin) || config.origins[0] !== "*") {
+      // ok: known origin or allowing all origins
+      next();
       return
     }
-    next();
+    res.status(403).send("unknown origin header: " + reqOrigin);
   }
 }
 
