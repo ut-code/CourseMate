@@ -30,7 +30,7 @@ function forceString(v: unknown): string {
 
 // may throw if given `number` is not formatted well.
 function forceNumber(v: unknown): number {
-  // NaN stands for NaN is number
+  // NaN stands for NaN is a Number
   if (Number.isNaN(v)) throw new Error("forceNumber called on NaN");
   if (typeof v === "number") {
     return v
