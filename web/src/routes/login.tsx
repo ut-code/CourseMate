@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebaseconfig";
 import { useSnackbar } from "notistack";
 import Header from "../components/Header";
-import { getUserData } from "../utils/getUserData";
+import user from "../api/user";
+import endpoints from "../api/endpoints";
 
 const provider = new GoogleAuthProvider();
 
@@ -42,7 +43,7 @@ export default function Login() {
             if (auth.currentUser === null) {
               throw new Error("ログインに失敗しました");
             }
-            const userData = await getUserData(auth.currentUser.uid);
+            const userData = await user.get(parseInt(auth.currentUser.uid));
             if (userData === null) {
               enqueueSnackbar("この Google アカウントは登録されていません。登録画面にリダイレクトしました。", { variant: "info" });
               navigate("/signup");
@@ -63,7 +64,13 @@ export default function Login() {
         onClick={async () => {
           try {
             const uid = await signInWithGoogle();
-            const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users/${uid}`);
+            if (!uid) {
+              throw new Error("no userid");
+            }
+            const userId = parseInt(uid);
+            if (isNaN(userId)) throw new Error("invalid uid formatting: "+ uid);
+
+            const response = await fetch(endpoints.user(userId));
 
             if (response.status !== 404) {
               enqueueSnackbar("この Google アカウントはすでに登録されています", { variant: "error" });
