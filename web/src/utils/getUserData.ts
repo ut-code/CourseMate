@@ -6,7 +6,9 @@ import { User } from "../../../common/types";
  * @returns ユーザの情報
  */
 export async function getUserData(uid: string): Promise<User | null> {
-  const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users/${uid}`);
+  const response = await fetch(
+    `${import.meta.env.VITE_API_ENDPOINT}/users/${uid}`,
+  );
   if (response.status === 404) {
     return null;
   }
