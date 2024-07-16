@@ -1,11 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  List,
-  ListItem,
-  ListItemAvatar,
-} from "@mui/material";
+import { Avatar, Box, Button, List, ListItem, ListItemAvatar } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { User } from "../../../../common/types";
 import useData from "../../hooks/useData";
@@ -16,7 +9,7 @@ async function deleteMatch(senderId: number, receiverId: number) {
       `${import.meta.env.VITE_API_ENDPOINT}/matches/${senderId}/${receiverId}`,
       {
         method: "DELETE",
-      },
+      }
     );
     const data = await response.json();
     return data;
@@ -47,11 +40,8 @@ export default function Followers() {
               secondaryAction={
                 <Button
                   onClick={() => {
-                    if (!window.confirm("本当にこのマッチングを削除しますか?"))
-                      return;
-                    deleteMatch(currentUserId!, matchedUser.id).then(() =>
-                      fetchData(),
-                    );
+                    if (!window.confirm("本当にこのマッチングを削除しますか?")) return;
+                    deleteMatch(currentUserId!, matchedUser.id).then(() => fetchData());
                   }}
                 >
                   削除

@@ -41,7 +41,7 @@ export default function Profile() {
         プロフィールを編集
       </Button>
       <EditUserDialog
-        userId={user ? user.id : 1}
+        userId={user ? user.id: 1}
         open={isDialogOpen}
         onClose={handleDialogClose}
       />

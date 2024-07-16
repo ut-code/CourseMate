@@ -1,13 +1,5 @@
-import React, { useState } from "react";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  Button,
-} from "@mui/material";
+import React, { useState } from 'react';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button } from '@mui/material';
 
 type EditUserDialogProps = {
   userId: number;
@@ -15,38 +7,38 @@ type EditUserDialogProps = {
   onClose: () => void;
 };
 
-const EditUserDialog: React.FC<EditUserDialogProps> = (
-  props: EditUserDialogProps,
-) => {
-  const { userId, open, onClose } = props;
+const EditUserDialog: React.FC<EditUserDialogProps> = (props: EditUserDialogProps) => {
+
+  const {userId, open, onClose} = props;
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [email,setEmail] = useState("")
 
   const handleSave = async () => {
-    const url = `${import.meta.env.VITE_API_ENDPOINT}/users/${userId}`;
+    const url = `${import.meta.env.VITE_API_ENDPOINT}/users/${userId}`
     try {
       const response = await fetch(url, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: name,
           password: name,
-          email: email,
+          email: email, 
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
 
       onClose();
     } catch (error) {
-      console.error("Error updating user information:", error);
+      console.error('Error updating user information:', error);
     }
-  };
+  }
+
 
   return (
     <Dialog open={open} onClose={onClose}>
