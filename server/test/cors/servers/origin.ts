@@ -1,7 +1,8 @@
 import * as express from "express";
 import methods from "../methods"; 
 import type { Request, Response } from "express";
-import cors from "../../../src/lib/cors/index";
+import cors from "../../../src/lib/cross-origin/multiorigin-cors";
+import csrf from "../../../src/lib/cross-origin/block-unknown-origin";
 
 // shut the fuck up TypeScript
 const expressCaller: () => express.Application = (express as any).default as any;
@@ -16,8 +17,8 @@ const corsConfig = {
   methods: methods.map(s => s.toUpperCase()),
 };
 
-app.use(cors.serverSide(corsConfig));
-app.use(cors.clientSide(corsConfig));
+app.use(cors(corsConfig));
+app.use(csrf(corsConfig));
 
 app.use(express.static("./static"));
 
