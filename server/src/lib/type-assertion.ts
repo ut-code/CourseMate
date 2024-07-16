@@ -17,7 +17,7 @@ TODO: consider using some third party validator such as:
 - [Typia](https://github.com/samchon/typia)
 
 
-btw this is one of the reasons I don't like TypeScript
+btw this is one of the reasons u don't like TypeScript
 */
 
 // never throws.
@@ -30,10 +30,15 @@ function forceString(v: unknown): string {
 
 // may throw if given `number` is not formatted well.
 function forceNumber(v: unknown): number {
+  // NaN stands for NaN is number
+  if (Number.isNaN(v)) throw new Error("forceNumber called on NaN");
   if (typeof v === "number") {
     return v
   }
-  return Number(forceString(v));
+  const n = Number(forceString(v));
+  if (n.toString() !== v) throw new Error("invalid number formatting: "+n);
+  if (Number.isNaN(n)) throw new Error(`isNaN(${n})`)
+  return n
 }
 
 // may throw.
