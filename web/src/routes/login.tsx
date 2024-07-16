@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebaseconfig";
 import { useSnackbar } from "notistack";
 import Header from "../components/Header";
+import { getUserData } from "../utils/getUserData";
 
 const provider = new GoogleAuthProvider();
 
@@ -38,8 +39,17 @@ export default function Login() {
         onClick={async () => {
           try {
             await signInWithGoogle();
-            enqueueSnackbar("Google アカウントでログインしました", { variant: "success" });
-            navigate("/home");
+            if (auth.currentUser === null) {
+              throw new Error("ログインに失敗しました");
+            }
+            const userData = await getUserData(auth.currentUser.uid);
+            if (userData === null) {
+              enqueueSnackbar("この Google アカウントは登録されていません。登録画面にリダイレクトしました。", { variant: "info" });
+              navigate("/signup");
+            } else {
+              enqueueSnackbar(`こんにちは、${userData.name} さん！`, { variant: "success" });
+              navigate("/home");
+            }
           } catch {
             enqueueSnackbar("Google アカウントでのログインに失敗しました", { variant: "error" });
           }

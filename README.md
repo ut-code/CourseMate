@@ -13,6 +13,14 @@
 - `server`
   - `DATABASE_URL` : `postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample` の形式
 
+### Docker Compose
+
+ここ以下は、 docker compose を使えば docker compose が全部やってくれる。
+
+```sh
+docker compose up --build
+```
+
 ### 環境構築
 
 プロジェクトルート・`mobile`・`web`・`server` の各ディレクトリで次のコマンドを実行してください
@@ -29,7 +37,7 @@ npm ci
 npm run web
 ```
 
-## `web`
+### `web`
 
 次のコマンドで開発環境が起動します
 
