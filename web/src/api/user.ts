@@ -6,10 +6,8 @@ import type { User } from "../../../common/types";
  * @param uid Google アカウントの uid
  * @returns ユーザの情報
  */
-export async function get(userId: number | string): Promise<User | null> {
-  if (typeof userId === "string") userId = parseInt(userId);
-  if (isNaN(userId)) throw new Error("userId is NaN");
-
+export async function get(uid: string): Promise<User | null> {
+  // TODO: fix this.
   const response = await fetch(endpoints.user(userId));
   if (response.status === 404) {
     return null;
