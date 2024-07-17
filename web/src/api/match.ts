@@ -1,4 +1,4 @@
-import endpoints from "./endpoints";
+import endpoints from "./internal/endpoints";
 
 // throws error on network error
 export async function deleteMatch(senderId: number, receiverId: number) {

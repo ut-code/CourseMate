@@ -5,7 +5,6 @@ import { auth } from "../firebase/firebaseconfig";
 import { useSnackbar } from "notistack";
 import Header from "../components/Header";
 import user from "../api/user";
-import endpoints from "../api/endpoints";
 
 const provider = new GoogleAuthProvider();
 
@@ -24,6 +23,7 @@ async function signInWithGoogle() {
     }
   } catch (error) {
     console.error(error);
+    throw error
   }
 }
 
@@ -43,7 +43,7 @@ export default function Login() {
             if (auth.currentUser === null) {
               throw new Error("ログインに失敗しました");
             }
-            const userData = await user.get(parseInt(auth.currentUser.uid));
+            const userData = await user.get_byguid(auth.currentUser.uid);
             if (userData === null) {
               enqueueSnackbar("この Google アカウントは登録されていません。登録画面にリダイレクトしました。", { variant: "info" });
               navigate("/signup");
@@ -63,16 +63,14 @@ export default function Login() {
         sx={{textTransform: "none"}}
         onClick={async () => {
           try {
-            const uid = await signInWithGoogle();
-            if (!uid) {
-              throw new Error("no userid");
+            const guid = await signInWithGoogle();
+            if (!guid) {
+              throw new Error("no guid");
             }
-            const userId = parseInt(uid);
-            if (isNaN(userId)) throw new Error("invalid uid formatting: "+ uid);
 
-            const response = await fetch(endpoints.user(userId));
+            const userExists = await user.exists(guid);
 
-            if (response.status !== 404) {
+            if (userExists) {
               enqueueSnackbar("この Google アカウントはすでに登録されています", { variant: "error" });
               navigate("/login");
             } else {
