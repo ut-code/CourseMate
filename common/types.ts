@@ -13,3 +13,13 @@ export type User = {
   name: string;
   email: string;
 };
+
+/**
+ * Google account's id.
+ **/
+export type GUID = string;
+
+/**
+ * User's ID used in database. do not assign string to this.
+ **/
+export type UserID = number;
