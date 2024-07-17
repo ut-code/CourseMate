@@ -23,7 +23,7 @@ async function signInWithGoogle() {
     }
   } catch (error) {
     console.error(error);
-    throw error
+    throw error;
   }
 }
 
@@ -43,7 +43,7 @@ export default function Login() {
               if (auth.currentUser === null) {
                 throw new Error("ログインに失敗しました");
               }
-              const userData = await getUserData(auth.currentUser.uid);
+              const userData = await user.get_byguid(auth.currentUser.uid);
               if (userData === null) {
                 enqueueSnackbar(
                   "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
@@ -61,39 +61,49 @@ export default function Login() {
                 variant: "error",
               });
             }
+            if (auth.currentUser === null)
+              throw new Error("fix this if you catch this");
             const userData = await user.get_byguid(auth.currentUser.uid);
             if (userData === null) {
-              enqueueSnackbar("この Google アカウントは登録されていません。登録画面にリダイレクトしました。", { variant: "info" });
+              enqueueSnackbar(
+                "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
+                { variant: "info" },
+              );
               navigate("/signup");
             } else {
-              enqueueSnackbar(`こんにちは、${userData.name} さん！`, { variant: "success" });
+              enqueueSnackbar(`こんにちは、${userData.name} さん！`, {
+                variant: "success",
+              });
               navigate("/home");
             }
-          } catch {
-            enqueueSnackbar("Google アカウントでのログインに失敗しました", { variant: "error" });
-          }
-        }}
-      >
-        Login
-      </Button>
-      <Button
-        variant="outlined"
-        sx={{textTransform: "none"}}
-        onClick={async () => {
-          try {
-            const guid = await signInWithGoogle();
-            if (!guid) {
-              throw new Error("no guid");
-            }
+          }}
+        >
+          Login
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{ textTransform: "none" }}
+          onClick={async () => {
+            try {
+              const guid = await signInWithGoogle();
+              if (!guid) {
+                throw new Error("no guid");
+              }
 
-            const userExists = await user.exists(guid);
+              const userExists = await user.exists(guid);
 
-            if (userExists) {
-              enqueueSnackbar("この Google アカウントはすでに登録されています", { variant: "error" });
-              navigate("/login");
-            } else {
-              enqueueSnackbar("新規登録を開始します", { variant: "info" });
-              navigate("/signup");
+              if (userExists) {
+                enqueueSnackbar(
+                  "この Google アカウントはすでに登録されています",
+                  { variant: "error" },
+                );
+                navigate("/login");
+              } else {
+                enqueueSnackbar("新規登録を開始します", { variant: "info" });
+                navigate("/signup");
+              }
+            } catch (e) {
+              console.error(e);
             }
           }}
         >

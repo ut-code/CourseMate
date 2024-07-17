@@ -21,7 +21,8 @@ export default function Profile() {
   useEffect(() => {
     const user = getAuth().currentUser;
     if (!user) return;
-    userapi.get_byguid(user.uid)
+    userapi
+      .get_byguid(user.uid)
       .then((data) => setUser(data))
       .catch((error) => console.error("Error fetching user data:", error));
   }, []);
@@ -45,6 +46,6 @@ export default function Profile() {
       </Box>
     );
   } else {
-    return <p>ユーザ情報が取得できませんでした。</p>
+    return <p>ユーザ情報が取得できませんでした。</p>;
   }
 }

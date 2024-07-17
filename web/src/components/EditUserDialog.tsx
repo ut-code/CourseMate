@@ -33,9 +33,9 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
       uid: "where is his uid",
       name: name,
       email: email,
-    }
+    };
     await userapi.update(userId, data);
-  }
+  };
 
   return (
     <Dialog open={open} onClose={onClose}>

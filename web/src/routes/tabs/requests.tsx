@@ -41,8 +41,15 @@ export default function Requests() {
                     </Button>
                     <Button
                       onClick={() => {
-                        if (!window.confirm("本当にこのマッチリクエストを拒否しますか?")) return;
-                        request.reject(matchedUser.id, currentUserId!).then(() => fetchData());
+                        if (
+                          !window.confirm(
+                            "本当にこのマッチリクエストを拒否しますか?",
+                          )
+                        )
+                          return;
+                        request
+                          .reject(matchedUser.id, currentUserId!)
+                          .then(() => fetchData());
                       }}
                     >
                       拒否

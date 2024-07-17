@@ -9,7 +9,7 @@ const alluser = `${origin}/users/all`;
 
 const userByGUID = (guid: string) => {
   return `${origin}/users/by-guid/${guid}`;
-}
+};
 
 // this one may be public to anyone.
 const userExists = (guid: string) => {
@@ -30,12 +30,11 @@ const sendRequest = (receiverId: UserID) => {
 
 const acceptRequest = (senderId: UserID) => {
   return `${origin}/requests/accept/${senderId}`;
-}
+};
 
 const rejectRequest = (senderId: UserID, receiverId: UserID) => {
-  return `${origin}/requests/reject/${senderId.toString()}/${receiverId.toString()}`
-}
-
+  return `${origin}/requests/reject/${senderId.toString()}/${receiverId.toString()}`;
+};
 
 export default {
   user,
