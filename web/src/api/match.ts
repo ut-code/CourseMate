@@ -1,8 +1,10 @@
+import endpoints from "./endpoints";
+
 // throws error on network error
 export async function deleteMatch(senderId: number, receiverId: number) {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_ENDPOINT}/matches/${senderId}/${receiverId}`,
+      endpoints.singlematch(senderId, receiverId),
       {
         method: "DELETE",
       }
