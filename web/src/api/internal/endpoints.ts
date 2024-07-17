@@ -5,7 +5,7 @@ const user = (userId: UserID) => {
   return `${origin}/users/${userId}`;
 };
 
-const alluser = `${import.meta.env.VITE_API_ENDPOINT}/users/all`;
+const alluser = `${origin}/users/all`;
 
 const userByGUID = (guid: string) => {
   return `${origin}/users/by-guid/${guid}`;
