@@ -1,12 +1,17 @@
+const origin = import.meta.env.VITE_API_ENDPOINT;
 type UserID = number;
-const user = (userId: UserID) => `{import.meta.env.VITE_API_ENDPOINT}/users/${userId}`;
 
-const matched = (userId: UserID) => `{import.meta.env.VITE_API_ENDPOINT}/requests/matched/${userId}`;
+const user = (userId: UserID) => `${origin}/users/${userId}`;
 
-const requests = (userId: UserID) => `${import.meta.env.VITE_API_ENDPOINT}/requests/receiverId/${userId}`;
+const singlematch = (senderId: UserID, receiverId: UserID) => `${origin}/match/${senderId}/${receiverId}`;
+
+const matches = (userId: UserID) => `${origin}/requests/matched/${userId}`;
+
+const requests = (userId: UserID) => `${origin}/requests/receiverId/${userId}`;
 
 export default {
   user,
-  matched,
+  singlematch,
+  matches,
   requests,
 };
