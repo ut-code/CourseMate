@@ -1,3 +1,4 @@
+// throws error on network error
 export async function deleteMatch(senderId: number, receiverId: number) {
   try {
     const response = await fetch(
@@ -8,8 +9,9 @@ export async function deleteMatch(senderId: number, receiverId: number) {
     );
     const data = await response.json();
     return data;
-  } catch {
-    console.error();
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 }
 
