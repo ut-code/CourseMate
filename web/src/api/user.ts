@@ -23,22 +23,22 @@ async function update(userId: number, newData: User): Promise<void> {
   try {
     const url = endpoints.user(userId);
     const response = await fetch(url, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(newData),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
   } catch (error) {
-    console.error('Error updating user information:', error);
+    console.error("Error updating user information:", error);
   }
 }
 
 export default {
   get,
   update,
-}
+};

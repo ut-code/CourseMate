@@ -6,7 +6,7 @@ export async function reject(senderId: number, receiverId: number) {
       }/requests/reject/${senderId.toString()}/${receiverId.toString()}`,
       {
         method: "PUT",
-      }
+      },
     );
     const data = await response.json();
     return data;
@@ -23,7 +23,7 @@ export async function accept(senderId: number, receiverId: number) {
       }/requests/accept/${senderId.toString()}/${receiverId.toString()}`,
       {
         method: "PUT",
-      }
+      },
     );
     const data = await response.json();
     return data;
@@ -32,8 +32,7 @@ export async function accept(senderId: number, receiverId: number) {
   }
 }
 
-
 export default {
   reject,
   accept,
-}
+};

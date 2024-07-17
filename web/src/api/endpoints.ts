@@ -3,7 +3,8 @@ type UserID = number;
 
 const user = (userId: UserID) => `${origin}/users/${userId}`;
 
-const singlematch = (senderId: UserID, receiverId: UserID) => `${origin}/match/${senderId}/${receiverId}`;
+const singlematch = (senderId: UserID, receiverId: UserID) =>
+  `${origin}/match/${senderId}/${receiverId}`;
 
 const matches = (userId: UserID) => `${origin}/requests/matched/${userId}`;
 
