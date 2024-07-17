@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { deleteMatch, getMatchesByUserId } from "../helpers/matchHelper";
+import { deleteMatch, getMatchesByUserId } from "../database/matches";
 
 const router = express.Router();
 

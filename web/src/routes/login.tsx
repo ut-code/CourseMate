@@ -34,14 +34,32 @@ export default function Login() {
     <Box>
       <Header title="Login" />
       <Box mt={2} mx={2} display="flex" gap={1}>
-      <Button
-        variant="outlined"
-        sx={{textTransform: "none"}}
-        onClick={async () => {
-          try {
-            await signInWithGoogle();
-            if (auth.currentUser === null) {
-              throw new Error("ログインに失敗しました");
+        <Button
+          variant="outlined"
+          sx={{ textTransform: "none" }}
+          onClick={async () => {
+            try {
+              await signInWithGoogle();
+              if (auth.currentUser === null) {
+                throw new Error("ログインに失敗しました");
+              }
+              const userData = await getUserData(auth.currentUser.uid);
+              if (userData === null) {
+                enqueueSnackbar(
+                  "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
+                  { variant: "info" },
+                );
+                navigate("/signup");
+              } else {
+                enqueueSnackbar(`こんにちは、${userData.name} さん！`, {
+                  variant: "success",
+                });
+                navigate("/home");
+              }
+            } catch {
+              enqueueSnackbar("Google アカウントでのログインに失敗しました", {
+                variant: "error",
+              });
             }
             const userData = await user.get_byguid(auth.currentUser.uid);
             if (userData === null) {
@@ -77,13 +95,10 @@ export default function Login() {
               enqueueSnackbar("新規登録を開始します", { variant: "info" });
               navigate("/signup");
             }
-          } catch (error) {
-            enqueueSnackbar("エラーが発生しました", { variant: "error" });
-          }
-        }}
-      >
-        Sign Up
-      </Button>
+          }}
+        >
+          Sign Up
+        </Button>
       </Box>
     </Box>
   );

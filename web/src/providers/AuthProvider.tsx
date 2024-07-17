@@ -7,7 +7,11 @@ import userapi from "../api/user";
 
 const AuthContext = createContext<User | null | undefined>(undefined);
 
-export default function AuthProvider({ children }: { children: React.ReactNode }) {
+export default function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [user, setUser] = useState<User | null | undefined>(undefined);
 
   useEffect(() => {
@@ -19,13 +23,13 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         } else {
           setUser(null);
           console.log("ログイン画面に移動します");
-          redirect("/login")
+          redirect("/login");
         }
       });
     } catch (error) {
       setUser(null);
       console.log("エラーが発生しました。ログイン画面に移動します");
-      redirect("/login")
+      redirect("/login");
       throw error;
     }
   }, []);

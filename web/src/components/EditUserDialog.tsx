@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button } from '@mui/material';
+import React, { useState } from "react";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Button,
+} from "@mui/material";
 
 import { User } from "../../../common/types";
 import userapi from "../api/user";
@@ -10,13 +18,14 @@ type EditUserDialogProps = {
   onClose: () => void;
 };
 
-const EditUserDialog: React.FC<EditUserDialogProps> = (props: EditUserDialogProps) => {
-
-  const {userId, open, onClose} = props;
+const EditUserDialog: React.FC<EditUserDialogProps> = (
+  props: EditUserDialogProps,
+) => {
+  const { userId, open, onClose } = props;
   const [name, setName] = useState("");
   // NOTE: password is not used. consider deleting this.
   const [password, setPassword] = useState("");
-  const [email,setEmail] = useState("")
+  const [email, setEmail] = useState("");
 
   const handleSave = async () => {
     const data: User = {

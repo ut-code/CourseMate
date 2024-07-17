@@ -1,4 +1,11 @@
-import { Avatar, Box, Button, List, ListItem, ListItemAvatar } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListItemAvatar,
+} from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import hooks from "../../api/hooks";
 import { deleteMatch } from "../../api/match";
@@ -23,8 +30,11 @@ export default function Followers() {
               secondaryAction={
                 <Button
                   onClick={() => {
-                    if (!window.confirm("本当にこのマッチングを削除しますか?")) return;
-                    deleteMatch(currentUserId!, matchedUser.id).then(() => fetchData());
+                    if (!window.confirm("本当にこのマッチングを削除しますか?"))
+                      return;
+                    deleteMatch(currentUserId!, matchedUser.id).then(() =>
+                      fetchData(),
+                    );
                   }}
                 >
                   削除
