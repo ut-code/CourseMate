@@ -14,7 +14,7 @@ export default function Followers() {
   // const currentUserId = useAuthContext()?.id;
   const currentUserId = 1; // TODO: Fix this
 
-  const { data, isLoading, error, fetchData } = hooks.matchedUsers();
+  const { data, isLoading, error, fetchData } = hooks.useMatchedUsers();
 
   return (
     <Box>

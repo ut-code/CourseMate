@@ -15,7 +15,7 @@ export default function Requests() {
   // const currentUserId = useAuthContext()?.id;
   const currentUserId = 1; // TODO: Fix this
 
-  const { data, isLoading, error, fetchData } = hooks.pendingRequests();
+  const { data, isLoading, error, fetchData } = hooks.usePendingRequests();
 
   return (
     <Box>
