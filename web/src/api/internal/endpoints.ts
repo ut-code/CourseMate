@@ -20,13 +20,9 @@ const singlematch = (senderId: UserID, receiverId: UserID) => {
   return `${origin}/match/${senderId}/${receiverId}`;
 };
 
-const matches = (userId: UserID) => {
-  return `${origin}/requests/matched/${userId}`;
-};
+const matches = `${origin}/requests/matched`;
 
-const requests = (userId: UserID) => {
-  return `${origin}/requests/receiverId/${userId}`;
-};
+const requests = `${origin}/requests`;
 
 const sendRequest = (receiverId: UserID) => {
   return `${import.meta.env.VITE_API_ENDPOINT}/requests/send/${receiverId}`;
@@ -35,6 +31,7 @@ const sendRequest = (receiverId: UserID) => {
 const acceptRequest = (senderId: UserID) => {
   return `${origin}/requests/accept/${senderId}`;
 }
+
 const rejectRequest = (senderId: UserID, receiverId: UserID) => {
   return `${origin}/requests/reject/${senderId.toString()}/${receiverId.toString()}`
 }

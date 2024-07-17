@@ -7,20 +7,15 @@ import Header from "../components/Header";
 import userapi from "../api/user";
 import { User } from "../../../common/types";
 
-function todo(): never {
-  throw new Error("called todo()");
-}
-
-async function signUp(uid: string, name: string, email: string) {
-  const user: User = {
-    id: todo(),
-    uid,
-    name,
-    email,
-  };
-  const ok = userapi.create(user);
-  if (!ok)
-    console.error("Error during sign-up");
+async function signUp(partialUser: Omit<User, "id">) {
+  try {
+    const user = await userapi.create(partialUser);
+    // TODO: use user for something or just let it drop
+    user;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
 
 export default function SignUp() {
@@ -49,7 +44,12 @@ export default function SignUp() {
               return;
             }
             try {
-              await signUp(uid, name, email, password);
+              const puser: Omit<User, "id"> = {
+                uid,
+                name,
+                email,
+              }
+              await signUp(puser);
               enqueueSnackbar("サインアップに成功しました", { variant: "success" });
               navigate("/home");
             } catch (error) {

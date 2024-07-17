@@ -15,7 +15,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       const auth = getAuth();
       return onAuthStateChanged(auth, (firebaseUser) => {
         if (firebaseUser) {
-          userapi.get(firebaseUser.uid).then((user) => setUser(user));
+          userapi.get_byguid(firebaseUser.uid).then((user) => setUser(user));
         } else {
           setUser(null);
           console.log("ログイン画面に移動します");

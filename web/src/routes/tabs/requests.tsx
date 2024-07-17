@@ -1,17 +1,13 @@
 import { Box, List, ListItem, Button, ListItemAvatar, Avatar, Stack } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import { User } from "../../../../common/types";
-import useData from "../../hooks/useData";
 import request from "../../api/request";
-import endpoints from "../../api/endpoints";
+import hooks from "../../api/hooks";
 
 export default function Requests() {
   // const currentUserId = useAuthContext()?.id;
   const currentUserId = 1; // TODO: Fix this
 
-  const url = endpoints.requests(currentUserId);
-
-  const { data, isLoading, error, fetchData } = useData<User[]>(url);
+  const { data, isLoading, error, fetchData } = hooks.pendingRequests();
 
   return (
     <Box>
@@ -22,6 +18,7 @@ export default function Requests() {
       ) : (
         <List>
           {data !== undefined &&
+            // FIXME: this is probably not matched user
             data?.map((matchedUser) => (
               <ListItem
                 key={matchedUser.id.toString()}
@@ -29,7 +26,7 @@ export default function Requests() {
                   <Stack direction={"row"}>
                     <Button
                       onClick={() => {
-                        request.accept(matchedUser.id, currentUserId!).then(() => fetchData());
+                        request.accept(matchedUser.id).then(() => fetchData());
                       }}
                     >
                       受け入れ

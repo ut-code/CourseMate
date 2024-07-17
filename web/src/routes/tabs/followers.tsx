@@ -1,17 +1,13 @@
 import { Avatar, Box, Button, List, ListItem, ListItemAvatar } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import { User } from "../../../../common/types";
-import useData from "../../hooks/useData";
-import { deleteMatch } from "../../api/match"; 
-import endpoints from "../../api/endpoints";
+import hooks from "../../api/hooks";
+import { deleteMatch } from "../../api/match";
 
 export default function Followers() {
   // const currentUserId = useAuthContext()?.id;
   const currentUserId = 1; // TODO: Fix this
 
-  const url = endpoints.matched(currentUserId);
-
-  const { data, isLoading, error, fetchData } = useData<User[]>(url);
+  const { data, isLoading, error, fetchData } = hooks.matchedUsers();
 
   return (
     <Box>

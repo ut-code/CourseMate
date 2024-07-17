@@ -30,7 +30,7 @@ export default function Home() {
 
   const handleClickCircle = (): void => {
     if (!displayedUser) return;
-    request.send(currentUserId, displayedUser.id).catch((err: any) => {
+    request.send(displayedUser.id).catch((err: any) => {
       console.error("Error liking user:", err);
     });
     if (!users) return;
