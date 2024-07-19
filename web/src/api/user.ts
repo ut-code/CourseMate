@@ -15,6 +15,7 @@ export async function except(id: number): Promise<User[]> {
     throw err;
   }
 }
+
 /**
  * Google アカウントの uid を用いて CourseMate ユーザの情報を取得する。
  * @param uid Google アカウントの uid
