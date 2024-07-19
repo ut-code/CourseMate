@@ -6,7 +6,7 @@ type Hook<T> = {
   data: T | null;
   isLoading: boolean;
   error: Error | null;
-  fetchData: () => void;
+  reload: () => void;
 };
 
 // TODO: install typia or zod.

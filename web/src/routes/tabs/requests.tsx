@@ -15,7 +15,7 @@ export default function Requests() {
   // const currentUserId = useAuthContext()?.id;
   const currentUserId = 1; // TODO: Fix this
 
-  const { data, isLoading, error, fetchData } = hooks.usePendingRequests();
+  const { data, isLoading, error, reload } = hooks.usePendingRequests();
 
   return (
     <Box>
@@ -34,7 +34,7 @@ export default function Requests() {
                   <Stack direction={"row"}>
                     <Button
                       onClick={() => {
-                        request.accept(matchedUser.id).then(() => fetchData());
+                        request.accept(matchedUser.id).then(() => reload());
                       }}
                     >
                       受け入れ
@@ -49,7 +49,7 @@ export default function Requests() {
                           return;
                         request
                           .reject(matchedUser.id, currentUserId!)
-                          .then(() => fetchData());
+                          .then(() => reload());
                       }}
                     >
                       拒否

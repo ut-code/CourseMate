@@ -7,7 +7,7 @@ export default function useData<T>(url: string) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchData = useCallback(async () => {
+  const reload = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -26,8 +26,8 @@ export default function useData<T>(url: string) {
   }, [url]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    reload();
+  }, [reload]);
 
-  return { data, isLoading, error, fetchData };
+  return { data, isLoading, error, reload };
 }

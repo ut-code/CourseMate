@@ -14,7 +14,7 @@ export default function Followers() {
   // const currentUserId = useAuthContext()?.id;
   const currentUserId = 1; // TODO: Fix this
 
-  const { data, isLoading, error, fetchData } = hooks.useMatchedUsers();
+  const { data, isLoading, error, reload } = hooks.useMatchedUsers();
 
   return (
     <Box>
@@ -33,7 +33,7 @@ export default function Followers() {
                     if (!window.confirm("本当にこのマッチングを削除しますか?"))
                       return;
                     deleteMatch(currentUserId!, matchedUser.id).then(() =>
-                      fetchData(),
+                      reload(),
                     );
                   }}
                 >
