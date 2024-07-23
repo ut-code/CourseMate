@@ -4,7 +4,6 @@ import type { Request, Response } from "express";
 import cors from "../../../src/lib/cross-origin/multiorigin-cors";
 import csrf from "../../../src/lib/cross-origin/block-unknown-origin";
 
-// shut the fuck up TypeScript
 const app = express();
 
 const origins = ["http://localhost:3000", "http://localhost:8080"];
