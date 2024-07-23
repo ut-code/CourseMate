@@ -11,6 +11,7 @@ import {
 
 import { User } from "../../../common/types";
 import userapi from "../api/user";
+import { getAuth } from "firebase/auth";
 
 type EditUserDialogProps = {
   userId: number;
@@ -28,9 +29,11 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
   const [email, setEmail] = useState("");
 
   const handleSave = async () => {
+    const uid = getAuth().currentUser?.uid;
+    if (!uid) throw new Error("you not logged in");
     const data: User = {
       id: userId,
-      uid: "where is his uid",
+      uid: uid,
       name: name,
       email: email,
     };
