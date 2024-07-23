@@ -1,13 +1,11 @@
-import * as express from "express";
+import express from "express";
 import methods from "../methods";
 import type { Request, Response } from "express";
 import cors from "../../../src/lib/cross-origin/multiorigin-cors";
 import csrf from "../../../src/lib/cross-origin/block-unknown-origin";
 
 // shut the fuck up TypeScript
-const expressCaller: () => express.Application = (express as any)
-  .default as any;
-const app = expressCaller();
+const app = express();
 
 const origins = ["http://localhost:3000", "http://localhost:8080"];
 const corsConfig = {

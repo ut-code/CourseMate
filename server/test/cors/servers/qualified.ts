@@ -1,11 +1,8 @@
-import * as express from "express";
+import express from "express";
 
 const port = 8080;
 
-// shut the fuck up TypeScript
-const expressCaller: () => express.Application = (express as any)
-  .default as any;
-const app = expressCaller();
+const app = express();
 
 app.use(express.static("./static"));
 
