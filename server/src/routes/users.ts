@@ -1,5 +1,11 @@
 import express, { Request, Response } from "express";
-import { createUser, deleteUser, getUser, updateUser, getAllUsers } from "../helpers/userHelper";
+import {
+  createUser,
+  deleteUser,
+  getUser,
+  updateUser,
+  getAllUsers,
+} from "../database/users";
 
 const router = express.Router();
 
@@ -80,7 +86,10 @@ router.put("/:userId", async (req: Request, res: Response) => {
   }
 
   try {
-    const updatedUser = await updateUser({ userId: parseInt(userId), ...updateData });
+    const updatedUser = await updateUser({
+      userId: parseInt(userId),
+      ...updateData,
+    });
     res.status(200).json({
       // パスワード以外の情報
       id: updatedUser.id,

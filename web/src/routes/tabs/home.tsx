@@ -11,10 +11,14 @@ export default function Home() {
   useEffect(() => {
     async function getUsers() {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users/all`);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_ENDPOINT}/users/all`,
+        );
         const data = await response.json();
         if (!currentUserId) return;
-        const otherUsers = data.filter((user: User) => user.id !== currentUserId);
+        const otherUsers = data.filter(
+          (user: User) => user.id !== currentUserId,
+        );
         setUsers(otherUsers);
       } catch (error) {
         console.error("Error fetching data:", error);

@@ -6,8 +6,55 @@ on:
   pull_request:
 
 jobs:
-  build-frontend:
-    name: Build Frontend
+  # mobile はもういないじゃない。
+  # build-frontend:
+  #   name: Build Frontend
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
+
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: latest
+  #         cache: npm
+
+  #     - name: Install Node Packages
+  #       run: npm ci
+  #       working-directory: mobile
+  #       shell: bash
+
+  #     - name: Build
+  #       run: npm run build
+  #       working-directory: mobile
+  #       shell: bash
+
+  # mobile:
+  #   name: mobile code style checks
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
+
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: latest
+  #         cache: npm
+
+  #     - name: Install Node Packages
+  #       run: npm ci
+  #       working-directory: mobile
+  #       shell: bash
+
+  #     - name: Run ESLint
+  #       run: npm run lint
+  #       working-directory: mobile
+  #       shell: bash
+
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -19,18 +66,23 @@ jobs:
           node-version: latest
           cache: npm
 
-      - name: Install Node Packages
-        run: npm ci
-        working-directory: mobile
-        shell: bash
+      - name: setup
+        run: ./setup.sh
+        working-directory: .
 
-      - name: Build
+      - name: build server
         run: npm run build
-        working-directory: mobile
+        working-directory: server
         shell: bash
 
-  eslint:
-    name: ESLint (including Prettier)
+      - name: build web
+        run: npm run build
+        working-directory: web
+        shell: bash
+
+  # Prettier + ESLint
+  style-check:
+    name: Code style check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -42,17 +94,21 @@ jobs:
           node-version: latest
           cache: npm
 
-      - name: Install Node Packages
-        run: npm ci
-        working-directory: mobile
+      - name: setup
+        run: ./setup.sh
+        working-directory: server
+
+      - name: "ESLint (TODO: RUN THIS AT PROJ ROOT)"
+        run: npx eslint .
+        working-directory: server
         shell: bash
 
-      - name: Run ESLint
-        run: npm run lint
-        working-directory: mobile
+      - name: "Prettier"
+        run: npx prettier . --check
+        working-directory: .
         shell: bash
 
-  type-check-frontend:
+  type-check:
     name: Type Check
     runs-on: ubuntu-latest
     steps:
@@ -65,12 +121,17 @@ jobs:
           node-version: latest
           cache: npm
 
-      - name: Install Node Packages
-        run: npm ci
-        working-directory: mobile
+      - name: setup
+        run: ./setup.sh
+        working-directory: .
         shell: bash
 
-      - name: Type Check
+      - name: Type Check web
         run: npx tsc --noEmit
-        working-directory: mobile
+        working-directory: web
+        shell: bash
+
+      - name: Type Check server
+        run: npx tsc --noEmit
+        working-directory: web
         shell: bash
