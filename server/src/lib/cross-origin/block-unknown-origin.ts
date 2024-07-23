@@ -3,12 +3,12 @@ import { validateConfig, Config } from "./share";
 
 function serverSideBlocking(config: Config) {
   validateConfig(config);
-  return function(req: Request, res: Response, next: () => void) {
+  return function (req: Request, res: Response, next: () => void) {
     const reqOrigin = req.header("Origin");
     if (!reqOrigin) {
       // no origin header == no cors == same origin
       next();
-      return
+      return;
     }
     let ok = false;
     if (config.origins.includes(reqOrigin)) ok = true;
@@ -16,10 +16,10 @@ function serverSideBlocking(config: Config) {
     if (ok) {
       // ok: known origin or allowing all origins
       next();
-      return
+      return;
     }
     res.status(403).send("unknown origin header: " + reqOrigin);
-  }
+  };
 }
 
 export default serverSideBlocking;

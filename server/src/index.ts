@@ -18,7 +18,7 @@ const allowedOrigins = [
   process.env.WEB_ORIGIN_BUILD,
 ];
 const corsOptions = {
-  origins: allowedOrigins.map(s => s || "").filter(s => s !== ""),
+  origins: allowedOrigins.map((s) => s || "").filter((s) => s !== ""),
   methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
   credentials: true,
 };

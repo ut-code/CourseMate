@@ -1,20 +1,28 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>CORS Tests</title>
+    <script src="./script.js" async defer></script>
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <title>CORS Tests</title>
-  <script src="./script.js" async defer></script>
-
-<body>
-  <h2>Available Servers</h2>
-  <ol>
-    <li>Origin - localhost:3000 <a href="http://localhost:3000"><button>Go</button></a></li>
-    <li>Qualified - localhost:8080 <a href="http://localhost:8080"><button>Go</button></a></li>
-    <li>Unqualified - localhost:12345 <a href="http://localhost:12345"><button>Go</button></a></li>
-  </ol>
-  <h2>Tests: Click to test!</h2>
-  <ul id="wrapper"></ul>
-</body>
-
+  <body>
+    <h2>Available Servers</h2>
+    <ol>
+      <li>
+        Origin - localhost:3000
+        <a href="http://localhost:3000"><button>Go</button></a>
+      </li>
+      <li>
+        Qualified - localhost:8080
+        <a href="http://localhost:8080"><button>Go</button></a>
+      </li>
+      <li>
+        Unqualified - localhost:12345
+        <a href="http://localhost:12345"><button>Go</button></a>
+      </li>
+    </ol>
+    <h2>Tests: Click to test!</h2>
+    <ul id="wrapper"></ul>
+  </body>
 </html>

@@ -10,19 +10,21 @@ function validateConfig(config: Config) {
   config.credentials = !!config.credentials; // make it boolean. not using Boolean() or new Boolean() because I don't trust JS
 
   // normalize allowOrigin URLs
-  config.origins = config.origins.map(origin => {
-    const url = new URL(origin)
+  config.origins = config.origins.map((origin) => {
+    const url = new URL(origin);
     if (url.origin === "null") {
-      console.log(`invalid URL: ${origin}. Please prefix this with http:// or https:// if you haven't.`);
+      console.log(
+        `invalid URL: ${origin}. Please prefix this with http:// or https:// if you haven't.`,
+      );
       throw "";
     }
-    return url.origin
+    return url.origin;
   });
 
   if (!config.methods) config.methods = []; // provide default
 
   // they must be uppercase
-  config.methods = config.methods.map(method => method.toUpperCase());
+  config.methods = config.methods.map((method) => method.toUpperCase());
 
   // GET and HEAD must be in this field. POST is for convenience.
   // ref: not found
@@ -39,11 +41,10 @@ function validateConfig(config: Config) {
 // this throws error if config is not good
 function assertValidConfig(config: Config) {
   if (config.origins.length === 0) {
-    throw new Error("Empty allowedOrigins in CORS config: " + JSON.stringify(config));
+    throw new Error(
+      "Empty allowedOrigins in CORS config: " + JSON.stringify(config),
+    );
   }
 }
 
-export {
-  validateConfig,
-  Config,
-}
+export { validateConfig, Config };

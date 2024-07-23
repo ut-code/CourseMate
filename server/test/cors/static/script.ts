@@ -1,4 +1,13 @@
-const methods = ["get", "head", "post", "put", "delete", "patch", "link", "unlink"] as const;
+const methods = [
+  "get",
+  "head",
+  "post",
+  "put",
+  "delete",
+  "patch",
+  "link",
+  "unlink",
+] as const;
 
 const $ = (id: string) => document.getElementById(id)!;
 const _ = (name: string) => {
@@ -11,7 +20,7 @@ const _ = (name: string) => {
   $("wrapper").appendChild(li);
   li.appendChild(span);
   li.appendChild(button);
-  return button
+  return button;
 };
 
 methods.forEach((kind) => {
@@ -34,7 +43,7 @@ methods.forEach((kind) => {
       element.textContent = "FAIL: " + err;
       element.style.color = "red";
     }
-  }
+  };
 });
 
 function assert(b: boolean) {

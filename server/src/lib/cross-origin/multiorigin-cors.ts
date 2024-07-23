@@ -26,7 +26,7 @@ export default (config: Config) => {
 
   function origin(
     origin: string | undefined,
-    callback: (error: Error | null, flag?: boolean) => void
+    callback: (error: Error | null, flag?: boolean) => void,
   ) {
     // origin not found === same origin request (or non-browser request)
     if (!origin) {
@@ -43,4 +43,4 @@ export default (config: Config) => {
   }
 
   return cors({ origin: origin });
-}
+};
