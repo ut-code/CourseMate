@@ -53,7 +53,6 @@ export default function Login() {
         onClick={async () => {
           try {
             const uid = await signInWithGoogle();
-            console.log(uid);
             const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users/${uid}`);
 
             const user = await response.json();
