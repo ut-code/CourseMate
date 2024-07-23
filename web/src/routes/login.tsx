@@ -56,7 +56,7 @@ export default function Login() {
             const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users/${uid}`);
 
             const user = await response.json();
-              if (user === null) {
+              if (user !== null) {
               enqueueSnackbar("この Google アカウントはすでに登録されています", { variant: "error" });
               navigate("/login");
             } else {
