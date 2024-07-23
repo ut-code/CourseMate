@@ -1,4 +1,8 @@
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import Root from "./routes/root";
 import Home from "./routes/tabs/home";
 import Profile from "./routes/tabs/profile";
@@ -12,7 +16,11 @@ import { SnackbarProvider } from "notistack";
 export default function App() {
   const PrivateRoute = () => {
     // Google アカウントでログインしていれば home に、ログインしていなければ login にリダイレクト
-    return getAuth().currentUser ? <Navigate to="/home" /> : <Navigate to="/login" />;
+    return getAuth().currentUser ? (
+      <Navigate to="/home" />
+    ) : (
+      <Navigate to="/login" />
+    );
   };
 
   const router = createBrowserRouter([

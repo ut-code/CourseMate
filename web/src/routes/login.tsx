@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebaseconfig";
 import { useSnackbar } from "notistack";
 import Header from "../components/Header";
+import { getUserData } from "../utils/getUserData";
 
 const provider = new GoogleAuthProvider();
 
@@ -32,43 +33,64 @@ export default function Login() {
     <Box>
       <Header title="Login" />
       <Box mt={2} mx={2} display="flex" gap={1}>
-      <Button
-        variant="outlined"
-        sx={{textTransform: "none"}}
-        onClick={async () => {
-          try {
-            await signInWithGoogle();
-            enqueueSnackbar("Google アカウントでログインしました", { variant: "success" });
-            navigate("/home");
-          } catch {
-            enqueueSnackbar("Google アカウントでのログインに失敗しました", { variant: "error" });
-          }
-        }}
-      >
-        Login
-      </Button>
-      <Button
-        variant="outlined"
-        sx={{textTransform: "none"}}
-        onClick={async () => {
-          try {
-            const uid = await signInWithGoogle();
-            const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users/${uid}`);
-
-            if (response.status !== 404) {
-              enqueueSnackbar("この Google アカウントはすでに登録されています", { variant: "error" });
-              navigate("/login");
-            } else {
-              enqueueSnackbar("新規登録を開始します", { variant: "info" });
-              navigate("/signup");
+        <Button
+          variant="outlined"
+          sx={{ textTransform: "none" }}
+          onClick={async () => {
+            try {
+              await signInWithGoogle();
+              if (auth.currentUser === null) {
+                throw new Error("ログインに失敗しました");
+              }
+              const userData = await getUserData(auth.currentUser.uid);
+              if (userData === null) {
+                enqueueSnackbar(
+                  "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
+                  { variant: "info" },
+                );
+                navigate("/signup");
+              } else {
+                enqueueSnackbar(`こんにちは、${userData.name} さん！`, {
+                  variant: "success",
+                });
+                navigate("/home");
+              }
+            } catch {
+              enqueueSnackbar("Google アカウントでのログインに失敗しました", {
+                variant: "error",
+              });
             }
-          } catch (error) {
-            enqueueSnackbar("エラーが発生しました", { variant: "error" });
-          }
-        }}
-      >
-        Sign Up
-      </Button>
+          }}
+        >
+          Login
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{ textTransform: "none" }}
+          onClick={async () => {
+            try {
+              const uid = await signInWithGoogle();
+              const response = await fetch(
+                `${import.meta.env.VITE_API_ENDPOINT}/users/${uid}`,
+              );
+
+              if (response.status !== 404) {
+                enqueueSnackbar(
+                  "この Google アカウントはすでに登録されています",
+                  { variant: "error" },
+                );
+                navigate("/login");
+              } else {
+                enqueueSnackbar("新規登録を開始します", { variant: "info" });
+                navigate("/signup");
+              }
+            } catch (error) {
+              enqueueSnackbar("エラーが発生しました", { variant: "error" });
+            }
+          }}
+        >
+          Sign Up
+        </Button>
       </Box>
     </Box>
   );
