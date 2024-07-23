@@ -8,7 +8,7 @@ export async function createUser({
   name,
   email,
   password,
-  pictureUrl
+  pictureUrl,
 }: {
   uid: string;
   name: string;
@@ -44,7 +44,7 @@ export async function updateUser({
   name,
   email,
   password,
-  pictureUrl
+  pictureUrl,
 }: {
   userId: number;
   name?: string;

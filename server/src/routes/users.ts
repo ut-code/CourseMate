@@ -45,7 +45,7 @@ router.get("/:uid", async (req: Request, res: Response) => {
 
 // ユーザーの作成エンドポイント
 router.post("/", async (req: Request, res: Response) => {
-  const { uid, name, email, password , pictureUrl} = req.body;
+  const { uid, name, email, password, pictureUrl } = req.body;
 
   try {
     const newUser = await createUser({
@@ -72,9 +72,14 @@ router.post("/", async (req: Request, res: Response) => {
 // ユーザーの更新エンドポイント
 router.put("/:userId", async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const { name, email, password ,pictureUrl} = req.body;
+  const { name, email, password, pictureUrl } = req.body;
 
-  const updateData: { name?: string; email?: string; password?: string; pictureUrl?: string } = {};
+  const updateData: {
+    name?: string;
+    email?: string;
+    password?: string;
+    pictureUrl?: string;
+  } = {};
   if (email) updateData.email = email;
   if (name) updateData.name = name;
   if (password) updateData.password = password;
