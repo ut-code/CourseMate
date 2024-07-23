@@ -13,7 +13,6 @@ import hooks from "../../api/hooks";
 
 export default function Requests() {
   // const currentUserId = useAuthContext()?.id;
-  const currentUserId = 1; // TODO: Fix this
 
   const { data, isLoading, error, reload } = hooks.usePendingRequests();
 
@@ -48,7 +47,7 @@ export default function Requests() {
                         )
                           return;
                         request
-                          .reject(matchedUser.id, currentUserId!)
+                          .reject(matchedUser.id)
                           .then(() => reload());
                       }}
                     >

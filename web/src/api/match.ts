@@ -1,9 +1,10 @@
 import endpoints from "./internal/endpoints";
+import type { UserID } from "./internal/endpoints"
 
 // throws error on network error
-export async function deleteMatch(senderId: number, receiverId: number) {
+export async function deleteMatch(opponentID: UserID) {
   try {
-    const response = await fetch(endpoints.singlematch(senderId, receiverId), {
+    const response = await fetch(endpoints.match(opponentID), {
       method: "DELETE",
     });
     const data = await response.json();

@@ -43,7 +43,7 @@ export default function Login() {
               if (auth.currentUser === null) {
                 throw new Error("ログインに失敗しました");
               }
-              const userData = await user.get_byguid(auth.currentUser.uid);
+              const userData = await user.getByGUID(auth.currentUser.uid);
               if (userData === null) {
                 enqueueSnackbar(
                   "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
@@ -63,7 +63,7 @@ export default function Login() {
             }
             if (auth.currentUser === null)
               throw new Error("fix this if you catch this");
-            const userData = await user.get_byguid(auth.currentUser.uid);
+            const userData = await user.getByGUID(auth.currentUser.uid);
             if (userData === null) {
               enqueueSnackbar(
                 "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",

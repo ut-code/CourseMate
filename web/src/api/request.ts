@@ -1,18 +1,18 @@
-import endpoints from "./internal/endpoints";
+import endpoints, { UserID } from "./internal/endpoints";
 
-export async function send(receiverId: number) {
-  const res = await fetch(endpoints.sendRequest(receiverId), {
+export async function send(receiverId: UserID) {
+  const res = await fetch(endpoints.request(receiverId), {
     method: "POST",
   });
   return res.json();
 }
 
-export async function reject(senderId: number, receiverId: number) {
+export async function reject(opponentID: UserID) {
   try {
     const response = await fetch(
-      endpoints.rejectRequest(senderId, receiverId),
+      endpoints.request(opponentID),
       {
-        method: "PUT",
+        method: "DELETE",
       },
     );
     const data = await response.json();
@@ -25,7 +25,7 @@ export async function reject(senderId: number, receiverId: number) {
 
 export async function accept(senderId: number) {
   try {
-    const response = await fetch(endpoints.acceptRequest(senderId), {
+    const response = await fetch(endpoints.request(senderId), {
       method: "PUT",
     });
     const data = await response.json();

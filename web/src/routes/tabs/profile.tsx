@@ -22,7 +22,7 @@ export default function Profile() {
     const user = getAuth().currentUser;
     if (!user) return;
     userapi
-      .get_byguid(user.uid)
+      .getByGUID(user.uid)
       .then((data) => setUser(data))
       .catch((error) => console.error("Error fetching user data:", error));
   }, []);
