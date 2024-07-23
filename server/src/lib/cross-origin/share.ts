@@ -6,11 +6,8 @@ type Config = {
 
 // make the cors config valid.
 // throws error if unrecoverable.
-function validate(config: Config) {
+function validateConfig(config: Config) {
   config.credentials = !!config.credentials; // make it boolean. not using Boolean() or new Boolean() because I don't trust JS
-
-  if (config.methods)
-    config.methods = config.methods.map(s => s.toUpperCase());
 
   // normalize allowOrigin URLs
   config.origins = config.origins.map(origin => {
@@ -22,17 +19,20 @@ function validate(config: Config) {
     return url.origin
   });
 
+  if (!config.methods) config.methods = []; // provide default
+
+  // they must be uppercase
+  config.methods = config.methods.map(method => method.toUpperCase());
+
   // GET and HEAD must be in this field. POST is for convenience.
   // ref: not found
   const defaultAllowedMethods = ["GET", "HEAD", "POST"];
-  if (!config.methods) {
-    config.methods = defaultAllowedMethods;
-  }
   for (const defaultMethod of defaultAllowedMethods) {
     if (!config.methods.includes(defaultMethod)) {
       config.methods.push(defaultMethod);
     }
   }
+
   assertValidConfig(config);
 }
 
@@ -44,6 +44,6 @@ function assertValidConfig(config: Config) {
 }
 
 export {
-  validate,
+  validateConfig,
   Config,
 }

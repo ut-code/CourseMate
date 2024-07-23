@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
-import { validate, Config } from "./share";
+import { validateConfig, Config } from "./share";
 
 function serverSideBlocking(config: Config) {
-  validate(config);
+  validateConfig(config);
   return function(req: Request, res: Response, next: () => void) {
     const reqOrigin = req.header("Origin");
     if (!reqOrigin) {
