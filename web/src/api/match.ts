@@ -1,5 +1,5 @@
 import endpoints from "./internal/endpoints";
-import type { UserID } from "./internal/endpoints"
+import type { UserID } from "./internal/endpoints";
 
 // throws error on network error
 export async function deleteMatch(opponentID: UserID) {

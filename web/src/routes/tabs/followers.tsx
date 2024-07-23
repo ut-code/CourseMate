@@ -31,9 +31,7 @@ export default function Followers() {
                   onClick={() => {
                     if (!window.confirm("本当にこのマッチングを削除しますか?"))
                       return;
-                    deleteMatch(matchedUser.id).then(() =>
-                      reload(),
-                    );
+                    deleteMatch(matchedUser.id).then(() => reload());
                   }}
                 >
                   削除

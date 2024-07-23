@@ -45,7 +45,7 @@ const match = (opponentID: UserID) => {
 
 /**
  * GET -> list all matches.
- **/ 
+ **/
 const matches = `${origin}/matches`;
 
 /**

@@ -46,9 +46,7 @@ export default function Requests() {
                           )
                         )
                           return;
-                        request
-                          .reject(matchedUser.id)
-                          .then(() => reload());
+                        request.reject(matchedUser.id).then(() => reload());
                       }}
                     >
                       拒否

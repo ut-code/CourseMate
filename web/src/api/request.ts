@@ -9,12 +9,9 @@ export async function send(receiverId: UserID) {
 
 export async function reject(opponentID: UserID) {
   try {
-    const response = await fetch(
-      endpoints.request(opponentID),
-      {
-        method: "DELETE",
-      },
-    );
+    const response = await fetch(endpoints.request(opponentID), {
+      method: "DELETE",
+    });
     const data = await response.json();
     return data;
   } catch (err) {
