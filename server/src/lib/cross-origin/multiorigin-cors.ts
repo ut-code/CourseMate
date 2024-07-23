@@ -1,4 +1,4 @@
-import type { Config } from "./share";
+import { validateConfig, type Config } from "./share";
 import cors from "cors";
 
 /* expected usecase:
@@ -21,17 +21,26 @@ app.use(cors.serverSide(corsConfig));
 // more about CORS:
 // - https://developer.mozilla.org/ja/docs/Web/HTTP/CORS
 
-// ??? I just pasted this from src/index.ts so I don't know what is going on here
 export default (config: Config) => {
-  const origin = function(
+  validateConfig(config);
+
+  function origin(
     origin: string | undefined,
     callback: (error: Error | null, flag?: boolean) => void
   ) {
-    if (!origin || config.origins.includes(origin)) {
+    // origin not found === same origin request (or non-browser request)
+    if (!origin) {
       return callback(null, true);
-    } else {
-      return callback(new Error("Not allowed by CORS"));
     }
+
+    // origin in allowedOrigins. good.
+    if (config.origins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // origin exists and not in allowedOrigins. bad.
+    return callback(new Error("Not allowed by CORS"));
   }
-  return cors({ origin });
+
+  return cors({ origin: origin });
 }
