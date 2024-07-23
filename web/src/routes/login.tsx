@@ -61,21 +61,6 @@ export default function Login() {
                 variant: "error",
               });
             }
-            if (auth.currentUser === null)
-              throw new Error("fix this if you catch this");
-            const userData = await user.getByGUID(auth.currentUser.uid);
-            if (userData === null) {
-              enqueueSnackbar(
-                "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
-                { variant: "info" },
-              );
-              navigate("/signup");
-            } else {
-              enqueueSnackbar(`こんにちは、${userData.name} さん！`, {
-                variant: "success",
-              });
-              navigate("/home");
-            }
           }}
         >
           Login
