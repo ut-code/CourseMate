@@ -58,12 +58,12 @@ export default function SignUp() {
               return;
             }
             try {
-              const puser: Omit<User, "id"> = {
+              const partialUser: Omit<User, "id"> = {
                 uid,
                 name,
                 email,
               };
-              await signUp(puser);
+              await signUp(partialUser);
               enqueueSnackbar("サインアップに成功しました", {
                 variant: "success",
               });
