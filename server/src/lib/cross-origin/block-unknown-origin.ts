@@ -10,7 +10,10 @@ function serverSideBlocking(config: Config) {
       next();
       return
     }
-    if (config.origins.includes(reqOrigin) || config.origins[0] !== "*") {
+    let ok = false;
+    if (config.origins.includes(reqOrigin)) ok = true;
+    if (config.origins[0] === "*") ok = true;
+    if (ok) {
       // ok: known origin or allowing all origins
       next();
       return
