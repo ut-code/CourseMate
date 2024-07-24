@@ -33,6 +33,13 @@ export default function Profile() {
         <Box>
           <p>Name: {user.name}</p>
           <p>ID: {user.id}</p>
+          {user.pictureUrl && (
+            <img
+              src={user.pictureUrl}
+              alt="Profile Picture"
+              style={{ width: "300px", height: "300px", objectFit: "cover" }} // 画像のサイズを指定
+            />
+          )}
         </Box>
         <LogOutButton />
         <Button color="inherit" onClick={handleDialogOpen}>
