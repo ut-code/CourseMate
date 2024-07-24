@@ -13,7 +13,7 @@ async function registerUserInfo(
   name: string,
   email: string,
   password: string,
-  pictureUrl: string
+  pictureUrl: string,
 ) {
   try {
     const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users`, {
@@ -59,7 +59,7 @@ async function handleImageUpload(uid: string, pictureFile: File) {
 //画像をファイルから選択する関数
 const handleImageChange = (
   event: ChangeEvent<HTMLInputElement>,
-  setPictureFile: (file: File) => void
+  setPictureFile: (file: File) => void,
 ): void => {
   if (event.target.files && event.target.files.length > 0) {
     setPictureFile(event.target.files[0]);
