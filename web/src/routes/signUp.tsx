@@ -48,8 +48,7 @@ export default function SignUp() {
       });
       navigate("/", { replace: true });
     }
-  }
-
+  };
 
   //画像を選択する関数
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -93,9 +92,7 @@ export default function SignUp() {
 }
 
 //ユーザー情報をデータベースに登録する関数
-async function registerUserInfo(
-  partialUser: Omit<User, "id">,
-) {
+async function registerUserInfo(partialUser: Omit<User, "id">) {
   try {
     const user = await userapi.create(partialUser);
     // TODO: use user for something or just let it drop
