@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { deleteMatch, getMatchesByUserId } from "../database/matches";
-import { User, Relationship, Public } from "../../../common/types";
+import { Relationship } from "../../../common/types";
 
 const router = express.Router();
 
