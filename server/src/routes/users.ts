@@ -9,6 +9,7 @@ import {
 } from "../database/users";
 import {
   searchMatchedUser,
+  searchPendingUsers,
 } from "../database/requests";
 
 const router = express.Router();
@@ -33,7 +34,22 @@ router.get("/matched", async (req: Request, res: Response) => {
 
   try {
     const matchedUsers: User[] = await searchMatchedUser(userId);
-    // パスワード以外を返す
+    const safeMatched = matchedUsers.map(Public);
+    res.status(200).json(safeMatched);
+  } catch (error) {
+    console.error("Error fetching matching requests", error);
+    res.status(500).json({ error: "Failed to fetch matching requests" });
+  }
+});
+
+router.get("/pending", async (req: Request, res: Response) => {
+  const userId: number = 1; // TODO: get from auth
+  const didItFail = false;
+  if (didItFail)
+    return res.status(401).send("auth error");
+
+  try {
+    const matchedUsers: User[] = await searchPendingUsers(userId);
     const safeMatched = matchedUsers.map(Public);
     res.status(200).json(safeMatched);
   } catch (error) {

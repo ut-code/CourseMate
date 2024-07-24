@@ -89,7 +89,7 @@ export async function rejectRequest(senderId: number, receiverId: number) {
 }
 
 //ユーザーにまつわるリクエストを探す
-export async function searchSenderByReceiverId(userId: number) {
+export async function searchPendingUsers(userId: number) {
   //俺をリクエストしているのは誰だ
   return await prisma.user.findMany({
     where: {

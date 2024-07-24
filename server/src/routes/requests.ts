@@ -1,40 +1,38 @@
 import express, { Request, Response } from "express";
-import { type User, Public, Relationship } from "../../../common/types";
+import { type Relationship } from "../../../common/types";
 
 import {
   approveRequest,
   getRequestsByUserId,
   rejectRequest,
   sendRequest,
-  searchSenderByReceiverId,
 } from "../database/requests";
-import { getMatchesByUserId } from "../database/matches";
 // import { Relationship } from "@prisma/client"; // ... not used?
 
 const router = express.Router();
 
-// what the fuc-
+// I'm pretty sure that this is not used, but I'm not confident enough to delete this
 // 特定のユーザ同士が送信・受信したマッチリクエストの取得
-router.get("/id/:matchId", async (req: Request, res: Response) => {
-  const { senderId, receiverId } = req.query;
-  if (!senderId && !receiverId) {
-    return res
-      .status(400)
-      .json({ error: "SenderID or ReceiverID is required" });
-  }
-  try {
-    const requests: Relationship[] = await getRequestsByUserId({
-      senderId: senderId ? parseInt(senderId as string) : undefined,
-      receiverId: receiverId ? parseInt(receiverId as string) : undefined,
-    });
-    res.status(200).json(requests);
-  } catch (error) {
-    console.error("Error fetching requests:", error);
-    res.status(500).json({ error: "Failed to fetch requests" });
-  }
-});
+// router.get("/id/:matchId", async (req: Request, res: Response) => {
+//   const { senderId, receiverId } = req.query;
+//   if (!senderId && !receiverId) {
+//     return res
+//       .status(400)
+//       .json({ error: "SenderID or ReceiverID is required" });
+//   }
+//   try {
+//     const requests: Relationship[] = await getRequestsByUserId({
+//       senderId: senderId ? parseInt(senderId as string) : undefined,
+//       receiverId: receiverId ? parseInt(receiverId as string) : undefined,
+//     });
+//     res.status(200).json(requests);
+//   } catch (error) {
+//     console.error("Error fetching requests:", error);
+//     res.status(500).json({ error: "Failed to fetch requests" });
+//   }
+// });
 
-//特定のユーザーにまつわるリクエストを取得
+//特定のユーザーにまつわるpendingリクエストを取得
 router.get("/", async (req: Request, res: Response) => {
   const userId = 1; // TODO: get it from auth
   const didItFail = false;
@@ -42,7 +40,7 @@ router.get("/", async (req: Request, res: Response) => {
     return res.status(401).send("auth error");
 
   try {
-    const requests: Relationship[] = await getRequestsByUserId({senderId: userId});
+    const requests: Relationship[] = await getRequestsByUserId({ senderId: userId });
     const pending = requests.filter(r => r.status === "PENDING");
     res.status(200).json(pending);
   } catch (error) {
@@ -52,8 +50,8 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 // リクエストの送信
-router.post("/:recvId", async (req: Request, res: Response) => {
-  const receiverId = parseInt(req.params.recvId);
+router.post("/:recv", async (req: Request, res: Response) => {
+  const receiverId = parseInt(req.params.recv);
   const senderId = 1; // TODO: get from auth
   const didAuthenticationFail = false;
   if (didAuthenticationFail)
@@ -83,8 +81,7 @@ router.put("/:senderId", async (req: Request, res: Response) => {
     console.error("Error approving match request:", error);
     res.status(500).json({ error: "Failed to approve match request" });
   }
-},
-);
+});
 
 // リクエストの拒否
 router.delete("/:opponentId", async (req: Request, res: Response) => {
@@ -101,7 +98,6 @@ router.delete("/:opponentId", async (req: Request, res: Response) => {
     console.error("Error rejecting match request:", error);
     res.status(500).json({ error: "Failed to reject match request" });
   }
-},
-);
+});
 
 export default router;
