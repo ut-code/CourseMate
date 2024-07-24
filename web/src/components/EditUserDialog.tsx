@@ -27,6 +27,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
   // NOTE: password is not used. consider deleting this.
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [pictureUrl, setPictureUrl] = useState("");
 
   const handleSave = async () => {
     const uid = getAuth().currentUser?.uid;
@@ -36,6 +37,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
       uid: uid,
       name: name,
       email: email,
+      pictureUrl: pictureUrl,
     };
     await userapi.update(userId, data);
   };
@@ -75,6 +77,16 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
           variant="standard"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+        />
+        <TextField
+          autoFocus
+          margin="dense"
+          label="画像の URL (TODO)"
+          type="url"
+          fullWidth
+          variant="standard"
+          value={pictureUrl}
+          onChange={(e) => setPictureUrl(e.target.value)}
         />
       </DialogContent>
       <DialogActions>

@@ -90,37 +90,38 @@ export default function SignUp() {
       </Box>
     </Box>
   );
+}
 
-  //ユーザー情報をデータベースに登録する関数
-  async function registerUserInfo(
-    partialUser: Omit<User, "id">,
-  ) {
-    try {
-      const user = await userapi.create(partialUser);
-      // TODO: use user for something or just let it drop
-      user;
-    } catch (error) {
-      console.error("Error during sign-up:", error);
-    }
+//ユーザー情報をデータベースに登録する関数
+async function registerUserInfo(
+  partialUser: Omit<User, "id">,
+) {
+  try {
+    const user = await userapi.create(partialUser);
+    // TODO: use user for something or just let it drop
+    user;
+  } catch (error) {
+    console.error("Error during sign-up:", error);
+  }
+}
+
+//画像をfirestoreにアップロードする関数
+async function uploadImage(uid: string, pictureFile: File) {
+  if (!pictureFile) {
+    return "";
   }
 
-  //画像をfirestoreにアップロードする関数
-  async function uploadImage(uid: string, pictureFile: File) {
-    if (!pictureFile) {
-      return "";
-    }
+  const storage = getStorage(app);
+  const filePath = `${uid}/${pictureFile.name}`;
+  const storageRef = ref(storage, filePath);
 
-    const storage = getStorage(app);
-    const filePath = `${uid}/${pictureFile.name}`;
-    const storageRef = ref(storage, filePath);
-
-    try {
-      const snapshot = await uploadBytes(storageRef, pictureFile);
-      const pictureUrl = await getDownloadURL(snapshot.ref);
-      console.log("File available at", pictureUrl);
-      return pictureUrl;
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      throw new Error("画像のアップロードに失敗しました");
-    }
+  try {
+    const snapshot = await uploadBytes(storageRef, pictureFile);
+    const pictureUrl = await getDownloadURL(snapshot.ref);
+    console.log("File available at", pictureUrl);
+    return pictureUrl;
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    throw new Error("画像のアップロードに失敗しました");
   }
+}
