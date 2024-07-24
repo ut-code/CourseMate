@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebaseconfig";
 import { useSnackbar } from "notistack";
 import Header from "../components/Header";
-import { getUserData } from "../utils/getUserData";
+import user from "../api/user";
 
 const provider = new GoogleAuthProvider();
 
@@ -23,6 +23,7 @@ async function signInWithGoogle() {
     }
   } catch (error) {
     console.error(error);
+    throw error;
   }
 }
 
@@ -42,7 +43,7 @@ export default function Login() {
               if (auth.currentUser === null) {
                 throw new Error("ログインに失敗しました");
               }
-              const userData = await getUserData(auth.currentUser.uid);
+              const userData = await user.getByGUID(auth.currentUser.uid);
               if (userData === null) {
                 enqueueSnackbar(
                   "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
@@ -69,12 +70,14 @@ export default function Login() {
           sx={{ textTransform: "none" }}
           onClick={async () => {
             try {
-              const uid = await signInWithGoogle();
-              const response = await fetch(
-                `${import.meta.env.VITE_API_ENDPOINT}/users/${uid}`,
-              );
+              const guid = await signInWithGoogle();
+              if (!guid) {
+                throw new Error("no guid");
+              }
 
-              if (response.status !== 404) {
+              const userExists = await user.exists(guid);
+
+              if (userExists) {
                 enqueueSnackbar(
                   "この Google アカウントはすでに登録されています",
                   { variant: "error" },
@@ -84,8 +87,8 @@ export default function Login() {
                 enqueueSnackbar("新規登録を開始します", { variant: "info" });
                 navigate("/signup");
               }
-            } catch (error) {
-              enqueueSnackbar("エラーが発生しました", { variant: "error" });
+            } catch (e) {
+              console.error(e);
             }
           }}
         >

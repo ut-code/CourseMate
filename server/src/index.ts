@@ -2,7 +2,8 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
-import cors from "cors";
+import cors from "./lib/cross-origin/multiorigin-cors";
+import nocsrf from "./lib/cross-origin/block-unknown-origin";
 import usersRoutes from "./routes/users";
 import coursesRoutes from "./routes/courses";
 import requestsRoutes from "./routes/requests";
@@ -11,26 +12,22 @@ import matchesRoutes from "./routes/matches";
 const app = express();
 const port = 3000;
 const allowedOrigins = [
+  process.env.SERVER_ORIGIN ?? "http://localhost:3000", // delete this fallback when you think everyone has updated their .env
   process.env.WEB_ORIGIN,
   process.env.MOBILE_ORIGIN,
   process.env.WEB_ORIGIN_BUILD,
 ];
 const corsOptions = {
-  origin: function (
-    origin: string | undefined,
-    callback: (error: Error | null, flag?: boolean) => void,
-  ) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      return callback(null, true);
-    } else {
-      return callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origins: allowedOrigins.map((s) => s || "").filter((s) => s !== ""),
+  methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
+
+app.use(cors(corsOptions));
+app.use(nocsrf(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.json("Hello from Express!");
