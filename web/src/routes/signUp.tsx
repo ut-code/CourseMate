@@ -7,55 +7,6 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { app } from "../firebase/firebaseconfig";
 
-//ユーザー情報をデータベースに登録する関数
-async function registerUserInfo(
-  uid: string,
-  name: string,
-  email: string,
-  password: string,
-  pictureUrl: string
-) {
-  try {
-    const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        uid,
-        name,
-        email,
-        password,
-        pictureUrl,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error("Failed to sign up");
-    }
-  } catch (error) {
-    console.error("Error during sign-up:", error);
-  }
-}
-
-//画像をfirestoreにアップロードする関数
-async function uploadImage(uid: string, pictureFile: File) {
-  if (!pictureFile) {
-    return "";
-  }
-
-  const storage = getStorage(app);
-  const filePath = `${uid}/${pictureFile.name}`;
-  const storageRef = ref(storage, filePath);
-
-  try {
-    const snapshot = await uploadBytes(storageRef, pictureFile);
-    const pictureUrl = await getDownloadURL(snapshot.ref);
-    console.log("File available at", pictureUrl);
-    return pictureUrl;
-  } catch (error) {
-    console.error("Error uploading file:", error);
-    throw new Error("画像のアップロードに失敗しました");
-  }
-}
-
 export default function SignUp() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -131,3 +82,54 @@ export default function SignUp() {
     </Box>
   );
 }
+
+//ユーザー情報をデータベースに登録する関数
+async function registerUserInfo(
+  uid: string,
+  name: string,
+  email: string,
+  password: string,
+  pictureUrl: string
+) {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        uid,
+        name,
+        email,
+        password,
+        pictureUrl,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to sign up");
+    }
+  } catch (error) {
+    console.error("Error during sign-up:", error);
+  }
+}
+
+//画像をfirestoreにアップロードする関数
+async function uploadImage(uid: string, pictureFile: File) {
+  if (!pictureFile) {
+    return "";
+  }
+
+  const storage = getStorage(app);
+  const filePath = `${uid}/${pictureFile.name}`;
+  const storageRef = ref(storage, filePath);
+
+  try {
+    const snapshot = await uploadBytes(storageRef, pictureFile);
+    const pictureUrl = await getDownloadURL(snapshot.ref);
+    console.log("File available at", pictureUrl);
+    return pictureUrl;
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    throw new Error("画像のアップロードに失敗しました");
+  }
+}
+
+
