@@ -8,14 +8,11 @@ const router = express.Router();
 router.get("/", async (req: Request, res: Response) => {
   const userId = 1; // TODO: get it from auth
   const didItFail = false;
-  if (didItFail)
-    return res.status(401).send("auth error");
+  if (didItFail) return res.status(401).send("auth error");
 
   try {
-    const all: Relationship[] = await getMatchesByUserId(userId)
-    const matched = all.filter(
-      (relation) => relation.status === "MATCHED"
-    );
+    const all: Relationship[] = await getMatchesByUserId(userId);
+    const matched = all.filter((relation) => relation.status === "MATCHED");
     res.status(200).json(matched);
   } catch (error) {
     console.error("Error fetching matches:", error);
@@ -28,8 +25,7 @@ router.delete("/:opponentId", async (req: Request, res: Response) => {
   const opponentId = parseInt(req.params.opponentId);
   const requesterId = 1; // TODO: get requester's id from auth
   const didItFail = false;
-  if (didItFail)
-    return res.status(401).send("auth error");
+  if (didItFail) return res.status(401).send("auth error");
 
   try {
     await deleteMatch(requesterId, opponentId);

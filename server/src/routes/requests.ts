@@ -36,12 +36,13 @@ const router = express.Router();
 router.get("/", async (req: Request, res: Response) => {
   const userId = 1; // TODO: get it from auth
   const didItFail = false;
-  if (didItFail)
-    return res.status(401).send("auth error");
+  if (didItFail) return res.status(401).send("auth error");
 
   try {
-    const requests: Relationship[] = await getRequestsByUserId({ senderId: userId });
-    const pending = requests.filter(r => r.status === "PENDING");
+    const requests: Relationship[] = await getRequestsByUserId({
+      senderId: userId,
+    });
+    const pending = requests.filter((r) => r.status === "PENDING");
     res.status(200).json(pending);
   } catch (error) {
     console.error("Error fetching matching requests", error);
@@ -54,11 +55,13 @@ router.post("/:recv", async (req: Request, res: Response) => {
   const receiverId = parseInt(req.params.recv);
   const senderId = 1; // TODO: get from auth
   const didAuthenticationFail = false;
-  if (didAuthenticationFail)
-    return res.status(401).send("auth error");
+  if (didAuthenticationFail) return res.status(401).send("auth error");
 
   try {
-    const sentRequest = await sendRequest({ senderId: senderId, receiverId: receiverId });
+    const sentRequest = await sendRequest({
+      senderId: senderId,
+      receiverId: receiverId,
+    });
     res.status(201).json(sentRequest);
   } catch (error) {
     console.error("Error sending match request:", error);
@@ -71,8 +74,7 @@ router.put("/:senderId", async (req: Request, res: Response) => {
   const senderId = parseInt(req.params.senderId);
   const recvId = 1; // TODO: get it from auth
   const didItFail = false;
-  if (didItFail)
-    return res.status(401).send("auth error");
+  if (didItFail) return res.status(401).send("auth error");
 
   try {
     await approveRequest(senderId, recvId);
@@ -88,8 +90,7 @@ router.delete("/:opponentId", async (req: Request, res: Response) => {
   const opponentId = parseInt(req.params.opponentId); // TODO: handle zero
   const requesterId = 1; // TODO: GET FROM AUTH
   const didItFail = false;
-  if (didItFail)
-    return res.status(401).send("auth error");
+  if (didItFail) return res.status(401).send("auth error");
 
   try {
     await rejectRequest(requesterId, opponentId);
