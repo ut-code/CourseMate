@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { redirect } from "react-router-dom";
-import { getUserData } from "../utils/getUserData";
-import { AuthContext } from "../contexts/AuthContext";
-import { User } from "../../../common/types";
+import { getUserData } from "../../utils/getUserData";
+import { AuthContext } from "./AuthContext";
+import { User } from "../../../../common/types";
 
 export default function AuthProvider({
   children,
