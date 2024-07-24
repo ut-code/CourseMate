@@ -36,7 +36,7 @@ async function registerUserInfo(
 }
 
 //画像をfirestoreにアップロードする関数
-async function handleImageUpload(uid: string, pictureFile: File) {
+async function uploadImage(uid: string, pictureFile: File) {
   if (!pictureFile) {
     return "";
   }
@@ -88,7 +88,7 @@ export default function SignUp() {
       return;
     }
     try {
-      const pictureUrl = await handleImageUpload(uid, pictureFile!);
+      const pictureUrl = await uploadImage(uid, pictureFile!);
       await registerUserInfo(uid, name, email, password, pictureUrl);
       enqueueSnackbar("サインアップに成功しました", {
         variant: "success",
