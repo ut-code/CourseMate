@@ -89,7 +89,7 @@ async function registerUserInfo(
   name: string,
   email: string,
   password: string,
-  pictureUrl: string
+  pictureUrl: string,
 ) {
   try {
     const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users`, {
@@ -131,5 +131,3 @@ async function uploadImage(uid: string, pictureFile: File) {
     throw new Error("画像のアップロードに失敗しました");
   }
 }
-
-
