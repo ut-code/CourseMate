@@ -7,10 +7,7 @@ import {
   updateUser,
   getAllUsers,
 } from "../database/users";
-import {
-  searchMatchedUser,
-  searchPendingUsers,
-} from "../database/requests";
+import { searchMatchedUser, searchPendingUsers } from "../database/requests";
 
 const router = express.Router();
 
@@ -29,8 +26,7 @@ router.get("/", async (req: Request, res: Response) => {
 router.get("/matched", async (req: Request, res: Response) => {
   const userId: number = 1; // TODO: get from auth
   const didItFail = false;
-  if (didItFail)
-    return res.status(401).send("auth error");
+  if (didItFail) return res.status(401).send("auth error");
 
   try {
     const matchedUsers: User[] = await searchMatchedUser(userId);
@@ -45,8 +41,7 @@ router.get("/matched", async (req: Request, res: Response) => {
 router.get("/pending", async (req: Request, res: Response) => {
   const userId: number = 1; // TODO: get from auth
   const didItFail = false;
-  if (didItFail)
-    return res.status(401).send("auth error");
+  if (didItFail) return res.status(401).send("auth error");
 
   try {
     const matchedUsers: User[] = await searchPendingUsers(userId);
