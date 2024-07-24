@@ -81,6 +81,21 @@ export async function update(userId: number, newData: User): Promise<void> {
   }
 }
 
+export async function remove(userId: number): Promise<void> {
+  try {
+    const url = endpoints.user(userId);
+    const res = await fetch(url, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      throw new Error("Network res was not ok");
+    }
+  } catch (error) {
+    console.error("Error deleting user information:", error);
+  }
+}
+
 export default {
   get,
   getByGUID,
@@ -89,4 +104,5 @@ export default {
   exists,
   create,
   update,
+  remove,
 };
