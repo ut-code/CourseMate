@@ -1,11 +1,13 @@
 import endpoints from "./internal/endpoints.ts";
 import type { User } from "../../../common/types";
 
+//全てのユーザ情報を取得する
 export async function all(): Promise<User[]> {
   const res = await fetch(endpoints.users);
   return res.json();
 }
 
+//指定した id のユーザ情報を除いた全てのユーザ情報を取得する
 export async function except(id: number): Promise<User[]> {
   try {
     const data = await all();
@@ -32,12 +34,14 @@ export async function getByGUID(guid: string): Promise<User | null> {
   return data;
 }
 
+//指定した guid のユーザが存在するかどうかを取得する
 export async function exists(guid: string): Promise<boolean> {
   const res = await fetch(endpoints.userExists(guid));
   if (res.status === 404) return false;
   return true;
 }
 
+//指定した id のユーザ情報を取得する
 export async function get(id: number): Promise<User | null> {
   const res = await fetch(endpoints.user(id));
   if (res.status === 404) {
@@ -48,6 +52,7 @@ export async function get(id: number): Promise<User | null> {
   return data;
 }
 
+//ユーザ情報を作成する
 export async function create(userdata: Omit<User, "id">): Promise<User> {
   const res = await fetch(endpoints.users, {
     method: "POST",
@@ -62,6 +67,7 @@ export async function create(userdata: Omit<User, "id">): Promise<User> {
   return user;
 }
 
+//ユーザ情報を更新する
 export async function update(userId: number, newData: User): Promise<void> {
   try {
     const url = endpoints.user(userId);
@@ -81,6 +87,7 @@ export async function update(userId: number, newData: User): Promise<void> {
   }
 }
 
+//ユーザ情報を削除する
 export async function remove(userId: number): Promise<void> {
   try {
     const url = endpoints.user(userId);
