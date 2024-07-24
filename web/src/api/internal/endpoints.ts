@@ -102,8 +102,8 @@ const userExists = (guid: string) => {
  * - statuses:
  *   - 204: deleted.
  *   - 401: unauthorized.
- *   - 404: you haven't matched the target user. 
- *          (not implemented at server) 
+ *   - 404: you haven't matched the target user.
+ *          (not implemented at server)
  *   - 500: internal error.
  **/
 const match = (opponentID: UserID) => {
@@ -121,7 +121,6 @@ const match = (opponentID: UserID) => {
  *   - 500: internal error.
  **/
 const matches = `${origin}/matches`;
-
 
 /**
  * [x] 実装済み
