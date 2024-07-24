@@ -7,7 +7,7 @@ export type UserID = number;
  * [] 実装済み
  * GET -> get user's info. TODO: filter return info by user's options and open level.
  * - statuses:
- *   - 200: ok. 
+ *   - 200: ok.
  *     - body: User
  *   - 400: not found.
  *   - 500: internal error.
@@ -129,7 +129,7 @@ const requests = `${origin}/requests`;
  * POST -> create request.
  * - status:
  *   - 201: Created.
- *   - 
+ *   - 500: internal error.
  *
  * [] 実装済み
  * PUT -> accept request.
