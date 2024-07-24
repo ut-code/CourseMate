@@ -13,3 +13,31 @@ export type User = {
   name: string;
   email: string;
 };
+<<<<<<< Updated upstream
+=======
+
+export type PublicUser = {
+  id: number;
+  name: string;
+  pictureUrl: string;
+}
+export function Public(u: User): PublicUser {
+  return {
+    id: u.id,
+    name: u.name,
+    pictureUrl: u.pictureUrl,
+  }
+}
+
+/**
+ * Google account's id.
+ * recommended variable name: guid
+ **/
+export type GUID = string;
+
+/**
+ * User's ID used in database. do not assign string to this.
+ * recommended variable name: id
+ **/
+export type UserID = number;
+>>>>>>> Stashed changes

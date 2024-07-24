@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import { type User, Public, Relationship } from "../../../common/types";
 
 import {
   approveRequest,
@@ -6,12 +7,13 @@ import {
   rejectRequest,
   sendRequest,
   searchSenderByReceiverId,
-  searchMatchedUser,
 } from "../database/requests";
+import { getMatchesByUserId } from "../database/matches";
 // import { Relationship } from "@prisma/client"; // ... not used?
 
 const router = express.Router();
 
+// what the fuc-
 // 特定のユーザ同士が送信・受信したマッチリクエストの取得
 router.get("/id/:matchId", async (req: Request, res: Response) => {
   const { senderId, receiverId } = req.query;
@@ -21,7 +23,7 @@ router.get("/id/:matchId", async (req: Request, res: Response) => {
       .json({ error: "SenderID or ReceiverID is required" });
   }
   try {
-    const requests = await getRequestsByUserId({
+    const requests: Relationship[] = await getRequestsByUserId({
       senderId: senderId ? parseInt(senderId as string) : undefined,
       receiverId: receiverId ? parseInt(receiverId as string) : undefined,
     });
@@ -32,50 +34,33 @@ router.get("/id/:matchId", async (req: Request, res: Response) => {
   }
 });
 
-//特定のユーザーにまつわるマッチリクエストを取得
-router.get("/receiverId/:userId", async (req: Request, res: Response) => {
-  const { userId } = req.params;
+//特定のユーザーにまつわるリクエストを取得
+router.get("/", async (req: Request, res: Response) => {
+  const userId = 1; // TODO: get it from auth
+  const didItFail = false;
+  if (didItFail)
+    return res.status(401).send("auth error");
+
   try {
-    const senders = await searchSenderByReceiverId(parseInt(userId));
-    // パスワード以外を返す
-    const sendersWithoutPassword = senders.map((sender) => {
-      const { password, ...senderWithoutPassword } = sender;
-      password; // against eslint; drop password
-      return senderWithoutPassword;
-    });
-    res.status(200).json(sendersWithoutPassword);
+    const requests: Relationship[] = await getRequestsByUserId({senderId: userId});
+    const pending = requests.filter(r => r.status === "PENDING");
+    res.status(200).json(pending);
   } catch (error) {
     console.error("Error fetching matching requests", error);
     res.status(500).json({ error: "Failed to fetch matching requests" });
   }
 });
 
-//特定のユーザーとマッチしたユーザーを取得
-router.get("/matched/:userId", async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  try {
-    const matchedUsers = await searchMatchedUser(parseInt(userId));
-    // パスワード以外を返す
-    const matchedUsersWithoutPassword = matchedUsers.map((user) => {
-      const { password, ...userWithoutPassword } = user;
-      password; // drop password for eslint
-      return userWithoutPassword;
-    });
-    res.status(200).json(matchedUsersWithoutPassword);
-  } catch (error) {
-    console.error("Error fetching matching requests", error);
-    res.status(500).json({ error: "Failed to fetch matching requests" });
-  }
-});
+// リクエストの送信
+router.post("/:recvId", async (req: Request, res: Response) => {
+  const receiverId = parseInt(req.params.recvId);
+  const senderId = 1; // TODO: get from auth
+  const didAuthenticationFail = false;
+  if (didAuthenticationFail)
+    return res.status(401).send("auth error");
 
-// マッチリクエストの送信
-router.post("/sendMatchRequest", async (req: Request, res: Response) => {
-  const { senderId, receiverId } = req.body;
   try {
-    const sentRequest = await sendRequest({
-      senderId: parseInt(senderId),
-      receiverId: parseInt(receiverId),
-    });
+    const sentRequest = await sendRequest({ senderId: senderId, receiverId: receiverId });
     res.status(201).json(sentRequest);
   } catch (error) {
     console.error("Error sending match request:", error);
@@ -83,34 +68,40 @@ router.post("/sendMatchRequest", async (req: Request, res: Response) => {
   }
 });
 
-// マッチリクエストの承認
-router.put(
-  "/accept/:senderId/:receiverId",
-  async (req: Request, res: Response) => {
-    const { senderId, receiverId } = req.params;
-    try {
-      await approveRequest(parseInt(senderId), parseInt(receiverId));
-      res.status(204).send();
-    } catch (error) {
-      console.error("Error approving match request:", error);
-      res.status(500).json({ error: "Failed to approve match request" });
-    }
-  },
+// リクエストの承認
+router.put("/:senderId", async (req: Request, res: Response) => {
+  const senderId = parseInt(req.params.senderId);
+  const recvId = 1; // TODO: get it from auth
+  const didItFail = false;
+  if (didItFail)
+    return res.status(401).send("auth error");
+
+  try {
+    await approveRequest(senderId, recvId);
+    res.status(201).send();
+  } catch (error) {
+    console.error("Error approving match request:", error);
+    res.status(500).json({ error: "Failed to approve match request" });
+  }
+},
 );
 
-// マッチリクエストの拒否
-router.put(
-  "/reject/:senderId/:receiverId",
-  async (req: Request, res: Response) => {
-    const { senderId, receiverId } = req.params;
-    try {
-      await rejectRequest(parseInt(senderId), parseInt(receiverId));
-      res.status(204).send();
-    } catch (error) {
-      console.error("Error rejecting match request:", error);
-      res.status(500).json({ error: "Failed to reject match request" });
-    }
-  },
+// リクエストの拒否
+router.delete("/:opponentId", async (req: Request, res: Response) => {
+  const opponentId = parseInt(req.params.opponentId); // TODO: handle zero
+  const requesterId = 1; // TODO: GET FROM AUTH
+  const didItFail = false;
+  if (didItFail)
+    return res.status(401).send("auth error");
+
+  try {
+    await rejectRequest(requesterId, opponentId);
+    res.status(204).send();
+  } catch (error) {
+    console.error("Error rejecting match request:", error);
+    res.status(500).json({ error: "Failed to reject match request" });
+  }
+},
 );
 
 export default router;
