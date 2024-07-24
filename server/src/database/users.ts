@@ -22,7 +22,7 @@ export async function getUser(uid: string) {
 }
 
 // ユーザーの更新
-export async function updateUser(userId: Number, newUser: Omit<User, "id">) {
+export async function updateUser(userId: number, newUser: Omit<User, "id">) {
   const updatedUser = await prisma.user.update({
     where: { id: userId },
     data: newUser,

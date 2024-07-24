@@ -14,24 +14,6 @@ export type User = {
   email: string;
   pictureUrl: string;
 };
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-
-export type PublicUser = {
-  id: number;
-  name: string;
-  pictureUrl: string;
-}
-export function Public(u: User): PublicUser {
-  return {
-    id: u.id,
-    name: u.name,
-    pictureUrl: u.pictureUrl,
-  }
-}
-=======
->>>>>>> main
 
 export type PublicUser = {
   id: number;
@@ -57,7 +39,3 @@ export type GUID = string;
  * recommended variable name: id
  **/
 export type UserID = number;
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> main
