@@ -13,7 +13,7 @@ async function registerUserInfo(
   name: string,
   email: string,
   password: string,
-  pictureUrl: string,
+  pictureUrl: string
 ) {
   try {
     const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users`, {
@@ -56,18 +56,6 @@ async function uploadImage(uid: string, pictureFile: File) {
   }
 }
 
-//画像をファイルから選択する関数
-const handleImageChange = (
-  event: ChangeEvent<HTMLInputElement>,
-  setPictureFile: (file: File) => void,
-): void => {
-  if (event.target.files && event.target.files.length > 0) {
-    setPictureFile(event.target.files[0]);
-  } else {
-    return;
-  }
-};
-
 export default function SignUp() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -103,6 +91,15 @@ export default function SignUp() {
     }
   };
 
+  //画像を選択する関数
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    if (event.target.files && event.target.files.length > 0) {
+      setPictureFile(event.target.files[0]);
+    } else {
+      return;
+    }
+  };
+
   return (
     <Box>
       <Header title="Sign Up" />
@@ -122,10 +119,7 @@ export default function SignUp() {
           onChange={(e) => setPassword(e.target.value)}
           label="Password"
         />
-        <input
-          type="file"
-          onChange={(e) => handleImageChange(e, setPictureFile)}
-        />
+        <input type="file" onChange={handleImageChange} />
         <Button
           variant="outlined"
           sx={{ textTransform: "none" }}
