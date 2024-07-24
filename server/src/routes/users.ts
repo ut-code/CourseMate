@@ -51,8 +51,6 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     res.status(200).json({
       // パスワード以外の情報
       id: user.id,
@@ -61,14 +59,8 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
       email: user.email,
       pictureUrl: user.pictureUrl,
     });
-=======
     const json: PublicUser = Public(user);
     res.status(200).json(json);
->>>>>>> Stashed changes
-=======
-    const json: PublicUser = Public(user);
-    res.status(200).json(json);
->>>>>>> Stashed changes
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({ error: "Failed to fetch user" });
@@ -77,46 +69,11 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
 
 // ユーザーの作成エンドポイント
 router.post("/", async (req: Request, res: Response) => {
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-  const { uid, name, email, password } = req.body;
-=======
-  const { uid, name, email, password, pictureUrl } = req.body;
->>>>>>> main
-
-  try {
-    const newUser = await createUser({
-      uid,
-      name,
-      email,
-      password,
-      pictureUrl,
-    });
-    res.status(201).json({
-      // パスワード以外の情報
-      id: newUser.id,
-      uid: newUser.uid,
-      name: newUser.name,
-      email: newUser.email,
-      pictureUrl: newUser.pictureUrl,
-    });
-=======
-  // TODO: insert Typia
   const partialUser: Omit<User, "id"> = req.body; // is any
 
   try {
     const newUser = await createUser(partialUser);
     res.status(201).json(newUser);
->>>>>>> Stashed changes
-=======
-  // TODO: insert Typia
-  const partialUser: Omit<User, "id"> = req.body; // is any
-
-  try {
-    const newUser = await createUser(partialUser);
-    res.status(201).json(newUser);
->>>>>>> Stashed changes
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(500).json({ error: "Failed to create user" });
@@ -124,8 +81,6 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 // ユーザーの更新エンドポイント
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 router.put("/:userId", async (req: Request, res: Response) => {
   const { userId } = req.params;
   const { name, email, password, pictureUrl } = req.body;
@@ -145,42 +100,15 @@ router.put("/:userId", async (req: Request, res: Response) => {
   if (Object.keys(updateData).length === 0) {
     return res.status(400).send({ message: "No update fields provided" });
   }
-=======
 router.put("/id/:userId", async (req: Request, res: Response) => {
   // TODO: handle non-int
   const userId = parseInt(req.params.userId); 
->>>>>>> Stashed changes
-=======
-router.put("/id/:userId", async (req: Request, res: Response) => {
-  // TODO: handle non-int
-  const userId = parseInt(req.params.userId); 
->>>>>>> Stashed changes
 
   // TODO: Typia
   const user: Omit<User, "id"> = req.body;
   try {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    const updatedUser = await updateUser({
-      userId: parseInt(userId),
-      ...updateData,
-    });
-    res.status(200).json({
-      // パスワード以外の情報
-      id: updatedUser.id,
-      uid: updatedUser.uid,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      pictureUrl: updatedUser.pictureUrl,
-    });
-=======
     const updatedUser = await updateUser(userId, user);
     res.status(200).json(updatedUser);
->>>>>>> Stashed changes
-=======
-    const updatedUser = await updateUser(userId, user);
-    res.status(200).json(updatedUser);
->>>>>>> Stashed changes
   } catch (error) {
     console.error("Error updating user:", error);
     res.status(500).json({ error: "Failed to update user" });

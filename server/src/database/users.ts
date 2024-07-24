@@ -4,39 +4,9 @@ import { User } from "../../../common/types";
 const prisma = new PrismaClient();
 
 // ユーザーの作成
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-export async function createUser({
-  uid,
-  name,
-  email,
-  password,
-  pictureUrl,
-}: {
-  uid: string;
-  name: string;
-  email: string;
-  password: string;
-  pictureUrl: string;
-}) {
-  const newUser = await prisma.user.create({
-    data: {
-      uid,
-      name,
-      email,
-      password,
-      pictureUrl,
-    },
-=======
 export async function createUser(partialUser: Omit<User, "id">) {
   const newUser = await prisma.user.create({
     data: partialUser,
->>>>>>> Stashed changes
-=======
-export async function createUser(partialUser: Omit<User, "id">) {
-  const newUser = await prisma.user.create({
-    data: partialUser,
->>>>>>> Stashed changes
   });
   return newUser;
 }
@@ -52,40 +22,10 @@ export async function getUser(uid: string) {
 }
 
 // ユーザーの更新
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-export async function updateUser({
-  userId,
-  name,
-  email,
-  password,
-  pictureUrl,
-}: {
-  userId: number;
-  name?: string;
-  email?: string;
-  password?: string;
-  pictureUrl?: string;
-}) {
-  const updatedUser = await prisma.user.update({
-    where: { id: userId },
-<<<<<<< HEAD
-    data: { name, email, password },
-=======
 export async function updateUser(userId: Number, newUser: Omit<User, "id">) {
   const updatedUser = await prisma.user.update({
     where: { id: userId },
     data: newUser,
->>>>>>> Stashed changes
-=======
-    data: { name, email, password, pictureUrl },
->>>>>>> main
-=======
-export async function updateUser(userId: Number, newUser: Omit<User, "id">) {
-  const updatedUser = await prisma.user.update({
-    where: { id: userId },
-    data: newUser,
->>>>>>> Stashed changes
   });
   return updatedUser;
 }
