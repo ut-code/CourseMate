@@ -9,6 +9,10 @@ import {
   Button,
 } from "@mui/material";
 
+import { User } from "../../../common/types";
+import userapi from "../api/user";
+import { getAuth } from "firebase/auth";
+
 type EditUserDialogProps = {
   userId: number;
   open: boolean;
@@ -20,32 +24,22 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
 ) => {
   const { userId, open, onClose } = props;
   const [name, setName] = useState("");
+  // NOTE: password is not used. consider deleting this.
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [pictureUrl, setPictureUrl] = useState("");
 
   const handleSave = async () => {
-    const url = `${import.meta.env.VITE_API_ENDPOINT}/users/${userId}`;
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: name,
-          password: name,
-          email: email,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      onClose();
-    } catch (error) {
-      console.error("Error updating user information:", error);
-    }
+    const uid = getAuth().currentUser?.uid;
+    if (!uid) throw new Error("you not logged in");
+    const data: User = {
+      id: userId,
+      uid: uid,
+      name: name,
+      email: email,
+      pictureUrl: pictureUrl,
+    };
+    await userapi.update(userId, data);
   };
 
   return (
@@ -83,6 +77,16 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
           variant="standard"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+        />
+        <TextField
+          autoFocus
+          margin="dense"
+          label="画像の URL (TODO)"
+          type="url"
+          fullWidth
+          variant="standard"
+          value={pictureUrl}
+          onChange={(e) => setPictureUrl(e.target.value)}
         />
       </DialogContent>
       <DialogActions>

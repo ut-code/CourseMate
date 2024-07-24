@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { redirect } from "react-router-dom";
-import { getUserData } from "../../utils/getUserData";
+import userapi from "../../api/user";
 import { AuthContext } from "./AuthContext";
 import { User } from "../../../../common/types";
 
@@ -17,7 +17,7 @@ export default function AuthProvider({
       const auth = getAuth();
       return onAuthStateChanged(auth, (firebaseUser) => {
         if (firebaseUser) {
-          getUserData(firebaseUser.uid).then((user) => setUser(user));
+          userapi.getByGUID(firebaseUser.uid).then((user) => setUser(user));
         } else {
           setUser(null);
           console.log("ログイン画面に移動します");

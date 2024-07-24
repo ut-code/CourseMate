@@ -8,50 +8,13 @@ import {
   Stack,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import { User } from "../../../../common/types";
-import useData from "../../hooks/useData";
-
-async function rejectMatchRequest(senderId: number, receiverId: number) {
-  try {
-    const response = await fetch(
-      `${
-        import.meta.env.VITE_API_ENDPOINT
-      }/requests/reject/${senderId.toString()}/${receiverId.toString()}`,
-      {
-        method: "PUT",
-      },
-    );
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function acceptMatchRequest(senderId: number, receiverId: number) {
-  try {
-    const response = await fetch(
-      `${
-        import.meta.env.VITE_API_ENDPOINT
-      }/requests/accept/${senderId.toString()}/${receiverId.toString()}`,
-      {
-        method: "PUT",
-      },
-    );
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-}
+import request from "../../api/request";
+import hooks from "../../api/hooks";
 
 export default function Requests() {
   // const currentUserId = useAuthContext()?.id;
-  const currentUserId = 1; // TODO: Fix this
 
-  const url = `${import.meta.env.VITE_API_ENDPOINT}/requests/receiverId/${currentUserId}`;
-
-  const { data, isLoading, error, fetchData } = useData<User[]>(url);
+  const { data, isLoading, error, reload } = hooks.usePendingRequests();
 
   return (
     <Box>
@@ -62,6 +25,7 @@ export default function Requests() {
       ) : (
         <List>
           {data !== undefined &&
+            // FIXME: this is probably not matched user
             data?.map((matchedUser) => (
               <ListItem
                 key={matchedUser.id.toString()}
@@ -69,9 +33,7 @@ export default function Requests() {
                   <Stack direction={"row"}>
                     <Button
                       onClick={() => {
-                        acceptMatchRequest(matchedUser.id, currentUserId!).then(
-                          () => fetchData(),
-                        );
+                        request.accept(matchedUser.id).then(() => reload());
                       }}
                     >
                       受け入れ
@@ -84,9 +46,7 @@ export default function Requests() {
                           )
                         )
                           return;
-                        rejectMatchRequest(matchedUser.id, currentUserId!).then(
-                          () => fetchData(),
-                        );
+                        request.reject(matchedUser.id).then(() => reload());
                       }}
                     >
                       拒否

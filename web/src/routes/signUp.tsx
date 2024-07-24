@@ -5,6 +5,8 @@ import { useSnackbar } from "notistack";
 import { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import userapi from "../api/user";
+import { User } from "../../../common/types";
 import { app } from "../firebase/firebaseconfig";
 
 export default function SignUp() {
@@ -28,7 +30,13 @@ export default function SignUp() {
     }
     try {
       const pictureUrl = await uploadImage(uid, pictureFile!);
-      await registerUserInfo(uid, name, email, password, pictureUrl);
+      const partialUser: Omit<User, "id"> = {
+        uid,
+        name,
+        email,
+        pictureUrl,
+      };
+      await registerUserInfo(partialUser);
       enqueueSnackbar("サインアップに成功しました", {
         variant: "success",
       });
@@ -84,28 +92,11 @@ export default function SignUp() {
 }
 
 //ユーザー情報をデータベースに登録する関数
-async function registerUserInfo(
-  uid: string,
-  name: string,
-  email: string,
-  password: string,
-  pictureUrl: string,
-) {
+async function registerUserInfo(partialUser: Omit<User, "id">) {
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/users`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        uid,
-        name,
-        email,
-        password,
-        pictureUrl,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error("Failed to sign up");
-    }
+    const user = await userapi.create(partialUser);
+    // TODO: use user for something or just let it drop
+    user;
   } catch (error) {
     console.error("Error during sign-up:", error);
   }

@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 
+// TODO: separate this into concrete types and urls s.t. there is no unsafe any
+// also use sth like Typia (or Zod if you really like it)
 export default function useData<T>(url: string) {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchData = useCallback(async () => {
+  const reload = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -24,8 +26,8 @@ export default function useData<T>(url: string) {
   }, [url]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    reload();
+  }, [reload]);
 
-  return { data, isLoading, error, fetchData };
+  return { data, isLoading, error, reload };
 }
