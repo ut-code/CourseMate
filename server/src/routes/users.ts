@@ -85,7 +85,7 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
 
 // ユーザーの作成エンドポイント
 router.post("/", async (req: Request, res: Response) => {
-  const partialUser: Omit<User, "id"> = req.body; // is any
+  const partialUser = assert<Omit<User, "id">>(req.body);
 
   try {
     const newUser = await createUser(partialUser);

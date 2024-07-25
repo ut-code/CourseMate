@@ -1,5 +1,6 @@
 import endpoints from "./internal/endpoints";
 import useData from "../hooks/useData";
+import { assertUser } from "../../../common/typia";
 import type { User } from "../../../common/types";
 
 type Hook<T> = {
@@ -9,16 +10,22 @@ type Hook<T> = {
   reload: () => void;
 };
 
-// TODO: install typia or zod.
-
 export function useMatchedUsers(): Hook<User[]> {
   const url = endpoints.matchedUsers;
-  return useData<User[]>(url);
+  const { data, isLoading, error, reload } = useData<User[]>(url);
+
+  const validatedData = data ? data.map(assertUser) : null;
+
+  return { data: validatedData, isLoading, error, reload };
 }
 
 export function usePendingUsers(): Hook<User[]> {
   const url = endpoints.pendingUsers;
-  return useData<User[]>(url);
+  const { data, isLoading, error, reload } = useData<User[]>(url);
+
+  const validatedData = data ? data.map(assertUser) : null;
+
+  return { data: validatedData, isLoading, error, reload };
 }
 
 export default {
