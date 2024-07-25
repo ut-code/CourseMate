@@ -10,7 +10,6 @@ import requestsRoutes from "./routes/requests";
 import matchesRoutes from "./routes/matches";
 import cookieParser from "cookie-parser";
 import mustBeLoggedIn from "./middleware/must-be-logged-in";
-require("dotenv").config();
 
 const app = express();
 const port = 3000;
