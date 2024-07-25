@@ -8,6 +8,7 @@ import {
   getAllUsers,
 } from "../database/users";
 import { searchMatchedUser, searchPendingUsers } from "../database/requests";
+import { assert } from "typia";
 
 const router = express.Router();
 
@@ -100,8 +101,7 @@ router.put("/id/:userId", async (req: Request, res: Response) => {
   // TODO: handle non-int
   const userId = parseInt(req.params.userId);
 
-  // TODO: Typia
-  const user: Omit<User, "id"> = req.body;
+  const user = assert<Omit<User, "id">>(req.body);
   try {
     const updatedUser = await updateUser(userId, user);
     res.status(200).json(updatedUser);
