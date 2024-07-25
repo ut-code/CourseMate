@@ -25,6 +25,8 @@ export async function getUserId(req: Request): Promise<UserID> {
       guid: guid,
     },
   });
+  if (!user)
+    throw new Error("User not found!");
   return user.id;
 }
 
