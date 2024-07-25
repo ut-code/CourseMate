@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { deleteMatch, getMatchesByUserId } from "../database/matches";
 import { Relationship } from "../../../common/types";
 import { safeGetUserId } from "../firebase/auth/db";
-import { safeParseInt } from "../../../common/lib/safeParseInt";
+import { safeParseInt } from "../../../common/lib/result/safeParseInt";
 
 const router = express.Router();
 

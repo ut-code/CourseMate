@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { type PublicUser, Public, User } from "../../../common/types";
-import { safeParseInt } from "../../../common/lib/safeParseInt";
+import { safeParseInt } from "../../../common/lib/result/safeParseInt";
 import {
   createUser,
   deleteUser,
