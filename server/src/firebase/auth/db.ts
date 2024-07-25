@@ -49,6 +49,7 @@ export async function safeGetUserId(req: Request): Promise<Result<UserID>> {
 
 /** returns true if userid is requester's id.
  * otherwise returns false.
+ * never throws.
  Expected use case:
  ```js
  const paramid = req.params.userid;
