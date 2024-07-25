@@ -21,6 +21,9 @@ services:
       dockerfile: ./server/Dockerfile
     ports:
       - "3000:3000"
+    # environment:
+    #   - DATABASE_URL=${DATABASE_URL:-postgres://postgres:mysecretpassword@coursemate_db:5432/}
+
     depends_on:
       coursemate_db:
         condition: service_healthy
