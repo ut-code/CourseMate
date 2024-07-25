@@ -2,38 +2,28 @@ import endpoints, { UserID } from "./internal/endpoints";
 
 //指定したユーザにリクエストを送る
 export async function send(receiverId: UserID) {
-  const res = await fetch(endpoints.request(receiverId), {
-    method: "POST",
+  const res = await fetch(endpoints.sendRequest(receiverId), {
+    method: "PUT",
   });
-  return res.json();
+  return res.text();
 }
 
 //相手からのリクエストを拒否する
 export async function reject(opponentID: UserID) {
-  try {
-    const response = await fetch(endpoints.request(opponentID), {
-      method: "DELETE",
-    });
-    const data = await response.json();
-    return data;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  const response = await fetch(endpoints.acceptRequest(opponentID), {
+    method: "PUT",
+  });
+  const data = await response.text();
+  return data;
 }
 
 //相手からのリクエストを受け入れる
 export async function accept(senderId: number) {
-  try {
-    const response = await fetch(endpoints.request(senderId), {
-      method: "PUT",
-    });
-    const data = await response.json();
-    return data;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  const response = await fetch(endpoints.rejectRequest(senderId), {
+    method: "PUT",
+  });
+  const data = await response.text();
+  return data;
 }
 
 export default {
