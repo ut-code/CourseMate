@@ -7,7 +7,9 @@ router.get("/set-cookie", (req: Request, res: Response) => {
   const body = req.body;
 
   for (const key of Object.keys(body)) {
-    res.cookie(key, String(body[key]));
+    res.cookie(key, String(body[key]), {
+      httpOnly: true,
+    });
   }
 
   res.status(204).end();
