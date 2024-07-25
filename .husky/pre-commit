@@ -1,1 +1,6 @@
-npm
+#!/usr/bin/env bash
+
+# init
+cd `dirname -- $0` # cd /path/to/coursemate/_/husky.sh
+cd ../..
+# now the wd is at /coursemate
