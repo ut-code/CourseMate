@@ -1,4 +1,4 @@
-import { IdToken } from "../firebase/auth/idToken";
+import { type IdToken } from "../firebase/auth/lib";
 import endpoints from "./internal/endpoints";
 
 // throws if res.status !== 204
