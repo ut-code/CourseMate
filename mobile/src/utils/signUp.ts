@@ -1,7 +1,8 @@
 import { router } from "expo-router";
+import { GUID } from "../../../common/types";
 
 const signUp = async (
-  uid: string,
+  guid: GUID,
   name: string,
   email: string,
   password: string,
@@ -13,7 +14,7 @@ const signUp = async (
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        uid,
+        guid,
         name,
         email,
         password,

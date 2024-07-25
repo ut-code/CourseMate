@@ -1,13 +1,13 @@
 import { View, ScrollView, StyleSheet } from "react-native";
 
-import { User } from "../../../../common/types";
+import { User, UserID } from "../../../../common/types";
 import Button from "../../components/Button";
 import ListItem from "../../components/ListItem";
 import { API_ENDPOINT } from "../../env";
 import useData from "../../hooks/useData";
 import { useAuthContext } from "../../provider/AuthProvider";
 
-async function rejectMatchRequest(senderId: number, receiverId: number) {
+async function rejectMatchRequest(senderId: UserID, receiverId: UserID) {
   try {
     const response = await fetch(
       `${API_ENDPOINT}/requests/reject/${senderId.toString()}/${receiverId.toString()}`,
@@ -22,7 +22,7 @@ async function rejectMatchRequest(senderId: number, receiverId: number) {
   }
 }
 
-async function acceptMatchRequest(senderId: number, receiverId: number) {
+async function acceptMatchRequest(senderId: UserID, receiverId: UserID) {
   try {
     const response = await fetch(
       `${API_ENDPOINT}/requests/accept/${senderId.toString()}/${receiverId.toString()}`,

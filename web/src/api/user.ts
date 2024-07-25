@@ -1,5 +1,5 @@
 import endpoints from "./internal/endpoints.ts";
-import type { User } from "../../../common/types";
+import type { GUID, User, UserID } from "../../../common/types";
 
 //全てのユーザ情報を取得する
 export async function all(): Promise<User[]> {
@@ -8,7 +8,7 @@ export async function all(): Promise<User[]> {
 }
 
 //指定した id のユーザ情報を除いた全てのユーザ情報を取得する
-export async function except(id: number): Promise<User[]> {
+export async function except(id: UserID): Promise<User[]> {
   try {
     const data = await all();
     return data.filter((user: User) => user.id !== id);
@@ -20,11 +20,11 @@ export async function except(id: number): Promise<User[]> {
 
 /**
  * Google アカウントの uid を用いて CourseMate ユーザの情報を取得する。
- * @param uid Google アカウントの uid
+ * @param guid Google アカウントの uid
  * @returns ユーザの情報
  * @throws network error and type error
  */
-export async function getByGUID(guid: string): Promise<User | null> {
+export async function getByGUID(guid: GUID): Promise<User | null> {
   const res = await fetch(endpoints.userByGUID(guid));
   if (res.status === 404) {
     return null;
@@ -35,14 +35,14 @@ export async function getByGUID(guid: string): Promise<User | null> {
 }
 
 //指定した guid のユーザが存在するかどうかを取得する
-export async function exists(guid: string): Promise<boolean> {
+export async function exists(guid: GUID): Promise<boolean> {
   const res = await fetch(endpoints.userExists(guid));
   if (res.status === 404) return false;
   return true;
 }
 
 //指定した id のユーザ情報を取得する
-export async function get(id: number): Promise<User | null> {
+export async function get(id: UserID): Promise<User | null> {
   const res = await fetch(endpoints.user(id));
   if (res.status === 404) {
     return null;
@@ -68,7 +68,7 @@ export async function create(userdata: Omit<User, "id">): Promise<User> {
 }
 
 //ユーザ情報を更新する
-export async function update(userId: number, newData: User): Promise<void> {
+export async function update(userId: UserID, newData: User): Promise<void> {
   try {
     const url = endpoints.user(userId);
     const res = await fetch(url, {
@@ -88,7 +88,7 @@ export async function update(userId: number, newData: User): Promise<void> {
 }
 
 //ユーザ情報を削除する
-export async function remove(userId: number): Promise<void> {
+export async function remove(userId: UserID): Promise<void> {
   try {
     const url = endpoints.user(userId);
     const res = await fetch(url, {
