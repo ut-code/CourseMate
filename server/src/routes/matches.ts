@@ -9,8 +9,7 @@ const router = express.Router();
 // 特定のユーザIDを含むマッチの取得
 router.get("/", async (req: Request, res: Response) => {
   const id = await safeGetUserId(req);
-  if (!id.ok)
-    return res.status(401).send("auth error");
+  if (!id.ok) return res.status(401).send("auth error");
   const userId = id.value;
 
   try {

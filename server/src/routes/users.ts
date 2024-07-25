@@ -39,8 +39,7 @@ router.get("/exists/:guid", async (req: Request, res: Response) => {
 // 特定のユーザーとマッチしたユーザーを取得
 router.get("/matched", async (req: Request, res: Response) => {
   const result = await safeGetUserId(req);
-  if (!result.ok)
-    return res.status(401).send("auth error");
+  if (!result.ok) return res.status(401).send("auth error");
   const userId = result.value;
 
   try {
@@ -55,8 +54,7 @@ router.get("/matched", async (req: Request, res: Response) => {
 
 router.get("/pending", async (req: Request, res: Response) => {
   const result = await safeGetUserId(req);
-  if (!result.ok)
-    return res.status(401).send("auth error");
+  if (!result.ok) return res.status(401).send("auth error");
   const userId = result.value;
 
   try {
@@ -102,8 +100,7 @@ router.post("/", async (req: Request, res: Response) => {
 // ユーザーの更新エンドポイント
 router.put("/id/:userId", async (req: Request, res: Response) => {
   const id = safeParseInt(req.params.userId);
-  if (!id.ok)
-    return res.status(400).send("bad param encoding");
+  if (!id.ok) return res.status(400).send("bad param encoding");
 
   if (await isRequester(req, id.value))
     return res.status(401).send("you can't update others");
@@ -124,11 +121,9 @@ router.put("/id/:userId", async (req: Request, res: Response) => {
 // ユーザーの削除エンドポイント
 router.delete("/id/:userId", async (req, res) => {
   const id = safeParseInt(req.params.userId);
-  if (!id.ok)
-    return res.status(400).send("invalid userId encoding");
+  if (!id.ok) return res.status(400).send("invalid userId encoding");
 
-  if (!isRequester(req, id.value))
-    return res.status(401).send("auth error");
+  if (!isRequester(req, id.value)) return res.status(401).send("auth error");
 
   try {
     await deleteUser(id.value);

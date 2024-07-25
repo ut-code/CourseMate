@@ -25,7 +25,7 @@ export async function getUserId(req: Request): Promise<UserID> {
       guid: guid,
     },
   });
-  return user.id
+  return user.id;
 }
 
 /**
@@ -55,12 +55,13 @@ export async function safeGetUserId(req: Request): Promise<Result<UserID>> {
    return res.status(401).send("auth error");
  ```
  **/
-export async function isRequester(req: Request, userid: UserID): Promise<boolean> {
+export async function isRequester(
+  req: Request,
+  userid: UserID,
+): Promise<boolean> {
   const result = await safeGetUserId(req);
-  if (!result.ok)
-    return false;
-  if (result.value !== userid)
-    return false;
+  if (!result.ok) return false;
+  if (result.value !== userid) return false;
 
   return true;
 }

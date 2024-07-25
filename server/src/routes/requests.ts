@@ -37,8 +37,7 @@ const router = express.Router();
 //特定のユーザーにまつわるpendingリクエストを取得
 router.get("/", async (req: Request, res: Response) => {
   const result = await safeGetUserId(req);
-  if (!result.ok)
-    return res.status(401).send("auth error");
+  if (!result.ok) return res.status(401).send("auth error");
   const userId = result.value;
 
   try {
@@ -56,13 +55,11 @@ router.get("/", async (req: Request, res: Response) => {
 // リクエストの送信
 router.put("/send/:receiverId", async (req: Request, res: Response) => {
   const recv = safeParseInt(req.params.receiverId);
-  if (!recv.ok)
-    return res.status(400).send("bad param encoding");
+  if (!recv.ok) return res.status(400).send("bad param encoding");
   const receiverId = recv.value;
 
   const sdr = await safeGetUserId(req);
-  if (!sdr.ok)
-    return res.status(401).send("auth error");
+  if (!sdr.ok) return res.status(401).send("auth error");
   const senderId = sdr.value;
 
   try {
@@ -80,13 +77,11 @@ router.put("/send/:receiverId", async (req: Request, res: Response) => {
 // リクエストの承認
 router.put("/accept/:senderId", async (req: Request, res: Response) => {
   const sdr = safeParseInt(req.params.senderId);
-  if (!sdr.ok)
-    return res.status(400).send("bad param encoding");
+  if (!sdr.ok) return res.status(400).send("bad param encoding");
   const senderId = sdr.value;
 
   const rcv = await safeGetUserId(req);
-  if (!rcv.ok)
-    return res.status(401).send("auth error");
+  if (!rcv.ok) return res.status(401).send("auth error");
   const receiverId = rcv.value;
 
   try {
@@ -101,13 +96,11 @@ router.put("/accept/:senderId", async (req: Request, res: Response) => {
 // リクエストの拒否
 router.put("/reject/:opponentId", async (req: Request, res: Response) => {
   const oppn = safeParseInt(req.params.opponentId);
-  if (!oppn.ok)
-    return res.status(400).send("bad param encoding");
+  if (!oppn.ok) return res.status(400).send("bad param encoding");
   const opponentId = oppn.value;
 
   const rqs = await safeGetUserId(req);
-  if (!rqs.ok)
-    return res.status(401).send("auth error");
+  if (!rqs.ok) return res.status(401).send("auth error");
   const requesterId = rqs.value;
 
   try {

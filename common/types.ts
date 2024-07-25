@@ -43,4 +43,4 @@ export type UserID = number;
 /**
  * Firebase ID Token.
  **/
- export type IDToken = string;
+export type IDToken = string;

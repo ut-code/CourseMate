@@ -8,4 +8,3 @@ export function safeParseInt(s: string | undefined): Result<number> {
     return Err(e);
   }
 }
-
