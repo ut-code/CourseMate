@@ -14,7 +14,7 @@ import hooks from "../../api/hooks";
 export default function Requests() {
   // const currentUserId = useAuthContext()?.id;
 
-  const { data, isLoading, error, reload } = hooks.usePendingRequests();
+  const { data, isLoading, error, reload } = hooks.usePendingUsers();
 
   return (
     <Box>

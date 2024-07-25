@@ -59,6 +59,7 @@ const users = `${origin}/users`;
  *   - 500: internal error.
  **/
 const matchedUsers = `${origin}/users/matched`;
+
 /**
  * [v] 実装済み
  * GET -> list all users that sent request to you.

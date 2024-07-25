@@ -12,16 +12,16 @@ type Hook<T> = {
 // TODO: install typia or zod.
 
 export function useMatchedUsers(): Hook<User[]> {
-  const url = endpoints.matches;
+  const url = endpoints.matchedUsers;
   return useData<User[]>(url);
 }
 
-export function usePendingRequests(): Hook<User[]> {
-  const url = endpoints.requests;
+export function usePendingUsers(): Hook<User[]> {
+  const url = endpoints.pendingUsers;
   return useData<User[]>(url);
 }
 
 export default {
   useMatchedUsers,
-  usePendingRequests,
+  usePendingUsers,
 };
