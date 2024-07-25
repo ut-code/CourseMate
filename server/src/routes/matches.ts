@@ -23,7 +23,7 @@ router.get("/", async (req: Request, res: Response) => {
 // マッチの削除
 router.delete("/:opponentId", async (req: Request, res: Response) => {
   const opponentId = parseInt(req.params.opponentId);
-  const requesterId = 1; // TODO: get requester's id from auth
+  const requesterId = 1;  //削除操作を要求しているユーザを指す // TODO: get requester's id from auth
   const didItFail = false;
   if (didItFail) return res.status(401).send("auth error");
 
