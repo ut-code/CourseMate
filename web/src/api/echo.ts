@@ -1,8 +1,8 @@
-import { type IdToken } from "../firebase/auth/lib";
+import { type IDToken } from "../.././../common/types";
 import endpoints from "./internal/endpoints";
 
 // throws if res.status !== 204
-export async function setIdTokenCookie(idToken: IdToken) {
+export async function setIdTokenCookie(idToken: IDToken) {
   const res = await fetch(endpoints.echoSetCookie, {
     body: JSON.stringify({
       "id-token": idToken,

@@ -1,18 +1,20 @@
-import { getAuth } from "firebase-admin/auth";
+import { DecodedIdToken, getAuth } from "firebase-admin/auth";
 import type { Request } from "express";
-
-type UID = string;
+import { GUID, IDToken } from "../../../../common/types";
 
 const app = getAuth();
 
 // REQUIRE: cookieParser middleware before this
 // THROWS: if idToken is not present in request cookie, or when the token is not valid.
-export async function verify(req: Request): Promise<UID> {
+export async function getGUID(req: Request): Promise<GUID> {
   const idToken = req.cookies["id-token"];
+  return (await verifyIDToken(idToken)).uid;
+}
+
+export async function verifyIDToken(idToken: IDToken): Promise<DecodedIdToken> {
   if (!idToken)
     throw new Error(
       "idToken not found on request.cookies. you must set it to the cookies before sending the request.",
     );
-  const token = await app.verifyIdToken(idToken);
-  return token.uid;
+  return await app.verifyIdToken(idToken);
 }

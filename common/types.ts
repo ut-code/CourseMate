@@ -39,3 +39,8 @@ export type GUID = string;
  * recommended variable name: id
  **/
 export type UserID = number;
+
+/**
+ * Firebase ID Token.
+ **/
+ export type IDToken = string;
