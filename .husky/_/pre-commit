@@ -5,6 +5,8 @@ cd `dirname -- $0` # cd /path/to/coursemate/_/husky.sh
 cd ../..
 # now the wd is at /coursemate
 
+echo "precommit hook is running..."
+
 if [ `git branch --show-current` == "main" ]; then
   echo "Cannot make commit on main! aborting..."
   exit 1
