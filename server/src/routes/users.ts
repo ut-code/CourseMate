@@ -22,6 +22,18 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+// ユーザーの存在を確認するためのエンドポイント。だれでもアクセス可能
+router.get("/exists/:guid", async (req: Request, res: Response) => {
+  const guid = req.params.guid;
+  try {
+    const user: User | null = await getUser(guid);
+    if (user == null) throw new Error("user not found");
+    res.status(200).send();
+  } catch (error) {
+    res.status(404).send();
+  }
+});
+
 // 特定のユーザーとマッチしたユーザーを取得
 router.get("/matched", async (req: Request, res: Response) => {
   const userId: number = 1; // TODO: get from auth
