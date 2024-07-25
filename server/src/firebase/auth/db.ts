@@ -14,7 +14,7 @@ const prisma = new PrismaClient();
  * try {
  *   userId = await getUserId(req);
  * } catch {
- *   return res.status(401).send("auth error")
+ *   return res.status(401).send("auth error");
  * }
  * ```
  **/
