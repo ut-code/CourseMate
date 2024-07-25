@@ -20,7 +20,7 @@ export async function except(id: number): Promise<User[]> {
 
 /**
  * Google アカウントの uid を用いて CourseMate ユーザの情報を取得する。
- * @param uid Google アカウントの uid
+ * @param guid Google アカウントの uid
  * @returns ユーザの情報
  * @throws network error and type error
  */
