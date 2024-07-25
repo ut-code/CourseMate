@@ -6,7 +6,7 @@ import { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import userapi from "../api/user";
-import { User } from "../../../common/types";
+import { GUID, User } from "../../../common/types";
 import { app } from "../firebase/firebaseconfig";
 
 export default function SignUp() {
@@ -103,7 +103,7 @@ async function registerUserInfo(partialUser: Omit<User, "id">) {
 }
 
 //画像をfirestoreにアップロードする関数
-async function uploadImage(guid: string, pictureFile: File) {
+async function uploadImage(guid: GUID, pictureFile: File) {
   if (!pictureFile) {
     return "";
   }

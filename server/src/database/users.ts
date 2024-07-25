@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { User } from "../../../common/types";
+import { GUID, User } from "../../../common/types";
 
 const prisma = new PrismaClient();
 
@@ -12,7 +12,7 @@ export async function createUser(partialUser: Omit<User, "id">) {
 }
 
 // ユーザーの取得
-export async function getUser(guid: string) {
+export async function getUser(guid: GUID) {
   const user = await prisma.user.findUnique({
     where: {
       guid: guid,

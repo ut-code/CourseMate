@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import { User } from "../../../common/types";
+import { GUID, User } from "../../../common/types";
 import { API_ENDPOINT } from "../env";
 
 const AuthContext = createContext<User | null | undefined>(undefined);
@@ -15,7 +15,7 @@ export default function AuthProvider({
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const router = useRouter();
 
-  async function getUserData(guid: string): Promise<User> {
+  async function getUserData(guid: GUID): Promise<User> {
     try {
       const response = await fetch(`${API_ENDPOINT}/users/${guid}`);
       if (response.status === 404) {

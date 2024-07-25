@@ -1,7 +1,8 @@
 import { router } from "expo-router";
+import { GUID } from "../../../common/types";
 
 const signUp = async (
-  guid: string,
+  guid: GUID,
   name: string,
   email: string,
   password: string,

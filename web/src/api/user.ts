@@ -1,5 +1,5 @@
 import endpoints from "./internal/endpoints.ts";
-import type { User } from "../../../common/types";
+import type { GUID, User } from "../../../common/types";
 
 //全てのユーザ情報を取得する
 export async function all(): Promise<User[]> {
@@ -24,7 +24,7 @@ export async function except(id: number): Promise<User[]> {
  * @returns ユーザの情報
  * @throws network error and type error
  */
-export async function getByGUID(guid: string): Promise<User | null> {
+export async function getByGUID(guid: GUID): Promise<User | null> {
   const res = await fetch(endpoints.userByGUID(guid));
   if (res.status === 404) {
     return null;
@@ -35,7 +35,7 @@ export async function getByGUID(guid: string): Promise<User | null> {
 }
 
 //指定した guid のユーザが存在するかどうかを取得する
-export async function exists(guid: string): Promise<boolean> {
+export async function exists(guid: GUID): Promise<boolean> {
   const res = await fetch(endpoints.userExists(guid));
   if (res.status === 404) return false;
   return true;
