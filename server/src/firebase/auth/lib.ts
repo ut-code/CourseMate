@@ -16,3 +16,13 @@ export async function verify(req: Request): Promise<UID> {
   const token = await app.verifyIdToken(idToken);
   return token.uid;
 }
+
+export async function isLoggedIn(req: Request): Promise<boolean> {
+  try {
+    const guid = await verify(req);
+    if (guid === "") return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
