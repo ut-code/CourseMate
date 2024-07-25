@@ -1,3 +1,5 @@
+import { GUID } from "../../../../common/types";
+
 const origin = import.meta.env.VITE_API_ENDPOINT;
 
 // TODO: de-export this and use one from /common
@@ -80,7 +82,7 @@ const pendingUsers = `${origin}/users/pending`;
  *   - 400: not found.
  *   - 500: internal error.
  **/
-const userByGUID = (guid: string) => {
+const userByGUID = (guid: GUID) => {
   return `${origin}/users/guid/${guid}`;
 };
 
@@ -93,7 +95,7 @@ const userByGUID = (guid: string) => {
  *   - 404: no, user doesn't exist.
  *   - 500: internal error.
  **/
-const userExists = (guid: string) => {
+const userExists = (guid: GUID) => {
   return `${origin}/users/exists/${guid}`;
 };
 

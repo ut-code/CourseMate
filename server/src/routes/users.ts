@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { type PublicUser, Public, User } from "../../../common/types";
+import { type PublicUser, Public, User, UserID } from "../../../common/types";
 import {
   createUser,
   deleteUser,
@@ -36,7 +36,7 @@ router.get("/exists/:guid", async (req: Request, res: Response) => {
 
 // 特定のユーザーとマッチしたユーザーを取得
 router.get("/matched", async (req: Request, res: Response) => {
-  const userId: number = 1; // TODO: get from auth
+  const userId: UserID = 1; // TODO: get from auth
   const didItFail = false;
   if (didItFail) return res.status(401).send("auth error");
 
@@ -51,7 +51,7 @@ router.get("/matched", async (req: Request, res: Response) => {
 });
 
 router.get("/pending", async (req: Request, res: Response) => {
-  const userId: number = 1; // TODO: get from auth
+  const userId: UserID = 1; // TODO: get from auth
   const didItFail = false;
   if (didItFail) return res.status(401).send("auth error");
 

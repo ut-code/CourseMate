@@ -11,7 +11,6 @@ const SignUp = (): JSX.Element => {
   const [password, setPassword] = useState("");
   // const user = useAuthContext();
   const user = getAuth().currentUser;
-  console.log("私のuidは", user?.uid);
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
@@ -41,8 +40,8 @@ const SignUp = (): JSX.Element => {
         <Button
           label="設定"
           onPress={async () => {
-            const uid = user?.uid;
-            await signUp(uid!, name, password, email);
+            const guid = user?.uid;
+            await signUp(guid!, name, password, email);
           }}
         />
       </View>

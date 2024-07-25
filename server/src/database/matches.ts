@@ -1,9 +1,10 @@
 import { PrismaClient } from "@prisma/client";
+import { UserID } from "../../../common/types";
 
 const prisma = new PrismaClient();
 
 // 特定のユーザIDを含むマッチの取得
-export async function getMatchesByUserId(userId: number) {
+export async function getMatchesByUserId(userId: UserID) {
   return await prisma.relationship.findMany({
     where: {
       AND: [
@@ -15,7 +16,7 @@ export async function getMatchesByUserId(userId: number) {
 }
 
 // マッチの削除
-export async function deleteMatch(senderId: number, receiverId: number) {
+export async function deleteMatch(senderId: UserID, receiverId: UserID) {
   console.log("delete starting...");
   // 最初の条件で削除を試みる
   const recordToDelete = await prisma.relationship.findUnique({

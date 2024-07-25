@@ -6,7 +6,7 @@ import { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import userapi from "../api/user";
-import { User } from "../../../common/types";
+import { GUID, User } from "../../../common/types";
 import { app } from "../firebase/firebaseconfig";
 
 export default function SignUp() {
@@ -21,17 +21,17 @@ export default function SignUp() {
 
   //サインアップの処理
   const handleSignUp = async () => {
-    const uid = user?.uid;
-    if (!uid) {
+    const guid = user?.uid;
+    if (!guid) {
       enqueueSnackbar("ユーザ情報が取得できませんでした", {
         variant: "error",
       });
       return;
     }
     try {
-      const pictureUrl = await uploadImage(uid, pictureFile!);
+      const pictureUrl = await uploadImage(guid, pictureFile!);
       const partialUser: Omit<User, "id"> = {
-        uid,
+        guid,
         name,
         email,
         pictureUrl,
@@ -103,13 +103,13 @@ async function registerUserInfo(partialUser: Omit<User, "id">) {
 }
 
 //画像をfirestoreにアップロードする関数
-async function uploadImage(uid: string, pictureFile: File) {
+async function uploadImage(guid: GUID, pictureFile: File) {
   if (!pictureFile) {
     return "";
   }
 
   const storage = getStorage(app);
-  const filePath = `${uid}/${pictureFile.name}`;
+  const filePath = `${guid}/${pictureFile.name}`;
   const storageRef = ref(storage, filePath);
 
   try {

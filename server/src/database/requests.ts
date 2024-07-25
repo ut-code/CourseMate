@@ -1,4 +1,5 @@
 import { PrismaClient, Relationship } from "@prisma/client";
+import { UserID } from "../../../common/types";
 
 const prisma = new PrismaClient();
 
@@ -7,8 +8,8 @@ export async function sendRequest({
   senderId,
   receiverId,
 }: {
-  senderId: number;
-  receiverId: number;
+  senderId: UserID;
+  receiverId: UserID;
 }): Promise<Relationship> {
   // 既存の関係をチェック
   const existingRelationship = await prisma.relationship.findFirst({
@@ -39,13 +40,13 @@ export async function getRequestsByUserId({
   senderId,
   receiverId,
 }: {
-  senderId?: number;
-  receiverId?: number;
-}) {
+  senderId?: UserID;
+  receiverId?: UserID;
+}): Promise<Relationship[]> {
   if (senderId === undefined && receiverId === undefined) {
     throw new Error("Either senderId or receiverId must be provided");
   }
-  const whereClause: { requestingUserId?: number; requestedUserId?: number } =
+  const whereClause: { requestingUserId?: UserID; requestedUserId?: UserID } =
     {};
   if (senderId !== undefined) {
     whereClause.requestingUserId = senderId;
@@ -59,7 +60,7 @@ export async function getRequestsByUserId({
 }
 
 // マッチリクエストの承認
-export async function approveRequest(senderId: number, receiverId: number) {
+export async function approveRequest(senderId: UserID, receiverId: UserID) {
   return await prisma.relationship.update({
     where: {
       requestingUserId_requestedUserId: {
@@ -74,7 +75,7 @@ export async function approveRequest(senderId: number, receiverId: number) {
 }
 
 // マッチリクエストの拒否
-export async function rejectRequest(senderId: number, receiverId: number) {
+export async function rejectRequest(senderId: UserID, receiverId: UserID) {
   return await prisma.relationship.update({
     where: {
       requestingUserId_requestedUserId: {
@@ -89,7 +90,7 @@ export async function rejectRequest(senderId: number, receiverId: number) {
 }
 
 //ユーザーにまつわるリクエストを探す
-export async function searchPendingUsers(userId: number) {
+export async function searchPendingUsers(userId: UserID) {
   //俺をリクエストしているのは誰だ
   return await prisma.user.findMany({
     where: {
@@ -102,7 +103,7 @@ export async function searchPendingUsers(userId: number) {
     },
   });
 }
-// export async function searchRequestingUser(userId: number):Promise<Relationship[]> {
+// export async function searchRequestingUser(userId: UserID):Promise<Relationship[]> {
 //   //俺がリクエストしているのは誰だ
 //   try {
 //     return await prisma.relationship.findMany({
@@ -115,7 +116,7 @@ export async function searchPendingUsers(userId: number) {
 // }
 
 //マッチした人の取得
-export async function searchMatchedUser(userId: number) {
+export async function searchMatchedUser(userId: UserID) {
   const users = await prisma.user.findMany({
     where: {
       OR: [

@@ -9,12 +9,12 @@ import {
   Button,
 } from "@mui/material";
 
-import { User } from "../../../common/types";
+import { User, UserID } from "../../../common/types";
 import userapi from "../api/user";
 import { getAuth } from "firebase/auth";
 
 type EditUserDialogProps = {
-  userId: number;
+  userId: UserID;
   open: boolean;
   onClose: () => void;
 };
@@ -30,11 +30,11 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
   const [pictureUrl, setPictureUrl] = useState("");
 
   const handleSave = async () => {
-    const uid = getAuth().currentUser?.uid;
-    if (!uid) throw new Error("you not logged in");
+    const guid = getAuth().currentUser?.uid;
+    if (!guid) throw new Error("you not logged in");
     const data: User = {
       id: userId,
-      uid: uid,
+      guid: guid,
       name: name,
       email: email,
       pictureUrl: pictureUrl,

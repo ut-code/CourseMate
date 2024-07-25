@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { User } from "../../../common/types";
+import { GUID, User, UserID } from "../../../common/types";
 
 const prisma = new PrismaClient();
 
@@ -12,10 +12,10 @@ export async function createUser(partialUser: Omit<User, "id">) {
 }
 
 // ユーザーの取得
-export async function getUser(uid: string) {
+export async function getUser(guid: GUID) {
   const user = await prisma.user.findUnique({
     where: {
-      uid: uid,
+      guid: guid,
     },
   });
   return user;
@@ -23,7 +23,7 @@ export async function getUser(uid: string) {
 
 // ユーザーの更新
 export async function updateUser(
-  userId: number,
+  userId: UserID,
   partialUser: Omit<User, "id">,
 ) {
   const updatedUser = await prisma.user.update({
@@ -34,7 +34,7 @@ export async function updateUser(
 }
 
 // ユーザーの削除
-export async function deleteUser(userId: number) {
+export async function deleteUser(userId: UserID) {
   const deletedUser = await prisma.user.delete({
     where: { id: userId },
   });
