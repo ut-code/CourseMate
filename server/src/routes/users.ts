@@ -74,14 +74,6 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    res.status(200).json({
-      // パスワード以外の情報
-      id: user.id,
-      uid: user.uid,
-      name: user.name,
-      email: user.email,
-      pictureUrl: user.pictureUrl,
-    });
     const json: PublicUser = Public(user);
     res.status(200).json(json);
   } catch (error) {
