@@ -9,12 +9,12 @@ import {
   Button,
 } from "@mui/material";
 
-import { User } from "../../../common/types";
+import { User, UserID } from "../../../common/types";
 import userapi from "../api/user";
 import { getAuth } from "firebase/auth";
 
 type EditUserDialogProps = {
-  userId: number;
+  userId: UserID;
   open: boolean;
   onClose: () => void;
 };

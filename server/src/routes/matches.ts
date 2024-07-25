@@ -1,12 +1,12 @@
 import express, { Request, Response } from "express";
 import { deleteMatch, getMatchesByUserId } from "../database/matches";
-import { Relationship } from "../../../common/types";
+import { Relationship, UserID } from "../../../common/types";
 
 const router = express.Router();
 
 // 特定のユーザIDを含むマッチの取得
 router.get("/", async (req: Request, res: Response) => {
-  const userId = 1; // TODO: get it from auth
+  const userId= 1; // TODO: get it from auth
   const didItFail = false;
   if (didItFail) return res.status(401).send("auth error");
 

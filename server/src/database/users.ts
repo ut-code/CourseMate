@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { GUID, User } from "../../../common/types";
+import { GUID, User, UserID } from "../../../common/types";
 
 const prisma = new PrismaClient();
 
@@ -23,7 +23,7 @@ export async function getUser(guid: GUID) {
 
 // ユーザーの更新
 export async function updateUser(
-  userId: number,
+  userId: UserID,
   partialUser: Omit<User, "id">,
 ) {
   const updatedUser = await prisma.user.update({
@@ -34,7 +34,7 @@ export async function updateUser(
 }
 
 // ユーザーの削除
-export async function deleteUser(userId: number) {
+export async function deleteUser(userId: UserID) {
   const deletedUser = await prisma.user.delete({
     where: { id: userId },
   });

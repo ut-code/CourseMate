@@ -18,7 +18,7 @@ export async function reject(opponentID: UserID) {
 }
 
 //相手からのリクエストを受け入れる
-export async function accept(senderId: number) {
+export async function accept(senderId: UserID) {
   const response = await fetch(endpoints.rejectRequest(senderId), {
     method: "PUT",
   });
