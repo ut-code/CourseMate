@@ -7,6 +7,8 @@ import {
   rejectRequest,
   sendRequest,
 } from "../database/requests";
+import { safeGetUserId } from "../firebase/auth/db";
+import { safeParseInt } from "../../../common/lib/safeParseInt";
 // import { Relationship } from "@prisma/client"; // ... not used?
 
 const router = express.Router();
@@ -34,9 +36,10 @@ const router = express.Router();
 
 //特定のユーザーにまつわるpendingリクエストを取得
 router.get("/", async (req: Request, res: Response) => {
-  const userId = 1; // TODO: get it from auth
-  const didItFail = false;
-  if (didItFail) return res.status(401).send("auth error");
+  const result = await safeGetUserId(req);
+  if (!result.ok)
+    return res.status(401).send("auth error");
+  const userId = result.value;
 
   try {
     const requests: Relationship[] = await getRequestsByUserId({
@@ -52,10 +55,15 @@ router.get("/", async (req: Request, res: Response) => {
 
 // リクエストの送信
 router.put("/send/:receiverId", async (req: Request, res: Response) => {
-  const receiverId = parseInt(req.params.receiverId);
-  const senderId = 1; // TODO: get from auth
-  const didAuthenticationFail = false;
-  if (didAuthenticationFail) return res.status(401).send("auth error");
+  const recv = safeParseInt(req.params.receiverId);
+  if (!recv.ok)
+    return res.status(400).send("bad param encoding");
+  const receiverId = recv.value;
+
+  const sdr = await safeGetUserId(req);
+  if (!sdr.ok)
+    return res.status(401).send("auth error");
+  const senderId = sdr.value;
 
   try {
     const sentRequest = await sendRequest({
@@ -71,10 +79,15 @@ router.put("/send/:receiverId", async (req: Request, res: Response) => {
 
 // リクエストの承認
 router.put("/accept/:senderId", async (req: Request, res: Response) => {
-  const senderId = parseInt(req.params.senderId);
-  const receiverId = 1; // TODO: get it from auth
-  const didItFail = false;
-  if (didItFail) return res.status(401).send("auth error");
+  const sdr = safeParseInt(req.params.senderId);
+  if (!sdr.ok)
+    return res.status(400).send("bad param encoding");
+  const senderId = sdr.value;
+
+  const rcv = await safeGetUserId(req);
+  if (!rcv.ok)
+    return res.status(401).send("auth error");
+  const receiverId = rcv.value;
 
   try {
     await approveRequest(senderId, receiverId);
@@ -87,10 +100,15 @@ router.put("/accept/:senderId", async (req: Request, res: Response) => {
 
 // リクエストの拒否
 router.put("/reject/:opponentId", async (req: Request, res: Response) => {
-  const opponentId = parseInt(req.params.opponentId); // TODO: handle zero
-  const requesterId = 1; // TODO: GET FROM AUTH
-  const didItFail = false;
-  if (didItFail) return res.status(401).send("auth error");
+  const oppn = safeParseInt(req.params.opponentId);
+  if (!oppn.ok)
+    return res.status(400).send("bad param encoding");
+  const opponentId = oppn.value;
+
+  const rqs = await safeGetUserId(req);
+  if (!rqs.ok)
+    return res.status(401).send("auth error");
+  const requesterId = rqs.value;
 
   try {
     await rejectRequest(requesterId, opponentId);

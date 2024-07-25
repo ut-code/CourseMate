@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { type PublicUser, Public, User, UserID } from "../../../common/types";
+import { safeParseInt } from "../../../common/lib/safeParseInt";
 import {
   createUser,
   deleteUser,
@@ -8,6 +9,7 @@ import {
   getAllUsers,
 } from "../database/users";
 import { searchMatchedUser, searchPendingUsers } from "../database/requests";
+import { isRequester, safeGetUserId } from "../firebase/auth/db";
 
 const router = express.Router();
 
@@ -36,9 +38,10 @@ router.get("/exists/:guid", async (req: Request, res: Response) => {
 
 // 特定のユーザーとマッチしたユーザーを取得
 router.get("/matched", async (req: Request, res: Response) => {
-  const userId: UserID = 1; // TODO: get from auth
-  const didItFail = false;
-  if (didItFail) return res.status(401).send("auth error");
+  const result = await safeGetUserId(req);
+  if (!result.ok)
+    return res.status(401).send("auth error");
+  const userId = result.value;
 
   try {
     const matchedUsers: User[] = await searchMatchedUser(userId);
@@ -51,9 +54,10 @@ router.get("/matched", async (req: Request, res: Response) => {
 });
 
 router.get("/pending", async (req: Request, res: Response) => {
-  const userId: UserID = 1; // TODO: get from auth
-  const didItFail = false;
-  if (didItFail) return res.status(401).send("auth error");
+  const result = await safeGetUserId(req);
+  if (!result.ok)
+    return res.status(401).send("auth error");
+  const userId = result.value;
 
   try {
     const matchedUsers: User[] = await searchPendingUsers(userId);
@@ -97,8 +101,14 @@ router.post("/", async (req: Request, res: Response) => {
 
 // ユーザーの更新エンドポイント
 router.put("/id/:userId", async (req: Request, res: Response) => {
-  // TODO: handle non-int
-  const userId = parseInt(req.params.userId);
+  const id = safeParseInt(req.params.userId);
+  if (!id.ok)
+    return res.status(400).send("bad param encoding");
+
+  if (await isRequester(req, id.value))
+    return res.status(401).send("you can't update others");
+
+  const userId = id.value;
 
   // TODO: Typia
   const user: Omit<User, "id"> = req.body;
@@ -113,11 +123,15 @@ router.put("/id/:userId", async (req: Request, res: Response) => {
 
 // ユーザーの削除エンドポイント
 router.delete("/id/:userId", async (req, res) => {
-  // TODO: handle non-int
-  const userId = parseInt(req.params.userId);
+  const id = safeParseInt(req.params.userId);
+  if (!id.ok)
+    return res.status(400).send("invalid userId encoding");
+
+  if (!isRequester(req, id.value))
+    return res.status(401).send("auth error");
 
   try {
-    await deleteUser(userId);
+    await deleteUser(id.value);
     res.status(204).send();
   } catch (error) {
     console.error("Error deleting user:", error);

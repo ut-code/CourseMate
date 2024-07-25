@@ -1,14 +1,17 @@
 import express, { Request, Response } from "express";
 import { deleteMatch, getMatchesByUserId } from "../database/matches";
 import { Relationship } from "../../../common/types";
+import { safeGetUserId } from "../firebase/auth/db";
+import { safeParseInt } from "../../../common/lib/safeParseInt";
 
 const router = express.Router();
 
 // 特定のユーザIDを含むマッチの取得
 router.get("/", async (req: Request, res: Response) => {
-  const userId = 1; // TODO: get it from auth
-  const didItFail = false;
-  if (didItFail) return res.status(401).send("auth error");
+  const id = await safeGetUserId(req);
+  if (!id.ok)
+    return res.status(401).send("auth error");
+  const userId = id.value;
 
   try {
     const all: Relationship[] = await getMatchesByUserId(userId);
@@ -22,10 +25,15 @@ router.get("/", async (req: Request, res: Response) => {
 
 // マッチの削除
 router.delete("/:opponentId", async (req: Request, res: Response) => {
-  const opponentId = parseInt(req.params.opponentId);
-  const requesterId = 1; //削除操作を要求しているユーザを指す // TODO: get requester's id from auth
-  const didItFail = false;
-  if (didItFail) return res.status(401).send("auth error");
+  const tgt = safeParseInt(req.params.opponentId);
+  if (!tgt.ok) return res.status(400).send("bad param encoding");
+  const opponentId = tgt.value;
+
+  const rqstr = await safeGetUserId(req);
+  if (!rqstr.ok) return res.status(401).send("auth error");
+
+  //削除操作を要求しているユーザを指す
+  const requesterId = rqstr.value;
 
   try {
     await deleteMatch(requesterId, opponentId);
