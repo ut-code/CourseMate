@@ -7,7 +7,7 @@ import { API_ENDPOINT } from "../../env";
 import useData from "../../hooks/useData";
 import { useAuthContext } from "../../provider/AuthProvider";
 
-async function rejectMatchRequest(senderId:UserID , receiverId: UserID) {
+async function rejectMatchRequest(senderId: UserID, receiverId: UserID) {
   try {
     const response = await fetch(
       `${API_ENDPOINT}/requests/reject/${senderId.toString()}/${receiverId.toString()}`,
