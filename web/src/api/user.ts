@@ -1,9 +1,11 @@
 import endpoints from "./internal/endpoints.ts";
 import type { GUID, User, UserID } from "../../../common/types";
+import { doWithIdToken, ErrUnauthorized } from "../firebase/auth/lib.ts";
 
 //全てのユーザ情報を取得する
 export async function all(): Promise<User[]> {
   const res = await fetch(endpoints.users);
+  // TODO: typia
   return res.json();
 }
 
@@ -25,13 +27,15 @@ export async function except(id: UserID): Promise<User[]> {
  * @throws network error and type error
  */
 export async function getByGUID(guid: GUID): Promise<User | null> {
-  const res = await fetch(endpoints.userByGUID(guid));
-  if (res.status === 404) {
-    return null;
-  }
-  const data = await res.json();
-  // TODO: properly convert this into User instead of assigning any
-  return data;
+  return await doWithIdToken<User | null>(async () => {
+    const res = await fetch(endpoints.userByGUID(guid));
+    if (res.status === 404) {
+      return null;
+    }
+    const data = await res.json();
+    // TODO: properly convert this into User instead of assigning any
+    return data;
+  });
 }
 
 //指定した guid のユーザが存在するかどうかを取得する
@@ -69,7 +73,7 @@ export async function create(userdata: Omit<User, "id">): Promise<User> {
 
 //ユーザ情報を更新する
 export async function update(userId: UserID, newData: User): Promise<void> {
-  try {
+  return await doWithIdToken(async () => {
     const url = endpoints.user(userId);
     const res = await fetch(url, {
       method: "PUT",
@@ -82,25 +86,22 @@ export async function update(userId: UserID, newData: User): Promise<void> {
     if (!res.ok) {
       throw new Error("Network res was not ok");
     }
-  } catch (error) {
-    console.error("Error updating user information:", error);
-  }
+  });
 }
 
 //ユーザ情報を削除する
 export async function remove(userId: UserID): Promise<void> {
-  try {
+  return await doWithIdToken(async () => {
     const url = endpoints.user(userId);
     const res = await fetch(url, {
       method: "DELETE",
     });
+    if (res.status === 401) throw new ErrUnauthorized();
 
     if (!res.ok) {
       throw new Error("Network res was not ok");
     }
-  } catch (error) {
-    console.error("Error deleting user information:", error);
-  }
+  });
 }
 
 export default {
