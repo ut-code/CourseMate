@@ -2,13 +2,14 @@ import { getAuth } from "firebase/auth";
 import { setIdTokenCookie } from "../../api/echo";
 
 export type IdToken = string
+export class ErrUnauthorized extends Error { }
 
 // sometimes throws.
 export async function getIdToken(): Promise<IdToken> {
   const currentUser = getAuth().currentUser;
   if (currentUser == null) throw new Error("current user not found");
   const idtoken = await currentUser.getIdToken();
-  return  idtoken;
+  return idtoken;
 }
 
 // sometimes throws error.
@@ -21,13 +22,18 @@ export async function refreshIdToken(): Promise<void> {
  * given func runs at most twice. do not mutate external variables inside the function.
  * throws error when:
  * - it failed to get id token
+ * - the func threw an error that is not ErrUnauthorized
  * - the func failed with id token
  **/
 export async function doWithIdToken<T>(func: () => Promise<T>): Promise<T> {
   try {
     return await func();
-  } catch {
-    refreshIdToken();
-    return await func();
+  } catch (e) {
+    if (e instanceof ErrUnauthorized) {
+      refreshIdToken();
+      return await func();
+    } else {
+      throw e;
+    }
   }
 }
