@@ -1,9 +1,9 @@
 export type Result<T> = Ok<T> | Err
-export type Ok<T> = {
+type Ok<T> = {
   ok: true,
   value: T,
 }
-export type Err = {
+type Err = {
   ok: false,
   error: unknown,
 }
