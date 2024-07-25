@@ -17,29 +17,19 @@ services:
       start_period: 10s
   server:
     build:
-      context: ./server/
-      dockerfile: ./Dockerfile
+      context: ./
+      dockerfile: ./server/Dockerfile
     ports:
       - "3000:3000"
-    develop:
-      watch:
-        - action: sync
-          path: ./src
-          target: /coursemate/dev/server
     depends_on:
       coursemate_db:
         condition: service_healthy
   web:
     build:
-      context: ./web/
-      dockerfile: ./Dockerfile
+      context: ./
+      dockerfile: ./web/Dockerfile
     ports:
       - "5173:5173"
-    develop:
-      watch:
-        - action: sync
-          path: ./src
-          target: /coursemate/dev/web/src
 
 volumes:
   coursemate_data:
