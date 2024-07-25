@@ -136,29 +136,39 @@ const requests = `${origin}/requests`;
 
 /**
  * [v] 実装済み
- * POST -> create request.
+ * PUT -> create request.
  * - status:
  *   - 201: Created.
  *   - 401: unauthorized.
  *   - 500: internal error.
- *
+ **/
+const sendRequest = (opponentId: UserID) => {
+  return `${origin}/requests/send/${opponentId}`;
+};
+
+/**
  * [v] 実装済み
  * PUT -> accept request.
  * - status:
- *   - 201: Created.
+ *   - 200: OK.
  *   - 403: (not implemented) Forbidden. he hasn't sent a request to you.
  *   - 500: internal error.
- *
+ **/
+const acceptRequest = (opponentId: UserID) => {
+  return `${origin}/requests/accept/${opponentId}`;
+};
+
+/**
  * [v] 実装済み
- * DELETE -> reject request.
+ * PUT -> reject request.
  * - status:
- *   - 204: No content. successfully deleted.
+ *   - 204: No content. successfully rejected.
  *   - 401: unauthorized.
  *   - 404: (not implemented) Not found. he hasn't sent a request to you.
  *   - 500: internal error.
  **/
-const request = (opponentId: UserID) => {
-  return `${origin}/requests/${opponentId}`;
+const rejectRequest = (opponentId: UserID) => {
+  return `${origin}/requests/reject/${opponentId}`;
 };
 
 export default {
@@ -171,5 +181,7 @@ export default {
   match,
   matches,
   requests,
-  request,
+  sendRequest,
+  acceptRequest,
+  rejectRequest,
 };

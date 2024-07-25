@@ -51,7 +51,7 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 // リクエストの送信
-router.post("/:receiverId", async (req: Request, res: Response) => {
+router.put("/send/:receiverId", async (req: Request, res: Response) => {
   const receiverId = parseInt(req.params.receiverId);
   const senderId = 1; // TODO: get from auth
   const didAuthenticationFail = false;
@@ -70,7 +70,7 @@ router.post("/:receiverId", async (req: Request, res: Response) => {
 });
 
 // リクエストの承認
-router.put("/:senderId", async (req: Request, res: Response) => {
+router.put("/accept/:senderId", async (req: Request, res: Response) => {
   const senderId = parseInt(req.params.senderId);
   const receiverId = 1; // TODO: get it from auth
   const didItFail = false;
@@ -86,7 +86,7 @@ router.put("/:senderId", async (req: Request, res: Response) => {
 });
 
 // リクエストの拒否
-router.delete("/:opponentId", async (req: Request, res: Response) => {
+router.put("/reject/:opponentId", async (req: Request, res: Response) => {
   const opponentId = parseInt(req.params.opponentId); // TODO: handle zero
   const requesterId = 1; // TODO: GET FROM AUTH
   const didItFail = false;
