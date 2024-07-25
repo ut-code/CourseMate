@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { type PublicUser, Public, User, UserID } from "../../../common/types";
+import { type PublicUser, Public, User } from "../../../common/types";
 import { safeParseInt } from "../../../common/lib/safeParseInt";
 import {
   createUser,
