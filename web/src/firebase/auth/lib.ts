@@ -1,8 +1,8 @@
 import { getAuth } from "firebase/auth";
 import { setIdTokenCookie } from "../../api/echo";
 
-export type IdToken = string
-export class ErrUnauthorized extends Error { }
+export type IdToken = string;
+export class ErrUnauthorized extends Error {}
 
 // sometimes throws.
 export async function getIdToken(): Promise<IdToken> {
@@ -18,7 +18,7 @@ export async function refreshIdToken(): Promise<void> {
   await setIdTokenCookie(idToken);
 }
 
-/** 
+/**
  * given func runs at most twice. do not mutate external variables inside the function.
  * throws error when:
  * - it failed to get id token
