@@ -9,7 +9,7 @@ export type Relationship = {
 
 export type User = {
   id: number;
-  uid: string;
+  guid: string;
   name: string;
   email: string;
   pictureUrl: string;

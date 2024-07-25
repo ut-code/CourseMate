@@ -15,9 +15,9 @@ export default function AuthProvider({
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const router = useRouter();
 
-  async function getUserData(uid: string): Promise<User> {
+  async function getUserData(guid: string): Promise<User> {
     try {
-      const response = await fetch(`${API_ENDPOINT}/users/${uid}`);
+      const response = await fetch(`${API_ENDPOINT}/users/${guid}`);
       if (response.status === 404) {
         router.push("/");
         console.log("データがありません。");

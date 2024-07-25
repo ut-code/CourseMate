@@ -12,10 +12,10 @@ export async function createUser(partialUser: Omit<User, "id">) {
 }
 
 // ユーザーの取得
-export async function getUser(uid: string) {
+export async function getUser(guid: string) {
   const user = await prisma.user.findUnique({
     where: {
-      uid: uid,
+      guid: guid,
     },
   });
   return user;
