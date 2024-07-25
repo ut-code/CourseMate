@@ -6,9 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint:mobile": "cd mobile && npm run lint",
-    "format:mobile": "cd mobile && npm run format"
+    "format:mobile": "cd mobile && npm run format",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^9.1.1"
+  }
 }
