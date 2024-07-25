@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2016",
     "module": "commonjs",
-    "rootDir": "./src",
+    "rootDir": "../",
     "outDir": "./target",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import { type PublicUser, Public, User } from "../../../common/types";
 import {
   createUser,
   deleteUser,
@@ -6,11 +7,12 @@ import {
   updateUser,
   getAllUsers,
 } from "../database/users";
+import { searchMatchedUser, searchPendingUsers } from "../database/requests";
 
 const router = express.Router();
 
 // 全ユーザーの取得エンドポイント
-router.get("/all", async (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
     const users = await getAllUsers();
     res.status(200).json(users);
@@ -20,23 +22,60 @@ router.get("/all", async (req: Request, res: Response) => {
   }
 });
 
-// ユーザーの取得エンドポイント
-router.get("/:uid", async (req: Request, res: Response) => {
-  const { uid } = req.params;
+// ユーザーの存在を確認するためのエンドポイント。だれでもアクセス可能
+router.get("/exists/:guid", async (req: Request, res: Response) => {
+  const guid = req.params.guid;
+  try {
+    const user: User | null = await getUser(guid);
+    if (user == null) throw new Error("user not found");
+    res.status(200).send();
+  } catch (error) {
+    res.status(404).send();
+  }
+});
+
+// 特定のユーザーとマッチしたユーザーを取得
+router.get("/matched", async (req: Request, res: Response) => {
+  const userId: number = 1; // TODO: get from auth
+  const didItFail = false;
+  if (didItFail) return res.status(401).send("auth error");
 
   try {
-    const user = await getUser(uid);
+    const matchedUsers: User[] = await searchMatchedUser(userId);
+    const safeMatched = matchedUsers.map(Public);
+    res.status(200).json(safeMatched);
+  } catch (error) {
+    console.error("Error fetching matching requests", error);
+    res.status(500).json({ error: "Failed to fetch matching requests" });
+  }
+});
+
+router.get("/pending", async (req: Request, res: Response) => {
+  const userId: number = 1; // TODO: get from auth
+  const didItFail = false;
+  if (didItFail) return res.status(401).send("auth error");
+
+  try {
+    const matchedUsers: User[] = await searchPendingUsers(userId);
+    const safeMatched = matchedUsers.map(Public);
+    res.status(200).json(safeMatched);
+  } catch (error) {
+    console.error("Error fetching matching requests", error);
+    res.status(500).json({ error: "Failed to fetch matching requests" });
+  }
+});
+
+// ユーザーの取得エンドポイント
+router.get("/guid/:guid", async (req: Request, res: Response) => {
+  const { guid } = req.params;
+
+  try {
+    const user = await getUser(guid);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    res.status(200).json({
-      // パスワード以外の情報
-      id: user.id,
-      uid: user.uid,
-      name: user.name,
-      email: user.email,
-      pictureUrl: user.pictureUrl,
-    });
+    const json: PublicUser = Public(user);
+    res.status(200).json(json);
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({ error: "Failed to fetch user" });
@@ -45,24 +84,11 @@ router.get("/:uid", async (req: Request, res: Response) => {
 
 // ユーザーの作成エンドポイント
 router.post("/", async (req: Request, res: Response) => {
-  const { uid, name, email, password, pictureUrl } = req.body;
+  const partialUser: Omit<User, "id"> = req.body; // is any
 
   try {
-    const newUser = await createUser({
-      uid,
-      name,
-      email,
-      password,
-      pictureUrl,
-    });
-    res.status(201).json({
-      // パスワード以外の情報
-      id: newUser.id,
-      uid: newUser.uid,
-      name: newUser.name,
-      email: newUser.email,
-      pictureUrl: newUser.pictureUrl,
-    });
+    const newUser = await createUser(partialUser);
+    res.status(201).json(newUser);
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(500).json({ error: "Failed to create user" });
@@ -70,39 +96,15 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 // ユーザーの更新エンドポイント
-router.put("/:userId", async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  const { name, email, password, pictureUrl } = req.body;
+router.put("/id/:userId", async (req: Request, res: Response) => {
+  // TODO: handle non-int
+  const userId = parseInt(req.params.userId);
 
-  const updateData: {
-    name?: string;
-    email?: string;
-    password?: string;
-    pictureUrl?: string;
-  } = {};
-  if (email) updateData.email = email;
-  if (name) updateData.name = name;
-  if (password) updateData.password = password;
-  if (pictureUrl) updateData.pictureUrl = pictureUrl;
-
-  // 更新する属性が一つも指定されていない場合はエラー
-  if (Object.keys(updateData).length === 0) {
-    return res.status(400).send({ message: "No update fields provided" });
-  }
-
+  // TODO: Typia
+  const user: Omit<User, "id"> = req.body;
   try {
-    const updatedUser = await updateUser({
-      userId: parseInt(userId),
-      ...updateData,
-    });
-    res.status(200).json({
-      // パスワード以外の情報
-      id: updatedUser.id,
-      uid: updatedUser.uid,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      pictureUrl: updatedUser.pictureUrl,
-    });
+    const updatedUser = await updateUser(userId, user);
+    res.status(200).json(updatedUser);
   } catch (error) {
     console.error("Error updating user:", error);
     res.status(500).json({ error: "Failed to update user" });
@@ -110,11 +112,12 @@ router.put("/:userId", async (req: Request, res: Response) => {
 });
 
 // ユーザーの削除エンドポイント
-router.delete("/:userId", async (req, res) => {
-  const { userId } = req.params;
+router.delete("/id/:userId", async (req, res) => {
+  // TODO: handle non-int
+  const userId = parseInt(req.params.userId);
 
   try {
-    await deleteUser(parseInt(userId));
+    await deleteUser(userId);
     res.status(204).send();
   } catch (error) {
     console.error("Error deleting user:", error);

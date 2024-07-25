@@ -1,29 +1,12 @@
 import { PrismaClient } from "@prisma/client";
+import { User } from "../../../common/types";
 
 const prisma = new PrismaClient();
 
 // ユーザーの作成
-export async function createUser({
-  uid,
-  name,
-  email,
-  password,
-  pictureUrl,
-}: {
-  uid: string;
-  name: string;
-  email: string;
-  password: string;
-  pictureUrl: string;
-}) {
+export async function createUser(partialUser: Omit<User, "id">) {
   const newUser = await prisma.user.create({
-    data: {
-      uid,
-      name,
-      email,
-      password,
-      pictureUrl,
-    },
+    data: partialUser,
   });
   return newUser;
 }
@@ -39,22 +22,13 @@ export async function getUser(uid: string) {
 }
 
 // ユーザーの更新
-export async function updateUser({
-  userId,
-  name,
-  email,
-  password,
-  pictureUrl,
-}: {
-  userId: number;
-  name?: string;
-  email?: string;
-  password?: string;
-  pictureUrl?: string;
-}) {
+export async function updateUser(
+  userId: number,
+  partialUser: Omit<User, "id">,
+) {
   const updatedUser = await prisma.user.update({
     where: { id: userId },
-    data: { name, email, password, pictureUrl },
+    data: partialUser,
   });
   return updatedUser;
 }

@@ -15,6 +15,19 @@ export type User = {
   pictureUrl: string;
 };
 
+export type PublicUser = {
+  id: number;
+  name: string;
+  pictureUrl: string;
+};
+export function Public(u: User): PublicUser {
+  return {
+    id: u.id,
+    name: u.name,
+    pictureUrl: u.pictureUrl,
+  };
+}
+
 /**
  * Google account's id.
  * recommended variable name: guid

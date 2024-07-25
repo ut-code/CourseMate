@@ -1,9 +1,8 @@
 FROM node:22.4-alpine3.19
 WORKDIR /coursemate/dev/web
-COPY package.json package-lock.json ./
+COPY web/package.json web/package-lock.json ./
 RUN npm ci
-ENV VITE_API_ENDPOINT=http://server:3000
-COPY . .
+ENV VITE_API_ENDPOINT=http://localhost:3000
+COPY ./web/ .
 
-# supports hot reload
 CMD npm run dev -- --host

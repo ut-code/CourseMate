@@ -12,7 +12,7 @@ export type UserID = number;
  *   - 400: not found.
  *   - 500: internal error.
  *
- * [] 実装済み
+ * [v] 実装済み
  * PUT -> update user info.
  * - request body: Omit<User, "id">
  * - statuses:
@@ -20,10 +20,10 @@ export type UserID = number;
  *     - body: User
  *   - 500: internal error.
  *
- * [] 実装済み
+ * [v] 実装済み
  * DELETE -> delete user.
  * - statuses:
- *   - 204: no content.
+ *   - 204: deleted, t.f. no content.
  *   - 500: internal error.
  *
  **/
@@ -32,14 +32,14 @@ const user = (userId: UserID) => {
 };
 
 /**
- * [] 実装済み
+ * [v] 実装済み
  * GET -> list all users.
  * - statuses:
  *   - 200: good.
  *     - body: User[]
  *   - 500: internal error
  *
- * [] 実装済み
+ * [v] 実装済み
  * POST -> create user.
  * - request body: Omit<User, "id">
  * - statuses:
@@ -50,30 +50,35 @@ const user = (userId: UserID) => {
 const users = `${origin}/users`;
 
 /**
- * Same as endpoints.user .
- *
- * [] 実装済み
+ * [v] 実装済み
+ * GET -> list all matched users.
+ * - statuses:
+ *   - 200: ok.
+ *     - body: User[]
+ *   - 401: unauthorized.
+ *   - 500: internal error.
+ **/
+const matchedUsers = `${origin}/users/matched`;
+
+/**
+ * [v] 実装済み
+ * GET -> list all users that sent request to you.
+ * - statuses:
+ *   - 200: ok.
+ *     - body: User[]
+ *   - 401: unauthorized.
+ *   - 500: internal error.
+ **/
+const pendingUsers = `${origin}/users/pending`;
+
+/**
+ * [v] 実装済み
  * GET -> get user's info. TODO: filter return info by user's options and open level.
  * - statuses:
  *   - 200: ok.
  *     - body: User
  *   - 400: not found.
  *   - 500: internal error.
- *
- * [] 実装済み
- * PUT -> update user info.
- * - request body: Omit<User, "id">
- * - statuses:
- *   - 200: ok.
- *     - body: User
- *   - 500: internal error.
- *
- * [] 実装済み
- * DELETE -> delete user.
- * - statuses:
- *   - 204: no content.
- *   - 500: internal error.
- *
  **/
 const userByGUID = (guid: string) => {
   return `${origin}/users/guid/${guid}`;
@@ -93,11 +98,13 @@ const userExists = (guid: string) => {
 };
 
 /**
- * [] 実装済み
+ * [v] 実装済み
  * DELETE -> delete match.
  * - statuses:
  *   - 204: deleted.
+ *   - 401: unauthorized.
  *   - 404: you haven't matched the target user.
+ *          (not implemented at server)
  *   - 500: internal error.
  **/
 const match = (opponentID: UserID) => {
@@ -105,48 +112,63 @@ const match = (opponentID: UserID) => {
 };
 
 /**
- * [] 実装済み
+ * [v] 実装済み
  * GET -> list all matches.
  * - statuses:
  *   - 200: ok.
- *     - body: User[] // TODO: reconsider this
+ *     - body: Relationship[] where relation.status === "MATCHED"
+ *            // shouldn't it be User[]?
+ *   - 401: unauthorized.
  *   - 500: internal error.
  **/
 const matches = `${origin}/matches`;
 
 /**
- * [] 実装済み
- * GET -> list all users that sent requests to you and the requests are not accepted yet.
+ * [x] 実装済み
+ * GET -> list all requests that are sent to you and not accepted yet.
  * - statuses:
  *   - 200: ok.
- *     - body: User[] // TODO: reconsider this
+ *     - body: Relationship[] where relation.status === "PENDING"
+ *   - 401: unauthorized.
  *   - 500: internal error.
  **/
 const requests = `${origin}/requests`;
 
 /**
- * [] 実装済み
- * POST -> create request.
+ * [v] 実装済み
+ * PUT -> create request.
  * - status:
  *   - 201: Created.
- *   - 500: internal error.
- *
- * [] 実装済み
- * PUT -> accept request.
- * - status:
- *   - 201: Created.
- *   - 403: Forbidden. he hasn't sent a request to you.
- *   - 500: internal error.
- *
- * [] 実装済み
- * DELETE -> reject request.
- * - status:
- *   - 204: No content. successfully deleted.
- *   - 403: Forbidden. he hasn't sent a request to you.
+ *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const request = (receiverId: UserID) => {
-  return `${origin}/requests/${receiverId}`;
+const sendRequest = (opponentId: UserID) => {
+  return `${origin}/requests/send/${opponentId}`;
+};
+
+/**
+ * [v] 実装済み
+ * PUT -> accept request.
+ * - status:
+ *   - 200: OK.
+ *   - 403: (not implemented) Forbidden. he hasn't sent a request to you.
+ *   - 500: internal error.
+ **/
+const acceptRequest = (opponentId: UserID) => {
+  return `${origin}/requests/accept/${opponentId}`;
+};
+
+/**
+ * [v] 実装済み
+ * PUT -> reject request.
+ * - status:
+ *   - 204: No content. successfully rejected.
+ *   - 401: unauthorized.
+ *   - 404: (not implemented) Not found. he hasn't sent a request to you.
+ *   - 500: internal error.
+ **/
+const rejectRequest = (opponentId: UserID) => {
+  return `${origin}/requests/reject/${opponentId}`;
 };
 
 export default {
@@ -154,8 +176,12 @@ export default {
   userByGUID,
   userExists,
   users,
+  matchedUsers,
+  pendingUsers,
   match,
   matches,
   requests,
-  request,
+  sendRequest,
+  acceptRequest,
+  rejectRequest,
 };
