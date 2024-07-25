@@ -1,5 +1,10 @@
 import express, { Request, Response } from "express";
-import { createCourse, deleteCourse, getCourse, updateCourse } from "../helpers/courseHelper";
+import {
+  createCourse,
+  deleteCourse,
+  getCourse,
+  updateCourse,
+} from "../database/courses";
 
 const router = express.Router();
 

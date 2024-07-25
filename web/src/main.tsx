@@ -6,7 +6,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { CssBaseline } from "@mui/material";
-import AuthProvider from "./providers/AuthProvider";
+import AuthProvider from "./firebase/auth/AuthProvider";
 import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -15,5 +15,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <CssBaseline />
       <App />
     </AuthProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

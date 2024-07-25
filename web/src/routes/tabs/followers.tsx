@@ -1,30 +1,19 @@
-import { Avatar, Box, Button, List, ListItem, ListItemAvatar } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListItemAvatar,
+} from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import { User } from "../../../../common/types";
-import useData from "../../hooks/useData";
-
-async function deleteMatch(senderId: number, receiverId: number) {
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_ENDPOINT}/matches/${senderId}/${receiverId}`,
-      {
-        method: "DELETE",
-      }
-    );
-    const data = await response.json();
-    return data;
-  } catch {
-    console.error();
-  }
-}
+import hooks from "../../api/hooks";
+import { deleteMatch } from "../../api/match";
 
 export default function Followers() {
   // const currentUserId = useAuthContext()?.id;
-  const currentUserId = 1; // TODO: Fix this
 
-  const url = `${import.meta.env.VITE_API_ENDPOINT}/requests/matched/${currentUserId}`;
-
-  const { data, isLoading, error, fetchData } = useData<User[]>(url);
+  const { data, isLoading, error, reload } = hooks.useMatchedUsers();
 
   return (
     <Box>
@@ -40,8 +29,9 @@ export default function Followers() {
               secondaryAction={
                 <Button
                   onClick={() => {
-                    if (!window.confirm("本当にこのマッチングを削除しますか?")) return;
-                    deleteMatch(currentUserId!, matchedUser.id).then(() => fetchData());
+                    if (!window.confirm("本当にこのマッチングを削除しますか?"))
+                      return;
+                    deleteMatch(matchedUser.id).then(() => reload());
                   }}
                 >
                   削除
