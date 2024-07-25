@@ -1,32 +1,22 @@
 import express from "express";
-import mustSatisfy from "./must-satisfy";
+import { asyncMust } from "./must-satisfy";
+import { isLoggedIn } from "../firebase/auth/lib";
 
-const maxAge = 5 * 1000; // its unit is ms in express.
+const ok = true;
+const bad = false;
 
 // requires cookieParser before this middleware.
 // NOTE: applying this doesn't make sure all request JSONs are valid.
-// it just makes sure the request is from the user where user.id = cookie.id
-const mustBeLoggedIn = mustSatisfy(
-  (req: express.Request) => {
-    if (
-      typeof req.cookies.id !== "string" ||
-      typeof req.cookies.session !== "string"
-    ) {
-      return false;
-    }
-    // TODO: use req.cookies.id and req.cookies.session to check if user is logged in
-    // (or just requiring existence of the cookies is also fine)
-    // probably requires some kind of DB conn.
-    // it probably won't be really efficient, so cache or make a JWT or smth
+// it just makes sure the request is from a valid user s.t. the error log is flooded with console.error("user not logged in");
+const mustBeLoggedIn = asyncMust(
+  async (req: express.Request) => {
+    const loggedIn: boolean = await isLoggedIn(req);
 
-    return true;
+    if (loggedIn) return ok;
+    return bad;
   },
-  function (res: express.Response) {
-    // TODO: res.status(401).send("must be logged in as a valid user");
-    // and let the fetch function at frontend to handle this error
-    res.cookie("id", "you are", { maxAge });
-    res.cookie("session", "not logged in", { maxAge });
-    res.send("granted cookie");
+  function onerror(res: express.Response) {
+    res.status(401).send("must be logged in");
   },
 );
 
