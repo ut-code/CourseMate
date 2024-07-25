@@ -51,8 +51,8 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 // リクエストの送信
-router.post("/:recv", async (req: Request, res: Response) => {
-  const receiverId = parseInt(req.params.recv);
+router.post("/:receiverId", async (req: Request, res: Response) => {
+  const receiverId = parseInt(req.params.receiverId);
   const senderId = 1; // TODO: get from auth
   const didAuthenticationFail = false;
   if (didAuthenticationFail) return res.status(401).send("auth error");
@@ -72,12 +72,12 @@ router.post("/:recv", async (req: Request, res: Response) => {
 // リクエストの承認
 router.put("/:senderId", async (req: Request, res: Response) => {
   const senderId = parseInt(req.params.senderId);
-  const recvId = 1; // TODO: get it from auth
+  const receiverId = 1; // TODO: get it from auth
   const didItFail = false;
   if (didItFail) return res.status(401).send("auth error");
 
   try {
-    await approveRequest(senderId, recvId);
+    await approveRequest(senderId, receiverId);
     res.status(201).send();
   } catch (error) {
     console.error("Error approving match request:", error);
