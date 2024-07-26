@@ -16,6 +16,39 @@ export async function aboutMe(): Promise<User> {
   return res.json();
 }
 
+// 自身のユーザ情報を更新する
+export async function update(newData: User): Promise<void> {
+  return await doWithIdToken(async () => {
+    const url = endpoints.me;
+    const res = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newData),
+    });
+
+    if (!res.ok) {
+      throw new Error("Network res was not ok");
+    }
+  });
+}
+
+// 自身のユーザ情報を削除する
+export async function remove(): Promise<void> {
+  return await doWithIdToken(async () => {
+    const url = endpoints.me;
+    const res = await fetch(url, {
+      method: "DELETE",
+    });
+    if (res.status === 401) throw new ErrUnauthorized();
+
+    if (!res.ok) {
+      throw new Error("Network res was not ok");
+    }
+  });
+}
+
 //指定した id のユーザ情報を除いた全てのユーザ情報を取得する
 export async function except(id: UserID): Promise<User[]> {
   try {
@@ -76,39 +109,6 @@ export async function create(userdata: Omit<User, "id">): Promise<User> {
   }
   const user = res.json();
   return user;
-}
-
-// 自身のユーザ情報を更新する
-export async function update(newData: User): Promise<void> {
-  return await doWithIdToken(async () => {
-    const url = endpoints.me;
-    const res = await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newData),
-    });
-
-    if (!res.ok) {
-      throw new Error("Network res was not ok");
-    }
-  });
-}
-
-// 自身のユーザ情報を削除する
-export async function remove(): Promise<void> {
-  return await doWithIdToken(async () => {
-    const url = endpoints.me;
-    const res = await fetch(url, {
-      method: "DELETE",
-    });
-    if (res.status === 401) throw new ErrUnauthorized();
-
-    if (!res.ok) {
-      throw new Error("Network res was not ok");
-    }
-  });
 }
 
 export default {
