@@ -1,10 +1,10 @@
 import { Err, Ok, Result } from "../result";
 
 export function safeParseInt(s: string | undefined): Result<number> {
-  if (s == null) return Err(new Error("empty string"));
-  try {
-    return Ok(parseInt(s));
-  } catch (e) {
-    return Err(e);
-  }
+  if (!s)
+    return Err(new Error("empty string"));
+  const n = parseInt(s);
+  if (Number.isNaN(n))
+    return Err(new Error("invalid formatting: "+s));
+  return Ok(n);
 }
