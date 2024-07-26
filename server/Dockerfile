@@ -1,19 +1,23 @@
 FROM node:22.4-alpine3.19
-WORKDIR /coursemate/dev/server
-COPY ./server/package.json ./server/package-lock.json ./
-RUN npm ci
-# ENV DATABASE_URL=postgres://postgres:mysecretpassword@coursemate_db:5432/
-COPY ./server .
-COPY ./common ../common
+WORKDIR /coursemate/dev/
 
-# setup typia
-COPY node_modules package.json package-lock.json tsconfig.json ../
-RUN cd ..; npm ci
+# install deps
+COPY ./server/package.json ./server/package-lock.json ./server/tsconfig.json ./server/
+RUN cd server; npm ci
+
+COPY package.json package-lock.json tsconfig.json ./
+RUN npm ci
+
+#TOOD: ENV DATABASE_URL=postgres://postgres:mysecretpassword@coursemate_db:5432/
+# COPY ./server ./server
 
 # set up prisma
-COPY ./server/prisma ./
-RUN npx prisma generate
+COPY ./server/prisma ./server/prisma
+RUN cd server; npx prisma generate
+
+COPY . .
+RUN npm run prepare
 
 # build
-RUN npm run build
-CMD npx prisma db push && npm run start
+RUN cd server; npm run build
+CMD cd server; npx prisma db push && npm run start

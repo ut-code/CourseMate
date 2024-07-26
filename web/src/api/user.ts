@@ -1,7 +1,7 @@
 import endpoints from "./internal/endpoints.ts";
 import type { GUID, User, UserID } from "../../../common/types";
 
-import { assertUser } from "../../../common/typia.ts";
+import { assertUser } from "../../../common/typia";
 
 import { doWithIdToken, ErrUnauthorized } from "../firebase/auth/lib.ts";
 
