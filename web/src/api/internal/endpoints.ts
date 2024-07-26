@@ -1,6 +1,8 @@
 import { GUID } from "../../../../common/types";
 
-const origin = import.meta.env.VITE_API_ENDPOINT;
+// @ts-ignore
+const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
+if (!origin) throw new Error("import.meta.env.VITE_API_ENDPOINT not found!");
 
 // TODO: de-export this and use one from /common
 export type UserID = number;
@@ -13,21 +15,6 @@ export type UserID = number;
  *     - body: User
  *   - 400: not found.
  *   - 500: internal error.
- *
- * [v] 実装済み
- * PUT -> update user info.
- * - request body: Omit<User, "id">
- * - statuses:
- *   - 200: ok.
- *     - body: User
- *   - 500: internal error.
- *
- * [v] 実装済み
- * DELETE -> delete user.
- * - statuses:
- *   - 204: deleted, t.f. no content.
- *   - 500: internal error.
- *
  **/
 const user = (userId: UserID) => {
   return `${origin}/users/id/${userId}`;
@@ -58,6 +45,21 @@ const users = `${origin}/users`;
  *   - 200: ok.
  *   - 401: unauthorized (you are not aunthenticated).
  *   - 500: internal error.
+ *
+ * [v] 実装済み
+ * PUT -> update user info.
+ * - request body: Omit<User, "id">
+ * - statuses:
+ *   - 200: ok.
+ *     - body: User
+ *   - 500: internal error.
+ *
+ * [v] 実装済み
+ * DELETE -> delete user.
+ * - statuses:
+ *   - 204: deleted, t.f. no content.
+ *   - 500: internal error.
+ *
  **/
 const me = `${origin}/users/me`;
 

@@ -78,10 +78,10 @@ export async function create(userdata: Omit<User, "id">): Promise<User> {
   return user;
 }
 
-//ユーザ情報を更新する
-export async function update(userId: UserID, newData: User): Promise<void> {
+// 自身のユーザ情報を更新する
+export async function update(newData: User): Promise<void> {
   return await doWithIdToken(async () => {
-    const url = endpoints.user(userId);
+    const url = endpoints.me;
     const res = await fetch(url, {
       method: "PUT",
       headers: {
@@ -96,10 +96,10 @@ export async function update(userId: UserID, newData: User): Promise<void> {
   });
 }
 
-//ユーザ情報を削除する
-export async function remove(userId: UserID): Promise<void> {
+// 自身のユーザ情報を削除する
+export async function remove(): Promise<void> {
   return await doWithIdToken(async () => {
-    const url = endpoints.user(userId);
+    const url = endpoints.me;
     const res = await fetch(url, {
       method: "DELETE",
     });

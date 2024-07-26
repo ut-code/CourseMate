@@ -110,15 +110,17 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-// ユーザーの更新エンドポイント
-router.put("/id/:userId", async (req: Request, res: Response) => {
-  // TODO: handle non-int
-  const userId = parseInt(req.params.userId);
+// TODO!!!!!!!!
+declare function safeGetUserID(req: Request): { value: UserID };
+
+// todo after merging typia: move this up to somewhere below GET /me
+router.put("/me", async (req: Request, res: Response) => {
+  const userId = safeGetUserID(req);
 
   // TODO: Typia
   const user: Omit<User, "id"> = req.body;
   try {
-    const updatedUser = await updateUser(userId, user);
+    const updatedUser = await updateUser(userId.value, user);
     res.status(200).json(updatedUser);
   } catch (error) {
     console.error("Error updating user:", error);
@@ -126,13 +128,11 @@ router.put("/id/:userId", async (req: Request, res: Response) => {
   }
 });
 
-// ユーザーの削除エンドポイント
-router.delete("/id/:userId", async (req, res) => {
-  // TODO: handle non-int
-  const userId = parseInt(req.params.userId);
+router.delete("/me", async (req, res) => {
+  const userId = safeGetUserID(req);
 
   try {
-    await deleteUser(userId);
+    await deleteUser(userId.value);
     res.status(204).send();
   } catch (error) {
     console.error("Error deleting user:", error);
