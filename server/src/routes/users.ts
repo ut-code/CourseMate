@@ -26,9 +26,8 @@ router.get("/", async (req: Request, res: Response) => {
 // 自分の情報を確認するエンドポイント。
 router.get("/me", async (req: Request, res: Response) => {
   const guid = await verify(req).catch(() => null);
-  if (guid === null)
-    return res.status(401).send("auth error");
-    
+  if (guid === null) return res.status(401).send("auth error");
+
   try {
     const users = await getUser(guid);
     res.status(200).json(users);
