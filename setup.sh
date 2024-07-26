@@ -2,6 +2,7 @@
 
 cd `dirname -- $0`
 
+npm ci
 server/setup.sh
 # mobile/setup.sh
 web/setup.sh

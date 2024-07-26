@@ -9,8 +9,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "precommit": "npx prettier . --write",
-    "check": "npx tsc --noEmit && npx prettier . --check",
-    "prepare": "npx ts-patch install && npx typia patch"
+    "check": "npx tsc --noEmit && npx prettier . --check"
   },
   "keywords": [],
   "author": "",
