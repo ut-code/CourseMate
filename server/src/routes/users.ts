@@ -8,6 +8,7 @@ import {
   getAllUsers,
 } from "../database/users";
 import { searchMatchedUser, searchPendingUsers } from "../database/requests";
+import { verify } from "../firebase/auth/lib";
 
 const router = express.Router();
 
@@ -15,6 +16,21 @@ const router = express.Router();
 router.get("/", async (req: Request, res: Response) => {
   try {
     const users = await getAllUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+
+// 自分の情報を確認するエンドポイント。
+router.get("/me", async (req: Request, res: Response) => {
+  const guid = await verify(req).catch(() => null);
+  if (guid === null)
+    return res.status(401).send("auth error");
+    
+  try {
+    const users = await getUser(guid);
     res.status(200).json(users);
   } catch (error) {
     console.error("Error fetching users:", error);

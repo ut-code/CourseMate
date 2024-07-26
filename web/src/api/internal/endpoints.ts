@@ -53,6 +53,16 @@ const users = `${origin}/users`;
 
 /**
  * [v] 実装済み
+ * GET -> get info of me.
+ * - status:
+ *   - 200: ok.
+ *   - 401: unauthorized (you are not aunthenticated).
+ *   - 500: internal error.
+ **/
+const me = `${origin}/users/me`;
+
+/**
+ * [v] 実装済み
  * GET -> list all matched users.
  * - statuses:
  *   - 200: ok.
@@ -185,6 +195,7 @@ const echoSetCookie = `${origin}/echo/set-cookie`;
 
 export default {
   user,
+  me,
   userByGUID,
   userExists,
   users,

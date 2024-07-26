@@ -9,6 +9,13 @@ export async function all(): Promise<User[]> {
   return res.json();
 }
 
+// 自身のユーザー情報を取得する
+export async function aboutMe(): Promise<User> {
+  // TODO: use doWithIdToken()
+  const res = await fetch(endpoints.me);
+  return res.json();
+}
+
 //指定した id のユーザ情報を除いた全てのユーザ情報を取得する
 export async function except(id: UserID): Promise<User[]> {
   try {
@@ -106,6 +113,7 @@ export async function remove(userId: UserID): Promise<void> {
 
 export default {
   get,
+  aboutMe,
   getByGUID,
   all,
   except,
