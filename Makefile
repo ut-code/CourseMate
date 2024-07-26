@@ -1,14 +1,13 @@
-start: watch
+default: start
 
 setup: setup-server setup-web setup-root
 	echo "auto setup is done. now do:"
 	echo "- edit server/.env"
 	echo "- edit web/.env"
 
-build: build-web build-server
-
-serve: serve-web serve-server
-
+start: start-all # build -> serve
+build: build-server build-web
+serve: serve-all # serve only. does not build.
 watch: watch-server watch-web
 
 docker:
@@ -21,14 +20,7 @@ precommit-check:
 	cd server; npx eslint .
 
 
-	
-lint:
-	cd server; npx eslint .
-	cd web; npm lint
-
-format:
-	npx prettier . --write
-
+# Setup
 
 setup-web:
 	cd web; npm ci
@@ -42,20 +34,33 @@ setup-server:
 setup-root:
 	npm ci
 
+
+# Code style checks
+
+lint:
+	cd server; npx eslint .
+	cd web; npm lint
+
+format:
+	npx prettier . --write
+
+
+# Runner
+
+start-all: build-web build-server
+	make serve-all
+
 build-web:
 	cd web; npm run build
-
 build-server:
 	cd server; npm run build
 
-serve-web:
-	cd web; npm run serve
-
-serve-server:
-	cd server; npm run start
+# TODO: make SERVE_STATIC flag function
+serve-all:
+	cp web/dist server/static -r
+	cd server; SERVE_STATIC=1 npm run serve
 
 watch-web:
 	cd web; npm run dev
-
 watch-server:
 	cd server; npm run dev
