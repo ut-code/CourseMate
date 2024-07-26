@@ -7,8 +7,6 @@ services:
       POSTGRES_PASSWORD: mysecretpassword
     ports:
       - "5432:5432"
-    volumes:
-      - coursemate_data:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready --username postgres --dbname postgres --port 5432 --quiet
       interval: 5s
@@ -33,6 +31,3 @@ services:
       dockerfile: ./web/Dockerfile
     ports:
       - "5173:5173"
-
-volumes:
-  coursemate_data:

@@ -6,12 +6,18 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint:mobile": "cd mobile && npm run lint",
-    "format:mobile": "cd mobile && npm run format"
+    "format:mobile": "cd mobile && npm run format",
+    "prepare": "npx ts-patch install && npx typia patch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "husky": "^9.1.1"
+    "husky": "^9.1.1",
+    "ts-patch": "^3.2.1",
+    "typescript": "^5.5.2"
+  },
+  "dependencies": {
+    "typia": "^6.5.4"
   }
 }

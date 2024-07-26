@@ -7,6 +7,10 @@ COPY ./server/prisma ./
 RUN npx prisma generate
 COPY ./server .
 COPY ./common ../common
-RUN npm run prepare
+COPY node_modules package.json package-lock.json tsconfig.json ../
+RUN cd ..
+RUN npm install
+RUN cd server
+RUN npm run build
 
-CMD npx prisma db push && npm run dev
+CMD npx prisma db push && npm run start
