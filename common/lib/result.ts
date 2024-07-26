@@ -82,7 +82,9 @@ export function safeTry<T>(fallible: () => T): Result<T> {
   }
 }
 
-export async function asyncSafeTry<T>(fallible: () => Promise<T>): Promise<Result<T>> {
+export async function asyncSafeTry<T>(
+  fallible: () => Promise<T>,
+): Promise<Result<T>> {
   try {
     return Ok(await fallible());
   } catch (e) {
