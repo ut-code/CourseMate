@@ -143,6 +143,4 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - run: docker compose up --build &\
-          sleep 60 & wait $! ;\
-          exit 0 ;
+      - run: docker compose up --build # & sleep 60 & wait $! && exit 0 ;
