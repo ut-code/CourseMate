@@ -1,5 +1,5 @@
-import { app } from "../init"
-import * as admin from "firebase-admin/auth"
+import { app } from "../init";
+import * as admin from "firebase-admin/auth";
 import type { Request } from "express";
 import { GUID, IDToken } from "../../../../common/types";
 
