@@ -8,12 +8,11 @@ const router = express.Router();
 
 // 特定のユーザIDを含むマッチの取得
 router.get("/", async (req: Request, res: Response) => {
-  const id = await safeGetUserId(req);
-  if (!id.ok) return res.status(401).send("auth error");
-  const userId = id.value;
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error");
 
   try {
-    const all: Relationship[] = await getMatchesByUserId(userId);
+    const all: Relationship[] = await getMatchesByUserId(userId.value);
     const matched = all.filter((relation) => relation.status === "MATCHED");
     res.status(200).json(matched);
   } catch (error) {
@@ -24,18 +23,15 @@ router.get("/", async (req: Request, res: Response) => {
 
 // マッチの削除
 router.delete("/:opponentId", async (req: Request, res: Response) => {
-  const tgt = safeParseInt(req.params.opponentId);
-  if (!tgt.ok) return res.status(400).send("bad param encoding");
-  const opponentId = tgt.value;
-
-  const rqstr = await safeGetUserId(req);
-  if (!rqstr.ok) return res.status(401).send("auth error");
+  const opponentId = safeParseInt(req.params.opponentId);
+  if (!opponentId.ok) return res.status(400).send("bad param encoding");
 
   //削除操作を要求しているユーザを指す
-  const requesterId = rqstr.value;
+  const requesterId = await safeGetUserId(req);
+  if (!requesterId.ok) return res.status(401).send("auth error");
 
   try {
-    await deleteMatch(requesterId, opponentId);
+    await deleteMatch(requesterId.value, opponentId.value);
     res.status(204).send();
   } catch (error) {
     console.error("Error deleting match:", error);

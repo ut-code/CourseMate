@@ -36,6 +36,7 @@ export async function sendRequest({
 }
 
 // 特定のユーザが送信・受信したマッチリクエストの取得
+// TODO: make is less generic s.t. it is safer to use and easier to maintain
 export async function getRequestsByUserId({
   senderId,
   receiverId,

@@ -36,13 +36,13 @@ const router = express.Router();
 
 //特定のユーザーにまつわるpendingリクエストを取得
 router.get("/", async (req: Request, res: Response) => {
-  const result = await safeGetUserId(req);
-  if (!result.ok) return res.status(401).send("auth error");
-  const userId = result.value;
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error");
 
   try {
     const requests: Relationship[] = await getRequestsByUserId({
-      senderId: userId,
+      // FIXME: isn't it supposed to be receiver id?
+      senderId: userId.value,
     });
     const pending = requests.filter((r) => r.status === "PENDING");
     res.status(200).json(pending);
@@ -54,18 +54,16 @@ router.get("/", async (req: Request, res: Response) => {
 
 // リクエストの送信
 router.put("/send/:receiverId", async (req: Request, res: Response) => {
-  const recv = safeParseInt(req.params.receiverId);
-  if (!recv.ok) return res.status(400).send("bad param encoding");
-  const receiverId = recv.value;
+  const receiverId = safeParseInt(req.params.receiverId);
+  if (!receiverId.ok) return res.status(400).send("bad param encoding");
 
-  const sdr = await safeGetUserId(req);
-  if (!sdr.ok) return res.status(401).send("auth error");
-  const senderId = sdr.value;
+  const senderId = await safeGetUserId(req);
+  if (!senderId.ok) return res.status(401).send("auth error");
 
   try {
     const sentRequest = await sendRequest({
-      senderId: senderId,
-      receiverId: receiverId,
+      senderId: senderId.value,
+      receiverId: receiverId.value,
     });
     res.status(201).json(sentRequest);
   } catch (error) {
@@ -76,16 +74,14 @@ router.put("/send/:receiverId", async (req: Request, res: Response) => {
 
 // リクエストの承認
 router.put("/accept/:senderId", async (req: Request, res: Response) => {
-  const sdr = safeParseInt(req.params.senderId);
-  if (!sdr.ok) return res.status(400).send("bad param encoding");
-  const senderId = sdr.value;
+  const senderId = safeParseInt(req.params.senderId);
+  if (!senderId.ok) return res.status(400).send("bad param encoding");
 
-  const rcv = await safeGetUserId(req);
-  if (!rcv.ok) return res.status(401).send("auth error");
-  const receiverId = rcv.value;
+  const receiverId = await safeGetUserId(req);
+  if (!receiverId.ok) return res.status(401).send("auth error");
 
   try {
-    await approveRequest(senderId, receiverId);
+    await approveRequest(senderId.value, receiverId.value);
     res.status(201).send();
   } catch (error) {
     console.error("Error approving match request:", error);
@@ -95,16 +91,14 @@ router.put("/accept/:senderId", async (req: Request, res: Response) => {
 
 // リクエストの拒否
 router.put("/reject/:opponentId", async (req: Request, res: Response) => {
-  const oppn = safeParseInt(req.params.opponentId);
-  if (!oppn.ok) return res.status(400).send("bad param encoding");
-  const opponentId = oppn.value;
+  const opponentId = safeParseInt(req.params.opponentId);
+  if (!opponentId.ok) return res.status(400).send("bad param encoding");
 
-  const rqs = await safeGetUserId(req);
-  if (!rqs.ok) return res.status(401).send("auth error");
-  const requesterId = rqs.value;
+  const requesterId = await safeGetUserId(req);
+  if (!requesterId.ok) return res.status(401).send("auth error");
 
   try {
-    await rejectRequest(requesterId, opponentId);
+    await rejectRequest(requesterId.value, opponentId.value);
     res.status(204).send();
   } catch (error) {
     console.error("Error rejecting match request:", error);

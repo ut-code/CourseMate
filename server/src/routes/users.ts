@@ -38,12 +38,11 @@ router.get("/exists/:guid", async (req: Request, res: Response) => {
 
 // 特定のユーザーとマッチしたユーザーを取得
 router.get("/matched", async (req: Request, res: Response) => {
-  const result = await safeGetUserId(req);
-  if (!result.ok) return res.status(401).send("auth error");
-  const userId = result.value;
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error");
 
   try {
-    const matchedUsers: User[] = await searchMatchedUser(userId);
+    const matchedUsers: User[] = await searchMatchedUser(userId.value);
     const safeMatched = matchedUsers.map(Public);
     res.status(200).json(safeMatched);
   } catch (error) {
@@ -53,12 +52,11 @@ router.get("/matched", async (req: Request, res: Response) => {
 });
 
 router.get("/pending", async (req: Request, res: Response) => {
-  const result = await safeGetUserId(req);
-  if (!result.ok) return res.status(401).send("auth error");
-  const userId = result.value;
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error");
 
   try {
-    const matchedUsers: User[] = await searchPendingUsers(userId);
+    const matchedUsers: User[] = await searchPendingUsers(userId.value);
     const safeMatched = matchedUsers.map(Public);
     res.status(200).json(safeMatched);
   } catch (error) {
@@ -105,12 +103,10 @@ router.put("/id/:userId", async (req: Request, res: Response) => {
   if (await isRequester(req, id.value))
     return res.status(401).send("you can't update others");
 
-  const userId = id.value;
-
   // TODO: Typia
   const user: Omit<User, "id"> = req.body;
   try {
-    const updatedUser = await updateUser(userId, user);
+    const updatedUser = await updateUser(id.value, user);
     res.status(200).json(updatedUser);
   } catch (error) {
     console.error("Error updating user:", error);
