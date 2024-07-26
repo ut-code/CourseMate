@@ -94,9 +94,7 @@ jobs:
           node-version: latest
           cache: npm
 
-      - name: setup
-        run: make setup
-        working-directory: server
+      - run: make setup
 
       - name: "ESLint (TODO: RUN THIS AT PROJ ROOT)"
         run: npx eslint .
