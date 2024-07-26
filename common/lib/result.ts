@@ -82,7 +82,7 @@ export function safeTry<T>(fallible: () => T): Result<T> {
   }
 }
 
-export async function asyncSafeTry<T>(
+export async function safeTryAsync<T>(
   fallible: () => Promise<T>,
 ): Promise<Result<T>> {
   try {
