@@ -6,17 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint:mobile": "cd mobile && npm run lint",
-    "format:mobile": "cd mobile && npm run format",
-    "prepare": "ts-patch install && typia patch"
+    "format:mobile": "cd mobile && npm run format"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@ryoppippi/unplugin-typia": "npm:@jsr/ryoppippi__unplugin-typia@^0.6.13",
-    "husky": "^9.1.1",
-    "ts-patch": "^3.2.1",
-    "typescript": "^5.5.2"
+    "husky": "^9.1.1"
   },
   "dependencies": {
     "typia": "^6.5.4"
