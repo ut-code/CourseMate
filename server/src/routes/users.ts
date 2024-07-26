@@ -8,7 +8,7 @@ import {
   getAllUsers,
 } from "../database/users";
 import { searchMatchedUser, searchPendingUsers } from "../database/requests";
-import { assert } from "typia";
+import { assertPartialUser } from "../../../common/typia";
 
 const router = express.Router();
 
@@ -85,7 +85,7 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
 
 // ユーザーの作成エンドポイント
 router.post("/", async (req: Request, res: Response) => {
-  const partialUser = assert<Omit<User, "id">>(req.body);
+  const partialUser = assertPartialUser(req.body);
 
   try {
     const newUser = await createUser(partialUser);
@@ -101,9 +101,10 @@ router.put("/id/:userId", async (req: Request, res: Response) => {
   // TODO: handle non-int
   const userId = parseInt(req.params.userId);
 
-  const user = assert<Omit<User, "id">>(req.body);
+  const partialUser = assertPartialUser(req.body);
+
   try {
-    const updatedUser = await updateUser(userId, user);
+    const updatedUser = await updateUser(userId, partialUser);
     res.status(200).json(updatedUser);
   } catch (error) {
     console.error("Error updating user:", error);

@@ -15,6 +15,8 @@ export type User = {
   pictureUrl: string;
 };
 
+export type PartialUser = Omit<User, "id">;
+
 export type PublicUser = {
   id: UserID;
   name: string;

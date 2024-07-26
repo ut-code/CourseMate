@@ -5,7 +5,6 @@ import { assertUser } from "../../../common/typia.ts";
 
 import { doWithIdToken, ErrUnauthorized } from "../firebase/auth/lib.ts";
 
-
 //全てのユーザ情報を取得する
 export async function all(): Promise<User[]> {
   const res = await fetch(endpoints.users);

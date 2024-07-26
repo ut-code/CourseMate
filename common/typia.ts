@@ -1,5 +1,12 @@
 import typia from "typia";
-import { GUID, PublicUser, Relationship, User, UserID } from "./types";
+import {
+  GUID,
+  PartialUser,
+  PublicUser,
+  Relationship,
+  User,
+  UserID,
+} from "./types";
 
 //引数がUser型に対して正しいかどうかをチェックする
 export function assertUser(input: unknown): User {
@@ -20,4 +27,8 @@ export function assertUserID(input: unknown): UserID {
 
 export function assertGUID(input: unknown): GUID {
   return typia.assert<GUID>(input);
+}
+
+export function assertPartialUser(input: unknown): PartialUser {
+  return typia.assert<PartialUser>(input);
 }
