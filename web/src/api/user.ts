@@ -1,5 +1,6 @@
 import endpoints from "./internal/endpoints.ts";
 import type { GUID, User, UserID } from "../../../common/types";
+import { assertUser } from "../../../common/typia.ts";
 
 //全てのユーザ情報を取得する
 export async function all(): Promise<User[]> {
@@ -30,8 +31,7 @@ export async function getByGUID(guid: GUID): Promise<User | null> {
     return null;
   }
   const data = await res.json();
-  // TODO: properly convert this into User instead of assigning any
-  return data;
+  return assertUser(data);
 }
 
 //指定した guid のユーザが存在するかどうかを取得する
@@ -48,8 +48,7 @@ export async function get(id: UserID): Promise<User | null> {
     return null;
   }
   const data = await res.json();
-  // TODO: properly convert this into User instead of assigning any
-  return data;
+  return assertUser(data);
 }
 
 //ユーザ情報を作成する
