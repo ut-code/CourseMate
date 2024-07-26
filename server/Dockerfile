@@ -20,4 +20,4 @@ RUN npm run prepare
 
 # build
 RUN cd server; npm run build
-CMD cd server; npx prisma db push && npm run start
+CMD cd server; npx prisma db push && npm run serve
