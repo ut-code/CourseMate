@@ -7,5 +7,6 @@ COPY ./server/prisma ./
 RUN npx prisma generate
 COPY ./server .
 COPY ./common ../common
+RUN npm run prepare
 
 CMD npx prisma db push && npm run dev

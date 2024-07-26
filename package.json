@@ -13,8 +13,5 @@
   "license": "ISC",
   "devDependencies": {
     "husky": "^9.1.1"
-  },
-  "dependencies": {
-    "typia": "^6.5.4"
   }
 }
