@@ -8,6 +8,7 @@ import usersRoutes from "./routes/users";
 import coursesRoutes from "./routes/courses";
 import requestsRoutes from "./routes/requests";
 import matchesRoutes from "./routes/matches";
+import echoRoutes from "./routes/echo";
 
 const app = express();
 const port = 3000;
@@ -38,6 +39,7 @@ app.use("/users", usersRoutes);
 app.use("/courses", coursesRoutes);
 app.use("/requests", requestsRoutes);
 app.use("/matches", matchesRoutes);
+app.use("/echo", echoRoutes);
 
 // サーバーの起動
 app.listen(port, () => {

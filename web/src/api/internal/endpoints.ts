@@ -173,6 +173,16 @@ const rejectRequest = (opponentId: UserID) => {
   return `${origin}/requests/reject/${opponentId}`;
 };
 
+/**
+ * GET -> echo back the same
+ * body: json<any>
+ * - status:
+ *   - 204: No content. successful.
+ *   - 400: Bad formatting.
+ *   - 500: internal error.
+ */
+const echoSetCookie = `${origin}/echo/set-cookie`;
+
 export default {
   user,
   userByGUID,
@@ -186,4 +196,6 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
+
+  echoSetCookie,
 };
