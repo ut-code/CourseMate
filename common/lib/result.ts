@@ -91,3 +91,25 @@ export async function safeTryAsync<T>(
     return Err(e);
   }
 }
+
+export function safify<T, U>(fallible: (v: T) => U): (v: T) => Result<U> {
+  return function (v: T): Result<U> {
+    try {
+      return Ok(fallible(v));
+    } catch (e) {
+      return Err(e);
+    }
+  };
+}
+
+export function safifyAsync<T, U>(
+  fallible: (v: T) => Promise<U>,
+): (v: T) => Promise<Result<U>> {
+  return async function (v: T): Promise<Result<U>> {
+    try {
+      return Ok(await fallible(v));
+    } catch (e) {
+      return Err(e);
+    }
+  };
+}
