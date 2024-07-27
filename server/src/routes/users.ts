@@ -39,7 +39,7 @@ router.get("/exists/:guid", async (req: Request, res: Response) => {
 // 特定のユーザーとマッチしたユーザーを取得
 router.get("/matched", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error");
+  if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
   try {
     const matchedUsers: User[] = await searchMatchedUser(userId.value);
@@ -53,7 +53,7 @@ router.get("/matched", async (req: Request, res: Response) => {
 
 router.get("/pending", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error");
+  if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
   try {
     const matchedUsers: User[] = await searchPendingUsers(userId.value);

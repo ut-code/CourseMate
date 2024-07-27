@@ -42,5 +42,8 @@ export default (config: Config) => {
     return callback(new Error("Not allowed by CORS"));
   }
 
-  return cors({ origin: origin });
+  return cors({ 
+    origin: origin,
+    credentials: config.credentials,
+  });
 };

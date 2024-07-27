@@ -42,10 +42,12 @@ export function useAuthorizedData<T>(url: string) {
 
   const safeReadData = async () => {
     try {
-      const response = await fetch(url);
-      if (response.status === 401) throw new ErrUnauthorized();
-      if (!response.ok) throw new Error("Response was not ok.");
-      const result = await response.json();
+      const res = await fetch(url, {
+        credentials: "include",
+      });
+      if (res.status === 401) throw new ErrUnauthorized();
+      if (!res.ok) throw new Error("Response was not ok.");
+      const result = await res.json();
       setData(result);
       return Ok(null);
     } catch (e) {
@@ -61,7 +63,7 @@ export function useAuthorizedData<T>(url: string) {
     setIsLoading(true);
     setError(null);
     const result = await safeReadData();
-    if (!result.ok && result.error instanceof ErrUnauthorized) {
+    if (!result.ok) {
       await refreshIdToken();
       await safeReadData();
     }
