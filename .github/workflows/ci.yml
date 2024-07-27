@@ -135,3 +135,13 @@ jobs:
         run: npx tsc --noEmit
         working-directory: web
         shell: bash
+
+  docker:
+    name: Docker run
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - run: cp server/.env.docker server/.env
+      - run: (docker compose up --build) & sleep 60 & wait $! && exit 0 ;
