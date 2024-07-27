@@ -15,8 +15,8 @@ export async function sendRequest({
   const existingRelationship = await prisma.relationship.findFirst({
     where: {
       OR: [
-        { requestingUserId: senderId, requestedUserId: receiverId },
-        { requestingUserId: receiverId, requestedUserId: senderId }, // 逆の関係もチェック
+        { sendingUserId: senderId, receivingUserId: receiverId },
+        { sendingUserId: receiverId, receivingUserId: senderId }, // 逆の関係もチェック
       ],
     },
   });
@@ -27,8 +27,8 @@ export async function sendRequest({
   // 既存の関係がない場合は新しい関係を作成
   const newRelationship = await prisma.relationship.create({
     data: {
-      requestingUser: { connect: { id: senderId } },
-      requestedUser: { connect: { id: receiverId } },
+      sendingUser: { connect: { id: senderId } },
+      receivingUser: { connect: { id: receiverId } },
       status: "PENDING",
     },
   });
@@ -36,6 +36,7 @@ export async function sendRequest({
 }
 
 // 特定のユーザが送信・受信したマッチリクエストの取得
+// TODO: make is less generic s.t. it is safer to use and easier to maintain
 export async function getRequestsByUserId({
   senderId,
   receiverId,
@@ -46,13 +47,12 @@ export async function getRequestsByUserId({
   if (senderId === undefined && receiverId === undefined) {
     throw new Error("Either senderId or receiverId must be provided");
   }
-  const whereClause: { requestingUserId?: UserID; requestedUserId?: UserID } =
-    {};
+  const whereClause: { sendingUserId?: UserID; receivingUserId?: UserID } = {};
   if (senderId !== undefined) {
-    whereClause.requestingUserId = senderId;
+    whereClause.sendingUserId = senderId;
   }
   if (receiverId !== undefined) {
-    whereClause.requestedUserId = receiverId;
+    whereClause.receivingUserId = receiverId;
   }
   return await prisma.relationship.findMany({
     where: whereClause,
@@ -63,9 +63,9 @@ export async function getRequestsByUserId({
 export async function approveRequest(senderId: UserID, receiverId: UserID) {
   return await prisma.relationship.update({
     where: {
-      requestingUserId_requestedUserId: {
-        requestingUserId: senderId,
-        requestedUserId: receiverId,
+      sendingUserId_receivingUserId: {
+        sendingUserId: senderId,
+        receivingUserId: receiverId,
       },
     },
     data: {
@@ -78,9 +78,9 @@ export async function approveRequest(senderId: UserID, receiverId: UserID) {
 export async function rejectRequest(senderId: UserID, receiverId: UserID) {
   return await prisma.relationship.update({
     where: {
-      requestingUserId_requestedUserId: {
-        requestingUserId: senderId,
-        requestedUserId: receiverId,
+      sendingUserId_receivingUserId: {
+        sendingUserId: senderId,
+        receivingUserId: receiverId,
       },
     },
     data: {
@@ -94,23 +94,24 @@ export async function searchPendingUsers(userId: UserID) {
   //俺をリクエストしているのは誰だ
   return await prisma.user.findMany({
     where: {
-      requestingUsers: {
+      sendingUsers: {
         some: {
-          requestedUserId: userId,
+          receivingUserId: userId,
           status: "PENDING",
         },
       },
     },
   });
 }
+
 // export async function searchRequestingUser(userId: UserID):Promise<Relationship[]> {
 //   //俺がリクエストしているのは誰だ
 //   try {
 //     return await prisma.relationship.findMany({
-//       where: {requestingUserId: userId}
+//       where: {sendingUserId: userId}
 //     });
 //   } catch(error) {
-//     console.log("failed to search requestingUsers")
+//     console.log("failed to search sendingUsers")
 //     throw error;
 //   }
 // }
@@ -121,17 +122,17 @@ export async function searchMatchedUser(userId: UserID) {
     where: {
       OR: [
         {
-          requestingUsers: {
+          sendingUsers: {
             some: {
-              requestedUserId: userId,
+              receivingUserId: userId,
               status: "MATCHED",
             },
           },
         },
         {
-          requestedUsers: {
+          receivingUsers: {
             some: {
-              requestingUserId: userId,
+              sendingUserId: userId,
               status: "MATCHED",
             },
           },
