@@ -6,6 +6,7 @@ export async function send(receiverId: UserID) {
   return doWithIdToken(async () => {
     const res = await fetch(endpoints.sendRequest(receiverId), {
       method: "PUT",
+      credentials: "include",
     });
     if (res.status === 401) throw new ErrUnauthorized();
 
@@ -18,6 +19,7 @@ export async function reject(opponentID: UserID) {
   return doWithIdToken(async () => {
     const res = await fetch(endpoints.acceptRequest(opponentID), {
       method: "PUT",
+      credentials: "include",
     });
     if (res.status === 401) throw new ErrUnauthorized();
     const data = await res.text();
@@ -30,6 +32,7 @@ export async function accept(senderId: UserID) {
   return doWithIdToken(async () => {
     const res = await fetch(endpoints.rejectRequest(senderId), {
       method: "PUT",
+      credentials: "include",
     });
     if (res.status === 401) throw new ErrUnauthorized();
     const data = await res.text();

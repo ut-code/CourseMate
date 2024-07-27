@@ -8,6 +8,7 @@ export async function deleteMatch(opponentID: UserID) {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.match(opponentID), {
       method: "DELETE",
+      credentials: "include",
     });
     if (res.status === 401) throw new ErrUnauthorized();
 
