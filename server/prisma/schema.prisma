@@ -16,12 +16,8 @@ model User {
   password    String        @default("")
   pictureUrl  String        @default("")
   enrollments Enrollement[]
-
-  //自分がマッチリクエストしている相手
-  requestingUsers Relationship[] @relation("requesting")
-
-  //自分をマッチリクエストしている相手
-  requestedUsers Relationship[] @relation("requested")
+  sendingUsers Relationship[] @relation("sending")  // 自分がマッチリクエストを送ったユーザー
+  receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
 }
 
 model Course {
@@ -39,14 +35,14 @@ model Enrollement {
 }
 
 model Relationship {
-  id               Int            @id @default(autoincrement())
-  status           MatchingStatus
-  requestingUser   User           @relation("requesting", fields: [requestingUserId], references: [id])
-  requestingUserId Int //マッチリクエストを送っている人
-  requestedUser    User           @relation("requested", fields: [requestedUserId], references: [id])
-  requestedUserId  Int //マッチリクエストを送られている人
+  id              Int            @id @default(autoincrement())
+  status          MatchingStatus
+  sendingUser     User           @relation("sending", fields: [sendingUserId], references: [id])
+  sendingUserId   Int 
+  receivingUser   User           @relation("receiving", fields: [receivingUserId], references: [id])
+  receivingUserId Int 
 
-  @@unique([requestingUserId, requestedUserId])
+  @@unique([sendingUserId, receivingUserId])
 }
 
 enum MatchingStatus {
