@@ -19,7 +19,7 @@ watch: watch-server watch-web
 docker:
 	docker compose up --build
 
-precommit: lint format
+precommit: type-check lint format
 
 precommit-check:
 	npx prettier . --check
@@ -30,12 +30,14 @@ precommit-check:
 
 setup-web:
 	cd web; npm ci
-	cd web; cp ./.env.sample ./.env
+	# copy .env.sample -> .env only if .env is not there
+	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 
 setup-server:
 	cd server; npm ci
 	cd server; npx prisma generate
-	cd server; cp ./.env.sample ./.env
+	# copy .env.sample -> .env only if .env is not there
+	cd server; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 
 setup-root:
 	npm ci
