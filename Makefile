@@ -2,8 +2,14 @@ default: start
 
 setup: setup-server setup-web setup-root
 	echo "auto setup is done. now do:"
+	echo "- run make husky"
 	echo "- edit server/.env"
 	echo "- edit web/.env"
+
+husky:
+	npx husky
+	git checkout .husky
+	rm .husky/pre-commit
 
 start: start-all # build -> serve
 build: build-server build-web
