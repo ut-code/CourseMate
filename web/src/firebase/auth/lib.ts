@@ -1,11 +1,11 @@
 import { getAuth } from "firebase/auth";
 import { setIdTokenCookie } from "../../api/echo";
+import { type IDToken } from "../../../../common/types";
 
-export type IdToken = string;
 export class ErrUnauthorized extends Error {}
 
 // sometimes throws.
-export async function getIdToken(): Promise<IdToken> {
+export async function getIdToken(): Promise<IDToken> {
   const currentUser = getAuth().currentUser;
   if (currentUser == null) throw new Error("current user not found");
   const idtoken = await currentUser.getIdToken();

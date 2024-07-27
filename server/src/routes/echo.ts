@@ -4,15 +4,19 @@ const router = express.Router();
 
 // requires body parser
 router.get("/set-cookie", (req: Request, res: Response) => {
-  const body = req.body;
+  const query = req.query;
 
-  for (const key of Object.keys(body)) {
-    res.cookie(key, String(body[key]), {
+  for (const key of Object.keys(query)) {
+    res.cookie(key, String(query[key]), {
       httpOnly: true,
+      sameSite: "lax", // TODO: make it to `strict` on release
+      maxAge: 5 * 60 * 1000,
+      path: "/",
+      secure: false,
     });
   }
 
-  res.status(204).end();
+  res.status(204).send();
 });
 
 export default router;
