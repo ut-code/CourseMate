@@ -98,7 +98,7 @@ router.put("/reject/:opponentId", async (req: Request, res: Response) => {
   if (!requesterId.ok) return res.status(401).send("auth error");
 
   try {
-    await rejectRequest(opponentId.value,requesterId.value); //TODO 名前を良いのに変える
+    await rejectRequest(opponentId.value, requesterId.value); //TODO 名前を良いのに変える
     res.status(204).send();
   } catch (error) {
     console.error("Error rejecting match request:", error);
