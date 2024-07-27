@@ -1,6 +1,7 @@
 /**
 # Result
 Result allows you to handle results in safer and more type-safe way.
+Result を使うと、失敗する可能性がある関数の結果をより安全で Type-safe な方法で扱うことができます。
 
 basic use case:
 ```js

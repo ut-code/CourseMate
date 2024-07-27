@@ -103,6 +103,7 @@ export async function searchPendingUsers(userId: UserID) {
     },
   });
 }
+
 // export async function searchRequestingUser(userId: UserID):Promise<Relationship[]> {
 //   //俺がリクエストしているのは誰だ
 //   try {
