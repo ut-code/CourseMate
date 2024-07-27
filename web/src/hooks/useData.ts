@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { ErrUnauthorized, refreshIdToken } from "../firebase/auth/lib";
-import { Ok, Err } from "../links/common/lib/result";
+import { Ok, Err } from "../dev/copied/common/lib/result";
 
 // TODO: separate this into concrete types and urls s.t. there is no unsafe any
 // also use sth like Typia (or Zod if you really like it)
