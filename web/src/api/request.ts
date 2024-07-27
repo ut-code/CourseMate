@@ -17,7 +17,7 @@ export async function send(receiverId: UserID) {
 //相手からのリクエストを拒否する
 export async function reject(opponentID: UserID) {
   return doWithIdToken(async () => {
-    const res = await fetch(endpoints.acceptRequest(opponentID), {
+    const res = await fetch(endpoints.rejectRequest(opponentID), {
       method: "PUT",
       credentials: "include",
     });
@@ -30,7 +30,7 @@ export async function reject(opponentID: UserID) {
 //相手からのリクエストを受け入れる
 export async function accept(senderId: UserID) {
   return doWithIdToken(async () => {
-    const res = await fetch(endpoints.rejectRequest(senderId), {
+    const res = await fetch(endpoints.acceptRequest(senderId), {
       method: "PUT",
       credentials: "include",
     });
