@@ -67,7 +67,7 @@ jobs:
           cache: npm
 
       - name: setup
-        run: ./setup.sh
+        run: make setup
         working-directory: .
 
       - name: build server
@@ -94,16 +94,14 @@ jobs:
           node-version: latest
           cache: npm
 
-      - name: setup
-        run: ./setup.sh
-        working-directory: server
+      - run: make setup
 
       - name: "ESLint (TODO: RUN THIS AT PROJ ROOT)"
         run: npx eslint .
         working-directory: server
         shell: bash
 
-      - name: "Prettier"
+      - name: Prettier
         run: npx prettier . --check
         working-directory: .
         shell: bash
@@ -122,7 +120,7 @@ jobs:
           cache: npm
 
       - name: setup
-        run: ./setup.sh
+        run: make setup
         working-directory: .
         shell: bash
 
