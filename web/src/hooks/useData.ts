@@ -66,11 +66,11 @@ export function useAuthorizedData<T>(url: string) {
       await safeReadData();
     }
     setIsLoading(false);
-}, []);
+  }, []);
 
-useEffect(() => {
-  reload();
-}, [reload]);
+  useEffect(() => {
+    reload();
+  }, [reload]);
 
-return { data, isLoading, error, reload };
+  return { data, isLoading, error, reload };
 }
