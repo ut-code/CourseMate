@@ -9,7 +9,7 @@ setup: setup-server setup-web setup-root
 husky:
 	npx husky
 	git checkout .husky
-	rm .husky/pre-commit
+	# rm .husky/pre-commit
 
 start: start-all # build -> serve
 build: build-server build-web
