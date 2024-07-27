@@ -5,7 +5,7 @@ import endpoints from "./internal/endpoints";
 export async function setIdTokenCookie(idToken: IDToken) {
   const res = await fetch(`${endpoints.echoSetCookie}?id-token=${idToken}`, {
     // https://stackoverflow.com/questions/72612730/browser-is-not-saving-cookie
-    // try setting 'credentials: "include"' in your fetch request that is EXPECTING A COOKIE IN THE RESPONSE. 
+    // try setting 'credentials: "include"' in your fetch request that is EXPECTING A COOKIE IN THE RESPONSE.
     credentials: "include",
   });
   if (res.status === 204)
