@@ -2,8 +2,8 @@ type RelationshipStatus = "PENDING" | "MATCHED" | "REJECTED";
 
 export type Relationship = {
   id: number;
-  requestingUserId: UserID;
-  requestedUserId: UserID;
+  sendingUserId: UserID;
+  receivingUserId: UserID;
   status: RelationshipStatus;
 };
 
