@@ -41,14 +41,24 @@ setup-root:
 	npm ci
 
 
-# Code style checks
+# Static checks
 
+## code style
 lint:
 	cd server; npx eslint .
 	cd web; npm lint
 
 format:
 	npx prettier . --write
+
+# type checks
+type-check: type-check-server type-check-web
+
+type-check-server:
+	cd server; npx tsc --noEmit
+
+type-check-web:
+	cd web; npx tsc --noEmit
 
 
 # Runner
