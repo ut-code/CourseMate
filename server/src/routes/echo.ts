@@ -9,7 +9,7 @@ router.get("/set-cookie", (req: Request, res: Response) => {
   for (const key of Object.keys(query)) {
     res.cookie(key, String(query[key]), {
       httpOnly: true,
-      sameSite: "none", // TODO: make it to `strict` on release
+      sameSite: "lax", // TODO: make it to `strict` on release
       maxAge: 5 * 60 * 1000,
       path: "/",
       secure: false,
