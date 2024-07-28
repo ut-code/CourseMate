@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { type PublicUser, Public, User } from "../../../common/types";
+import { type PublicUser, Public, User } from "../common/types";
 import {
   createUser,
   deleteUser,

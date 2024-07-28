@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { GUID, User, UserID } from "../../../common/types";
+import { GUID, User, UserID } from "../common/types";
 
 const prisma = new PrismaClient();
 
