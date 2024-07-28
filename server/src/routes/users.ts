@@ -109,7 +109,6 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-// todo after merging typia: move this up to somewhere below GET /me
 router.put("/me", async (req: Request, res: Response) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
