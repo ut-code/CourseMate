@@ -4,8 +4,8 @@ import { Result, Ok, Err } from "../dev/copied/common/lib/result";
 
 // TODO: separate this into concrete types and urls s.t. there is no unsafe any
 // also use sth like Typia (or Zod if you really like it)
-export default function useData<T>(url: string) {
-  const [data, setData] = useState<T | null>(null);
+export default function useData(url: string) {
+  const [data, setData] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -34,7 +34,7 @@ export default function useData<T>(url: string) {
   return { data, isLoading, error, reload };
 }
 
-async function safeReadData<T>(url: string): Promise<Result<T>> {
+async function safeReadData(url: string): Promise<Result<unknown>> {
   try {
     const res = await fetch(url, {
       credentials: "include",
@@ -50,8 +50,8 @@ async function safeReadData<T>(url: string): Promise<Result<T>> {
 }
 
 // TODO: refactor this to look better.
-export function useAuthorizedData<T>(url: string) {
-  const [data, setData] = useState<T | null>(null);
+export function useAuthorizedData(url: string) {
+  const [data, setData] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -61,13 +61,13 @@ export function useAuthorizedData<T>(url: string) {
 
     // this never throws. I'm only using this to use finally
     try {
-      let result = await safeReadData<T>(url);
+      let result = await safeReadData(url);
       if (result.ok) {
         setData(result.value);
         return;
       }
       await refreshIdToken();
-      result = await safeReadData<T>(url);
+      result = await safeReadData(url);
       if (result.ok) {
         setData(result.value);
         return;

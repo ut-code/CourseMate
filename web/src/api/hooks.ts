@@ -13,12 +13,24 @@ type Hook<T> = {
 
 export function useMatchedUsers(): Hook<User[]> {
   const url = endpoints.matchedUsers;
-  return useAuthorizedData<User[]>(url);
+  const hook = useAuthorizedData(url);
+  return {
+    data: hook.data as User[] | null,
+    isLoading: hook.isLoading,
+    error: hook.error,
+    reload: hook.reload,
+  };
 }
 
 export function usePendingUsers(): Hook<User[]> {
   const url = endpoints.pendingUsers;
-  return useAuthorizedData<User[]>(url);
+  const hook = useAuthorizedData(url);
+  return {
+    data: hook.data as User[] | null,
+    isLoading: hook.isLoading,
+    error: hook.error,
+    reload: hook.reload,
+  };
 }
 
 export default {
