@@ -13,42 +13,29 @@
 - `server`
   - `DATABASE_URL` : `postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample` の形式
 
-### Docker Compose
+## Makefile
 
-ここ以下は、 docker compose を使えば docker compose が全部やってくれる。
+GNU Make が導入されています。以下は、ユーザーが使うことが想定されているコマンドの一部です。
+
+- make setup (セットアップします。)
+- make start (build -> serve します。)
+- make watch (ホットリロードします。)
+- make precommit (type-check, format-check, lint を実行します。husky で自動実行されます。)
+
+## 環境構築
 
 ```sh
-docker compose up --build
+make setup
 ```
 
-### 環境構築
+終わったら、 `server/.env` と `web/.env` をコピーしてきましょう。
 
-プロジェクトルート・`mobile`・`web`・`server` の各ディレクトリで次のコマンドを実行してください
+## server、webの起動
 
-```shell
-npm ci
-```
-
-### `mobile`
-
-次のコマンドで開発環境が起動します（Web）
-
-```shell
-npm run web
-```
-
-### `web`
-
-次のコマンドで開発環境が起動します
-
-```shell
-npm run dev
-```
-
-### `server`
-
-次のコマンドで開発環境が起動します
-
-```shell
-npm run dev
+```sh
+make start
+# または
+make watch
+# または
+make docker
 ```
