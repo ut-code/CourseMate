@@ -14,13 +14,14 @@ export default function Root() {
   const location = useLocation();
   const [value, setValue] = useState(0);
 
+  //TODO 元々はどこでリロードしてもheaderがhomeになっていた。それを解消するために以下のコードを追加した。しかし、微妙だと思うので、より良い方法を求む。
   useEffect(() => {
     const currentPath = location.pathname;
     const currentIndex = paths.indexOf(currentPath);
     if (currentIndex !== -1) {
       setValue(currentIndex);
     }
-  }, [location.pathname]); //TODO より良いものを求む
+  }, [location.pathname]);
 
   return (
     <>
