@@ -23,6 +23,11 @@ export async function aboutMe(): Promise<User> {
     return res.json();
   });
 }
+// 自身のユーザーIDを取得する
+export async function getMyId(): Promise<UserID> {
+  const me = await aboutMe();
+  return me.id;
+}
 
 // 自身のユーザ情報を更新する
 export async function update(newData: User): Promise<void> {
