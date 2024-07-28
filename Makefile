@@ -48,7 +48,7 @@ setup-root:
 ## code style
 lint:
 	cd server; npx eslint .
-	cd web; npm lint
+	cd web; npm run lint
 
 format:
 	npx prettier . --write

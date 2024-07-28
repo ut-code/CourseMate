@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import { type PublicUser, Public, User } from "../../../common/types";
-import { safeParseInt } from "../../../common/lib/result/safeParseInt";
 import {
   createUser,
   deleteUser,
@@ -109,7 +108,6 @@ router.post("/", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to create user" });
   }
 });
-
 
 // todo after merging typia: move this up to somewhere below GET /me
 router.put("/me", async (req: Request, res: Response) => {

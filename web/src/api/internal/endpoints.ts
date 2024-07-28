@@ -1,6 +1,5 @@
 import { GUID } from "../../../../common/types";
 
-// @ts-ignore
 const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
 if (!origin) throw new Error("import.meta.env.VITE_API_ENDPOINT not found!");
 
