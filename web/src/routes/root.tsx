@@ -14,14 +14,13 @@ export default function Root() {
   const location = useLocation();
   const [value, setValue] = useState(0);
 
-  // Update value based on the current path
   useEffect(() => {
     const currentPath = location.pathname;
     const currentIndex = paths.indexOf(currentPath);
     if (currentIndex !== -1) {
       setValue(currentIndex);
     }
-  }, [location.pathname]);
+  }, [location.pathname]); //TODO より良いものを求む
 
   return (
     <>
