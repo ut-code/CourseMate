@@ -9,7 +9,7 @@ export async function getMatchesByUserId(userId: UserID) {
     where: {
       AND: [
         { status: "MATCHED" },
-        { OR: [{ requestingUserId: userId }, { requestedUserId: userId }] },
+        { OR: [{ sendingUserId: userId }, { receivingUserId: userId }] },
       ],
     },
   });
@@ -21,9 +21,9 @@ export async function deleteMatch(senderId: UserID, receiverId: UserID) {
   // 最初の条件で削除を試みる
   const recordToDelete = await prisma.relationship.findUnique({
     where: {
-      requestingUserId_requestedUserId: {
-        requestingUserId: senderId,
-        requestedUserId: receiverId,
+      sendingUserId_receivingUserId: {
+        sendingUserId: senderId,
+        receivingUserId: receiverId,
       },
     },
   });
@@ -43,9 +43,9 @@ export async function deleteMatch(senderId: UserID, receiverId: UserID) {
   // 次の条件で削除を試みる
   const altRecordToDelete = await prisma.relationship.findUnique({
     where: {
-      requestingUserId_requestedUserId: {
-        requestingUserId: receiverId,
-        requestedUserId: senderId,
+      sendingUserId_receivingUserId: {
+        sendingUserId: receiverId,
+        receivingUserId: senderId,
       },
     },
   });

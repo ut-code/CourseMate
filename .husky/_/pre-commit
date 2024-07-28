@@ -11,3 +11,5 @@ if [ `git branch --show-current` == "main" ]; then
   echo "Cannot make commit on main! aborting..."
   exit 1
 fi
+
+make precommit

@@ -2,9 +2,13 @@ import endpoints from "./internal/endpoints.ts";
 import type { GUID, User, UserID } from "../../../common/types";
 import { doWithIdToken, ErrUnauthorized } from "../firebase/auth/lib.ts";
 
+// TODO: migrate to safe functions
+
 //全てのユーザ情報を取得する
 export async function all(): Promise<User[]> {
-  const res = await fetch(endpoints.users);
+  const res = await fetch(endpoints.users, {
+    credentials: "include",
+  });
   // TODO: typia
   return res.json();
 }
@@ -26,6 +30,7 @@ export async function update(newData: User): Promise<void> {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newData),
+      credentials: "include",
     });
 
     if (!res.ok) {
@@ -40,6 +45,7 @@ export async function remove(): Promise<void> {
     const url = endpoints.me;
     const res = await fetch(url, {
       method: "DELETE",
+      credentials: "include",
     });
     if (res.status === 401) throw new ErrUnauthorized();
 
@@ -68,7 +74,9 @@ export async function except(id: UserID): Promise<User[]> {
  */
 export async function getByGUID(guid: GUID): Promise<User | null> {
   return await doWithIdToken<User | null>(async () => {
-    const res = await fetch(endpoints.userByGUID(guid));
+    const res = await fetch(endpoints.userByGUID(guid), {
+      credentials: "include",
+    });
     if (res.status === 404) {
       return null;
     }
@@ -80,7 +88,9 @@ export async function getByGUID(guid: GUID): Promise<User | null> {
 
 //指定した guid のユーザが存在するかどうかを取得する
 export async function exists(guid: GUID): Promise<boolean> {
-  const res = await fetch(endpoints.userExists(guid));
+  const res = await fetch(endpoints.userExists(guid), {
+    credentials: "include",
+  });
   if (res.status === 404) return false;
   return true;
 }
@@ -102,6 +112,7 @@ export async function create(userdata: Omit<User, "id">): Promise<User> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userdata),
+    credentials: "include",
   });
   if (!res.ok) {
     console.error("res.ok was not true");

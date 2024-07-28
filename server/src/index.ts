@@ -9,6 +9,7 @@ import coursesRoutes from "./routes/courses";
 import requestsRoutes from "./routes/requests";
 import matchesRoutes from "./routes/matches";
 import echoRoutes from "./routes/echo";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = 3000;
@@ -29,8 +30,9 @@ app.use(nocsrf(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.json("Hello from Express!");
 });
 

@@ -1,5 +1,5 @@
 import endpoints from "./internal/endpoints";
-import useData from "../hooks/useData";
+import { useAuthorizedData } from "../hooks/useData";
 import type { User } from "../../../common/types";
 
 type Hook<T> = {
@@ -13,12 +13,12 @@ type Hook<T> = {
 
 export function useMatchedUsers(): Hook<User[]> {
   const url = endpoints.matchedUsers;
-  return useData<User[]>(url);
+  return useAuthorizedData<User[]>(url);
 }
 
 export function usePendingUsers(): Hook<User[]> {
   const url = endpoints.pendingUsers;
-  return useData<User[]>(url);
+  return useAuthorizedData<User[]>(url);
 }
 
 export default {

@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
-import { type PublicUser, Public, User, UserID } from "../../../common/types";
+import { type PublicUser, Public, User } from "../../../common/types";
+import { safeParseInt } from "../../../common/lib/result/safeParseInt";
 import {
   createUser,
   deleteUser,
@@ -8,12 +9,13 @@ import {
   getAllUsers,
 } from "../database/users";
 import { searchMatchedUser, searchPendingUsers } from "../database/requests";
-import { verify } from "../firebase/auth/lib";
+import { isRequester, safeGetUserId } from "../firebase/auth/db";
+import { safeGetGUID } from "../firebase/auth/lib";
 
 const router = express.Router();
 
 // 全ユーザーの取得エンドポイント
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", async (_: Request, res: Response) => {
   try {
     const users = await getAllUsers();
     res.status(200).json(users);
@@ -25,11 +27,11 @@ router.get("/", async (req: Request, res: Response) => {
 
 // 自分の情報を確認するエンドポイント。
 router.get("/me", async (req: Request, res: Response) => {
-  const guid = await verify(req).catch(() => null);
-  if (guid === null) return res.status(401).send("auth error");
+  const guid = await safeGetGUID(req);
+  if (!guid.ok) return res.status(401).send("auth error");
 
   try {
-    const users = await getUser(guid);
+    const users = await getUser(guid.value);
     res.status(200).json(users);
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -51,12 +53,11 @@ router.get("/exists/:guid", async (req: Request, res: Response) => {
 
 // 特定のユーザーとマッチしたユーザーを取得
 router.get("/matched", async (req: Request, res: Response) => {
-  const userId: UserID = 1; // TODO: get from auth
-  const didItFail = false;
-  if (didItFail) return res.status(401).send("auth error");
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
   try {
-    const matchedUsers: User[] = await searchMatchedUser(userId);
+    const matchedUsers: User[] = await searchMatchedUser(userId.value);
     const safeMatched = matchedUsers.map(Public);
     res.status(200).json(safeMatched);
   } catch (error) {
@@ -66,12 +67,11 @@ router.get("/matched", async (req: Request, res: Response) => {
 });
 
 router.get("/pending", async (req: Request, res: Response) => {
-  const userId: UserID = 1; // TODO: get from auth
-  const didItFail = false;
-  if (didItFail) return res.status(401).send("auth error");
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
   try {
-    const matchedUsers: User[] = await searchPendingUsers(userId);
+    const matchedUsers: User[] = await searchPendingUsers(userId.value);
     const safeMatched = matchedUsers.map(Public);
     res.status(200).json(safeMatched);
   } catch (error) {
@@ -110,17 +110,19 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-// TODO!!!!!!!!
-declare function safeGetUserID(req: Request): { value: UserID };
 
 // todo after merging typia: move this up to somewhere below GET /me
 router.put("/me", async (req: Request, res: Response) => {
-  const userId = safeGetUserID(req);
+  const id = await safeGetUserId(req);
+  if (!id.ok) return res.status(401).send("auth error");
+
+  if (await isRequester(req, id.value))
+    return res.status(401).send("you can't update others");
 
   // TODO: Typia
   const user: Omit<User, "id"> = req.body;
   try {
-    const updatedUser = await updateUser(userId.value, user);
+    const updatedUser = await updateUser(id.value, user);
     res.status(200).json(updatedUser);
   } catch (error) {
     console.error("Error updating user:", error);
@@ -129,10 +131,11 @@ router.put("/me", async (req: Request, res: Response) => {
 });
 
 router.delete("/me", async (req, res) => {
-  const userId = safeGetUserID(req);
+  const id = await safeGetUserId(req);
+  if (!id.ok) return res.status(401).send("auth error");
 
   try {
-    await deleteUser(userId.value);
+    await deleteUser(id.value);
     res.status(204).send();
   } catch (error) {
     console.error("Error deleting user:", error);
