@@ -9,7 +9,7 @@ import {
   Button,
 } from "@mui/material";
 
-import { User, UserID } from "../../../common/types";
+import { User, UserID } from "../common/types";
 import userapi from "../api/user";
 import { getAuth } from "firebase/auth";
 

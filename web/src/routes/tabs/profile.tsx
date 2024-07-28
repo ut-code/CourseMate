@@ -2,7 +2,7 @@ import { Box, Button } from "@mui/material";
 import LogOutButton from "../../components/LogOutButton";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
-import { User } from "../../../../common/types";
+import { User } from "../../common/types";
 import EditUserDialog from "../../components/EditUserDialog";
 import userapi from "../../api/user";
 

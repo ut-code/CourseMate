@@ -1,5 +1,5 @@
 import endpoints from "./internal/endpoints.ts";
-import type { GUID, User, UserID } from "../../../common/types";
+import type { GUID, User, UserID } from "../common/types";
 import { doWithIdToken, ErrUnauthorized } from "../firebase/auth/lib.ts";
 
 // TODO: migrate to safe functions

@@ -1,4 +1,4 @@
-import { GUID } from "../../../../common/types";
+import { GUID } from "../../common/types";
 
 const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
 if (!origin) throw new Error("import.meta.env.VITE_API_ENDPOINT not found!");
