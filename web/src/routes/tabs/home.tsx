@@ -3,7 +3,7 @@ import { User } from "../../../../common/types";
 import { Box, Button, Stack } from "@mui/material";
 import { except } from "../../api/user";
 import request from "../../api/request";
-import { useCurrentUserId } from "../../hooks/userCurrentUser";
+import { useCurrentUserId } from "../../hooks/useCurrentUser";
 
 export default function Home() {
   const [users, setUsers] = useState<User[] | null>(null);

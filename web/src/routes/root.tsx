@@ -7,20 +7,21 @@ import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 
+const labels = ["Home", "Profile", "Followers", "Requests"];
+const paths = ["/home", "/profile", "/followers", "/requests"];
+
 export default function Root() {
   const location = useLocation();
   const [value, setValue] = useState(0);
-  const labels = ["Home", "Profile", "Followers", "Requests"];
-  const paths = ["/home", "/profile", "/followers", "/requests"];
 
-  // Update value based on the current path
+  //TODO 元々はどこでリロードしてもheaderがhomeになっていた。それを解消するために以下のコードを追加した。しかし、微妙だと思うので、より良い方法を求む。
   useEffect(() => {
     const currentPath = location.pathname;
     const currentIndex = paths.indexOf(currentPath);
     if (currentIndex !== -1) {
       setValue(currentIndex);
     }
-  }, [location]);
+  }, [location.pathname]);
 
   return (
     <>
