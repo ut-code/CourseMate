@@ -1,26 +1,14 @@
 import { useEffect, useState } from "react";
 import { User } from "../../../../common/types";
 import { Box, Button, Stack } from "@mui/material";
-import { except, getMyId } from "../../api/user";
+import { except } from "../../api/user";
 import request from "../../api/request";
+import { useCurrentUserId } from "../../hooks/userCurrentUser";
 
 export default function Home() {
   const [users, setUsers] = useState<User[] | null>(null);
   const [displayedUser, setDisplayedUser] = useState<User | null>(null);
-  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
-
-  useEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        const id = await getMyId();
-        setCurrentUserId(id);
-      } catch (error) {
-        console.error("Error fetching user ID:", error);
-      }
-    };
-
-    fetchUserId();
-  }, []);
+  const currentUserId = useCurrentUserId();
 
   useEffect(() => {
     if (!currentUserId) return;
