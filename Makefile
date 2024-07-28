@@ -79,8 +79,12 @@ build-server:
 
 # TODO: make SERVE_STATIC flag function
 serve-all:
-	cp web/dist server/static -r
-	cd server; SERVE_STATIC=1 npm run serve
+	(trap 'kill 0' SIGINT; make serve-server & make serve-web & wait)
+serve-web:
+	cd web; go run .
+
+serve-server:
+	cd server; npm run serve
 
 watch-web:
 	cd web; npm run dev
