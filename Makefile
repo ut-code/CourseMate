@@ -19,7 +19,7 @@ watch: watch-server watch-web
 docker:
 	docker compose up --build
 
-precommit: type-check lint format
+precommit: type-check lint format-check
 
 precommit-check:
 	npx prettier . --check
@@ -52,6 +52,9 @@ lint:
 
 format:
 	npx prettier . --write
+
+format-check:
+	npx prettier . --check
 
 # type checks
 type-check: type-check-server type-check-web
