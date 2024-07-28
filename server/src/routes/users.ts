@@ -65,6 +65,7 @@ router.get("/matched", async (req: Request, res: Response) => {
   }
 });
 
+// machingStatusがpendingなユーザーを取得
 router.get("/pending", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
@@ -109,6 +110,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
+// ユーザーの更新エンドポイント
 router.put("/me", async (req: Request, res: Response) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
@@ -127,6 +129,7 @@ router.put("/me", async (req: Request, res: Response) => {
   }
 });
 
+// ユーザーの削除エンドポイント
 router.delete("/me", async (req, res) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
