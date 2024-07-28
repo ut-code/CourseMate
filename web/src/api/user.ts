@@ -15,11 +15,13 @@ export async function all(): Promise<User[]> {
 
 // 自身のユーザー情報を取得する
 export async function aboutMe(): Promise<User> {
-  // TODO: use doWithIdToken()
-  const res = await fetch(endpoints.me, {
-    credentials: "include",
+  return await doWithIdToken(async () => {
+    const res = await fetch(endpoints.me, {
+      credentials: "include",
+    });
+    if (res.status === 401) throw new ErrUnauthorized();
+    return res.json();
   });
-  return res.json();
 }
 
 // 自身のユーザ情報を更新する
@@ -35,6 +37,7 @@ export async function update(newData: User): Promise<void> {
       credentials: "include",
     });
 
+    if (res.status === 401) throw new ErrUnauthorized();
     if (!res.ok) {
       throw new Error("Network res was not ok");
     }
@@ -97,7 +100,7 @@ export async function exists(guid: GUID): Promise<boolean> {
   return true;
 }
 
-//指定した id のユーザ情報を取得する
+// 指定した id のユーザ情報を取得する
 export async function get(id: UserID): Promise<User | null> {
   const res = await fetch(endpoints.user(id));
   if (res.status === 404) {
