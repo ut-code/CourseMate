@@ -96,15 +96,11 @@ jobs:
 
       - run: make setup
 
-      - name: "ESLint (TODO: RUN THIS AT PROJ ROOT)"
-        run: npx eslint .
-        working-directory: server
-        shell: bash
+      - name: Lint
+        run: make lint
 
-      - name: Prettier
-        run: npx prettier . --check
-        working-directory: .
-        shell: bash
+      - name: Format
+        run: make format
 
   type-check:
     name: Type Check
