@@ -30,7 +30,7 @@ export async function doWithIdToken<T>(func: () => Promise<T>): Promise<T> {
     return await func();
   } catch (e) {
     if (e instanceof ErrUnauthorized) {
-      refreshIdToken();
+      await refreshIdToken();
       return await func();
     } else {
       throw e;

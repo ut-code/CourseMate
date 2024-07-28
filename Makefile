@@ -14,7 +14,8 @@ husky:
 start: start-all # build -> serve
 build: build-server build-web
 serve: serve-all # serve only. does not build.
-watch: watch-server watch-web
+watch:
+		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
 
 docker:
 	docker compose up --build
@@ -48,7 +49,7 @@ setup-root:
 ## code style
 lint:
 	cd server; npx eslint .
-	cd web; npm lint
+	cd web; npm run lint
 
 format:
 	npx prettier . --write

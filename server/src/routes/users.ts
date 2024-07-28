@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import { type PublicUser, Public, User } from "../../../common/types";
-import { safeParseInt } from "../../../common/lib/result/safeParseInt";
 import {
   createUser,
   deleteUser,
@@ -10,13 +9,28 @@ import {
 } from "../database/users";
 import { searchMatchedUser, searchPendingUsers } from "../database/requests";
 import { isRequester, safeGetUserId } from "../firebase/auth/db";
+import { safeGetGUID } from "../firebase/auth/lib";
 
 const router = express.Router();
 
 // 全ユーザーの取得エンドポイント
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", async (_: Request, res: Response) => {
   try {
     const users = await getAllUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+
+// 自分の情報を確認するエンドポイント。
+router.get("/me", async (req: Request, res: Response) => {
+  const guid = await safeGetGUID(req);
+  if (!guid.ok) return res.status(401).send("auth error");
+
+  try {
+    const users = await getUser(guid.value);
     res.status(200).json(users);
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -51,6 +65,7 @@ router.get("/matched", async (req: Request, res: Response) => {
   }
 });
 
+// machingStatusがpendingなユーザーを取得
 router.get("/pending", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
@@ -96,9 +111,9 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 // ユーザーの更新エンドポイント
-router.put("/id/:userId", async (req: Request, res: Response) => {
-  const id = safeParseInt(req.params.userId);
-  if (!id.ok) return res.status(400).send("bad param encoding");
+router.put("/me", async (req: Request, res: Response) => {
+  const id = await safeGetUserId(req);
+  if (!id.ok) return res.status(401).send("auth error");
 
   if (await isRequester(req, id.value))
     return res.status(401).send("you can't update others");
@@ -115,11 +130,9 @@ router.put("/id/:userId", async (req: Request, res: Response) => {
 });
 
 // ユーザーの削除エンドポイント
-router.delete("/id/:userId", async (req, res) => {
-  const id = safeParseInt(req.params.userId);
-  if (!id.ok) return res.status(400).send("invalid userId encoding");
-
-  if (!isRequester(req, id.value)) return res.status(401).send("auth error");
+router.delete("/me", async (req, res) => {
+  const id = await safeGetUserId(req);
+  if (!id.ok) return res.status(401).send("auth error");
 
   try {
     await deleteUser(id.value);

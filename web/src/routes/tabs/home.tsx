@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { User } from "../../../../common/types";
 import { Box, Button, Stack } from "@mui/material";
-import user from "../../api/user";
+import { except } from "../../api/user";
 import request from "../../api/request";
+import { useCurrentUserId } from "../../hooks/userCurrentUser";
 
 export default function Home() {
   const [users, setUsers] = useState<User[] | null>(null);
   const [displayedUser, setDisplayedUser] = useState<User | null>(null);
-  // const currentUserId = useAuthContext()?.id;
-  const currentUserId = 1; // TODO: Fix this
+  const currentUserId = useCurrentUserId();
 
   useEffect(() => {
     if (!currentUserId) return;
-    user.except(currentUserId).then(setUsers).catch(console.error);
+    except(currentUserId).then(setUsers).catch(console.error);
   }, [currentUserId]);
 
   useEffect(() => {
@@ -24,17 +24,17 @@ export default function Home() {
 
   const handleClickCross = (): void => {
     if (!users || !displayedUser) return;
-    const newUsers = users?.filter((user) => user.id !== displayedUser?.id);
+    const newUsers = users.filter((user) => user.id !== displayedUser.id);
     setUsers(newUsers);
   };
 
   const handleClickCircle = (): void => {
     if (!displayedUser) return;
-    request.send(displayedUser.id).catch((err: any) => {
+    request.send(displayedUser.id).catch((err: unknown) => {
       console.error("Error liking user:", err);
     });
     if (!users) return;
-    const newUsers = users?.filter((user) => user.id !== displayedUser?.id);
+    const newUsers = users.filter((user) => user.id !== displayedUser.id);
     setUsers(newUsers);
   };
 

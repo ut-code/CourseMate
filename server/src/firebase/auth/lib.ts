@@ -2,6 +2,7 @@ import { app } from "../init";
 import * as admin from "firebase-admin/auth";
 import type { Request } from "express";
 import { GUID, IDToken } from "../../../../common/types";
+import { Result, Ok, Err } from "../../../../common/lib/result";
 
 const auth = admin.getAuth(app);
 type DecodedIdToken = admin.DecodedIdToken;
@@ -11,6 +12,14 @@ type DecodedIdToken = admin.DecodedIdToken;
 export async function getGUID(req: Request): Promise<GUID> {
   const idToken = req.cookies["id-token"];
   return (await verifyIDToken(idToken)).uid;
+}
+
+export async function safeGetGUID(req: Request): Promise<Result<GUID>> {
+  try {
+    return Ok(await getGUID(req));
+  } catch (e) {
+    return Err(e);
+  }
 }
 
 export async function verifyIDToken(idToken: IDToken): Promise<DecodedIdToken> {

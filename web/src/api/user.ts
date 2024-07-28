@@ -13,6 +13,58 @@ export async function all(): Promise<User[]> {
   return res.json();
 }
 
+// 自身のユーザー情報を取得する
+export async function aboutMe(): Promise<User> {
+  return await doWithIdToken(async () => {
+    const res = await fetch(endpoints.me, {
+      credentials: "include",
+    });
+    if (res.status === 401) throw new ErrUnauthorized();
+    return res.json();
+  });
+}
+// 自身のユーザーIDを取得する
+export async function getMyId(): Promise<UserID> {
+  const me = await aboutMe();
+  return me.id;
+}
+
+// 自身のユーザ情報を更新する
+export async function update(newData: User): Promise<void> {
+  return await doWithIdToken(async () => {
+    const url = endpoints.me;
+    const res = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newData),
+      credentials: "include",
+    });
+
+    if (res.status === 401) throw new ErrUnauthorized();
+    if (!res.ok) {
+      throw new Error("Network res was not ok");
+    }
+  });
+}
+
+// 自身のユーザ情報を削除する
+export async function remove(): Promise<void> {
+  return await doWithIdToken(async () => {
+    const url = endpoints.me;
+    const res = await fetch(url, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (res.status === 401) throw new ErrUnauthorized();
+
+    if (!res.ok) {
+      throw new Error("Network res was not ok");
+    }
+  });
+}
+
 //指定した id のユーザ情報を除いた全てのユーザ情報を取得する
 export async function except(id: UserID): Promise<User[]> {
   try {
@@ -53,7 +105,7 @@ export async function exists(guid: GUID): Promise<boolean> {
   return true;
 }
 
-//指定した id のユーザ情報を取得する
+// 指定した id のユーザ情報を取得する
 export async function get(id: UserID): Promise<User | null> {
   const res = await fetch(endpoints.user(id));
   if (res.status === 404) {
@@ -80,43 +132,9 @@ export async function create(userdata: Omit<User, "id">): Promise<User> {
   return user;
 }
 
-//ユーザ情報を更新する
-export async function update(userId: UserID, newData: User): Promise<void> {
-  return await doWithIdToken(async () => {
-    const url = endpoints.user(userId);
-    const res = await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newData),
-      credentials: "include",
-    });
-
-    if (!res.ok) {
-      throw new Error("Network res was not ok");
-    }
-  });
-}
-
-//ユーザ情報を削除する
-export async function remove(userId: UserID): Promise<void> {
-  return await doWithIdToken(async () => {
-    const url = endpoints.user(userId);
-    const res = await fetch(url, {
-      method: "DELETE",
-      credentials: "include",
-    });
-    if (res.status === 401) throw new ErrUnauthorized();
-
-    if (!res.ok) {
-      throw new Error("Network res was not ok");
-    }
-  });
-}
-
 export default {
   get,
+  aboutMe,
   getByGUID,
   all,
   except,

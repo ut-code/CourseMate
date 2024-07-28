@@ -39,7 +39,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
       email: email,
       pictureUrl: pictureUrl,
     };
-    await userapi.update(userId, data);
+    await userapi.update(data);
   };
 
   return (
