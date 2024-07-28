@@ -16,7 +16,9 @@ export async function all(): Promise<User[]> {
 // 自身のユーザー情報を取得する
 export async function aboutMe(): Promise<User> {
   // TODO: use doWithIdToken()
-  const res = await fetch(endpoints.me);
+  const res = await fetch(endpoints.me, {
+    credentials: "include",
+  });
   return res.json();
 }
 
