@@ -3,15 +3,22 @@ import HomeIcon from "@mui/icons-material/Home";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EmailIcon from "@mui/icons-material/Email";
 import PeopleIcon from "@mui/icons-material/People";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 
 export default function Root() {
   const location = useLocation();
   const [value, setValue] = useState(0);
-  const labels = ["Home", "Profile", "Followers", "Requests"];
-  const paths = ["/home", "/profile", "/followers", "/requests"];
+
+  const labels = useMemo(
+    () => ["Home", "Profile", "Followers", "Requests"],
+    [],
+  );
+  const paths = useMemo(
+    () => ["/home", "/profile", "/followers", "/requests"],
+    [],
+  );
 
   // Update value based on the current path
   useEffect(() => {
@@ -20,7 +27,7 @@ export default function Root() {
     if (currentIndex !== -1) {
       setValue(currentIndex);
     }
-  }, [location]);
+  }, [location, paths]);
 
   return (
     <>
