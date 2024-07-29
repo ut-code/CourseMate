@@ -6,7 +6,7 @@ import hooks from "../../api/hooks";
 
 export default function Profile() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { data, isLoading, error } = hooks.useMe();
+  const { data, isLoading, error, reload } = hooks.useMe();
 
   const handleDialogOpen = () => {
     setIsDialogOpen(true);
@@ -42,7 +42,10 @@ export default function Profile() {
           <EditUserDialog
             userId={data.id}
             open={isDialogOpen}
-            onClose={handleDialogClose}
+            onClose={() => {
+              handleDialogClose();
+              reload();
+            }}
           />
         </>
       ) : (
