@@ -8,7 +8,7 @@ import {
   getAllUsers,
 } from "../database/users";
 import { searchMatchedUser, searchPendingUsers } from "../database/requests";
-import { isRequester, safeGetUserId } from "../firebase/auth/db";
+import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
 
 const router = express.Router();
@@ -114,9 +114,6 @@ router.post("/", async (req: Request, res: Response) => {
 router.put("/me", async (req: Request, res: Response) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
-
-  if (await isRequester(req, id.value))
-    return res.status(401).send("you can't update others");
 
   // TODO: Typia
   const user: Omit<User, "id"> = req.body;
