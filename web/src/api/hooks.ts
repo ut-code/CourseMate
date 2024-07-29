@@ -21,7 +21,13 @@ export function usePendingUsers(): Hook<User[]> {
   return useAuthorizedData<User[]>(url);
 }
 
+export function useMe(): Hook<User> {
+  const url = endpoints.me;
+  return useAuthorizedData<User>(url);
+}
+
 export default {
   useMatchedUsers,
   usePendingUsers,
+  useMe,
 };
