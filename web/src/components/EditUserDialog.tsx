@@ -22,9 +22,9 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
   props: EditUserDialogProps,
 ) => {
   const { isOpen, close, defaultValue } = props;
-  const [name, setName] = useState(defaultValue.name ?? "");
-  const [email, setEmail] = useState(defaultValue.email ?? "");
-  const [pictureUrl, setPictureUrl] = useState(defaultValue.pictureUrl ?? "");
+  const [name, setName] = useState(defaultValue.name);
+  const [email, setEmail] = useState(defaultValue.email);
+  const [pictureUrl, setPictureUrl] = useState(defaultValue.pictureUrl);
 
   const handleSave = async () => {
     const data: UpdateUser = {
