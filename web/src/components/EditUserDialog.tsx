@@ -9,20 +9,18 @@ import {
   Button,
 } from "@mui/material";
 
-import { User, UserID } from "../../../common/types";
+import { UpdateUser } from "../../../common/types";
 import userapi from "../api/user";
-import { getAuth } from "firebase/auth";
 
 type EditUserDialogProps = {
-  userId: UserID;
   open: boolean;
-  onClose: () => void;
+  close: () => void;
 };
 
 const EditUserDialog: React.FC<EditUserDialogProps> = (
   props: EditUserDialogProps,
 ) => {
-  const { userId, open, onClose } = props;
+  const { open, close } = props;
   const [name, setName] = useState("");
   // NOTE: password is not used. consider deleting this.
   const [password, setPassword] = useState("");
@@ -30,20 +28,17 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
   const [pictureUrl, setPictureUrl] = useState("");
 
   const handleSave = async () => {
-    const guid = getAuth().currentUser?.uid;
-    if (!guid) throw new Error("you not logged in");
-    const data: User = {
-      id: userId,
-      guid: guid,
+    const data: UpdateUser = {
       name: name,
       email: email,
       pictureUrl: pictureUrl,
     };
     await userapi.update(data);
+    close();
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={close}>
       <DialogTitle>ユーザー情報を編集</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -90,7 +85,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={close} color="primary">
           キャンセル
         </Button>
         <Button onClick={handleSave} color="primary">

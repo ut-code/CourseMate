@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { GUID, User, UserID } from "../../../common/types";
+import { GUID, UpdateUser, User, UserID } from "../../../common/types";
 
 const prisma = new PrismaClient();
 
@@ -22,13 +22,17 @@ export async function getUser(guid: GUID) {
 }
 
 // ユーザーの更新
-export async function updateUser(
-  userId: UserID,
-  partialUser: Omit<User, "id">,
-) {
+export async function updateUser(userId: UserID, partialUser: UpdateUser) {
+  // undefined means do nothing to this field
+  // https://www.prisma.io/docs/orm/prisma-client/special-fields-and-types/null-and-undefined#use-case-null-and-undefined-in-a-graphql-resolver
+  const updateUser = {
+    id: undefined,
+    guid: undefined,
+    ...partialUser,
+  };
   const updatedUser = await prisma.user.update({
     where: { id: userId },
-    data: partialUser,
+    data: updateUser,
   });
   return updatedUser;
 }

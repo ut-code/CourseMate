@@ -1,5 +1,10 @@
 import express, { Request, Response } from "express";
-import { type PublicUser, Public, User } from "../../../common/types";
+import {
+  type PublicUser,
+  Public,
+  UpdateUser,
+  User,
+} from "../../../common/types";
 import {
   createUser,
   deleteUser,
@@ -116,7 +121,7 @@ router.put("/me", async (req: Request, res: Response) => {
   if (!id.ok) return res.status(401).send("auth error");
 
   // TODO: Typia
-  const user: Omit<User, "id"> = req.body;
+  const user: UpdateUser = req.body;
   try {
     const updatedUser = await updateUser(id.value, user);
     res.status(200).json(updatedUser);
