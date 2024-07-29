@@ -13,19 +13,18 @@ import { UpdateUser } from "../../../common/types";
 import userapi from "../api/user";
 
 type EditUserDialogProps = {
-  open: boolean;
+  isOpen: boolean;
   close: () => void;
+  defaultValue: UpdateUser;
 };
 
 const EditUserDialog: React.FC<EditUserDialogProps> = (
   props: EditUserDialogProps,
 ) => {
-  const { open, close } = props;
-  const [name, setName] = useState("");
-  // NOTE: password is not used. consider deleting this.
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [pictureUrl, setPictureUrl] = useState("");
+  const { isOpen, close, defaultValue } = props;
+  const [name, setName] = useState(defaultValue.name);
+  const [email, setEmail] = useState(defaultValue.email);
+  const [pictureUrl, setPictureUrl] = useState(defaultValue.pictureUrl);
 
   const handleSave = async () => {
     const data: UpdateUser = {
@@ -38,7 +37,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
   };
 
   return (
-    <Dialog open={open} onClose={close}>
+    <Dialog open={isOpen} onClose={close}>
       <DialogTitle>ユーザー情報を編集</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -63,15 +62,6 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
           variant="standard"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          margin="dense"
-          label="パスワード"
-          type="password"
-          fullWidth
-          variant="standard"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
         />
         <TextField
           autoFocus
