@@ -9,41 +9,35 @@ import {
   Button,
 } from "@mui/material";
 
-import { User, UserID } from "../common/types";
+import { UpdateUser } from "../common/types";
 import userapi from "../api/user";
-import { getAuth } from "firebase/auth";
 
 type EditUserDialogProps = {
-  userId: UserID;
-  open: boolean;
-  onClose: () => void;
+  isOpen: boolean;
+  close: () => void;
+  defaultValue: UpdateUser;
 };
 
 const EditUserDialog: React.FC<EditUserDialogProps> = (
   props: EditUserDialogProps,
 ) => {
-  const { userId, open, onClose } = props;
-  const [name, setName] = useState("");
-  // NOTE: password is not used. consider deleting this.
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [pictureUrl, setPictureUrl] = useState("");
+  const { isOpen, close, defaultValue } = props;
+  const [name, setName] = useState(defaultValue.name);
+  const [email, setEmail] = useState(defaultValue.email);
+  const [pictureUrl, setPictureUrl] = useState(defaultValue.pictureUrl);
 
   const handleSave = async () => {
-    const guid = getAuth().currentUser?.uid;
-    if (!guid) throw new Error("you not logged in");
-    const data: User = {
-      id: userId,
-      guid: guid,
+    const data: UpdateUser = {
       name: name,
       email: email,
       pictureUrl: pictureUrl,
     };
     await userapi.update(data);
+    close();
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={isOpen} onClose={close}>
       <DialogTitle>ユーザー情報を編集</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -70,15 +64,6 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
           onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
-          margin="dense"
-          label="パスワード"
-          type="password"
-          fullWidth
-          variant="standard"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <TextField
           autoFocus
           margin="dense"
           label="画像の URL (TODO)"
@@ -90,7 +75,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={close} color="primary">
           キャンセル
         </Button>
         <Button onClick={handleSave} color="primary">

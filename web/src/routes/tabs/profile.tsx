@@ -40,9 +40,9 @@ export default function Profile() {
             プロフィールを編集
           </Button>
           <EditUserDialog
-            userId={data.id}
-            open={isDialogOpen}
-            onClose={() => {
+            defaultValue={data}
+            isOpen={isDialogOpen}
+            close={() => {
               handleDialogClose();
               reload();
             }}

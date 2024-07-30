@@ -1,5 +1,5 @@
 import endpoints from "./internal/endpoints.ts";
-import type { GUID, User, UserID } from "../common/types";
+import type { GUID, UpdateUser, User, UserID } from "../common/types";
 import { doWithIdToken, ErrUnauthorized } from "../firebase/auth/lib.ts";
 
 // TODO: migrate to safe functions
@@ -30,7 +30,7 @@ export async function getMyId(): Promise<UserID> {
 }
 
 // 自身のユーザ情報を更新する
-export async function update(newData: User): Promise<void> {
+export async function update(newData: UpdateUser): Promise<void> {
   return await doWithIdToken(async () => {
     const url = endpoints.me;
     const res = await fetch(url, {
