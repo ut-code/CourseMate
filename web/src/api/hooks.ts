@@ -1,7 +1,7 @@
 import endpoints from "./internal/endpoints";
 import { useAuthorizedData } from "../hooks/useData";
-import type { User } from "../../../common/types";
-import type { Hook } from "./internal/types";
+import type { User } from "../common/types";
+import type { Hook } from "./share/types";
 
 // TODO: install typia or zod.
 

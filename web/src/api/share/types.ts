@@ -1,6 +1,6 @@
 export type Hook<T> = {
   data: T | null;
-  isLoading: boolean;
+  loading: boolean;
   error: Error | null;
   reload: () => void;
 };

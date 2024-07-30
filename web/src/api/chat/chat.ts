@@ -12,7 +12,7 @@ type GUID = string & { __internal_prevent_implicit_cast_GUID: PhantomData };
 type User = {
   id: UserID;
   guid: GUID;
-}
+};
 
 // TODO: commonify types
 
@@ -26,9 +26,15 @@ type User = {
 
 type PhantomData = never;
 
-export type MessageID = number & { __internal_prevent_cast_MessageID: PhantomData };
-export type ShareRoomID = number & { __internal_prevent_cast_RoomID: PhantomData };
-export type PictureURL = string & { __internal_prevent_cast_PictureURL: PhantomData };
+export type MessageID = number & {
+  __internal_prevent_cast_MessageID: PhantomData;
+};
+export type ShareRoomID = number & {
+  __internal_prevent_cast_RoomID: PhantomData;
+};
+export type PictureURL = string & {
+  __internal_prevent_cast_PictureURL: PhantomData;
+};
 
 export type Message = {
   id: MessageID;
@@ -67,7 +73,7 @@ export type SharedRoom = {
 };
 
 export type DMRoomID = number & { __internal_prevent_cast_DMID: PhantomData };
-export type DMRoom= {
+export type DMRoom = {
   id: DMRoomID; // TODO: should this use Relationship.ID or RoomID?
   isDM: true;
   member: User[];
@@ -206,7 +212,10 @@ export async function send(
 }
 
 // TODO
-export async function sendDM(dmid: DMRoomID, msg: SendMessage): Promise<Message> {
+export async function sendDM(
+  dmid: DMRoomID,
+  msg: SendMessage,
+): Promise<Message> {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.dmroom(dmid), {
       method: "POST",

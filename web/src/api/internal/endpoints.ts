@@ -1,5 +1,5 @@
-import { GUID } from "../../../../common/types";
-import { DMID, MessageID, ShareRoomID } from "../chat/chat";
+import { GUID } from "../../common/types";
+import { DMRoomID, MessageID, ShareRoomID } from "../chat/chat";
 
 const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
 if (!origin) throw new Error("import.meta.env.VITE_API_ENDPOINT not found!");
@@ -207,14 +207,14 @@ const roomOverview = `${origin}/rooms/all/overview`;
  *   - 403: Forbidden
  *   - 500: internal error
  **/
-const dmroom = (dmid: DMID) => `${origin}/rooms/dm/id/` + dmid;
+const dmroom = (dmid: DMRoomID) => `${origin}/rooms/dm/id/` + dmid;
 
 /**
  * ? unimplemented.
  **/
 const dmrooms = `${origin}/rooms/dm`;
 
-/** 
+/**
  * POST -> start dm with userId. created one if none was found. authorized.
  * - body: {with: UserID}
  * - status:
@@ -227,7 +227,7 @@ const dmrooms = `${origin}/rooms/dm`;
  **/
 const dmWith = (userId: UserID) => `${origin}/rooms/dm/with/` + userId;
 
-/** 
+/**
  * POST -> Create a room. authenticated
  * - body: InitRoom
  * - status:
@@ -247,7 +247,8 @@ const sharedRooms = `${origin}/rooms/shared`;
 const sharedRoom = (roomId: ShareRoomID) => `${origin}/rooms/shared/` + roomId;
 
 // PATCH: authorized body=UserID[]
-const roomInvite = (roomId: ShareRoomID) => `${origin}/rooms/shared/id/${roomId}/invite`;
+const roomInvite = (roomId: ShareRoomID) =>
+  `${origin}/rooms/shared/id/${roomId}/invite`;
 
 // PATCH: authorized body=SendMessage
 // DELETE: authorized

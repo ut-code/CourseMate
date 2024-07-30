@@ -1,8 +1,8 @@
 import type { Request } from "express";
-import { Result, Ok, Err } from "../../../../common/lib/result";
+import { Result, Ok, Err } from "../../common/lib/result";
 import { getGUID } from "./lib";
 import { PrismaClient } from "@prisma/client";
-import { UserID } from "../../../../common/types";
+import { UserID } from "../../common/types";
 
 const prisma = new PrismaClient();
 /**

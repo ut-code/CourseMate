@@ -3,7 +3,7 @@ import * as chat from "../api/chat/chat";
 import { useRoomsOverview } from "../api/chat/hooks";
 
 export default function Requests() {
-  const { data, error, isLoading: loading, reload } = useRoomsOverview();
+  const { data, error, loading, reload } = useRoomsOverview();
 
   let key = 0;
   return (

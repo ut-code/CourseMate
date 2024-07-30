@@ -6,7 +6,7 @@ import type { RoomOverview } from "./chat";
 export function useRoomsOverview(): Hook<RoomOverview[]> {
   const [data, setData] = useState<RoomOverview[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
-  const [isLoading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const reload = useCallback(async () => {
     setLoading(true);
@@ -21,11 +21,11 @@ export function useRoomsOverview(): Hook<RoomOverview[]> {
       setLoading(false);
     }
   }, []);
-  
+
   return {
     data,
     error,
-    isLoading,
+    loading,
     reload,
-  }
+  };
 }
