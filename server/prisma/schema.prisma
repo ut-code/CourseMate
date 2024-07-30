@@ -50,3 +50,26 @@ enum MatchingStatus {
   MATCHED
   REJECTED
 }
+
+// TODO: lazy load MessageLog s.t. it doesn't need to be loaded on Overview query.
+// https://www.prisma.io/docs/orm/prisma-client/queries/select-fields
+model SharedRoom {
+  id Int @id @default(autoincrement())
+  name String
+  members Int[]
+  messages Message[]
+}
+
+model DM {
+  id Int @id @default(autoincrement())
+  members Int[] // TODO: relation
+  messages Message[]
+}
+
+model Message {
+  id Int @id @default(autoincrement())
+  creator Int // refers to UserId
+  createdAt DateTime @default(now()) // @readonly
+  edited Boolean @default(false)
+  content String
+}
