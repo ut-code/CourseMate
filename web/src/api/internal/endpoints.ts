@@ -1,4 +1,5 @@
 import { GUID } from "../../../../common/types";
+import { DMID, MessageID, ShareRoomID } from "../chat/chat";
 
 const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
 if (!origin) throw new Error("import.meta.env.VITE_API_ENDPOINT not found!");
@@ -185,6 +186,74 @@ const rejectRequest = (opponentId: UserID) => {
 };
 
 /**
+ * []実装済み
+ * GET -> get personalized room overviews.
+ * - status:
+ *   - 200: ok
+ *     - body=RoomOverview[]
+ *   - 401: unauthorized
+ *   - 500: internal error
+ */
+const roomOverview = `${origin}/rooms/all/overview`;
+
+/**
+ * []実装済み
+ * POST -> send a DM.
+ * - body: SendMessage
+ * - statuses:
+ *   - 201: created.
+ *     - body: Message
+ *   - 401: unauthorized
+ *   - 403: Forbidden
+ *   - 500: internal error
+ **/
+const dmroom = (dmid: DMID) => `${origin}/rooms/dm/id/` + dmid;
+
+/**
+ * ? unimplemented.
+ **/
+const dmrooms = `${origin}/rooms/dm`;
+
+/** 
+ * POST -> start dm with userId. created one if none was found. authorized.
+ * - body: {with: UserID}
+ * - status:
+ *   - 200: room already there.
+ *     - body: DMRoom
+ *   - 201: created new room.
+ *   - 401: unauthorized.
+ *   - 403: forbidden. you and the user are not matched yet.
+ *   - 500: internal error.
+ **/
+const dmWith = (userId: UserID) => `${origin}/rooms/dm/with/` + userId;
+
+/** 
+ * POST -> Create a room. authenticated
+ * - body: InitRoom
+ * - status:
+ *   - 201: created:
+ *     - body: SharedRoom
+ *   - 401: unauthorized
+ *   - 403: forbidden (cannot invite non-friends)
+ *   - 500: internal error
+ **/
+const sharedRooms = `${origin}/rooms/shared`;
+
+/** authorized
+ * GET -> Get info of a room (including the message log).
+ * PATCH -> update room info. (excluding the message log).
+ * - body: UpdateRoom
+ **/
+const sharedRoom = (roomId: ShareRoomID) => `${origin}/rooms/shared/` + roomId;
+
+// PATCH: authorized body=UserID[]
+const roomInvite = (roomId: ShareRoomID) => `${origin}/rooms/shared/id/${roomId}/invite`;
+
+// PATCH: authorized body=SendMessage
+// DELETE: authorized
+const message = (messageId: MessageID) => `${origin}/messages/id/` + messageId;
+
+/**
  * GET -> echo back the same
  * body: json<any>
  * - status:
@@ -208,6 +277,14 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
+  roomOverview,
+  dmroom,
+  dmrooms,
+  dmWith,
+  sharedRoom,
+  sharedRooms,
+  roomInvite,
+  message,
 
   echoSetCookie,
 };

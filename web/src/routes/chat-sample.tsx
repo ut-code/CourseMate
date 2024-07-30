@@ -62,11 +62,3 @@ export default function Requests() {
     </Box>
   );
 }
-
-type Hook<T> = {
-  data: T | null;
-  loading: boolean;
-  error: Error | null;
-  reload: () => void;
-};
-

@@ -1,4 +1,5 @@
 import { doWithIdToken, ErrUnauthorized } from "../../firebase/auth/lib";
+import endpoints from "../internal/endpoints";
 
 /* TODO
 import { UserID } from "../common/types";
@@ -12,8 +13,6 @@ type User = {
   id: UserID;
   guid: GUID;
 }
-
-// import endpoints from "../internal/endpoints";
 
 // TODO: commonify types
 
@@ -49,7 +48,7 @@ export type DMOverview = {
   thumbnail: PictureURL;
   lastmsg?: Message;
   isDM: true;
-  dmid: DMID;
+  dmid: DMRoomID;
 };
 
 export type ShareRoomOverview = {
@@ -59,7 +58,7 @@ export type ShareRoomOverview = {
   roomId: ShareRoomID;
 };
 
-export type ShareRoom = {
+export type SharedRoom = {
   id: ShareRoomID;
   isDM: false;
   name: string;
@@ -67,55 +66,26 @@ export type ShareRoom = {
   messages: Message[];
 };
 
-export type DMID = number & { __internal_prevent_cast_DMID: PhantomData };
-export type DM = {
-  id: DMID; // TODO: should this use Relationship.ID or RoomID?
+export type DMRoomID = number & { __internal_prevent_cast_DMID: PhantomData };
+export type DMRoom= {
+  id: DMRoomID; // TODO: should this use Relationship.ID or RoomID?
   isDM: true;
   member: User[];
   messages: Message[];
 };
 
-export type InitRoom = Omit<Omit<ShareRoom, "id">, "log">;
+export type InitRoom = Omit<Omit<SharedRoom, "id">, "log">;
 export type UpdateRoom = {
   name: string;
   pictureUrl: PictureURL;
 };
 
-const endpoints = {
-  // GET: personalized res.body=RoomOverview[] (also contains DM entries)
-  chat: "todo",
-
-  // POST: send a DM authorized body=SendMessage
-  DMroom: (dmid: DMID) => "todo" + dmid,
-
-  // POST: authorized body={friend: UserID}
-  DMrooms: "todo",
-
-  // POST: authorized
-  startDM: (userId: UserID) => "todo" + userId,
-
-  // GET: authorized
-
-  // GET: authorized, PATCH: authorized body=UpdateRoom
-  sharedRoom: (roomId: ShareRoomID) => "todo" + roomId,
-
-  // GET: personalized res.body=RoomOverview[], POST: authenticated body=InitRoom
-  sharedRooms: "todo",
-
-  // PATCH: authorized body=UserID[]
-  roomInvite: (roomId: ShareRoomID) => "invite" + roomId,
-
-  // PATCH: authorized body=SendMessage
-  // DELETE: authorized
-  message: (messageId: MessageID) => "todo" + messageId,
-};
-
-export async function createDM(friendId: UserID): Promise<void> {
+export async function startDM(friendId: UserID): Promise<void> {
   return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.DMrooms, {
+    const res = await fetch(endpoints.dmrooms, {
       method: "POST",
       body: JSON.stringify({
-        friend: friendId,
+        with: friendId,
       }),
     });
     if (res.status === 401) throw new ErrUnauthorized();
@@ -158,7 +128,7 @@ export async function invite(
 export async function patchRoom(
   roomId: ShareRoomID,
   room: Partial<UpdateRoom>,
-): Promise<ShareRoom> {
+): Promise<SharedRoom> {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.sharedRoom(roomId), {
       method: "PATCH",
@@ -173,9 +143,9 @@ export async function patchRoom(
   });
 }
 
-export async function entry(): Promise<RoomOverview[]> {
+export async function overview(): Promise<RoomOverview[]> {
   return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.chat, {
+    const res = await fetch(endpoints.roomOverview, {
       credentials: "include",
     });
     if (res.status === 401) throw new ErrUnauthorized();
@@ -193,7 +163,7 @@ export async function rooms(): Promise<RoomOverview[]> {
   });
 }
 
-export async function getSharedRoom(roomId: ShareRoomID): Promise<ShareRoom> {
+export async function getSharedRoom(roomId: ShareRoomID): Promise<SharedRoom> {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.sharedRoom(roomId), {
       credentials: "include",
@@ -202,9 +172,9 @@ export async function getSharedRoom(roomId: ShareRoomID): Promise<ShareRoom> {
     return await res.json();
   });
 }
-export async function getDM(dmid: DMID): Promise<DM> {
+export async function getDM(dmid: DMRoomID): Promise<DMRoom> {
   return doWithIdToken(async () => {
-    const res = await fetch(endpoints.DMroom(dmid), {
+    const res = await fetch(endpoints.dmroom(dmid), {
       credentials: "include",
     });
     if (res.status === 401) throw new ErrUnauthorized();
@@ -236,9 +206,9 @@ export async function send(
 }
 
 // TODO
-export async function sendDM(dmid: DMID, msg: SendMessage): Promise<Message> {
+export async function sendDM(dmid: DMRoomID, msg: SendMessage): Promise<Message> {
   return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.DMroom(dmid), {
+    const res = await fetch(endpoints.dmroom(dmid), {
       method: "POST",
       credentials: "include",
       body: JSON.stringify(msg),
@@ -247,9 +217,9 @@ export async function sendDM(dmid: DMID, msg: SendMessage): Promise<Message> {
   });
 }
 
-export async function startDMWith(userId: UserID): Promise<DM> {
+export async function startDMWith(userId: UserID): Promise<DMRoom> {
   return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.startDM(userId));
+    const res = await fetch(endpoints.dmWith(userId));
     if (res.status === 401) throw new ErrUnauthorized();
     if (res.status === 200 || res.status === 201) return res.json();
     throw new Error(

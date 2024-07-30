@@ -11,7 +11,7 @@ export function useRoomsOverview(): Hook<RoomOverview[]> {
   const reload = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await chat.entry();
+      const data = await chat.overview();
       setData(data);
       setError(null);
       setLoading(false);
