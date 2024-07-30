@@ -1,70 +1,82 @@
-import type { User } from "../common/types";
-import { doWithIdToken, ErrUnauthorized } from "../firebase/auth/lib";
+import { doWithIdToken, ErrUnauthorized } from "../../firebase/auth/lib";
+
+/* TODO
 import { UserID } from "../common/types";
-// import endpoints from "./internal/endpoints";
+import type { User } from "../common/types";
+*/
+
+// TODO: import these from common
+type UserID = number & { __inmernal_prevent_implicit_cast_UserID: PhantomData };
+type GUID = string & { __internal_prevent_implicit_cast_GUID: PhantomData };
+type User = {
+  id: UserID;
+  guid: GUID;
+}
+
+// import endpoints from "../internal/endpoints";
 
 // TODO: commonify types
 
+/*
+- chat (domain)
+  - Room (= All chattable places)
+    - log
+  - DM : part of Room
+  - SharedRoom : also part of Room
+*/
+
 type PhantomData = never;
 
-type MessageID = number & { __internal_prevent_cast_MessageID: PhantomData };
-type ShareRoomID = number & { __internal_prevent_cast_RoomID: PhantomData };
-type PictureURL = string & { __internal_prevent_cast_PictureURL: PhantomData };
+export type MessageID = number & { __internal_prevent_cast_MessageID: PhantomData };
+export type ShareRoomID = number & { __internal_prevent_cast_RoomID: PhantomData };
+export type PictureURL = string & { __internal_prevent_cast_PictureURL: PhantomData };
 
-type Message = {
+export type Message = {
   id: MessageID;
   senderId: UserID;
   content: string;
   createdAt: Date;
 };
 
-type SendMessage = {
+export type SendMessage = {
   content: string;
 };
-
-/*
-- chat (domain)
-  - Room (= All chattable places)
-    - messages
-  - DM : part of Room
-  - SharedRoom : also part of Room
-*/
 
 // the data type to be displayed at initial screen (in list)
 export type RoomOverview = ShareRoomOverview | DMOverview;
 
-type DMOverview = {
+export type DMOverview = {
   thumbnail: PictureURL;
   lastmsg?: Message;
   isDM: true;
   dmid: DMID;
 };
 
-type ShareRoomOverview = {
+export type ShareRoomOverview = {
   thumbnail: PictureURL;
   lastmsg?: Message;
   isDM: false;
   roomId: ShareRoomID;
 };
 
-type ShareRoom = {
+export type ShareRoom = {
   id: ShareRoomID;
   isDM: false;
   name: string;
   member: User[];
-  log: Message[];
+  messages: Message[];
 };
 
-type DMID = number & { __internal_prevent_cast_DMID: PhantomData };
-type DM = {
-  id: DMID; // TODO: should this use Relationship.ID?
+export type DMID = number & { __internal_prevent_cast_DMID: PhantomData };
+export type DM = {
+  id: DMID; // TODO: should this use Relationship.ID or RoomID?
   isDM: true;
   member: User[];
-  log: Message[];
+  messages: Message[];
 };
 
-type InitRoom = Omit<Omit<ShareRoom, "id">, "log">;
-type UpdateRoom = {
+export type InitRoom = Omit<Omit<ShareRoom, "id">, "log">;
+export type UpdateRoom = {
   name: string;
   pictureUrl: PictureURL;
 };
@@ -93,7 +105,8 @@ const endpoints = {
   // PATCH: authorized body=UserID[]
   roomInvite: (roomId: ShareRoomID) => "invite" + roomId,
 
-  // POST: authorized body=SendMessage
+  // PATCH: authorized body=SendMessage
+  // DELETE: authorized
   message: (messageId: MessageID) => "todo" + messageId,
 };
 
