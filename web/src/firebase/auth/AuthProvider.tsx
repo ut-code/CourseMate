@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { redirect } from "react-router-dom";
 import userapi from "../../api/user";
 import { AuthContext } from "./AuthContext";
-import { User } from "../../../../common/types";
+import { User } from "../../common/types";
 
 export default function AuthProvider({
   children,

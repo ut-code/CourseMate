@@ -1,4 +1,4 @@
-import { type IDToken } from "../.././../common/types";
+import { type IDToken } from "../common/types";
 import endpoints from "./internal/endpoints";
 
 // throws if res.status !== 204

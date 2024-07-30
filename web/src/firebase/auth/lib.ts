@@ -1,6 +1,6 @@
 import { getAuth } from "firebase/auth";
 import { setIdTokenCookie } from "../../api/echo";
-import { type IDToken } from "../../../../common/types";
+import { type IDToken } from "../../common/types";
 
 export class ErrUnauthorized extends Error {}
 
