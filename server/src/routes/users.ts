@@ -1,10 +1,6 @@
 import express, { Request, Response } from "express";
-import {
-  type PublicUser,
-  Public,
-  UpdateUser,
-  User,
-} from "../../../common/types";
+import { z } from "zod";
+import { type PublicUser, Public, User } from "../../../common/types";
 import {
   createUser,
   deleteUser,
@@ -15,6 +11,12 @@ import {
 import { searchMatchedUser, searchPendingUsers } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
+import {
+  parseGUID,
+  parseInitUser,
+  parseUpdateUser,
+  parseUser,
+} from "../../../common/zod/method";
 
 const router = express.Router();
 
@@ -22,24 +24,25 @@ const router = express.Router();
 router.get("/", async (_: Request, res: Response) => {
   try {
     const users = await getAllUsers();
-    res.status(200).json(users);
+    const parsedUsers = users.map(parseUser);
+    res.status(200).json(parsedUsers);
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ error: "Failed to fetch users" });
   }
 });
 
-// 自分の情報を確認するエンドポイント。
+// 自分の情報を確認するエンドポイント
 router.get("/me", async (req: Request, res: Response) => {
   const guid = await safeGetGUID(req);
   if (!guid.ok) return res.status(401).send("auth error");
 
   try {
-    const users = await getUser(guid.value);
-    res.status(200).json(users);
+    const user = await getUser(guid.value);
+    res.status(200).json(user);
   } catch (error) {
-    console.error("Error fetching users:", error);
-    res.status(500).json({ error: "Failed to fetch users" });
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Failed to fetch user" });
   }
 });
 
@@ -47,6 +50,7 @@ router.get("/me", async (req: Request, res: Response) => {
 router.get("/exists/:guid", async (req: Request, res: Response) => {
   const guid = req.params.guid;
   try {
+    parseGUID(guid); // GUIDを検証
     const user: User | null = await getUser(guid);
     if (user == null) throw new Error("user not found");
     res.status(200).send();
@@ -76,12 +80,12 @@ router.get("/pending", async (req: Request, res: Response) => {
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
   try {
-    const matchedUsers: User[] = await searchPendingUsers(userId.value);
-    const safeMatched = matchedUsers.map(Public);
-    res.status(200).json(safeMatched);
+    const pendingUsers: User[] = await searchPendingUsers(userId.value);
+    const safePending = pendingUsers.map(Public);
+    res.status(200).json(safePending);
   } catch (error) {
-    console.error("Error fetching matching requests", error);
-    res.status(500).json({ error: "Failed to fetch matching requests" });
+    console.error("Error fetching pending users", error);
+    res.status(500).json({ error: "Failed to fetch pending users" });
   }
 });
 
@@ -90,6 +94,7 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
   const { guid } = req.params;
 
   try {
+    parseGUID(guid); // GUIDを検証
     const user = await getUser(guid);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -104,14 +109,18 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
 
 // ユーザーの作成エンドポイント
 router.post("/", async (req: Request, res: Response) => {
-  const partialUser: Omit<User, "id"> = req.body; // is any
-
   try {
-    const newUser = await createUser(partialUser);
-    res.status(201).json(newUser);
+    const parsedInitUser = parseInitUser(req.body); // ユーザー作成データを検証
+    const newUser = await createUser(parsedInitUser); // レスポンスのユーザーデータを検証
+    const parsedNewUser = parseUser(newUser);
+    res.status(201).json(parsedNewUser);
   } catch (error) {
     console.error("Error creating user:", error);
-    res.status(500).json({ error: "Failed to create user" });
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ error: error.errors });
+    } else {
+      res.status(500).json({ error: "Failed to create user" });
+    }
   }
 });
 
@@ -120,19 +129,22 @@ router.put("/me", async (req: Request, res: Response) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
 
-  // TODO: Typia
-  const user: UpdateUser = req.body;
   try {
+    const user = parseUpdateUser(req.body); // 更新データを検証
     const updatedUser = await updateUser(id.value, user);
     res.status(200).json(updatedUser);
   } catch (error) {
     console.error("Error updating user:", error);
-    res.status(500).json({ error: "Failed to update user" });
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ error: error.errors });
+    } else {
+      res.status(500).json({ error: "Failed to update user" });
+    }
   }
 });
 
 // ユーザーの削除エンドポイント
-router.delete("/me", async (req, res) => {
+router.delete("/me", async (req: Request, res: Response) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
 

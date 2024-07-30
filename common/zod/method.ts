@@ -32,7 +32,7 @@ export const parseRelationshipStatus = (data: unknown) => {
 };
 
 // Function to parse User
-export const parseUser = (data: User) => {
+export const parseUser = (data: unknown) => {
   return UserSchema.parse(data);
 };
 

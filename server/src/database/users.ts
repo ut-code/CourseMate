@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { GUID, UpdateUser, User, UserID } from "../../../common/types";
+import { GUID, InitUser, UpdateUser, UserID } from "../../../common/types";
 
 const prisma = new PrismaClient();
 
 // ユーザーの作成
-export async function createUser(partialUser: Omit<User, "id">) {
+export async function createUser(partialUser: InitUser) {
   const newUser = await prisma.user.create({
     data: partialUser,
   });

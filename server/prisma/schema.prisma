@@ -13,7 +13,6 @@ model User {
   guid        String        @unique
   name        String        @default("名無し")
   email       String        @default("")
-  password    String        @default("")
   pictureUrl  String        @default("")
   enrollments Enrollement[]
   sendingUsers Relationship[] @relation("sending")  // 自分がマッチリクエストを送ったユーザー
