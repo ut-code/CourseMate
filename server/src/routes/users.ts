@@ -1,6 +1,4 @@
 import express, { Request, Response } from "express";
-import { z } from "zod";
-import { type PublicUser, Public, User } from "../../../common/types";
 import {
   createUser,
   deleteUser,
@@ -17,6 +15,7 @@ import {
   parseUpdateUser,
   parseUser,
 } from "../../../common/zod/method";
+import { z } from "zod";
 
 const router = express.Router();
 
@@ -24,8 +23,7 @@ const router = express.Router();
 router.get("/", async (_: Request, res: Response) => {
   try {
     const users = await getAllUsers();
-    const parsedUsers = users.map(parseUser);
-    res.status(200).json(parsedUsers);
+    res.status(200).json(users);
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ error: "Failed to fetch users" });
@@ -50,11 +48,14 @@ router.get("/me", async (req: Request, res: Response) => {
 router.get("/exists/:guid", async (req: Request, res: Response) => {
   const guid = req.params.guid;
   try {
-    parseGUID(guid); // GUIDを検証
-    const user: User | null = await getUser(guid);
+    parseGUID(guid);
+    const user = await getUser(guid);
     if (user == null) throw new Error("user not found");
     res.status(200).send();
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).send({ error: error.errors });
+    }
     res.status(404).send();
   }
 });
@@ -65,9 +66,8 @@ router.get("/matched", async (req: Request, res: Response) => {
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
   try {
-    const matchedUsers: User[] = await searchMatchedUser(userId.value);
-    const safeMatched = matchedUsers.map(Public);
-    res.status(200).json(safeMatched);
+    const matchedUsers = await searchMatchedUser(userId.value);
+    res.status(200).json(matchedUsers);
   } catch (error) {
     console.error("Error fetching matching requests", error);
     res.status(500).json({ error: "Failed to fetch matching requests" });
@@ -80,9 +80,8 @@ router.get("/pending", async (req: Request, res: Response) => {
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
   try {
-    const pendingUsers: User[] = await searchPendingUsers(userId.value);
-    const safePending = pendingUsers.map(Public);
-    res.status(200).json(safePending);
+    const pendingUsers = await searchPendingUsers(userId.value);
+    res.status(200).json(pendingUsers);
   } catch (error) {
     console.error("Error fetching pending users", error);
     res.status(500).json({ error: "Failed to fetch pending users" });
@@ -94,13 +93,12 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
   const { guid } = req.params;
 
   try {
-    parseGUID(guid); // GUIDを検証
+    parseGUID(guid);
     const user = await getUser(guid);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    const json: PublicUser = Public(user);
-    res.status(200).json(json);
+    res.status(200).json(user);
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({ error: "Failed to fetch user" });
@@ -110,10 +108,9 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
 // ユーザーの作成エンドポイント
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const parsedInitUser = parseInitUser(req.body); // ユーザー作成データを検証
-    const newUser = await createUser(parsedInitUser); // レスポンスのユーザーデータを検証
-    const parsedNewUser = parseUser(newUser);
-    res.status(201).json(parsedNewUser);
+    const parsedInitUser = parseInitUser(req.body);
+    const newUser = await createUser(parsedInitUser);
+    res.status(201).json(newUser);
   } catch (error) {
     console.error("Error creating user:", error);
     if (error instanceof z.ZodError) {
@@ -132,7 +129,7 @@ router.put("/me", async (req: Request, res: Response) => {
   try {
     const user = parseUpdateUser(req.body); // 更新データを検証
     const updatedUser = await updateUser(id.value, user);
-    res.status(200).json(updatedUser);
+    res.status(200).json(parseUser(updatedUser));
   } catch (error) {
     console.error("Error updating user:", error);
     if (error instanceof z.ZodError) {
