@@ -9,6 +9,7 @@ import coursesRoutes from "./router/courses";
 import requestsRoutes from "./router/requests";
 import matchesRoutes from "./router/matches";
 import echoRoutes from "./router/echo";
+import chatRoutes from "./router/chat";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -42,6 +43,7 @@ app.use("/courses", coursesRoutes);
 app.use("/requests", requestsRoutes);
 app.use("/matches", matchesRoutes);
 app.use("/echo", echoRoutes);
+app.use("/chat", chatRoutes);
 
 // サーバーの起動
 app.listen(port, () => {

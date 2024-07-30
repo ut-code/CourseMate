@@ -194,7 +194,7 @@ const rejectRequest = (opponentId: UserID) => {
  *   - 401: unauthorized
  *   - 500: internal error
  */
-const roomOverview = `${origin}/rooms/all/overview`;
+const roomOverview = `${origin}/chat/overview`;
 
 /**
  * []実装済み
@@ -207,12 +207,12 @@ const roomOverview = `${origin}/rooms/all/overview`;
  *   - 403: Forbidden
  *   - 500: internal error
  **/
-const dmroom = (dmid: DMRoomID) => `${origin}/rooms/dm/id/` + dmid;
+const dmroom = (dmid: DMRoomID) => `${origin}/chat/dm/to/` + dmid;
 
 /**
  * ? unimplemented.
  **/
-const dmrooms = `${origin}/rooms/dm`;
+const dmrooms = `${origin}/chat/dm`;
 
 /**
  * POST -> start dm with userId. created one if none was found. authorized.
@@ -221,11 +221,12 @@ const dmrooms = `${origin}/rooms/dm`;
  *   - 200: room already there.
  *     - body: DMRoom
  *   - 201: created new room.
+ *   - 400: bad request: bad param formatting.
  *   - 401: unauthorized.
  *   - 403: forbidden. you and the user are not matched yet.
  *   - 500: internal error.
  **/
-const dmWith = (userId: UserID) => `${origin}/rooms/dm/with/` + userId;
+const dmWith = (userId: UserID) => `${origin}/chat/dm/with/` + userId;
 
 /**
  * POST -> Create a room. authenticated
@@ -237,26 +238,30 @@ const dmWith = (userId: UserID) => `${origin}/rooms/dm/with/` + userId;
  *   - 403: forbidden (cannot invite non-friends)
  *   - 500: internal error
  **/
-const sharedRooms = `${origin}/rooms/shared`;
+const sharedRooms = `${origin}/chat/shared`;
 
 /** authorized
  * GET -> Get info of a room (including the message log).
  * PATCH -> update room info. (excluding the message log).
  * - body: UpdateRoom
  **/
-const sharedRoom = (roomId: ShareRoomID) => `${origin}/rooms/shared/` + roomId;
+const sharedRoom = (roomId: ShareRoomID) => `${origin}/chat/shared/` + roomId;
 
-// PATCH: authorized body=UserID[]
+// POST: invite. authorized body=UserID[]
+// -> 204
 const roomInvite = (roomId: ShareRoomID) =>
-  `${origin}/rooms/shared/id/${roomId}/invite`;
-
-// PATCH: authorized body=SendMessage
-// DELETE: authorized
-const message = (messageId: MessageID) => `${origin}/messages/id/` + messageId;
+  `${origin}/chat/shared/id/${roomId}/invite`;
 
 /**
- * GET -> echo back the same
- * body: json<any>
+ * PATCH: authorized body=SendMessage
+ * DELETE: authorized
+ **/
+const message = (messageId: MessageID) =>
+  `${origin}/chat/messages/id/` + messageId;
+
+/**
+ * GET -> echo back the same cookie as Set-Cookie header
+ * - param: Map<string, string>
  * - status:
  *   - 204: No content. successful.
  *   - 400: Bad formatting.

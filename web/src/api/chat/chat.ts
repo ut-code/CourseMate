@@ -123,7 +123,7 @@ export async function invite(
 ): Promise<void> {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.roomInvite(roomId), {
-      method: "PATCH",
+      method: "POST",
       body: JSON.stringify(memberIDs),
       credentials: "include",
     });
