@@ -1,5 +1,5 @@
 import { Box, List, ListItem, Button, Stack } from "@mui/material";
-import * as chat from "../api/chat";
+import * as chat from "../../api/chat";
 import { useCallback, useState } from "react";
 
 export default function Requests() {
