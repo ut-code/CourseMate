@@ -1,5 +1,6 @@
 import { doWithIdToken, ErrUnauthorized } from "../../firebase/auth/lib";
 import endpoints from "../internal/endpoints";
+import { DMRoom, DMRoomID, InitRoom, Message, MessageID, RoomOverview, SendMessage, SharedRoom, ShareRoomID, UpdateRoom, UserID } from "../../common/types";
 
 /* TODO
 import { UserID } from "../common/types";
