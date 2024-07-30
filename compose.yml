@@ -17,8 +17,8 @@ services:
       start_period: 10s
   server:
     build:
-      context: ./
-      dockerfile: ./server/Dockerfile
+      context: ./server
+      dockerfile: ./Dockerfile
     ports:
       - "3000:3000"
     # environment:
@@ -29,8 +29,8 @@ services:
         condition: service_healthy
   web:
     build:
-      context: ./
-      dockerfile: ./web/Dockerfile
+      context: ./web
+      dockerfile: ./Dockerfile
     ports:
       - "5173:5173"
 

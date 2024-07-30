@@ -6,7 +6,7 @@ import { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import userapi from "../api/user";
-import { GUID, User } from "../../../common/types";
+import { GUID, User } from "../common/types";
 import { app } from "../firebase/firebaseconfig";
 
 export default function SignUp() {

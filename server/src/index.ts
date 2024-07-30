@@ -4,11 +4,11 @@ dotenv.config();
 import express from "express";
 import cors from "./lib/cross-origin/multiorigin-cors";
 import nocsrf from "./lib/cross-origin/block-unknown-origin";
-import usersRoutes from "./routes/users";
-import coursesRoutes from "./routes/courses";
-import requestsRoutes from "./routes/requests";
-import matchesRoutes from "./routes/matches";
-import echoRoutes from "./routes/echo";
+import usersRoutes from "./router/users";
+import coursesRoutes from "./router/courses";
+import requestsRoutes from "./router/requests";
+import matchesRoutes from "./router/matches";
+import echoRoutes from "./router/echo";
 import cookieParser from "cookie-parser";
 
 const app = express();
