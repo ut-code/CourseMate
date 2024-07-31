@@ -4,13 +4,17 @@
  * Google account's id.
  * recommended variable name: guid
  **/
-export type GUID = string & { __internal_prevent_implicit_cast_GUID: PhantomData };
+export type GUID = string & {
+  __internal_prevent_implicit_cast_GUID: PhantomData;
+};
 
 /**
  * User's ID used in database. do not assign string to this.
  * recommended variable name: id
  **/
-export type UserID = number & { __internal_prevent_implicit_cast_UserID: PhantomData };
+export type UserID = number & {
+  __internal_prevent_implicit_cast_UserID: PhantomData;
+};
 
 /**
  * Firebase ID Token.
@@ -64,8 +68,12 @@ export type Relationship = {
 
 type PhantomData = never;
 
-export type MessageID = number & { __internal_prevent_cast_MessageID: PhantomData };
-export type ShareRoomID = number & { __internal_prevent_cast_RoomID: PhantomData };
+export type MessageID = number & {
+  __internal_prevent_cast_MessageID: PhantomData;
+};
+export type ShareRoomID = number & {
+  __internal_prevent_cast_RoomID: PhantomData;
+};
 export type DMRoomID = number & { __internal_prevent_cast_DMID: PhantomData };
 export type Message = {
   id: MessageID;
@@ -117,4 +125,3 @@ export type UpdateRoom = {
   name: string;
   pictureUrl: string;
 };
-

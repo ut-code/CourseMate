@@ -1,7 +1,33 @@
 import { PrismaClient } from "@prisma/client";
 import { UserID } from "../common/types";
+import asyncMap from "../lib/async/map";
 
 const prisma = new PrismaClient();
+
+// returns false if u1 or u2 is not present.
+export async function areMatched(u1: UserID, u2: UserID): Promise<boolean> {
+  const match = await prisma.relationship.findUnique({
+    where: {
+      OR: [
+        { AND: [{ sendingUserId: u1 }, { receivingUserId: u2 }] },
+        { AND: [{ sendingUserId: u2 }, { receivingUserId: u1 }] },
+      ],
+    },
+  });
+
+  return match !== null && match.status === "MATCHED";
+}
+
+export async function areAllMatched(
+  user: UserID,
+  friends: UserID[],
+): Promise<boolean> {
+  return (
+    await asyncMap(friends, (friend) => {
+      return areMatched(user, friend);
+    })
+  ).reduce((a, b) => a && b);
+}
 
 // 特定のユーザIDを含むマッチの取得
 export async function getMatchesByUserId(userId: UserID) {

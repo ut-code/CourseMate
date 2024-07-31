@@ -1,26 +1,30 @@
 import express from "express";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeParseInt } from "../common/lib/result/safeParseInt";
+import type {
+  Message,
+  MessageID,
+  SendMessage,
+  ShareRoomID,
+} from "../common/types";
 import asyncMap from "../lib/async/map";
+import * as db from "../database/chat";
+import { areAllMatched, areMatched } from "../database/matches";
+import type { UserID, InitRoom } from "../common/types";
+import { lazyFallbackAsync } from "../common/lib/fallback";
 
 const router = express.Router();
-
-// TODO: fix this
-type DMRoom = {
-  members: number[];
-};
-type InitRoom = {
-  members: number[];
-};
 
 router.get("/overview", async (req, res) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
+  const overview = await db.overview(id.value);
 
   // SELECT overview FROM rooms WHERE id IN members
 
-  // SEND: RoomOverview[]
-  res.status(200).send('"todo"');
+  // SEND: RoomOverview[].
+  // this is NOT ordered. you need to sort it on frontend.
+  res.status(200).send(overview);
 });
 
 // send DM to userid.
@@ -30,20 +34,36 @@ router.post("/dm/to/:userid", async (req, res) => {
   const friend = safeParseInt(req.params.userid);
   if (!friend.ok) return res.status(400).send("bad param encoding: `dmid`");
 
-  const dm = { messages: ["hi"] }; // SELECT members FROM dms WHERE members = (user, friend)
+  if (!areMatched(user.value, friend.value as UserID))
+    return res.status(403).send("cannot send DM to non-friend");
 
-  type SendMessage = string; // fix this
-  const msg: SendMessage = req.body; // todo: typia
+  // they are now MATCHED
 
-  // PUSH msg TO dm
-  dm.messages.push(msg);
+  const smsg: SendMessage = req.body; // todo: typia
+  const msg: Omit<Message, "id"> = {
+    sender: user.value,
+    createdAt: new Date(),
+    ...smsg,
+  };
+
+  const room = await lazyFallbackAsync(
+    await db.findDMof(user.value, friend.value as UserID),
+    async () => {
+      return await db.createDMRoom({
+        creatorId: user.value,
+        friendId: friend.value as UserID,
+      });
+    },
+  );
+
+  const newRoom = db.sendDM(room.id, msg);
 
   // SEND: DMRoom
-  res.status(200).send(dm);
+  res.status(200).send(newRoom);
 });
 
 // GET a DM Room with userid, CREATE one if not found.
-router.post("/dm/with/:userid", async (req, res) => {
+router.put("/dm/with/:userid", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
 
@@ -54,16 +74,14 @@ router.post("/dm/with/:userid", async (req, res) => {
   const existingDM = null; // SELECT * FROM DMs WHERE members = (user, friend)
   if (existingDM !== null) return res.status(200).send(existingDM);
 
-  const relation: "PENDING" | "REJECTED" | "MATCHED" = "MATCHED";
-  if (relation !== "MATCHED")
-    // IF NOT Relationship(user <> friend) = MATCHED
-    return res.status(403).send("you and him are not matched yet");
+  if (!areMatched(user.value, friend.value as UserID))
+    return res.status(403).send("cannot DM with a non-friend");
 
-  const room: DMRoom = {
-    members: [user.value, friend.value],
-  };
+  const room = await db.createDMRoom({
+    creatorId: user.value,
+    friendId: friend.value as UserID,
+  });
 
-  // CREATE room INTO DMs
   return res.status(201).send(room);
 });
 
@@ -71,35 +89,33 @@ router.post("/dm/with/:userid", async (req, res) => {
 router.post(`/shared`, async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
-  const room: DMRoom = {} as DMRoom;
 
-  const rels = await asyncMap(room.members, async (member) => {
-    member;
-    return "MATCHED"; // GET Relationship<user, member>
-  });
+  const init: InitRoom = req.body;
 
-  if (rels.some((rel) => rel !== "MATCHED"))
+  const allMatched = (
+    await asyncMap(init.members, async (member) => {
+      return await areMatched(user.value, member);
+    })
+  ).reduce((a, b) => a && b);
+
+  if (!allMatched)
     return res.status(403).send("error: some members are not friends with you");
 
-  // CREATE room IN rooms
+  const room = db.createSharedRoom(init);
+
   res.status(201).send(room);
 });
 
-/** authorized
- * GET -> Get info of a room (including the message log).
- **/
 router.get("/shared/:room", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
   const roomId = safeParseInt(req.params.room);
   if (!roomId.ok) return res.status(400).send("invalid formatting of :room");
 
-  const room = {
-    members: [1],
-  }; // GET room WHERE room.id = roomId.value
-
-  if (!room.members.includes(user.value))
+  if (!(await db.isUserInRoom(roomId.value as ShareRoomID, user.value)))
     res.status(403).send("you don't belong to that room!");
+
+  const room = db.findSharedRoom(roomId.value as ShareRoomID);
 
   res.status(200).send(room);
 });
@@ -108,13 +124,14 @@ router.get("/shared/:room", async (req, res) => {
  * PATCH -> update room info. (except the message log).
  * - body: UpdateRoom
  **/
-router.get("/shared/:room", async (req, res) => {
+router.patch("/shared/:room", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
+  const roomId = safeParseInt(req.params.room);
+  if (!roomId.ok) return res.status(400).send("invalid :room");
 
-  const initRoom: InitRoom = req.body; // typia
-
-  const room = initRoom; // CREATE initRoom IN rooms
+  const name: string = req.body.name; // typia
+  const room = db.updateRoomName(roomId.value as ShareRoomID, name);
 
   res.status(201).send(room);
 });
@@ -123,27 +140,40 @@ router.get("/shared/:room", async (req, res) => {
 router.post("/shared/id/:room/invite", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
+  const roomId = safeParseInt(req.params.room);
+  if (!roomId.ok) return res.status(400).send("invalid :room");
 
-  const invited: number[] = req.body; // typia
+  const invited: UserID[] = req.body; // typia
 
-  const rels = await asyncMap(invited, async (invited) => {
-    invited;
-    return "MATCHED"; // GET Relationship<user, invited>
-  });
-
-  if (rels.some((rel) => rel !== "MATCHED")) {
+  if (!(await areAllMatched(user.value, invited)))
     return res.status(403).send("some of the members are not friends with you");
-  }
 
-  // APPEND (...invited) TO room.members
+  const room = db.inviteUserToSharedRoom(roomId.value as ShareRoomID, invited);
 
-  res.status(204).send();
+  res.status(200).send(room);
 });
 
-router.patch("/messages/id/:id", async () => {
-  // TODO!
-  // PATCH: authorized body=SendMessage
-  // DELETE: authorized
+router.patch("/messages/id/:id", async (req, res) => {
+  const user = await safeGetUserId(req);
+  if (!user.ok) return res.status(401).send("auth error");
+  const id = safeParseInt(req.params.id);
+  if (!id.ok) return res.status(400).send("invalid :id");
+
+  const old = await db.findMessage(id.value as MessageID);
+  if (!old) return res.status(404).send("couldn't find message");
+  if (old.sender !== user.value)
+    return res.status(403).send("cannot edit others' message");
+
+  const content: string = req.body.content; // typia
+
+  const msg = await db.updateMessage(id.value as MessageID, content);
+  res.status(200).send(msg);
+});
+
+// DELETE: authorized TODO!
+router.delete("/messages/id/:id", async (req, res) => {
+  const user = await safeGetUserId(req);
+  if (!user.ok) return res.status(401).send("auth error");
 });
 
 export default router;

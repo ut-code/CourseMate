@@ -1,6 +1,18 @@
 import { doWithIdToken, ErrUnauthorized } from "../../firebase/auth/lib";
 import endpoints from "../internal/endpoints";
-import { DMRoom, DMRoomID, InitRoom, Message, MessageID, RoomOverview, SendMessage, SharedRoom, ShareRoomID, UpdateRoom, UserID } from "../../common/types";
+import {
+  DMRoom,
+  DMRoomID,
+  InitRoom,
+  Message,
+  MessageID,
+  RoomOverview,
+  SendMessage,
+  SharedRoom,
+  ShareRoomID,
+  UpdateRoom,
+  UserID,
+} from "../../common/types";
 
 /* TODO
 import { UserID } from "../common/types";
@@ -99,6 +111,7 @@ export async function getSharedRoom(roomId: ShareRoomID): Promise<SharedRoom> {
     return await res.json();
   });
 }
+
 export async function getDM(dmid: DMRoomID): Promise<DMRoom> {
   return doWithIdToken(async () => {
     const res = await fetch(endpoints.dmroom(dmid), {
@@ -149,7 +162,10 @@ export async function sendDM(
 
 export async function startDMWith(userId: UserID): Promise<DMRoom> {
   return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.dmWith(userId));
+    const res = await fetch(endpoints.dmWith(userId), {
+      method: "PUT",
+      credentials: "include",
+    });
     if (res.status === 401) throw new ErrUnauthorized();
     if (res.status === 200 || res.status === 201) return res.json();
     throw new Error(

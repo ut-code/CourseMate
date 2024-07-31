@@ -210,12 +210,7 @@ const roomOverview = `${origin}/chat/overview`;
 const dmroom = (dmid: DMRoomID) => `${origin}/chat/dm/to/` + dmid;
 
 /**
- * ? unimplemented.
- **/
-const dmrooms = `${origin}/chat/dm`;
-
-/**
- * POST -> start dm with userId. created one if none was found. authorized.
+ * PUT -> start dm with userId. created one if none was found. authorized.
  * - body: {with: UserID}
  * - status:
  *   - 200: room already there.
@@ -247,8 +242,14 @@ const sharedRooms = `${origin}/chat/shared`;
  **/
 const sharedRoom = (roomId: ShareRoomID) => `${origin}/chat/shared/` + roomId;
 
-// POST: invite. authorized body=UserID[]
-// -> 204
+/** POST: invite. authorized
+ * - body: UserID[]
+ * - status:
+ *   - 200: Invited. body: SharedRoom
+ *   - 401: unauthorized
+ *   - 403: forbidden (cannot invite non-friends)
+ *   - 500: internal error
+ **/
 const roomInvite = (roomId: ShareRoomID) =>
   `${origin}/chat/shared/id/${roomId}/invite`;
 
