@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { UserID, Relationship } from "../common/types";
+import { User, UserID, Relationship, RelationshipID, RelationshipStatus } from "../common/types";
+import { castUser } from "./users"; 
 
 const prisma = new PrismaClient();
 
@@ -22,7 +23,7 @@ export async function sendRequest({
   });
   // 既存の関係がある場合はそのまま返す
   if (existingRelationship) {
-    return existingRelationship;
+    return castRelationship(existingRelationship);
   }
   // 既存の関係がない場合は新しい関係を作成
   const newRelationship = await prisma.relationship.create({
@@ -32,7 +33,7 @@ export async function sendRequest({
       status: "PENDING",
     },
   });
-  return newRelationship;
+  return castRelationship(newRelationship);
 }
 
 // 特定のユーザが送信・受信したマッチリクエストの取得
@@ -54,14 +55,15 @@ export async function getRequestsByUserId({
   if (receiverId !== undefined) {
     whereClause.receivingUserId = receiverId;
   }
-  return await prisma.relationship.findMany({
+  const found = await prisma.relationship.findMany({
     where: whereClause,
   });
+  return found.map(castRelationship);
 }
 
 // マッチリクエストの承認
-export async function approveRequest(senderId: UserID, receiverId: UserID) {
-  return await prisma.relationship.update({
+export async function approveRequest(senderId: UserID, receiverId: UserID): Promise<Relationship> {
+  const updated = await prisma.relationship.update({
     where: {
       sendingUserId_receivingUserId: {
         sendingUserId: senderId,
@@ -72,27 +74,30 @@ export async function approveRequest(senderId: UserID, receiverId: UserID) {
       status: "MATCHED",
     },
   });
+  return castRelationship(updated);
 }
 
 // マッチリクエストの拒否
-export async function rejectRequest(senderId: UserID, receiverId: UserID) {
-  return await prisma.relationship.update({
-    where: {
-      sendingUserId_receivingUserId: {
-        sendingUserId: senderId,
-        receivingUserId: receiverId,
+export async function rejectRequest(senderId: UserID, receiverId: UserID): Promise<Relationship> {
+  return castRelationship(
+    await prisma.relationship.update({
+      where: {
+        sendingUserId_receivingUserId: {
+          sendingUserId: senderId,
+          receivingUserId: receiverId,
+        },
       },
-    },
-    data: {
-      status: "REJECTED",
-    },
-  });
+      data: {
+        status: "REJECTED",
+      },
+    })
+  );
 }
 
 //ユーザーにまつわるリクエストを探す
-export async function searchPendingUsers(userId: UserID) {
+export async function searchPendingUsers(userId: UserID): Promise<User[]> {
   //俺をリクエストしているのは誰だ
-  return await prisma.user.findMany({
+  const found = await prisma.user.findMany({
     where: {
       sendingUsers: {
         some: {
@@ -102,6 +107,7 @@ export async function searchPendingUsers(userId: UserID) {
       },
     },
   });
+  return found.map(castUser);
 }
 
 // export async function searchRequestingUser(userId: UserID):Promise<Relationship[]> {
@@ -118,7 +124,7 @@ export async function searchPendingUsers(userId: UserID) {
 
 //マッチした人の取得
 export async function searchMatchedUser(userId: UserID) {
-  const users = await prisma.user.findMany({
+  const found = await prisma.user.findMany({
     where: {
       OR: [
         {
@@ -140,5 +146,20 @@ export async function searchMatchedUser(userId: UserID) {
       ],
     },
   });
-  return users;
+  return found.map(castUser);
+}
+
+function castRelationship(rel: {
+  id: number,
+  sendingUserId: number,
+  receivingUserId: number,
+  status: RelationshipStatus,
+}): Relationship {
+  return {
+    id: rel.id as RelationshipID,
+    sendingUserId: rel.sendingUserId as UserID,
+    receivingUserId: rel.receivingUserId as UserID,
+    status: rel.status,
+
+  }
 }

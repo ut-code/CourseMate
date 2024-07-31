@@ -58,3 +58,19 @@ export async function getAllUsers() {
   const users = await prisma.user.findMany();
   return users;
 }
+
+export function castUser(u: {
+  id: number;
+  guid: string;
+  name: string;
+  email: string;
+  pictureUrl: string;
+}): User {
+  return {
+    id: u.id as UserID,
+    guid: u.guid as GUID,
+    name: u.name,
+    email: u.email,
+    pictureUrl: u.pictureUrl,
+  }
+}
