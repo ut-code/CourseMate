@@ -9,6 +9,7 @@ import {
 } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeParseInt } from "../../../common/lib/result/safeParseInt";
+import { parseUser } from "../../../common/zod/method";
 // import { Relationship } from "@prisma/client"; // ... not used?
 
 const router = express.Router();
@@ -40,6 +41,7 @@ router.get("/", async (req: Request, res: Response) => {
   if (!userId.ok) return res.status(401).send("auth error");
 
   try {
+    parseUser(userId.value);
     const requests: Relationship[] = await getRequestsByUserId({
       // FIXME: isn't it supposed to be receiver id?
       senderId: userId.value,
@@ -61,6 +63,8 @@ router.put("/send/:receiverId", async (req: Request, res: Response) => {
   if (!senderId.ok) return res.status(401).send("auth error");
 
   try {
+    parseUser(senderId.value);
+    parseUser(receiverId.value);
     const sentRequest = await sendRequest({
       senderId: senderId.value,
       receiverId: receiverId.value,
@@ -81,6 +85,7 @@ router.put("/accept/:senderId", async (req: Request, res: Response) => {
   if (!receiverId.ok) return res.status(401).send("auth error");
 
   try {
+    parseUser(senderId.value);
     await approveRequest(senderId.value, receiverId.value);
     res.status(201).send();
   } catch (error) {
@@ -98,6 +103,8 @@ router.put("/reject/:opponentId", async (req: Request, res: Response) => {
   if (!requesterId.ok) return res.status(401).send("auth error");
 
   try {
+    parseUser(opponentId.value);
+    parseUser(requesterId.value);
     await rejectRequest(opponentId.value, requesterId.value); //TODO 名前を良いのに変える
     res.status(204).send();
   } catch (error) {

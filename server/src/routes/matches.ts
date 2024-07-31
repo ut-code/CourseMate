@@ -3,6 +3,7 @@ import { deleteMatch, getMatchesByUserId } from "../database/matches";
 import { Relationship } from "../../../common/types";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeParseInt } from "../../../common/lib/result/safeParseInt";
+import { parseUserID } from "../../../common/zod/method";
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ router.get("/", async (req: Request, res: Response) => {
   if (!userId.ok) return res.status(401).send("auth error");
 
   try {
+    parseUserID(userId.value);
     const all: Relationship[] = await getMatchesByUserId(userId.value);
     const matched = all.filter((relation) => relation.status === "MATCHED");
     res.status(200).json(matched);
@@ -31,6 +33,8 @@ router.delete("/:opponentId", async (req: Request, res: Response) => {
   if (!requesterId.ok) return res.status(401).send("auth error");
 
   try {
+    parseUserID(requesterId.value);
+    parseUserID(opponentId.value);
     await deleteMatch(requesterId.value, opponentId.value);
     res.status(204).send();
   } catch (error) {

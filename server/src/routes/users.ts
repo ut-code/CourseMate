@@ -14,6 +14,7 @@ import {
   parseInitUser,
   parseUpdateUser,
   parseUser,
+  parseUserID,
 } from "../../../common/zod/method";
 import { z } from "zod";
 
@@ -36,6 +37,7 @@ router.get("/me", async (req: Request, res: Response) => {
   if (!guid.ok) return res.status(401).send("auth error");
 
   try {
+    parseGUID(guid.value);
     const user = await getUser(guid.value);
     res.status(200).json(user);
   } catch (error) {
@@ -66,6 +68,7 @@ router.get("/matched", async (req: Request, res: Response) => {
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
   try {
+    parseUserID(userId.value);
     const matchedUsers = await searchMatchedUser(userId.value);
     res.status(200).json(matchedUsers);
   } catch (error) {
@@ -80,6 +83,7 @@ router.get("/pending", async (req: Request, res: Response) => {
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
   try {
+    parseUserID(userId.value);
     const pendingUsers = await searchPendingUsers(userId.value);
     res.status(200).json(pendingUsers);
   } catch (error) {
@@ -108,8 +112,8 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
 // ユーザーの作成エンドポイント
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const parsedInitUser = parseInitUser(req.body);
-    const newUser = await createUser(parsedInitUser);
+    parseInitUser(req.body);
+    const newUser = await createUser(req.body);
     res.status(201).json(newUser);
   } catch (error) {
     console.error("Error creating user:", error);
@@ -127,8 +131,9 @@ router.put("/me", async (req: Request, res: Response) => {
   if (!id.ok) return res.status(401).send("auth error");
 
   try {
-    const user = parseUpdateUser(req.body); // 更新データを検証
-    const updatedUser = await updateUser(id.value, user);
+    parseUserID(id.value);
+    parseUpdateUser(req.body);
+    const updatedUser = await updateUser(id.value, req.body);
     res.status(200).json(parseUser(updatedUser));
   } catch (error) {
     console.error("Error updating user:", error);
@@ -146,6 +151,7 @@ router.delete("/me", async (req: Request, res: Response) => {
   if (!id.ok) return res.status(401).send("auth error");
 
   try {
+    parseUserID(id.value);
     await deleteUser(id.value);
     res.status(204).send();
   } catch (error) {

@@ -7,7 +7,7 @@ import {
 } from "../database/courses";
 
 const router = express.Router();
-// zodかそれに準ずるものが必要
+// TODO: add zod
 // コースの取得エンドポイント
 router.get("/:courseId", async (req: Request, res: Response) => {
   const { courseId } = req.params;
