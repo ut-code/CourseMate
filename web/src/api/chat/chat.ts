@@ -21,11 +21,8 @@ import type { User } from "../common/types";
 
 export async function startDM(friendId: UserID): Promise<void> {
   return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.dmrooms, {
+    const res = await fetch(endpoints.dmWith(friendId), {
       method: "POST",
-      body: JSON.stringify({
-        with: friendId,
-      }),
     });
     if (res.status === 401) throw new ErrUnauthorized();
     if (res.status !== 201)

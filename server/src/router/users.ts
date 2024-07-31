@@ -1,5 +1,11 @@
 import express, { Request, Response } from "express";
-import { type PublicUser, Public, UpdateUser, User } from "../common/types";
+import {
+  type PublicUser,
+  Public,
+  UpdateUser,
+  User,
+  GUID,
+} from "../common/types";
 import {
   createUser,
   deleteUser,
@@ -42,7 +48,7 @@ router.get("/me", async (req: Request, res: Response) => {
 router.get("/exists/:guid", async (req: Request, res: Response) => {
   const guid = req.params.guid;
   try {
-    const user: User | null = await getUser(guid);
+    const user: User | null = await getUser(guid as GUID);
     if (user == null) throw new Error("user not found");
     res.status(200).send();
   } catch (error) {
@@ -85,7 +91,7 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
   const { guid } = req.params;
 
   try {
-    const user = await getUser(guid);
+    const user = await getUser(guid as GUID);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }

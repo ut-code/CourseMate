@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { redirect } from "react-router-dom";
 import userapi from "../../api/user";
 import { AuthContext } from "./AuthContext";
-import { User } from "../../common/types";
+import type { User, GUID } from "../../common/types";
 
 export default function AuthProvider({
   children,
@@ -17,7 +17,9 @@ export default function AuthProvider({
       const auth = getAuth();
       return onAuthStateChanged(auth, (firebaseUser) => {
         if (firebaseUser) {
-          userapi.getByGUID(firebaseUser.uid).then((user) => setUser(user));
+          userapi
+            .getByGUID(firebaseUser.uid as GUID)
+            .then((user) => setUser(user));
         } else {
           setUser(null);
           console.log("ログイン画面に移動します");

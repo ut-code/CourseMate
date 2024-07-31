@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { Hook } from "../share/types";
 import * as chat from "./chat";
-import type { RoomOverview } from "./chat";
+import type { RoomOverview } from "../../common/types";
 
 export function useRoomsOverview(): Hook<RoomOverview[]> {
   const [data, setData] = useState<RoomOverview[] | null>(null);

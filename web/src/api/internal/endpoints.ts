@@ -1,5 +1,5 @@
 import { GUID } from "../../common/types";
-import { DMRoomID, MessageID, ShareRoomID } from "../chat/chat";
+import { MessageID, ShareRoomID } from "../../common/types";
 
 const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
 if (!origin) throw new Error("import.meta.env.VITE_API_ENDPOINT not found!");
@@ -207,7 +207,7 @@ const roomOverview = `${origin}/chat/overview`;
  *   - 403: Forbidden
  *   - 500: internal error
  **/
-const dmroom = (dmid: DMRoomID) => `${origin}/chat/dm/to/` + dmid;
+const dmroom = (userId: UserID) => `${origin}/chat/dm/to/` + userId;
 
 /**
  * PUT -> start dm with userId. created one if none was found. authorized.
@@ -286,7 +286,6 @@ export default {
   rejectRequest,
   roomOverview,
   dmroom,
-  dmrooms,
   dmWith,
   sharedRoom,
   sharedRooms,
