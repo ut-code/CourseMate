@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { UserID } from "../common/types";
 import type {
+  User,
   RoomOverview,
   Relationship,
   RelationshipID,
@@ -14,6 +15,7 @@ import type {
   SharedRoomOverview,
 } from "../common/types";
 import { findRelation, findRelations } from "./matches";
+import { getUserByID } from "./users";
 import asyncMap from "../lib/async/map";
 
 const prisma = new PrismaClient();
@@ -21,26 +23,22 @@ const prisma = new PrismaClient();
 // ユーザーの参加しているすべての Room の概要 (Overview) の取得
 export async function overview(user: UserID): Promise<RoomOverview[]> {
   const rels: Relationship[] = await findRelations(user);
-  const found = (
-    await asyncMap(
-      rels,
-      async (rel) =>
-        await prisma.directRoom.findUnique({
-          where: {
-            id: rel.id,
-          },
-        }),
-    )
-  ).filter((f) => f !== null);
-  const dmov = found.map((dm) => {
+  const dmov = await asyncMap(rels, async (rel) => {
+    let friend: User | null = null;
+    if (rel.sendingUserId === user) {
+      friend = await getUserByID(rel.receivingUserId);
+    } else {
+      friend = await getUserByID(rel.sendingUserId);
+    }
     const overview: DMOverview = {
-      dmid: dm.id as RelationshipID,
-      name: "TODO: DM 相手のユーザー名をここに",
-      thumbnail: "", // TODO: DM 相手のアイコン
+      dmid: rel.id as RelationshipID,
+      name: friend!.name,
+      thumbnail: friend!.pictureUrl,
       isDM: true,
     };
     return overview;
   });
+
   const shared: {
     id: number;
     name: string;

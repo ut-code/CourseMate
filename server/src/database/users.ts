@@ -20,7 +20,7 @@ export async function getUser(guid: GUID) {
   });
   return user;
 }
-export async function getUserByID(id: UserID) {
+export async function getUserByID(id: UserID): Promise<User> {
   const user = await prisma.user.findUnique({
     where: {
       id,
