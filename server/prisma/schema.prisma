@@ -55,21 +55,26 @@ enum MatchingStatus {
 // https://www.prisma.io/docs/orm/prisma-client/queries/select-fields
 model SharedRoom {
   id Int @id @default(autoincrement())
+  thumbnail String // URL to thumbnail picture
   name String
   members Int[]
   messages Message[]
 }
 
-model DM {
+model DirectRoom {
   id Int @id @default(autoincrement())
   members Int[] // TODO: relation
   messages Message[]
 }
 
 model Message {
-  id Int @id @default(autoincrement())
-  creator Int // refers to UserId
-  createdAt DateTime @default(now()) // @readonly
-  edited Boolean @default(false)
-  content String
+  id           Int         @id @default(autoincrement())
+  creator      Int // refers to UserId
+  createdAt    DateTime    @default(now()) // @readonly
+  edited       Boolean     @default(false)
+  content      String
+  directRoom   DirectRoom? @relation(fields: [directRoomId], references: [id])
+  directRoomId Int?
+  sharedRoom   SharedRoom? @relation(fields: [sharedRoomId], references: [id])
+  sharedRoomId Int?
 }

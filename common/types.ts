@@ -95,21 +95,24 @@ export type SendMessage = {
 export type RoomOverview = SharedRoomOverview | DMOverview;
 
 export type DMOverview = {
-  thumbnail: string;
-  lastmsg?: Message;
   isDM: true;
   dmid: DMRoomID;
+  name: string;
+  thumbnail: string;
+  lastmsg?: Message;
 };
 
 export type SharedRoomOverview = {
-  thumbnail: string;
-  lastmsg?: Message;
   isDM: false;
   roomId: ShareRoomID;
+  name: string;
+  thumbnail: string;
+  lastmsg?: Message;
 };
 
 export type DMRoom = {
   id: DMRoomID; // TODO: should this use Relationship.ID or RoomID?
+  thumbnail: string;
   isDM: true;
   members: UserID[];
   messages: Message[];
@@ -117,6 +120,7 @@ export type DMRoom = {
 
 export type SharedRoom = {
   id: ShareRoomID;
+  thumbnail: string;
   name: string;
   isDM: false;
   members: UserID[];
