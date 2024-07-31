@@ -62,8 +62,7 @@ model SharedRoom {
 }
 
 model DirectRoom {
-  id Int @id @default(autoincrement())
-  members Int[] // TODO: relation
+  id Int @id
   messages Message[]
 }
 

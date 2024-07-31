@@ -53,9 +53,11 @@ export function Public(u: User): PublicUser {
 // MATCHES
 
 type RelationshipStatus = "PENDING" | "MATCHED" | "REJECTED";
-
+export type RelationshipID = number & {
+  __internal_prevent_implicit_cast: never;
+};
 export type Relationship = {
-  id: number;
+  id: RelationshipID;
   sendingUserId: UserID;
   receivingUserId: UserID;
   status: RelationshipStatus;
@@ -79,12 +81,11 @@ export type MessageID = number & {
 export type ShareRoomID = number & {
   __internal_prevent_cast_RoomID: PhantomData;
 };
-export type DMRoomID = number & { __internal_prevent_cast_DMID: PhantomData };
 export type Message = {
   id: MessageID;
-  sender: UserID;
-  content: string;
+  creator: UserID;
   createdAt: Date;
+  content: string;
 };
 
 export type SendMessage = {
@@ -96,7 +97,7 @@ export type RoomOverview = SharedRoomOverview | DMOverview;
 
 export type DMOverview = {
   isDM: true;
-  dmid: DMRoomID;
+  dmid: RelationshipID;
   name: string;
   thumbnail: string;
   lastmsg?: Message;
@@ -111,11 +112,13 @@ export type SharedRoomOverview = {
 };
 
 export type DMRoom = {
-  id: DMRoomID; // TODO: should this use Relationship.ID or RoomID?
-  thumbnail: string;
+  id: RelationshipID;
   isDM: true;
-  members: UserID[];
   messages: Message[];
+};
+export type PersonalizedDMRoom = {
+  name: string;
+  thumbnail: string;
 };
 
 export type SharedRoom = {

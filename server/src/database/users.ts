@@ -20,6 +20,14 @@ export async function getUser(guid: GUID) {
   });
   return user;
 }
+export async function getUserByID(id: UserID) {
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+  return user;
+}
 
 // ユーザーの更新
 export async function updateUser(userId: UserID, partialUser: UpdateUser) {

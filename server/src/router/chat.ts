@@ -6,12 +6,14 @@ import type {
   MessageID,
   SendMessage,
   ShareRoomID,
+  PersonalizedDMRoom,
 } from "../common/types";
 import asyncMap from "../lib/async/map";
 import * as db from "../database/chat";
 import { areAllMatched, areMatched } from "../database/matches";
 import type { UserID, InitRoom } from "../common/types";
 import { lazyFallbackAsync } from "../common/lib/fallback";
+import { getUser, getUserByID } from "../database/users";
 
 const router = express.Router();
 
@@ -41,19 +43,19 @@ router.post("/dm/to/:userid", async (req, res) => {
 
   const smsg: SendMessage = req.body; // todo: typia
   const msg: Omit<Message, "id"> = {
-    sender: user.value,
+    creator: user.value,
     createdAt: new Date(),
     ...smsg,
   };
 
   const room = await lazyFallbackAsync(
-    await db.findDMof(user.value, friend.value as UserID),
+    await db.findDMbetween(user.value, friend.value as UserID),
     async () => {
       return await db.createDMRoom({
         creatorId: user.value,
         friendId: friend.value as UserID,
       });
-    },
+    }
   );
 
   const newRoom = db.sendDM(room.id, msg);
@@ -81,6 +83,14 @@ router.put("/dm/with/:userid", async (req, res) => {
     creatorId: user.value,
     friendId: friend.value as UserID,
   });
+
+  const friendData = await getUserByID(friend.value as UserID);
+
+  const personalized: PersonalizedDMRoom = {
+    name: friendData!.name,
+    thumbnail: friendData!.pictureUrl,
+    ...room,
+  };
 
   return res.status(201).send(room);
 });
@@ -161,7 +171,7 @@ router.patch("/messages/id/:id", async (req, res) => {
 
   const old = await db.findMessage(id.value as MessageID);
   if (!old) return res.status(404).send("couldn't find message");
-  if (old.sender !== user.value)
+  if (old.creator !== user.value)
     return res.status(403).send("cannot edit others' message");
 
   const content: string = req.body.content; // typia

@@ -1,48 +1,56 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import { UserID } from "../common/types";
+import * as requests from "./requests";
 import type {
   RoomOverview,
+  RelationshipID,
   DMRoom,
   InitRoom,
   SharedRoom,
   ShareRoomID,
-  DMRoomID,
   Message,
   MessageID,
   DMOverview,
   SharedRoomOverview,
 } from "../common/types";
+import { findRelation } from "./matches";
+import asyncMap from "../lib/async/map";
 
 const prisma = new PrismaClient();
 
 // ユーザーの参加しているすべての Room の概要 (Overview) の取得
 export async function overview(user: UserID): Promise<RoomOverview[]> {
-  const dms: DMRoom[] = await prisma.directRoom.findMany({
-    where: {
-      member: {
-        has: user,
-      },
-    },
-  });
-  const dmov = dms.map((dm) => {
+  const rels = await requests.searchMatchedUser(user);
+  const found = (
+    await asyncMap(
+      rels,
+      async (rel) =>
+        await prisma.directRoom.findUnique({
+          where: {
+            id: rel.id,
+          },
+        })
+    )
+  ).filter((f) => f !== null);
+  const dmov = found.map((dm) => {
     const overview: DMOverview = {
-      dmid: dm.id,
+      dmid: dm.id as RelationshipID,
       name: "TODO: DM 相手のユーザー名をここに",
       thumbnail: "", // TODO: DM 相手のアイコン
       isDM: true,
     };
     return overview;
   });
-  const shared: SharedRoom[] = await prisma.sharedRoom.findMany({
+  const shared = await prisma.sharedRoom.findMany({
     where: {
-      member: {
+      members: {
         has: user,
       },
     },
   });
   const sharedov = shared.map((shared) => {
     const overview: SharedRoomOverview = {
-      roomId: shared.id,
+      roomId: shared.id as ShareRoomID,
       name: shared.name,
       thumbnail: shared.thumbnail,
       isDM: false,
@@ -61,46 +69,41 @@ export async function createDMRoom({
   creatorId: UserID;
   friendId: UserID;
 }): Promise<DMRoom> {
-  const room: Omit<DMRoom, "isDM"> = await prisma.directRoom.create({
+  const relID = await findRelation(creatorId, friendId);
+  if (!relID) throw new Error("rel not found!");
+  const room = await prisma.directRoom.create({
     data: {
-      members: [creatorId, friendId],
-      messages: [],
+      id: relID.id,
     },
   });
   return {
     isDM: true,
-    ...room,
+    messages: [],
+    id: room.id as RelationshipID,
   };
 }
 
 /**
- * DM の作成
+ * DM の送信
  * 送信者の id は呼び出す側で指定すること
  **/
 export async function sendDM(
-  room: DMRoomID,
-  content: Omit<Message, "id">,
-): Promise<DMRoom> {
-  const sentRoom = prisma.directRoom.update({
-    where: {
-      id: room,
-    },
+  roomId: RelationshipID,
+  content: Omit<Message, "id">
+): Promise<void> {
+  const msg = await prisma.message.create({
     data: {
-      messages: {
-        push: content,
-      },
+      ...content,
     },
   });
-
-  return sentRoom;
 }
 
 export async function createSharedRoom(room: InitRoom) {
   const created = await prisma.sharedRoom.create({
     data: {
+      thumbnail: "todo",
       name: room.name,
       members: room.members,
-      messages: [],
     },
   });
   return {
@@ -111,9 +114,9 @@ export async function createSharedRoom(room: InitRoom) {
 
 export async function isUserInRoom(
   roomId: ShareRoomID,
-  userId: UserID,
+  userId: UserID
 ): Promise<boolean> {
-  const room: SharedRoom | null = await prisma.sharedRoom.findUnique({
+  const room = await prisma.sharedRoom.findUnique({
     where: {
       id: roomId,
       members: {
@@ -127,8 +130,8 @@ export async function isUserInRoom(
 
 export async function updateRoomName(
   roomId: ShareRoomID,
-  newName: string,
-): Promise<SharedRoom> {
+  newName: string
+): Promise<Omit<SharedRoom, "messages">> {
   const updated = await prisma.sharedRoom.update({
     where: {
       id: roomId,
@@ -139,15 +142,18 @@ export async function updateRoomName(
   });
   return {
     isDM: false,
-    ...updated,
+    id: updated.id as ShareRoomID,
+    name: updated.name,
+    thumbnail: updated.thumbnail,
+    members: updated.members as UserID[],
   };
 }
 
 export async function inviteUserToSharedRoom(
   roomId: ShareRoomID,
-  invite: UserID[],
-): Promise<SharedRoom> {
-  return await prisma.sharedRoom.update({
+  invite: UserID[]
+): Promise<Omit<SharedRoom, "messages">> {
+  const update = await prisma.sharedRoom.update({
     where: {
       id: roomId,
     },
@@ -157,38 +163,81 @@ export async function inviteUserToSharedRoom(
       },
     },
   });
+  return {
+    isDM: false,
+    ...update,
+  } as Omit<SharedRoom, "messages">;
 }
 
-export async function findDMof(u1: UserID, u2: UserID): Promise<DMRoom | null> {
-  const dm = await prisma.directRoom.findUnique({
+export async function findDMbetween(
+  u1: UserID,
+  u2: UserID
+): Promise<DMRoom | null> {
+  const rel = await findRelation(u1, u2);
+  if (!rel) return null; // no request = no match = no dm
+
+  const messages = await prisma.message.findMany({
     where: {
-      members: [u1, u2],
+      directRoomId: rel.id,
     },
   });
-  return dm;
+
+  return {
+    isDM: true,
+    id: rel.id,
+    messages: messages.map((m) => {
+      // I know it's bad. find a better way and fix it.
+      return {
+        id: m.id as MessageID,
+        creator: m.creator as UserID,
+        createdAt: m.createdAt,
+        content: m.content,
+        edited: m.edited,
+      };
+    }),
+  };
 }
 
-export async function findSharedRoom(roomId: ShareRoomID): Promise<SharedRoom> {
-  return await prisma.sharedRoom.findUnique({
+export async function findSharedRoom(
+  roomId: ShareRoomID
+): Promise<SharedRoom | null> {
+  const room = await prisma.sharedRoom.findUnique({
     where: {
       id: roomId,
     },
   });
+  if (!room) return null;
+
+  const messages = await prisma.message.findMany({
+    where: {
+      sharedRoomId: room.id,
+    },
+  });
+  return {
+    id: room.id as ShareRoomID,
+    name: room.name,
+    isDM: false,
+    thumbnail: room.thumbnail,
+    members: room.members as UserID[],
+    messages: messages.map(castMessage),
+  };
 }
 
 export async function findMessage(id: MessageID): Promise<Message | null> {
-  return await prisma.message.findUnique({
+  const message = await prisma.message.findUnique({
     where: {
       id: id,
     },
   });
+  if (!message) return null;
+  return castMessage(message);
 }
 
 export async function updateMessage(
   id: MessageID,
-  content: string,
+  content: string
 ): Promise<Message> {
-  return await prisma.message.update({
+  const message = await prisma.message.update({
     where: {
       id: id,
     },
@@ -197,4 +246,21 @@ export async function updateMessage(
       edited: true,
     },
   });
+  return castMessage(message);
+}
+
+function castMessage(m: {
+  id: number;
+  creator: number;
+  createdAt: Date;
+  content: string;
+  edited: boolean;
+}) {
+  return {
+    id: m.id as MessageID,
+    creator: m.creator as UserID,
+    createdAt: m.createdAt,
+    content: m.content,
+    edited: m.edited,
+  };
 }
