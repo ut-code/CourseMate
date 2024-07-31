@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function findRelation(
   u1: UserID,
-  u2: UserID
+  u2: UserID,
 ): Promise<Relationship | null> {
   // TODO!!!! FIXME!!!!!! FIX THIS findMany!!!!!
   const rel = await prisma.relationship.findMany({
@@ -27,6 +27,15 @@ export async function findRelation(
     : null;
 }
 
+export async function findRelations(user: UserID): Promise<Relationship[]> {
+  const rels: Relationship[] = await prisma.relationship.findMany({
+    where: {
+      OR: [{ sendingUserId: user }, { receivingUserId: user }],
+    },
+  });
+  return rels;
+}
+
 // returns false if u1 or u2 is not present.
 export async function areMatched(u1: UserID, u2: UserID): Promise<boolean> {
   const match = await findRelation(u1, u2);
@@ -36,7 +45,7 @@ export async function areMatched(u1: UserID, u2: UserID): Promise<boolean> {
 
 export async function areAllMatched(
   user: UserID,
-  friends: UserID[]
+  friends: UserID[],
 ): Promise<boolean> {
   return (
     await asyncMap(friends, (friend) => {
@@ -77,7 +86,7 @@ export async function deleteMatch(senderId: UserID, receiverId: UserID) {
       },
     });
     console.log(
-      `Deleted record with senderId=${senderId} and receiverId=${receiverId}`
+      `Deleted record with senderId=${senderId} and receiverId=${receiverId}`,
     );
     return;
   }
@@ -99,12 +108,12 @@ export async function deleteMatch(senderId: UserID, receiverId: UserID) {
       },
     });
     console.log(
-      `Deleted record with senderId=${receiverId} and receiverId=${senderId}`
+      `Deleted record with senderId=${receiverId} and receiverId=${senderId}`,
     );
     return;
   }
 
   console.log(
-    `No matching records found for senderId=${senderId} and receiverId=${receiverId}`
+    `No matching records found for senderId=${senderId} and receiverId=${receiverId}`,
   );
 }

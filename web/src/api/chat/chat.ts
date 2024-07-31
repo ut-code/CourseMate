@@ -2,10 +2,10 @@ import { doWithIdToken, ErrUnauthorized } from "../../firebase/auth/lib";
 import endpoints from "../internal/endpoints";
 import {
   DMRoom,
-  DMRoomID,
   InitRoom,
   Message,
   MessageID,
+  RelationshipID,
   RoomOverview,
   SendMessage,
   SharedRoom,
@@ -109,7 +109,7 @@ export async function getSharedRoom(roomId: ShareRoomID): Promise<SharedRoom> {
   });
 }
 
-export async function getDM(dmid: DMRoomID): Promise<DMRoom> {
+export async function getDM(dmid: RelationshipID): Promise<DMRoom> {
   return doWithIdToken(async () => {
     const res = await fetch(endpoints.dmroom(dmid), {
       credentials: "include",
@@ -144,11 +144,11 @@ export async function send(
 
 // TODO
 export async function sendDM(
-  dmid: DMRoomID,
+  friend: UserID,
   msg: SendMessage,
 ): Promise<Message> {
   return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.dmroom(dmid), {
+    const res = await fetch(endpoints.dmroom(friend), {
       method: "POST",
       credentials: "include",
       body: JSON.stringify(msg),

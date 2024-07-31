@@ -1,8 +1,8 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { UserID } from "../common/types";
-import * as requests from "./requests";
 import type {
   RoomOverview,
+  Relationship,
   RelationshipID,
   DMRoom,
   InitRoom,
@@ -13,14 +13,14 @@ import type {
   DMOverview,
   SharedRoomOverview,
 } from "../common/types";
-import { findRelation } from "./matches";
+import { findRelation, findRelations } from "./matches";
 import asyncMap from "../lib/async/map";
 
 const prisma = new PrismaClient();
 
 // ユーザーの参加しているすべての Room の概要 (Overview) の取得
 export async function overview(user: UserID): Promise<RoomOverview[]> {
-  const rels = await requests.searchMatchedUser(user);
+  const rels: Relationship[] = await findRelations(user);
   const found = (
     await asyncMap(
       rels,
@@ -29,7 +29,7 @@ export async function overview(user: UserID): Promise<RoomOverview[]> {
           where: {
             id: rel.id,
           },
-        })
+        }),
     )
   ).filter((f) => f !== null);
   const dmov = found.map((dm) => {
@@ -41,7 +41,11 @@ export async function overview(user: UserID): Promise<RoomOverview[]> {
     };
     return overview;
   });
-  const shared = await prisma.sharedRoom.findMany({
+  const shared: {
+    id: number;
+    name: string;
+    thumbnail: string;
+  }[] = await prisma.sharedRoom.findMany({
     where: {
       members: {
         has: user,
@@ -89,10 +93,11 @@ export async function createDMRoom({
  **/
 export async function sendDM(
   roomId: RelationshipID,
-  content: Omit<Message, "id">
+  content: Omit<Message, "id">,
 ): Promise<void> {
-  const msg = await prisma.message.create({
+  await prisma.message.create({
     data: {
+      directRoomId: roomId,
       ...content,
     },
   });
@@ -114,7 +119,7 @@ export async function createSharedRoom(room: InitRoom) {
 
 export async function isUserInRoom(
   roomId: ShareRoomID,
-  userId: UserID
+  userId: UserID,
 ): Promise<boolean> {
   const room = await prisma.sharedRoom.findUnique({
     where: {
@@ -130,7 +135,7 @@ export async function isUserInRoom(
 
 export async function updateRoomName(
   roomId: ShareRoomID,
-  newName: string
+  newName: string,
 ): Promise<Omit<SharedRoom, "messages">> {
   const updated = await prisma.sharedRoom.update({
     where: {
@@ -151,7 +156,7 @@ export async function updateRoomName(
 
 export async function inviteUserToSharedRoom(
   roomId: ShareRoomID,
-  invite: UserID[]
+  invite: UserID[],
 ): Promise<Omit<SharedRoom, "messages">> {
   const update = await prisma.sharedRoom.update({
     where: {
@@ -171,12 +176,12 @@ export async function inviteUserToSharedRoom(
 
 export async function findDMbetween(
   u1: UserID,
-  u2: UserID
+  u2: UserID,
 ): Promise<DMRoom | null> {
   const rel = await findRelation(u1, u2);
   if (!rel) return null; // no request = no match = no dm
 
-  const messages = await prisma.message.findMany({
+  const messages: Message[] = await prisma.message.findMany({
     where: {
       directRoomId: rel.id,
     },
@@ -199,7 +204,7 @@ export async function findDMbetween(
 }
 
 export async function findSharedRoom(
-  roomId: ShareRoomID
+  roomId: ShareRoomID,
 ): Promise<SharedRoom | null> {
   const room = await prisma.sharedRoom.findUnique({
     where: {
@@ -235,7 +240,7 @@ export async function findMessage(id: MessageID): Promise<Message | null> {
 
 export async function updateMessage(
   id: MessageID,
-  content: string
+  content: string,
 ): Promise<Message> {
   const message = await prisma.message.update({
     where: {

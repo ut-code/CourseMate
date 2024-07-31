@@ -13,7 +13,7 @@ import * as db from "../database/chat";
 import { areAllMatched, areMatched } from "../database/matches";
 import type { UserID, InitRoom } from "../common/types";
 import { lazyFallbackAsync } from "../common/lib/fallback";
-import { getUser, getUserByID } from "../database/users";
+import { getUserByID } from "../database/users";
 
 const router = express.Router();
 
@@ -45,6 +45,7 @@ router.post("/dm/to/:userid", async (req, res) => {
   const msg: Omit<Message, "id"> = {
     creator: user.value,
     createdAt: new Date(),
+    edited: false,
     ...smsg,
   };
 
@@ -55,7 +56,7 @@ router.post("/dm/to/:userid", async (req, res) => {
         creatorId: user.value,
         friendId: friend.value as UserID,
       });
-    }
+    },
   );
 
   const newRoom = db.sendDM(room.id, msg);
@@ -92,7 +93,7 @@ router.put("/dm/with/:userid", async (req, res) => {
     ...room,
   };
 
-  return res.status(201).send(room);
+  return res.status(201).send(personalized);
 });
 
 // create a shared chat room.

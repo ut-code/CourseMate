@@ -72,5 +72,5 @@ export function castUser(u: {
     name: u.name,
     email: u.email,
     pictureUrl: u.pictureUrl,
-  }
+  };
 }
