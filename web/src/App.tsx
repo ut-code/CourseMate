@@ -12,7 +12,7 @@ import Login from "./routes/login";
 import SignUp from "./routes/signUp";
 import { getAuth } from "firebase/auth";
 import { SnackbarProvider } from "notistack";
-import ChatSample from "./routes/chat-sample";
+import Chat from "./routes/tabs/chat";
 
 export default function App() {
   const PrivateRoute = () => {
@@ -52,7 +52,7 @@ export default function App() {
         },
         {
           path: "chat",
-          element: <ChatSample />,
+          element: <Chat />,
         },
       ],
     },
@@ -63,6 +63,10 @@ export default function App() {
     {
       path: "/signup",
       element: <SignUp />,
+    },
+    {
+      path: "/chat",
+      element: <Chat />,
     },
   ]);
 
