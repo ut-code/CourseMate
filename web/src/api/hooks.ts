@@ -1,6 +1,6 @@
 import endpoints from "./internal/endpoints";
 import { useAuthorizedData } from "../hooks/useData";
-import type { User } from "../../../common/types";
+import type { User } from "../common/types";
 
 type Hook<T> = {
   data: T | null;

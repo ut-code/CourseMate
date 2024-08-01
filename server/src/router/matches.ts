@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import { deleteMatch, getMatchesByUserId } from "../database/matches";
-import { Relationship } from "../../../common/types";
+import { Relationship } from "../common/types";
 import { safeGetUserId } from "../firebase/auth/db";
-import { safeParseInt } from "../../../common/lib/result/safeParseInt";
-import { parseUserID } from "../../../common/zod/method";
+import { safeParseInt } from "../common/lib/result/safeParseInt";
+import { parseUserID } from "../common/zod/method";
 
 const router = express.Router();
 

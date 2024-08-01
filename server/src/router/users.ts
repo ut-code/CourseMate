@@ -15,7 +15,7 @@ import {
   parseUpdateUser,
   parseUser,
   parseUserID,
-} from "../../../common/zod/method";
+} from "../common/zod/method";
 import { z } from "zod";
 
 const router = express.Router();

@@ -100,7 +100,7 @@ jobs:
         run: make lint
 
       - name: Format
-        run: make format
+        run: make format-check
 
   type-check:
     name: Type Check

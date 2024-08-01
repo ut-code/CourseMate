@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { type Relationship } from "../../../common/types";
+import { type Relationship } from "../common/types";
 
 import {
   approveRequest,
@@ -8,8 +8,8 @@ import {
   sendRequest,
 } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
-import { safeParseInt } from "../../../common/lib/result/safeParseInt";
-import { parseUser } from "../../../common/zod/method";
+import { safeParseInt } from "../common/lib/result/safeParseInt";
+import { parseUser } from "../common/zod/method";
 // import { Relationship } from "@prisma/client"; // ... not used?
 
 const router = express.Router();

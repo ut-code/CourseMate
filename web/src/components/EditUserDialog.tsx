@@ -9,7 +9,7 @@ import {
   Button,
 } from "@mui/material";
 
-import { UpdateUser } from "../../../common/types";
+import { UpdateUser } from "../common/types";
 import userapi from "../api/user";
 
 type EditUserDialogProps = {
