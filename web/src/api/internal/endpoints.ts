@@ -207,7 +207,7 @@ const roomOverview = `${origin}/chat/overview`;
  *   - 403: Forbidden
  *   - 500: internal error
  **/
-const dmroom = (userId: UserID) => `${origin}/chat/dm/to/` + userId;
+const dmTo = (userId: UserID) => `${origin}/chat/dm/to/` + userId;
 
 /**
  * PUT -> start dm with userId. created one if none was found. authorized.
@@ -285,7 +285,7 @@ export default {
   acceptRequest,
   rejectRequest,
   roomOverview,
-  dmroom,
+  dmTo,
   dmWith,
   sharedRoom,
   sharedRooms,

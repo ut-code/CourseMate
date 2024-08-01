@@ -2,7 +2,7 @@ import { Box, List, ListItem, Button, Stack } from "@mui/material";
 import * as chat from "../api/chat/chat";
 import { useRoomsOverview } from "../api/chat/hooks";
 
-export default function Requests() {
+export default function ChatSample() {
   const { data, error, loading, reload } = useRoomsOverview();
 
   let key = 0;

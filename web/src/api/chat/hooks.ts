@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Hook } from "../share/types";
 import * as chat from "./chat";
 import type { RoomOverview } from "../../common/types";
@@ -21,6 +21,10 @@ export function useRoomsOverview(): Hook<RoomOverview[]> {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    reload();
+  }, [reload]);
 
   return {
     data,

@@ -109,9 +109,9 @@ export async function getSharedRoom(roomId: ShareRoomID): Promise<SharedRoom> {
   });
 }
 
-export async function getDM(dmid: RelationshipID): Promise<DMRoom> {
+export async function getDM(id: RelationshipID): Promise<DMRoom> {
   return doWithIdToken(async () => {
-    const res = await fetch(endpoints.dmroom(dmid), {
+    const res = await fetch(endpoints.dmWith(id), {
       credentials: "include",
     });
     if (res.status === 401) throw new ErrUnauthorized();
@@ -148,7 +148,7 @@ export async function sendDM(
   msg: SendMessage,
 ): Promise<Message> {
   return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.dmroom(friend), {
+    const res = await fetch(endpoints.dmTo(friend), {
       method: "POST",
       credentials: "include",
       body: JSON.stringify(msg),
