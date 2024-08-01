@@ -1,9 +1,9 @@
 import { Box, List, ListItem, Button, Stack } from "@mui/material";
-import * as chat from "../../api/chat";
-import { useCallback, useState } from "react";
+import * as chat from "../../api/chat/chat";
+import { useRoomsOverview } from "../../api/chat/hooks";
 
 export default function Chat() {
-  const { data, error, loading, reload } = useChatPage();
+  const { data, error, loading, reload } = useRoomsOverview();
 
   let key = 0;
   return (
@@ -25,11 +25,11 @@ export default function Chat() {
                         if (room.isDM) {
                           chat
                             .getDM(room.dmid)
-                            .then((data) => alert(data.log.join("\n")));
+                            .then((data) => alert(data.messages.join("\n")));
                         } else {
                           chat
                             .getSharedRoom(room.roomId)
-                            .then((data) => alert(data.log.join("\n")));
+                            .then((data) => alert(data.messages.join("\n")));
                         }
                       }}
                     >
@@ -61,38 +61,4 @@ export default function Chat() {
       )}
     </Box>
   );
-}
-
-type Hook<T> = {
-  data: T | null;
-  loading: boolean;
-  error: Error | null;
-  reload: () => void;
-};
-
-function useChatPage(): Hook<chat.RoomOverview[]> {
-  const [data, setData] = useState<chat.RoomOverview[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  const reload = useCallback(async () => {
-    setLoading(true);
-    try {
-      const ro = await chat.entry();
-      setData(ro);
-      setError(null);
-      setLoading(false);
-    } catch (e) {
-      setError(e as Error);
-      setData(null);
-      setLoading(false);
-    }
-  }, []);
-
-  return {
-    data,
-    loading,
-    error,
-    reload,
-  };
 }
