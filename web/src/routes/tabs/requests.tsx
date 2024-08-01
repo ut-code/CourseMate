@@ -14,11 +14,11 @@ import hooks from "../../api/hooks";
 export default function Requests() {
   // const currentUserId = useAuthContext()?.id;
 
-  const { data, isLoading, error, reload } = hooks.usePendingUsers();
+  const { data, loading, error, reload } = hooks.usePendingUsers();
 
   return (
     <Box>
-      {isLoading ? (
+      {loading ? (
         <p>Loading...</p>
       ) : error ? (
         <p>Error: {error.message}</p>

@@ -21,6 +21,15 @@ export async function getUser(guid: GUID) {
   return user;
 }
 
+export async function getUserByID(id: UserID): Promise<User | null> {
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+  return user;
+}
+
 // ユーザーの更新
 export async function updateUser(userId: UserID, partialUser: UpdateUser) {
   // undefined means do nothing to this field
@@ -49,4 +58,20 @@ export async function deleteUser(userId: UserID) {
 export async function getAllUsers() {
   const users = await prisma.user.findMany();
   return users;
+}
+
+export function castUser(u: {
+  id: number;
+  guid: string;
+  name: string;
+  email: string;
+  pictureUrl: string;
+}): User {
+  return {
+    id: u.id as UserID,
+    guid: u.guid as GUID,
+    name: u.name,
+    email: u.email,
+    pictureUrl: u.pictureUrl,
+  };
 }

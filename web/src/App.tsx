@@ -50,6 +50,10 @@ export default function App() {
           path: "requests",
           element: <Requests />,
         },
+        {
+          path: "chat",
+          element: <ChatSample />,
+        },
       ],
     },
     {

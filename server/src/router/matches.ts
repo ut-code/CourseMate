@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { deleteMatch, getMatchesByUserId } from "../database/matches";
-import { Relationship } from "../common/types";
+import type { Relationship, UserID } from "../common/types";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeParseInt } from "../common/lib/result/safeParseInt";
 
@@ -31,7 +31,7 @@ router.delete("/:opponentId", async (req: Request, res: Response) => {
   if (!requesterId.ok) return res.status(401).send("auth error");
 
   try {
-    await deleteMatch(requesterId.value, opponentId.value);
+    await deleteMatch(requesterId.value, opponentId.value as UserID);
     res.status(204).send();
   } catch (error) {
     console.error("Error deleting match:", error);

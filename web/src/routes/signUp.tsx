@@ -21,7 +21,7 @@ export default function SignUp() {
 
   //サインアップの処理
   const handleSignUp = async () => {
-    const guid = user?.uid;
+    const guid = user?.uid as GUID | undefined;
     if (!guid) {
       enqueueSnackbar("ユーザ情報が取得できませんでした", {
         variant: "error",
