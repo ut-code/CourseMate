@@ -129,7 +129,6 @@ export async function send(
   });
 }
 
-// TODO
 export async function sendDM(
   friend: UserID,
   msg: SendMessage,
