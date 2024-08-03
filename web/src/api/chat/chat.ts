@@ -65,10 +65,10 @@ export async function sendDM(
 }
 
 // 相手のIDを指定して、
-export async function startDM(friendId: UserID): Promise<DMRoom> {
+export async function getDM(friendId: UserID): Promise<DMRoom> {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.dmWith(friendId), {
-      method: "PUT",
+      method: "GET",
       credentials: "include",
     });
     if (res.status === 401) throw new ErrUnauthorized();

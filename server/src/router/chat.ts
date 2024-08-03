@@ -66,7 +66,7 @@ router.post("/dm/to/:userid", async (req, res) => {
 });
 
 // GET a DM Room with userid, CREATE one if not found.
-router.put("/dm/with/:userid", async (req, res) => {
+router.get("/dm/with/:userid", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
 

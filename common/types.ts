@@ -92,7 +92,7 @@ export type RoomOverview = SharedRoomOverview | DMOverview;
 
 export type DMOverview = {
   isDM: true;
-  dmid: RelationshipID;
+  friendId: UserID;
   name: string;
   thumbnail: string;
   lastmsg?: Message;

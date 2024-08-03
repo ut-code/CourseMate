@@ -23,21 +23,24 @@ const prisma = new PrismaClient();
 // ユーザーの参加しているすべての Room の概要 (Overview) の取得
 export async function overview(user: UserID): Promise<RoomOverview[]> {
   const rels: Relationship[] = await findRelations(user);
-  const dmov = await asyncMap(rels, async (rel) => {
-    let friend: User | null = null;
-    if (rel.sendingUserId === user) {
-      friend = await getUserByID(rel.receivingUserId);
-    } else {
-      friend = await getUserByID(rel.sendingUserId);
-    }
-    const overview: DMOverview = {
-      dmid: rel.id as RelationshipID,
-      name: friend!.name,
-      thumbnail: friend!.pictureUrl,
-      isDM: true,
-    };
-    return overview;
-  });
+  const dmov = (
+    await asyncMap(rels, async (rel) => {
+      let friend: User | null = null;
+      if (rel.sendingUserId === user) {
+        friend = await getUserByID(rel.receivingUserId);
+      } else {
+        friend = await getUserByID(rel.sendingUserId);
+      }
+      if (!friend) return null;
+      const overview: DMOverview = {
+        friendId: friend.id as UserID,
+        name: friend.name,
+        thumbnail: friend.pictureUrl,
+        isDM: true,
+      };
+      return overview;
+    })
+  ).filter((ov) => ov !== null);
 
   const shared: {
     id: number;
