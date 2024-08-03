@@ -22,6 +22,7 @@ export async function startDM(friendId: UserID): Promise<DMRoom> {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.dmWith(friendId), {
       method: "PUT",
+      credentials: "include",
     });
     if (res.status === 401) throw new ErrUnauthorized();
     if (res.status !== 201)
