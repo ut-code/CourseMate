@@ -127,7 +127,7 @@ export async function searchPendingUsers(userId: UserID): Promise<User[]> {
 // }
 
 //マッチした人の取得
-export async function searchMatchedUser(userId: UserID) {
+export async function searchMatchedUser(userId: UserID): Promise<User[]> {
   const found = await prisma.user.findMany({
     where: {
       OR: [
@@ -150,5 +150,5 @@ export async function searchMatchedUser(userId: UserID) {
       ],
     },
   });
-  return found.map(castUser);
+  return found;
 }

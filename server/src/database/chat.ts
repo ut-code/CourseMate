@@ -3,7 +3,6 @@ import { UserID } from "../common/types";
 import type {
   User,
   RoomOverview,
-  Relationship,
   RelationshipID,
   DMRoom,
   InitRoom,
@@ -14,33 +13,24 @@ import type {
   DMOverview,
   SharedRoomOverview,
 } from "../common/types";
-import { findRelation, findRelations } from "./matches";
-import { getUserByID } from "./users";
-import asyncMap from "../lib/async/map";
+import { findRelation } from "./matches";
+import { Result, safifyAsync } from "../common/lib/result";
+import { searchMatchedUser } from "./requests";
 
 const prisma = new PrismaClient();
 
 // ユーザーの参加しているすべての Room の概要 (Overview) の取得
 export async function overview(user: UserID): Promise<RoomOverview[]> {
-  const rels: Relationship[] = await findRelations(user);
-  const dmov = (
-    await asyncMap(rels, async (rel) => {
-      let friend: User | null = null;
-      if (rel.sendingUserId === user) {
-        friend = await getUserByID(rel.receivingUserId);
-      } else {
-        friend = await getUserByID(rel.sendingUserId);
-      }
-      if (!friend) return null;
-      const overview: DMOverview = {
-        friendId: friend.id as UserID,
-        name: friend.name,
-        thumbnail: friend.pictureUrl,
-        isDM: true,
-      };
-      return overview;
-    })
-  ).filter((ov) => ov !== null);
+  const matched: User[] = await searchMatchedUser(user);
+  const dmov = matched.map((user) => {
+    const ov: DMOverview = {
+      isDM: true,
+      friendId: user.id,
+      name: user.name,
+      thumbnail: user.pictureUrl,
+    };
+    return ov;
+  });
 
   const shared: {
     id: number;
@@ -66,14 +56,19 @@ export async function overview(user: UserID): Promise<RoomOverview[]> {
   return [...sharedov, ...dmov];
 }
 
+type createDMRoomArgs = {
+  creatorId: UserID;
+  friendId: UserID;
+};
+
 // DM Room の作成
+export const safeCreateDMRoom: (
+  args: createDMRoomArgs,
+) => Promise<Result<DMRoom>> = safifyAsync(createDMRoom);
 export async function createDMRoom({
   creatorId,
   friendId,
-}: {
-  creatorId: UserID;
-  friendId: UserID;
-}): Promise<DMRoom> {
+}: createDMRoomArgs): Promise<DMRoom> {
   const relID = await findRelation(creatorId, friendId);
   if (!relID) throw new Error("rel not found!");
   const room = await prisma.directRoom.create({
@@ -180,7 +175,7 @@ export async function findDMbetween(
   u2: UserID,
 ): Promise<DMRoom | null> {
   const rel = await findRelation(u1, u2);
-  if (!rel) return null; // no request = no match = no dm
+  if (!rel) return null;
 
   const messages: Message[] = await prisma.message.findMany({
     where: {
