@@ -18,6 +18,53 @@ import { UserID } from "../common/types";
 import type { User } from "../common/types";
 */
 
+//// DM グループチャット 共通////
+
+//指定したメッセージを削除する
+export async function deleteMessage(messageId: MessageID): Promise<void> {
+  return await doWithIdToken(async () => {
+    const res = await fetch(endpoints.message(messageId), {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (res.status === 401) throw new ErrUnauthorized();
+    if (res.status !== 204)
+      throw new Error(
+        `on deleteMessage(), expected status code of 204, but got ${res.status}`,
+      );
+  });
+}
+
+// 自身の参加しているすべての Room (DM グループチャットともに) の概要 (Overview) の取得 (メッセージの履歴を除く)
+export async function overview(): Promise<RoomOverview[]> {
+  return await doWithIdToken(async () => {
+    const res = await fetch(endpoints.roomOverview, {
+      credentials: "include",
+    });
+    if (res.status === 401) throw new ErrUnauthorized();
+    return await res.json();
+  });
+}
+
+//// DM関連 ////
+
+// TODO
+// 指定したユーザーにDMを送る
+export async function sendDM(
+  friend: UserID,
+  msg: SendMessage,
+): Promise<Message> {
+  return await doWithIdToken(async () => {
+    const res = await fetch(endpoints.dmTo(friend), {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(msg),
+    });
+    return res.json();
+  });
+}
+
+// 相手のIDを指定して、
 export async function startDM(friendId: UserID): Promise<DMRoom> {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.dmWith(friendId), {
@@ -33,6 +80,9 @@ export async function startDM(friendId: UserID): Promise<DMRoom> {
   });
 }
 
+////グループチャット関連////
+
+// グループチャットを作成する←今使わない
 export async function createRoom(initRoom: InitRoom): Promise<void> {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.sharedRooms, {
@@ -48,6 +98,7 @@ export async function createRoom(initRoom: InitRoom): Promise<void> {
   });
 }
 
+// グループチャットにメンバーを招待する
 export async function invite(
   roomId: ShareRoomID,
   memberIDs: UserID[],
@@ -62,6 +113,7 @@ export async function invite(
   });
 }
 
+// グループチャットの情報を更新する
 export async function patchRoom(
   roomId: ShareRoomID,
   room: Partial<UpdateRoom>,
@@ -80,26 +132,19 @@ export async function patchRoom(
   });
 }
 
-export async function overview(): Promise<RoomOverview[]> {
-  return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.roomOverview, {
-      credentials: "include",
-    });
-    if (res.status === 401) throw new ErrUnauthorized();
-    return await res.json();
-  });
-}
+// TODO getのエンドポイントがない
 
-export async function rooms(): Promise<RoomOverview[]> {
-  return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.sharedRooms, {
-      credentials: "include",
-    });
-    if (res.status === 401) throw new ErrUnauthorized();
-    return await res.json();
-  });
-}
+// export async function rooms(): Promise<RoomOverview[]> {
+//   return await doWithIdToken(async () => {
+//     const res = await fetch(endpoints.sharedRooms, {
+//       credentials: "include",
+//     });
+//     if (res.status === 401) throw new ErrUnauthorized();
+//     return await res.json();
+//   });
+// }
 
+//指定したグループチャットの部屋情報を得る
 export async function getSharedRoom(roomId: ShareRoomID): Promise<SharedRoom> {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.sharedRoom(roomId), {
@@ -111,6 +156,7 @@ export async function getSharedRoom(roomId: ShareRoomID): Promise<SharedRoom> {
 }
 
 // don't forget to refresh after sending.
+// グループチャットでメッセージを送信する
 export async function send(
   roomId: ShareRoomID,
   msg: SendMessage,
@@ -125,35 +171,6 @@ export async function send(
     if (res.status !== 201)
       throw new Error(
         `on send(), expected status code of 201, but got ${res.status}`,
-      );
-  });
-}
-
-// TODO
-export async function sendDM(
-  friend: UserID,
-  msg: SendMessage,
-): Promise<Message> {
-  return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.dmTo(friend), {
-      method: "POST",
-      credentials: "include",
-      body: JSON.stringify(msg),
-    });
-    return res.json();
-  });
-}
-
-export async function deleteMessage(messageId: MessageID): Promise<void> {
-  return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.message(messageId), {
-      method: "DELETE",
-      credentials: "include",
-    });
-    if (res.status === 401) throw new ErrUnauthorized();
-    if (res.status !== 204)
-      throw new Error(
-        `on deleteMessage(), expected status code of 204, but got ${res.status}`,
       );
   });
 }
