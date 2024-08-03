@@ -16,7 +16,6 @@ export default function SignUp() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [pictureFile, setPictureFile] = useState<File>();
 
   //サインアップの処理
@@ -72,11 +71,6 @@ export default function SignUp() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           label="Email"
-        />
-        <TextField
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          label="Password"
         />
         <input type="file" onChange={handleImageChange} />
         <Button
