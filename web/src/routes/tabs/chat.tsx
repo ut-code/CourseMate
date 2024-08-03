@@ -24,7 +24,7 @@ export default function Chat() {
                       onClick={() => {
                         if (room.isDM) {
                           chat
-                            .startDM(room.dmid)
+                            .startDM(room.friendId)
                             .then((data) => alert(data.messages.join("\n")));
                         } else {
                           chat
@@ -45,7 +45,7 @@ export default function Chat() {
                           )! as HTMLInputElement;
                           const text = elem.value!;
                           const msg = { content: text };
-                          if (room.isDM) await chat.sendDM(room.dmid, msg);
+                          if (room.isDM) await chat.sendDM(room.friendId, msg);
                           else await chat.send(room.roomId, msg);
                           reload();
                         }}
