@@ -62,19 +62,18 @@ export default function Chat() {
                     <form
                       onSubmit={async (e) => {
                         e.preventDefault();
-                        const elem = document.getElementById(
-                          "message-" + key,
-                        ) as HTMLInputElement;
-                        const text = elem.value;
-                        const msg = { content: text };
+                        const form = new FormData(e.currentTarget);
+                        const text = form.get("message");
+                        if (text === null) return;
+                        const msg = { content: String(text) };
                         if (room.isDM) await chat.sendDM(room.friendId, msg);
                         else await chat.send(room.roomId, msg);
-                        elem.value = "";
                         reload();
                       }}
                     >
                       <Stack direction="row" spacing={1} alignItems="center">
                         <TextField
+                          name="message"
                           placeholder="メッセージ"
                           variant="outlined"
                           size="small"

@@ -42,6 +42,7 @@ router.post("/dm/to/:userid", async (req, res) => {
   // they are now MATCHED
 
   const smsg: SendMessage = req.body; // todo: typia
+  if (!smsg.content) throw new Error("smsg.content not found");
   const msg: Omit<Message, "id"> = {
     creator: user.value,
     createdAt: new Date(),
@@ -74,7 +75,7 @@ router.get("/dm/with/:userid", async (req, res) => {
   if (!friend.ok)
     return res.status(400).send("invalid param `userid` fomatting");
 
-  const existingDM = null; // SELECT * FROM DMs WHERE members = (user, friend)
+  const existingDM = await db.findDMbetween(user.value, friend.value);
   if (existingDM !== null) return res.status(200).send(existingDM);
 
   if (!areMatched(user.value, friend.value as UserID))

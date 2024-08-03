@@ -58,6 +58,10 @@ export async function sendDM(
     const res = await fetch(endpoints.dmTo(friend), {
       method: "POST",
       credentials: "include",
+      headers: {
+        // didn't think I need this
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(msg),
     });
     return res.json();
