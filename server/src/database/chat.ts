@@ -73,13 +73,14 @@ export async function createDMRoom({
   if (!relID) throw new Error("rel not found!");
   const room = await prisma.directRoom.create({
     data: {
-      id: relID.id,
+      relationId: relID.id,
     },
   });
+
   return {
     isDM: true,
     messages: [],
-    id: room.id as RelationshipID,
+    ...room,
   };
 }
 
@@ -186,16 +187,7 @@ export async function findDMbetween(
   return {
     isDM: true,
     id: rel.id,
-    messages: messages.map((m) => {
-      // I know it's bad. find a better way and fix it.
-      return {
-        id: m.id as MessageID,
-        creator: m.creator as UserID,
-        createdAt: m.createdAt,
-        content: m.content,
-        edited: m.edited,
-      };
-    }),
+    messages: messages,
   };
 }
 
