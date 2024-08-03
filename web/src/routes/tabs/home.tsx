@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { User } from "../../common/types";
 import { Box, Button, Stack } from "@mui/material";
-import { except } from "../../api/user";
+import user from "../../api/user";
 import request from "../../api/request";
 import { useCurrentUserId } from "../../hooks/useCurrentUser";
 
@@ -11,8 +11,14 @@ export default function Home() {
   const currentUserId = useCurrentUserId();
 
   useEffect(() => {
-    if (!currentUserId) return;
-    except(currentUserId).then(setUsers).catch(console.error);
+    (async () => {
+      if (!currentUserId) return;
+
+      const matched = await user.matched();
+      const users = await user.except(currentUserId);
+      const unmatched = users.filter((user) => !matched.includes(user));
+      setUsers(unmatched);
+    })().catch(console.error);
   }, [currentUserId]);
 
   useEffect(() => {
