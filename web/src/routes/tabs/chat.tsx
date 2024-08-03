@@ -19,17 +19,28 @@ export default function Chat() {
   return (
     <Box>
       {loading ? (
-        <p>Loading...</p>
+        <Typography>Loading...</Typography>
       ) : error ? (
-        <p>Error: {error.message}</p>
+        <Typography color="error">Error: {error.message}</Typography>
       ) : (
         <List>
           {data !== undefined &&
             data?.map((room) => (
               <ListItem
                 key={key++}
+                sx={{
+                  mb: 1,
+                  border: "2px solid #1976D2",
+                  borderRadius: 1,
+                  padding: 5,
+                }}
                 secondaryAction={
-                  <Stack direction={"row"} spacing={2} alignItems="center">
+                  <Stack
+                    direction={"row"}
+                    spacing={2}
+                    alignItems="center"
+                    textAlign={"center"}
+                  >
                     <Typography variant="body2">{room.name}</Typography>
                     <Button
                       variant="contained"
