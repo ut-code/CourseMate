@@ -117,10 +117,10 @@ router.post(`/shared`, async (req, res) => {
   res.status(201).send(room);
 });
 
-router.get("/shared/:room", async (req, res) => {
+router.get("/shared/:roomId", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
-  const roomId = safeParseInt(req.params.room);
+  const roomId = safeParseInt(req.params.roomId);
   if (!roomId.ok) return res.status(400).send("invalid formatting of :room");
 
   if (!(await db.isUserInRoom(roomId.value as ShareRoomID, user.value)))
