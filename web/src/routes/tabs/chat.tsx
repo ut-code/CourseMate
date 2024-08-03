@@ -24,7 +24,7 @@ export default function Chat() {
                       onClick={() => {
                         if (room.isDM) {
                           chat
-                            .getDM(room.dmid)
+                            .startDM(room.dmid)
                             .then((data) => alert(data.messages.join("\n")));
                         } else {
                           chat

@@ -5,7 +5,6 @@ import {
   InitRoom,
   Message,
   MessageID,
-  RelationshipID,
   RoomOverview,
   SendMessage,
   SharedRoom,
@@ -19,16 +18,17 @@ import { UserID } from "../common/types";
 import type { User } from "../common/types";
 */
 
-export async function startDM(friendId: UserID): Promise<void> {
+export async function startDM(friendId: UserID): Promise<DMRoom> {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.dmWith(friendId), {
-      method: "POST",
+      method: "PUT",
     });
     if (res.status === 401) throw new ErrUnauthorized();
     if (res.status !== 201)
       throw new Error(
         `createDM() failed: expected status code 201, got ${res.status}`,
       );
+    return res.json();
   });
 }
 
@@ -109,20 +109,6 @@ export async function getSharedRoom(roomId: ShareRoomID): Promise<SharedRoom> {
   });
 }
 
-export async function getDM(id: RelationshipID): Promise<DMRoom> {
-  return doWithIdToken(async () => {
-    const res = await fetch(endpoints.dmWith(id), {
-      credentials: "include",
-    });
-    if (res.status === 401) throw new ErrUnauthorized();
-    if (res.status !== 200)
-      throw new Error(
-        `assertion failed on getDM: expected 200 on res.status, but got ${res.status}`,
-      );
-    return res.json();
-  });
-}
-
 // don't forget to refresh after sending.
 export async function send(
   roomId: ShareRoomID,
@@ -154,20 +140,6 @@ export async function sendDM(
       body: JSON.stringify(msg),
     });
     return res.json();
-  });
-}
-
-export async function startDMWith(userId: UserID): Promise<DMRoom> {
-  return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.dmWith(userId), {
-      method: "PUT",
-      credentials: "include",
-    });
-    if (res.status === 401) throw new ErrUnauthorized();
-    if (res.status === 200 || res.status === 201) return res.json();
-    throw new Error(
-      `on send(), expected status code of 200 or 201, but got ${res.status}`,
-    );
   });
 }
 
