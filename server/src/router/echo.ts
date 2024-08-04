@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 
 const router = express.Router();
 
+//TODO: add zod
 // requires body parser
 router.get("/set-cookie", (req: Request, res: Response) => {
   const query = req.query;
