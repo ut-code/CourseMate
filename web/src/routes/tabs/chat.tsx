@@ -19,11 +19,6 @@ export default function Chat() {
   const [message, setMessage] = useState("");
 
   const submitMessage = async (room: RoomOverview) => {
-    // const room = data![key];
-    // const elem = document.getElementById(
-    //   "message-" + key
-    // ) as HTMLInputElement;
-    // const text = elem.value;
     const msg = { content: message };
     if (room.isDM) await chat.sendDM(room.friendId, msg);
     else await chat.send(room.roomId, msg);
@@ -31,7 +26,6 @@ export default function Chat() {
     reload();
   };
 
-  let key = 0;
   return (
     <Box>
       {loading ? (
@@ -41,77 +35,72 @@ export default function Chat() {
       ) : (
         <List>
           {data !== undefined &&
-            data?.map((room) => (
-              <ListItem
-                key={key++}
-                sx={{
-                  mb: 1,
-                  border: "2px solid #1976D2",
-                  borderRadius: 1,
-                  padding: 5,
-                }}
-                secondaryAction={
-                  <Stack
-                    direction={"row"}
-                    spacing={2}
-                    alignItems="center"
-                    textAlign={"center"}
-                  >
-                    <Typography variant="body2">{room.name}</Typography>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {
-                        if (room.isDM) {
-                          chat
-                            .getDM(room.friendId)
-                            .then((data) => alert(data.messages.join("\n")));
-                        } else {
-                          chat
-                            .getSharedRoom(room.roomId)
-                            .then((data) => alert(data.messages.join("\n")));
-                        }
-                      }}
-                    >
-                      チャットの内容を表示
-                    </Button>
-                    <form
-                      onSubmit={async (e) => {
-                        e.preventDefault();
-                        const form = new FormData(e.currentTarget);
-                        const text = form.get("message");
-                        if (text === null) return;
-                        const msg = { content: String(text) };
-                        if (room.isDM) await chat.sendDM(room.friendId, msg);
-                        else await chat.send(room.roomId, msg);
-                        reload();
-                      }}
-                    >
-                      <Stack direction="row" spacing={1} alignItems="center">
-                        <TextField
-                          name="message"
-                          placeholder="メッセージ"
-                          variant="outlined"
-                          size="small"
-                          id={"message-" + key}
-                          value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                        />
-                        <IconButton
-                          type="submit"
+            data?.map((room) => {
+              if (room.isDM) {
+                return (
+                  <ListItem
+                    key={room.friendId}
+                    sx={{
+                      mb: 1,
+                      border: "2px solid #1976D2",
+                      borderRadius: 1,
+                      padding: 5,
+                    }}
+                    secondaryAction={
+                      <Stack
+                        direction={"row"}
+                        spacing={2}
+                        alignItems="center"
+                        textAlign={"center"}
+                      >
+                        <Typography variant="body2">{room.name}</Typography>
+                        <Button
+                          variant="contained"
                           color="primary"
                           onClick={() => {
+                            chat
+                              .getDM(room.friendId)
+                              .then((data) => alert(data.messages.join("\n")));
+                          }}
+                        >
+                          チャットの内容を表示
+                        </Button>
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault();
                             submitMessage(room);
                           }}
                         >
-                          <SendIcon />
-                        </IconButton>
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            alignItems="center"
+                          >
+                            <TextField
+                              name="message"
+                              placeholder="メッセージ"
+                              variant="outlined"
+                              size="small"
+                              value={message}
+                              onChange={(e) => setMessage(e.target.value)}
+                            />
+                            <IconButton type="submit" color="primary">
+                              <SendIcon />
+                            </IconButton>
+                          </Stack>
+                        </form>
                       </Stack>
-                    </form>
-                  </Stack>
-                }
-              />
-            ))}
+                    }
+                  />
+                );
+              } else {
+                return (
+                  <Typography key={room.roomId} variant="body2" sx={{ mb: 1 }}>
+                    グループチャット: {room.name}
+                  </Typography>
+                );
+              }
+            })}
         </List>
       )}
     </Box>
