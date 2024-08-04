@@ -11,9 +11,25 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import * as chat from "../../api/chat/chat";
 import { useRoomsOverview } from "../../api/chat/hooks";
+import { useState } from "react";
+import { RoomOverview } from "../../common/types";
 
 export default function Chat() {
   const { data, error, loading, reload } = useRoomsOverview();
+  const [message, setMessage] = useState("");
+
+  const submitMessage = async (room: RoomOverview) => {
+    // const room = data![key];
+    // const elem = document.getElementById(
+    //   "message-" + key
+    // ) as HTMLInputElement;
+    // const text = elem.value;
+    const msg = { content: message };
+    if (room.isDM) await chat.sendDM(room.friendId, msg);
+    else await chat.send(room.roomId, msg);
+    setMessage("");
+    reload();
+  };
 
   let key = 0;
   return (
@@ -78,8 +94,16 @@ export default function Chat() {
                           variant="outlined"
                           size="small"
                           id={"message-" + key}
+                          value={message}
+                          onChange={(e) => setMessage(e.target.value)}
                         />
-                        <IconButton type="submit" color="primary">
+                        <IconButton
+                          type="submit"
+                          color="primary"
+                          onClick={() => {
+                            submitMessage(room);
+                          }}
+                        >
                           <SendIcon />
                         </IconButton>
                       </Stack>
