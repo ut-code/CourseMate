@@ -14,7 +14,6 @@ import type {
   SharedRoomOverview,
 } from "../common/types";
 import { findRelation } from "./matches";
-import { Result, safifyAsync } from "../common/lib/result";
 import { searchMatchedUser } from "./requests";
 
 const prisma = new PrismaClient();
@@ -56,45 +55,17 @@ export async function overview(user: UserID): Promise<RoomOverview[]> {
   return [...sharedov, ...dmov];
 }
 
-type createDMRoomArgs = {
-  creatorId: UserID;
-  friendId: UserID;
-};
-
-// DM Room の作成
-export const safeCreateDMRoom: (
-  args: createDMRoomArgs,
-) => Promise<Result<DMRoom>> = safifyAsync(createDMRoom);
-export async function createDMRoom({
-  creatorId,
-  friendId,
-}: createDMRoomArgs): Promise<DMRoom> {
-  const relID = await findRelation(creatorId, friendId);
-  if (!relID) throw new Error("rel not found!");
-  const room = await prisma.directRoom.create({
-    data: {
-      relationId: relID.id,
-    },
-  });
-
-  return {
-    isDM: true,
-    messages: [],
-    ...room,
-  };
-}
-
 /**
  * DM の送信
  * 送信者の id は呼び出す側で指定すること
  **/
 export async function sendDM(
-  roomId: RelationshipID,
+  relation: RelationshipID,
   content: Omit<Message, "id">,
 ): Promise<void> {
   await prisma.message.create({
     data: {
-      directRoomId: roomId,
+      relationId: relation,
       ...content,
     },
   });
@@ -180,7 +151,7 @@ export async function findDMbetween(
 
   const messages: Message[] = await prisma.message.findMany({
     where: {
-      directRoomId: rel.id,
+      relationId: rel.id,
     },
   });
 

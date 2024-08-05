@@ -10,9 +10,8 @@ import type {
 } from "../common/types";
 import asyncMap from "../lib/async/map";
 import * as db from "../database/chat";
-import { areAllMatched, areMatched } from "../database/matches";
+import { areAllMatched, areMatched, findRelation } from "../database/matches";
 import type { UserID, InitRoom } from "../common/types";
-import { lazyFallbackAsync } from "../common/lib/fallback";
 import { getUserByID } from "../database/users";
 
 const router = express.Router();
@@ -36,7 +35,8 @@ router.post("/dm/to/:userid", async (req, res) => {
   const friend = safeParseInt(req.params.userid);
   if (!friend.ok) return res.status(400).send("bad param encoding: `dmid`");
 
-  if (!areMatched(user.value, friend.value as UserID))
+  const rel = await findRelation(user.value, friend.value as UserID);
+  if (!rel || rel.status !== "MATCHED")
     return res.status(403).send("cannot send DM to non-friend");
 
   // they are now MATCHED
@@ -50,20 +50,10 @@ router.post("/dm/to/:userid", async (req, res) => {
     ...smsg,
   };
 
-  const room = await lazyFallbackAsync(
-    await db.findDMbetween(user.value, friend.value as UserID),
-    async () => {
-      return await db.createDMRoom({
-        creatorId: user.value,
-        friendId: friend.value as UserID,
-      });
-    },
-  );
-
-  const newRoom = db.sendDM(room.id, msg);
+  const room = await db.sendDM(rel.id, msg);
 
   // SEND: DMRoom
-  res.status(200).send(newRoom);
+  res.status(200).send(room);
 });
 
 // GET a DM Room with userid, CREATE one if not found.
@@ -75,17 +65,10 @@ router.get("/dm/with/:userid", async (req, res) => {
   if (!friend.ok)
     return res.status(400).send("invalid param `userid` fomatting");
 
-  const existingDM = await db.findDMbetween(user.value, friend.value);
-  if (existingDM !== null) return res.status(200).send(existingDM);
-
   if (!areMatched(user.value, friend.value as UserID))
     return res.status(403).send("cannot DM with a non-friend");
 
-  const room = await db.createDMRoom({
-    creatorId: user.value,
-    friendId: friend.value as UserID,
-  });
-
+  const room = await db.findDMbetween(user.value, friend.value);
   const friendData = await getUserByID(friend.value as UserID);
 
   const personalized: PersonalizedDMRoom = {

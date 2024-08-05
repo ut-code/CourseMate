@@ -40,7 +40,9 @@ model Relationship {
   sendingUser     User           @relation("sending", fields: [sendingUserId], references: [id])
   sendingUserId   Int 
   receivingUser   User           @relation("receiving", fields: [receivingUserId], references: [id])
-  receivingUserId Int 
+  receivingUserId Int
+
+  messages Message[]
 
   @@unique([sendingUserId, receivingUserId])
 }
@@ -61,20 +63,14 @@ model SharedRoom {
   messages Message[]
 }
 
-model DirectRoom {
-  id Int @id @default(autoincrement())
-  relationId Int @unique
-  messages Message[]
-}
-
 model Message {
   id           Int         @id @default(autoincrement())
   creator      Int // refers to UserId
   createdAt    DateTime    @default(now()) // @readonly
   edited       Boolean     @default(false)
   content      String
-  directRoom   DirectRoom? @relation(fields: [directRoomId], references: [id])
-  directRoomId Int?
+  relation     Relationship? @relation(fields: [relationId], references: [id])
+  relationId   Int?
   sharedRoom   SharedRoom? @relation(fields: [sharedRoomId], references: [id])
   sharedRoomId Int?
 }
