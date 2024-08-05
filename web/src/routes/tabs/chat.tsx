@@ -2,7 +2,7 @@ import { Box, List, Typography } from "@mui/material";
 import * as chat from "../../api/chat/chat";
 import { useRoomsOverview } from "../../api/chat/hooks";
 import { SendMessage, UserID } from "../../common/types";
-import { ChatStack } from "../../components/ChatStack";
+import { DMStack } from "../../components/DMStack";
 
 export default function Chat() {
   const { data, error, loading } = useRoomsOverview();
@@ -27,7 +27,7 @@ export default function Chat() {
             data?.map((room) => {
               if (room.isDM) {
                 return (
-                  <ChatStack
+                  <DMStack
                     key={room.friendId}
                     send={sendDMMessage}
                     room={room}

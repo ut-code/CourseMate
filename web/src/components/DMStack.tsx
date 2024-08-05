@@ -16,7 +16,7 @@ type Props = {
   room: DMOverview;
 };
 
-export function ChatStack(props: Props) {
+export function DMStack(props: Props) {
   const { room, send } = props;
 
   const [message, setMessage] = useState<string>("");
