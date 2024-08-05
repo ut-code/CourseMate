@@ -57,6 +57,7 @@ export function ChatStack(props: Props) {
               send(room.friendId, {
                 content: message,
               });
+              setMessage("");
             }}
           >
             <Stack direction="row" spacing={1} alignItems="center">
