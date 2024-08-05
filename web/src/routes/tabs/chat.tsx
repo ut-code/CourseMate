@@ -16,13 +16,24 @@ import { RoomOverview } from "../../common/types";
 
 export default function Chat() {
   const { data, error, loading, reload } = useRoomsOverview();
-  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<{ [key: string]: string }>({});
+
+  const handleChange = (friendId: number, value: string) => {
+    setMessages((prevMessages) => ({
+      ...prevMessages,
+      [friendId]: value,
+    }));
+  };
 
   const submitMessage = async (room: RoomOverview) => {
-    const msg = { content: message };
-    if (room.isDM) await chat.sendDM(room.friendId, msg);
-    else await chat.send(room.roomId, msg);
-    setMessage("");
+    if (room.isDM) {
+      const msg = { content: messages[room.friendId] || "" };
+      await chat.sendDM(room.friendId, msg);
+    } else {
+      const msg = { content: messages[room.roomId] || "" };
+      await chat.send(room.roomId, msg);
+    }
+    setMessages({});
     reload();
   };
 
@@ -39,7 +50,6 @@ export default function Chat() {
               if (room.isDM) {
                 return (
                   <ListItem
-                    key={room.friendId}
                     sx={{
                       mb: 1,
                       border: "2px solid #1976D2",
@@ -81,8 +91,10 @@ export default function Chat() {
                               placeholder="メッセージ"
                               variant="outlined"
                               size="small"
-                              value={message}
-                              onChange={(e) => setMessage(e.target.value)}
+                              value={messages[room.friendId] || ""}
+                              onChange={(e) =>
+                                handleChange(room.friendId, e.target.value)
+                              }
                             />
                             <IconButton type="submit" color="primary">
                               <SendIcon />
