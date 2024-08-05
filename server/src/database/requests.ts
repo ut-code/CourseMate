@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { User, UserID, Relationship } from "../common/types";
-import { castUser } from "./users";
 
 const prisma = new PrismaClient();
 
@@ -111,7 +110,7 @@ export async function searchPendingUsers(userId: UserID): Promise<User[]> {
       },
     },
   });
-  return found.map(castUser);
+  return found;
 }
 
 // export async function searchRequestingUser(userId: UserID):Promise<Relationship[]> {

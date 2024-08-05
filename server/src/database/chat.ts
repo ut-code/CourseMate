@@ -186,7 +186,7 @@ export async function findSharedRoom(
     isDM: false,
     thumbnail: room.thumbnail,
     members: room.members as UserID[],
-    messages: messages.map(castMessage),
+    messages: messages,
   };
 }
 
@@ -197,7 +197,7 @@ export async function findMessage(id: MessageID): Promise<Message | null> {
     },
   });
   if (!message) return null;
-  return castMessage(message);
+  return message;
 }
 
 export async function updateMessage(
@@ -213,21 +213,5 @@ export async function updateMessage(
       edited: true,
     },
   });
-  return castMessage(message);
-}
-
-function castMessage(m: {
-  id: number;
-  creator: number;
-  createdAt: Date;
-  content: string;
-  edited: boolean;
-}) {
-  return {
-    id: m.id as MessageID,
-    creator: m.creator as UserID,
-    createdAt: m.createdAt,
-    content: m.content,
-    edited: m.edited,
-  };
+  return message;
 }
