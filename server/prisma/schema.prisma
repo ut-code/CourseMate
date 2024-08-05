@@ -37,9 +37,9 @@ model Enrollement {
 model Relationship {
   id              Int            @id @default(autoincrement())
   status          MatchingStatus
-  sendingUser     User           @relation("sending", fields: [sendingUserId], references: [id])
+  sendingUser     User           @relation("sending", fields: [sendingUserId], references: [id] onDelete: Cascade)
   sendingUserId   Int 
-  receivingUser   User           @relation("receiving", fields: [receivingUserId], references: [id])
+  receivingUser   User           @relation("receiving", fields: [receivingUserId], references: [id] onDelete: Cascade)
   receivingUserId Int
 
   messages Message[]
@@ -69,8 +69,8 @@ model Message {
   createdAt    DateTime    @default(now()) // @readonly
   edited       Boolean     @default(false)
   content      String
-  relation     Relationship? @relation(fields: [relationId], references: [id])
+  relation     Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId   Int?
-  sharedRoom   SharedRoom? @relation(fields: [sharedRoomId], references: [id])
+  sharedRoom   SharedRoom? @relation(fields: [sharedRoomId], references: [id], onDelete: Cascade)
   sharedRoomId Int?
 }
