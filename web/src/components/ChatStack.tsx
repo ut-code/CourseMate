@@ -43,7 +43,9 @@ export function ChatStack(props: Props) {
             onClick={() => {
               chat
                 .getDM(room.friendId)
-                .then((data) => alert(data.messages.join("\n")));
+                .then((data) =>
+                  alert(data.messages.map((m) => m.content).join("\n")),
+                );
             }}
           >
             チャットの内容を表示
@@ -51,9 +53,8 @@ export function ChatStack(props: Props) {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              const msg = "hi";
               send(room, {
-                content: msg,
+                content: message,
               });
             }}
           >

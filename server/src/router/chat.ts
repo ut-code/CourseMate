@@ -53,7 +53,7 @@ router.post("/dm/to/:userid", async (req, res) => {
   const room = await db.sendDM(rel.id, msg);
 
   // SEND: DMRoom
-  res.status(200).send(room);
+  res.status(200).json(room);
 });
 
 // GET a DM Room with userid, CREATE one if not found.

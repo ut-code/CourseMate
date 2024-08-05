@@ -3,7 +3,7 @@ import endpoints from "../internal/endpoints";
 import {
   DMRoom,
   InitRoom,
-  Message,
+  // Message,
   MessageID,
   RoomOverview,
   SendMessage,
@@ -53,7 +53,7 @@ export async function overview(): Promise<RoomOverview[]> {
 export async function sendDM(
   friend: UserID,
   msg: SendMessage,
-): Promise<Message> {
+): Promise<string> {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.dmTo(friend), {
       method: "POST",
@@ -64,7 +64,7 @@ export async function sendDM(
       },
       body: JSON.stringify(msg),
     });
-    return res.json();
+    return await res.text();
   });
 }
 

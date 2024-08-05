@@ -27,7 +27,13 @@ export default function Chat() {
           {data !== undefined &&
             data?.map((room) => {
               if (room.isDM) {
-                return <ChatStack send={submitMessage} room={room} />;
+                return (
+                  <ChatStack
+                    key={room.friendId}
+                    send={submitMessage}
+                    room={room}
+                  />
+                );
               } else {
                 return (
                   <Typography key={room.roomId} variant="body2" sx={{ mb: 1 }}>
