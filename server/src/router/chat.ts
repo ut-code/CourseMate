@@ -33,7 +33,7 @@ router.post("/dm/to/:userid", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
   const friend = safeParseInt(req.params.userid);
-  if (!friend.ok) return res.status(400).send("bad param encoding: `dmid`");
+  if (!friend.ok) return res.status(400).send("bad param encoding: `userid`");
 
   const rel = await findRelation(user.value, friend.value as UserID);
   if (!rel || rel.status !== "MATCHED")
@@ -50,10 +50,8 @@ router.post("/dm/to/:userid", async (req, res) => {
     ...smsg,
   };
 
-  const room = await db.sendDM(rel.id, msg);
-
-  // SEND: DMRoom
-  res.status(200).json(room);
+  await db.sendDM(rel.id, msg);
+  res.status(201).send();
 });
 
 // GET a DM Room with userid, CREATE one if not found.

@@ -7,14 +7,15 @@ import {
   IconButton,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import { DMOverview, RoomOverview, SendMessage } from "../common/types";
+import { DMOverview, SendMessage, UserID } from "../common/types";
 import { useState } from "react";
 import * as chat from "../api/chat/chat";
 
 type Props = {
-  send: (ro: RoomOverview, m: SendMessage) => void;
+  send: (to: UserID, m: SendMessage) => void;
   room: DMOverview;
 };
+
 export function ChatStack(props: Props) {
   const { room, send } = props;
 
@@ -53,7 +54,7 @@ export function ChatStack(props: Props) {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              send(room, {
+              send(room.friendId, {
                 content: message,
               });
             }}

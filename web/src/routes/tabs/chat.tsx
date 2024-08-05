@@ -1,20 +1,19 @@
 import { Box, List, Typography } from "@mui/material";
 import * as chat from "../../api/chat/chat";
 import { useRoomsOverview } from "../../api/chat/hooks";
-import { RoomOverview, SendMessage } from "../../common/types";
+import { SendMessage, UserID } from "../../common/types";
 import { ChatStack } from "../../components/ChatStack";
 
 export default function Chat() {
-  const { data, error, loading, reload } = useRoomsOverview();
+  const { data, error, loading } = useRoomsOverview();
 
-  const submitMessage = async (room: RoomOverview, msg: SendMessage) => {
-    if (room.isDM) {
-      await chat.sendDM(room.friendId, msg);
-    } else {
-      await chat.send(room.roomId, msg);
-    }
-    reload();
+  const sendDMMessage = async (to: UserID, msg: SendMessage): Promise<void> => {
+    await chat.sendDM(to, msg);
   };
+  // TODO!
+  // function sendSharedRoomMessage(roomId: ShareRoomID, msg: SendMessage): Promise<void> {
+  //   TODO!
+  // }
 
   return (
     <Box>
@@ -30,7 +29,7 @@ export default function Chat() {
                 return (
                   <ChatStack
                     key={room.friendId}
-                    send={submitMessage}
+                    send={sendDMMessage}
                     room={room}
                   />
                 );

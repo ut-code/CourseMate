@@ -149,15 +149,18 @@ export async function findDMbetween(
   const rel = await findRelation(u1, u2);
   if (!rel) return null;
 
+  return findDM(rel.id);
+}
+export async function findDM(relID: RelationshipID): Promise<DMRoom | null> {
   const messages: Message[] = await prisma.message.findMany({
     where: {
-      relationId: rel.id,
+      relationId: relID,
     },
   });
 
   return {
     isDM: true,
-    id: rel.id,
+    id: relID,
     messages: messages,
   };
 }

@@ -50,12 +50,9 @@ export async function overview(): Promise<RoomOverview[]> {
 
 // TODO
 // 指定したユーザーにDMを送る
-export async function sendDM(
-  friend: UserID,
-  msg: SendMessage,
-): Promise<string> {
+export async function sendDM(friend: UserID, msg: SendMessage): Promise<void> {
   return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.dmTo(friend), {
+    await fetch(endpoints.dmTo(friend), {
       method: "POST",
       credentials: "include",
       headers: {
@@ -64,7 +61,6 @@ export async function sendDM(
       },
       body: JSON.stringify(msg),
     });
-    return await res.text();
   });
 }
 
