@@ -50,6 +50,7 @@ export default function Chat() {
               if (room.isDM) {
                 return (
                   <ListItem
+                    key={room.friendId}
                     sx={{
                       mb: 1,
                       border: "2px solid #1976D2",
