@@ -1,7 +1,58 @@
 import { PrismaClient } from "@prisma/client";
-import { UserID } from "../common/types";
+import { UserID, Relationship, RelationshipID } from "../common/types";
+import asyncMap from "../lib/async/map";
 
 const prisma = new PrismaClient();
+
+export async function findRelation(
+  u1: UserID,
+  u2: UserID,
+): Promise<Relationship | null> {
+  // TODO!!!! FIXME!!!!!! FIX THIS findMany!!!!!
+  const rel = await prisma.relationship.findMany({
+    where: {
+      OR: [
+        { sendingUserId: u1, receivingUserId: u2 },
+        { sendingUserId: u2, receivingUserId: u1 },
+      ],
+    },
+  });
+  return rel[0]
+    ? {
+        id: rel[0].id as RelationshipID,
+        sendingUserId: rel[0].sendingUserId as UserID,
+        receivingUserId: rel[0].receivingUserId as UserID,
+        status: rel[0].status,
+      }
+    : null;
+}
+
+export async function findRelations(user: UserID): Promise<Relationship[]> {
+  const rels: Relationship[] = await prisma.relationship.findMany({
+    where: {
+      OR: [{ sendingUserId: user }, { receivingUserId: user }],
+    },
+  });
+  return rels;
+}
+
+// returns false if u1 or u2 is not present.
+export async function areMatched(u1: UserID, u2: UserID): Promise<boolean> {
+  const match = await findRelation(u1, u2);
+
+  return match !== null && match.status === "MATCHED";
+}
+
+export async function areAllMatched(
+  user: UserID,
+  friends: UserID[],
+): Promise<boolean> {
+  return (
+    await asyncMap(friends, (friend) => {
+      return areMatched(user, friend);
+    })
+  ).reduce((a, b) => a && b);
+}
 
 // 特定のユーザIDを含むマッチの取得
 export async function getMatchesByUserId(userId: UserID) {

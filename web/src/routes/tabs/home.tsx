@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { User } from "../../common/types";
+import type { UserID, User } from "../../common/types";
 import { Box, Button, Stack } from "@mui/material";
 import { except } from "../../api/user";
 import request from "../../api/request";
@@ -12,7 +12,9 @@ export default function Home() {
 
   useEffect(() => {
     if (!currentUserId) return;
-    except(currentUserId).then(setUsers).catch(console.error);
+    except(currentUserId as UserID)
+      .then(setUsers)
+      .catch(console.error);
   }, [currentUserId]);
 
   useEffect(() => {

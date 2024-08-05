@@ -52,11 +52,11 @@ async function safeReadData<T>(url: string): Promise<Result<T>> {
 // TODO: refactor this to look better.
 export function useAuthorizedData<T>(url: string) {
   const [data, setData] = useState<T | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
   const reload = useCallback(async () => {
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
 
     // this never throws. I'm only using this to use finally
@@ -75,7 +75,7 @@ export function useAuthorizedData<T>(url: string) {
       setError(result.error as Error);
       setData(null);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   }, [url]);
 
@@ -83,5 +83,5 @@ export function useAuthorizedData<T>(url: string) {
     reload();
   }, [reload]);
 
-  return { data, isLoading, error, reload };
+  return { data, loading, error, reload };
 }

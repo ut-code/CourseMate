@@ -6,7 +6,7 @@ import hooks from "../../api/hooks";
 
 export default function Profile() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { data, isLoading, error, reload } = hooks.useMe();
+  const { data, loading, error, reload } = hooks.useMe();
 
   const handleDialogOpen = () => {
     setIsDialogOpen(true);
@@ -18,7 +18,7 @@ export default function Profile() {
 
   return (
     <Box>
-      {isLoading ? (
+      {loading ? (
         <p>Loading...</p>
       ) : error ? (
         <p>Error: {error.message}</p>
