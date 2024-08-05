@@ -37,9 +37,9 @@ model Enrollement {
 model Relationship {
   id              Int            @id @default(autoincrement())
   status          MatchingStatus
-  sendingUser     User           @relation("sending", fields: [sendingUserId], references: [id] onDelete: Cascade)
+  sendingUser     User           @relation("sending", fields: [sendingUserId], references: [id], onDelete: Cascade)
   sendingUserId   Int 
-  receivingUser   User           @relation("receiving", fields: [receivingUserId], references: [id] onDelete: Cascade)
+  receivingUser   User           @relation("receiving", fields: [receivingUserId], references: [id], onDelete: Cascade)
   receivingUserId Int
 
   messages Message[]
