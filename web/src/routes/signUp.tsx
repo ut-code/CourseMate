@@ -16,12 +16,11 @@ export default function SignUp() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [pictureFile, setPictureFile] = useState<File>();
 
   //サインアップの処理
   const handleSignUp = async () => {
-    const guid = user?.uid;
+    const guid = user?.uid as GUID | undefined;
     if (!guid) {
       enqueueSnackbar("ユーザ情報が取得できませんでした", {
         variant: "error",
@@ -72,11 +71,6 @@ export default function SignUp() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           label="Email"
-        />
-        <TextField
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          label="Password"
         />
         <input type="file" onChange={handleImageChange} />
         <Button
