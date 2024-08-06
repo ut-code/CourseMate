@@ -12,7 +12,7 @@ import {
 import { UpdateUser } from "../common/types";
 import userapi from "../api/user";
 import { PhotoPreview } from "./PhotoPreview";
-import { saver } from "./data/photo-preview";
+import { photo } from "./data/photo-preview";
 
 type EditUserDialogProps = {
   isOpen: boolean;
@@ -29,7 +29,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
 
   const handleSave = async () => {
     let pictureUrl: string | null = null;
-    if (saver.save) pictureUrl = await saver.save();
+    if (photo.upload) pictureUrl = await photo.upload();
 
     const data: UpdateUser = {
       name: name,

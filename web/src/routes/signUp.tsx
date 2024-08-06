@@ -7,7 +7,7 @@ import Header from "../components/Header";
 import userapi from "../api/user";
 import { GUID, User } from "../common/types";
 import { PhotoPreview } from "../components/PhotoPreview";
-import { saver } from "../components/data/photo-preview";
+import { photo } from "../components/data/photo-preview";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ export default function SignUp() {
       return;
     }
     try {
-      const pictureUrl = saver.save && (await saver.save());
+      const pictureUrl = photo.upload && (await photo.upload());
       const partialUser: Omit<User, "id"> = {
         guid,
         name,

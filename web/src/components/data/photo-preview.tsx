@@ -1,5 +1,6 @@
-export const saver: {
-  save: (() => Promise<string>) | null;
+type URL = string;
+export const photo: {
+  upload: (() => Promise<URL>) | null;
 } = {
-  save: null,
+  upload: null,
 };

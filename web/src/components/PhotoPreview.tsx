@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, useEffect } from "react";
 import { uploadImage } from "../firebase/store/upload-photo";
-import { saver } from "./data/photo-preview";
+import { photo } from "./data/photo-preview";
 
 export function PhotoPreview() {
   const [url, setUrl] = useState<string | null>(null);
@@ -13,7 +13,7 @@ export function PhotoPreview() {
   }
 
   useEffect(() => {
-    if (file) saver.save = async () => await uploadImage(file);
+    if (file) photo.upload = async () => await uploadImage(file);
   }, [file]);
 
   useEffect(() => {
