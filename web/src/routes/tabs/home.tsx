@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { UserID, User } from "../../common/types";
+import type { User } from "../../common/types";
 import { Box, Button, Stack } from "@mui/material";
 import user from "../../api/user";
 import request from "../../api/request";
