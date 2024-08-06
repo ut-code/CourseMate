@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, useEffect } from "react";
-import { uploadImage } from "../supabase/upload-photo";
+import { uploadImage } from "../firebase/store/upload-photo";
 import { saver } from "./data/photo-preview";
 
 export function PhotoPreview() {

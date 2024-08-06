@@ -1,5 +1,5 @@
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { app } from "../firebase/firebaseconfig";
+import { app } from "../firebaseconfig";
 import { getAuth } from "firebase/auth";
 
 //画像をfirestoreにアップロードする関数
