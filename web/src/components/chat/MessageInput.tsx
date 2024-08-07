@@ -36,7 +36,6 @@ export function MessageInput(props: Props) {
           </IconButton>
         </Stack>
       </form>
-      ;
     </>
   );
 }
