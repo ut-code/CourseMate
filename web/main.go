@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 )
@@ -14,26 +16,38 @@ import (
 // dist server
 // this go file is only intended to serve /dist after building with vite build.
 
+const serveDir = "./dist"
+const addr uint16 = 4173 // is this what server/.env:WEB_ORIGIN_BUILD meant to be?
+const restartOnError = false
+
 func main() {
 	mux := http.NewServeMux()
-	fs := http.FileServer(http.Dir("./dist"))
+	fs := http.FileServer(http.Dir(serveDir))
 	mux.Handle("/", http.StripPrefix("/", fs))
 	server := http.Server{
-		// is this what server/.env/WEB_ORIGIN_BUILD mean?
-		Addr:    ":4173",
+		Addr:    ":" + strconv.Itoa(int(addr)),
 		Handler: mux,
 	}
 
-	var errch chan error
+	var srvTerm chan error
 	go func() {
-		errch <- server.ListenAndServe()
+		var err error
+	restart:
+		err = server.ListenAndServe()
+		if restartOnError {
+			fmt.Println("Server failed with error:", err.Error())
+			fmt.Println("Restarting...")
+			goto restart
+		} else {
+			srvTerm <- err
+		}
 	}()
 
 	interrupt, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, os.Interrupt)
 	defer cancel()
 
 	select {
-	case err := <-errch:
+	case err := <-srvTerm:
 		if !errors.Is(err, http.ErrServerClosed) {
 			// server failed
 			log.Fatalln(err)
