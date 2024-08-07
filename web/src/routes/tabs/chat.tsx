@@ -6,11 +6,15 @@ import { useState } from "react";
 import { MessageWindow } from "../../components/chat/MessageWindow";
 
 export default function Chat() {
-  const { data, error, loading } = useRoomsOverview();
-  const [selectedRoom, setSelectedRoom] = useState<DMOverview | null>(null);
+  const {
+    data: roomsData,
+    error: roomsError,
+    loading: roomsLoading,
+  } = useRoomsOverview();
+  const [activeRoom, setActiveRoom] = useState<DMOverview | null>(null);
 
   const handleRoomClick = (room: DMOverview) => {
-    setSelectedRoom(room);
+    setActiveRoom(room);
   };
 
   return (
@@ -29,13 +33,13 @@ export default function Chat() {
           overflowY: "auto",
         }}
       >
-        {loading ? (
+        {roomsLoading ? (
           <Typography>Loading...</Typography>
-        ) : error ? (
-          <Typography color="error">Error: {error.message}</Typography>
+        ) : roomsError ? (
+          <Typography color="error">Error: {roomsError.message}</Typography>
         ) : (
           <List disablePadding>
-            {data?.map((room) => {
+            {roomsData?.map((room) => {
               if (room.isDM) {
                 return (
                   <Box
@@ -43,7 +47,7 @@ export default function Chat() {
                     onClick={() => handleRoomClick(room)}
                     sx={{
                       backgroundColor:
-                        selectedRoom?.friendId === room.friendId
+                        activeRoom?.friendId === room.friendId
                           ? "gainsboro"
                           : "white",
                     }}
@@ -72,8 +76,8 @@ export default function Chat() {
           overflow: "auto",
         }}
       >
-        {selectedRoom ? (
-          <MessageWindow room={selectedRoom} />
+        {activeRoom ? (
+          <MessageWindow room={activeRoom} />
         ) : (
           <div
             style={{
