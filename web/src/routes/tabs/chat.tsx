@@ -43,8 +43,21 @@ export default function Chat() {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <Box sx={{ width: "20%", borderRight: "1px solid #ddd" }}>
+    <Box
+      sx={{
+        display: "flex",
+        height: "100vh",
+        width: "100vw",
+        overflow: "hidden",
+      }}
+    >
+      <Box
+        sx={{
+          width: "20%",
+          borderRight: "1px solid #ddd",
+          overflowY: "auto",
+        }}
+      >
         {loading ? (
           <Typography>Loading...</Typography>
         ) : error ? (
@@ -73,13 +86,20 @@ export default function Chat() {
         )}
       </Box>
       <Box
-        sx={{ width: "80%", position: "relative", backgroundColor: "white" }}
+        sx={{
+          width: "80%",
+          height: "100%",
+          backgroundColor: "white",
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
         {selectedRoom && messages && (
           <MessageWindow
             data={messages}
             send={sendDMMessage}
             room={selectedRoom}
+            sx={{ flex: 1 }}
           />
         )}
       </Box>

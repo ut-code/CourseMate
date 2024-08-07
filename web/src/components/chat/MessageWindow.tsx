@@ -1,3 +1,4 @@
+import { SxProps, Theme } from "@mui/material";
 import { DMOverview, DMRoom, SendMessage, UserID } from "../../common/types";
 import { MessageInput } from "./MessageInput";
 
@@ -5,6 +6,7 @@ type Prop = {
   data: DMRoom;
   send: (to: UserID, m: SendMessage) => void;
   room: DMOverview;
+  sx?: SxProps<Theme>;
 };
 
 export function MessageWindow(props: Prop) {
