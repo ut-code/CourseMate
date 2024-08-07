@@ -3,6 +3,7 @@ import LogOutButton from "../../components/LogOutButton";
 import { useState } from "react";
 import EditUserDialog from "../../components/EditUserDialog";
 import hooks from "../../api/hooks";
+import UserAvatar from "../../components/avatar/avatar";
 
 export default function Profile() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -27,13 +28,12 @@ export default function Profile() {
           <Box>
             <p>Name: {data.name}</p>
             <p>ID: {data.id}</p>
-            {data.pictureUrl && (
-              <img
-                src={data.pictureUrl}
-                alt="Profile Picture"
-                style={{ width: "300px", height: "300px", objectFit: "cover" }}
-              />
-            )}
+            <UserAvatar
+              pictureUrl={data.pictureUrl}
+              altText={data.name}
+              width="300px"
+              height="300px"
+            />
           </Box>
           <LogOutButton />
           <Button color="inherit" onClick={handleDialogOpen}>
