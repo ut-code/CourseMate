@@ -4,6 +4,7 @@ import { Box, Button, Stack } from "@mui/material";
 import user from "../../api/user";
 import request from "../../api/request";
 import { useCurrentUserId } from "../../hooks/useCurrentUser";
+import UserAvatar from "../../components/avatar/avatar";
 
 export default function Home() {
   const [users, setUsers] = useState<User[] | null>(null);
@@ -48,13 +49,12 @@ export default function Home() {
     <Box>
       <p>Name: {displayedUser?.name}</p>
       <p>id: {displayedUser?.id}</p>
-      {displayedUser?.pictureUrl && (
-        <img
-          src={displayedUser?.pictureUrl}
-          alt="Profile Picture"
-          style={{ width: "300px", height: "300px", objectFit: "cover" }} // 画像のサイズを指定
-        />
-      )}
+      <UserAvatar
+        pictureUrl={displayedUser?.pictureUrl}
+        altText={displayedUser?.name}
+        width="300px"
+        height="300px"
+      />
       <Stack direction={"row"}>
         <Button onClick={handleClickCross}>X</Button>
         <Button onClick={handleClickCircle}>O</Button>
