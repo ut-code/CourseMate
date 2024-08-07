@@ -1,6 +1,8 @@
 import { SxProps, Theme } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { DMOverview, DMRoom, SendMessage, UserID } from "../../common/types";
 import { MessageInput } from "./MessageInput";
+import { getMyId } from "../../api/user";
 
 type Prop = {
   data: DMRoom;
@@ -9,23 +11,47 @@ type Prop = {
   sx?: SxProps<Theme>;
 };
 
+const id = await getMyId();
+
 export function MessageWindow(props: Prop) {
   const { send, room, data } = props;
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         display: "flex",
         flexDirection: "column",
         height: "92%",
-        padding: 4,
+        padding: 2,
+        ...props.sx,
       }}
     >
-      <div style={{ flexGrow: 1, overflowY: "auto" }}>
+      <Box sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}>
         {data.messages.map((m) => (
-          <div key={m.id}>{m.content}</div>
+          <Box
+            key={m.id}
+            sx={{
+              display: "flex",
+              justifyContent: m.creator === id ? "flex-end" : "flex-start",
+              marginBottom: 1,
+            }}
+          >
+            <Paper
+              sx={{
+                display: "flex",
+                maxWidth: "60%",
+                padding: 1,
+                borderRadius: 2,
+                backgroundColor: m.creator === id ? "#DCF8C6" : "#FFF",
+                boxShadow: 1,
+                border: 1,
+              }}
+            >
+              <Typography>{m.content}</Typography>
+            </Paper>
+          </Box>
         ))}
-      </div>
+      </Box>
       <MessageInput send={send} room={room} />
-    </div>
+    </Box>
   );
 }
