@@ -1,4 +1,4 @@
-import { Typography, ListItem } from "@mui/material";
+import { Typography, ListItem, Stack } from "@mui/material";
 import { DMOverview } from "../../common/types";
 import UserAvatar from "../avatar/avatar";
 
