@@ -15,12 +15,28 @@ export function DMStack(props: Props) {
   const [showMessageWindow, setShowMessageWindow] = useState<boolean>(false);
 
   useEffect(() => {
-    chat.getDM(room.friendId).then(setMessages);
+    // Fetch messages on mount
+    const fetchMessages = async () => {
+      const newMessages = await chat.getDM(room.friendId);
+      setMessages(newMessages);
+    };
+    fetchMessages();
+
+    // Set up interval to fetch messages every 10 seconds
+    const intervalId = setInterval(fetchMessages, 10000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
   }, [room.friendId]);
 
   const handleClick = () => {
     setShowMessageWindow(true);
   };
+
+  // const handleSend = (to: UserID, m: SendMessage) => {
+  //   send(to, m);
+  //   fetchMessages(); // Fetch messages immediately after sending a new message
+  // };
 
   return (
     <>
