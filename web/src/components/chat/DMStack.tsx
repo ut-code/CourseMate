@@ -1,5 +1,6 @@
 import { Stack, Typography, ListItem } from "@mui/material";
 import { DMOverview } from "../../common/types";
+import UserAvatar from "../avatar/avatar";
 
 type Props = {
   room: DMOverview;
@@ -10,25 +11,28 @@ export function DMStack(props: Props) {
   return (
     <>
       <ListItem
-        // key={room.friendId}
         sx={{
           mb: 1,
           border: "2px solid #1976D2",
           borderRadius: 1,
-          padding: 5,
           cursor: "pointer",
         }}
-        secondaryAction={
-          <Stack
-            direction={"row"}
-            spacing={2}
-            alignItems="center"
-            textAlign={"center"}
-          >
-            <Typography variant="body2">{room.name}</Typography>
-          </Stack>
-        }
-      />
+      >
+        <Stack
+          direction={"row"}
+          spacing={2}
+          alignItems="center"
+          textAlign={"center"}
+        >
+          <UserAvatar
+            pictureUrl={room.thumbnail}
+            altText={room.name}
+            width="50px"
+            height="50px"
+          />
+          <Typography variant="body2">{room.name}</Typography>
+        </Stack>
+      </ListItem>
     </>
   );
 }

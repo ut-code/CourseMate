@@ -5,7 +5,6 @@ import { SendMessage, UserID, DMOverview, DMRoom } from "../../common/types";
 import { DMStack } from "../../components/chat/DMStack";
 import { useState, useEffect } from "react";
 import { MessageWindow } from "../../components/chat/MessageWindow";
-// import UserAvatar from "../../components/avatar/avatar";
 
 export default function Chat() {
   const { data, error, loading } = useRoomsOverview();
@@ -72,12 +71,6 @@ export default function Chat() {
                     key={room.friendId}
                     onClick={() => handleRoomClick(room)}
                   >
-                    {/* <UserAvatar
-                      pictureUrl={.pictureUrl}
-                      altText={matchedUser.name}
-                      width="50px"
-                      height="50px"
-                    /> */}
                     <DMStack room={room} />
                   </Box>
                 );
