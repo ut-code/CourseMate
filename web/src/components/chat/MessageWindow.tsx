@@ -4,7 +4,7 @@ import { DMOverview, DMRoom, SendMessage, UserID } from "../../common/types";
 import { MessageInput } from "./MessageInput";
 import { useCurrentUserId } from "../../hooks/useCurrentUser";
 import UserAvatar from "../avatar/avatar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as chat from "../../api/chat/chat";
 
 type Prop = {
@@ -40,6 +40,18 @@ export function MessageWindow(props: Prop) {
     }
   }, [room]);
 
+  const scrollDiv = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollDiv.current) {
+      const element = scrollDiv.current;
+      element.scrollTo({
+        top: element.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [messages]);
+
   return (
     <>
       <Stack
@@ -66,7 +78,10 @@ export function MessageWindow(props: Prop) {
         }}
       >
         {messages ? (
-          <Box sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}>
+          <Box
+            sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}
+            ref={scrollDiv}
+          >
             {messages.messages.map((m) => (
               <Box
                 key={m.id}
