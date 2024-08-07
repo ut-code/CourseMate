@@ -13,6 +13,13 @@ export async function all(): Promise<User[]> {
   return res.json();
 }
 
+export async function matched(): Promise<User[]> {
+  const res = await fetch(endpoints.matchedUsers, {
+    credentials: "include",
+  });
+  return res.json();
+}
+
 // 自身のユーザー情報を取得する
 export async function aboutMe(): Promise<User> {
   return await doWithIdToken(async () => {
@@ -23,6 +30,7 @@ export async function aboutMe(): Promise<User> {
     return res.json();
   });
 }
+
 // 自身のユーザーIDを取得する
 export async function getMyId(): Promise<UserID> {
   const me = await aboutMe();
@@ -137,6 +145,7 @@ export default {
   aboutMe,
   getByGUID,
   all,
+  matched,
   except,
   exists,
   create,
