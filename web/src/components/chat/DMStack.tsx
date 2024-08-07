@@ -1,15 +1,7 @@
-import {
-  Button,
-  Stack,
-  Typography,
-  ListItem,
-  TextField,
-  IconButton,
-} from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
+import { Button, Stack, Typography, ListItem } from "@mui/material";
 import { DMOverview, SendMessage, UserID } from "../../common/types";
-import { useState } from "react";
 import * as chat from "../../api/chat/chat";
+import { MessageInput } from "./MessageInput";
 
 type Props = {
   send: (to: UserID, m: SendMessage) => void;
@@ -18,8 +10,6 @@ type Props = {
 
 export function DMStack(props: Props) {
   const { room, send } = props;
-
-  const [message, setMessage] = useState<string>("");
 
   return (
     <ListItem
@@ -51,29 +41,7 @@ export function DMStack(props: Props) {
           >
             チャットの内容を表示
           </Button>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              send(room.friendId, {
-                content: message,
-              });
-              setMessage("");
-            }}
-          >
-            <Stack direction="row" spacing={1} alignItems="center">
-              <TextField
-                name="message"
-                placeholder="メッセージ"
-                variant="outlined"
-                size="small"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-              <IconButton type="submit" color="primary">
-                <SendIcon />
-              </IconButton>
-            </Stack>
-          </form>
+          <MessageInput send={send} room={room} />
         </Stack>
       }
     />
