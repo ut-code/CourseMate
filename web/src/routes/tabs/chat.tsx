@@ -1,9 +1,9 @@
-import { Box, List, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useRoomsOverview } from "../../api/chat/hooks";
 import { DMOverview } from "../../common/types";
-import { DMStack } from "../../components/chat/DMStack";
 import { useState } from "react";
 import { MessageWindow } from "../../components/chat/MessageWindow";
+import RoomList from "../../components/chat/RoomList";
 
 export default function Chat() {
   const {
@@ -38,32 +38,11 @@ export default function Chat() {
         ) : roomsError ? (
           <Typography color="error">Error: {roomsError.message}</Typography>
         ) : (
-          <List disablePadding>
-            {roomsData?.map((room) => {
-              if (room.isDM) {
-                return (
-                  <Box
-                    key={room.friendId}
-                    onClick={() => handleRoomClick(room)}
-                    sx={{
-                      backgroundColor:
-                        activeRoom?.friendId === room.friendId
-                          ? "gainsboro"
-                          : "white",
-                    }}
-                  >
-                    <DMStack room={room} />
-                  </Box>
-                );
-              } else {
-                return (
-                  <Typography key={room.roomId} variant="body2" sx={{ mb: 1 }}>
-                    グループチャット: {room.name}
-                  </Typography>
-                );
-              }
-            })}
-          </List>
+          <RoomList
+            roomsData={roomsData}
+            activeRoom={activeRoom}
+            handleRoomClick={handleRoomClick}
+          />
         )}
       </Box>
       <Box
