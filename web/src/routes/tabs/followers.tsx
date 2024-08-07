@@ -1,10 +1,4 @@
-import {
-  Box,
-  Button,
-  List,
-  ListItem,
-  ListItemAvatar,
-} from "@mui/material";
+import { Box, Button, List, ListItem, ListItemAvatar } from "@mui/material";
 import hooks from "../../api/hooks";
 import { deleteMatch } from "../../api/match";
 import UserAvatar from "../../components/avatar/avatar";

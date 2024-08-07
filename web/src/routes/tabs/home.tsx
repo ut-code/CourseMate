@@ -49,10 +49,10 @@ export default function Home() {
     <Box>
       <p>Name: {displayedUser?.name}</p>
       <p>id: {displayedUser?.id}</p>
-      <UserAvatar 
-        pictureUrl={displayedUser?.pictureUrl} 
-        altText={displayedUser?.name} 
-        width="300px" 
+      <UserAvatar
+        pictureUrl={displayedUser?.pictureUrl}
+        altText={displayedUser?.name}
+        width="300px"
         height="300px"
       />
       <Stack direction={"row"}>
