@@ -2,7 +2,7 @@ import { SxProps, Theme } from "@mui/material";
 import { Box, Paper, Typography } from "@mui/material";
 import { DMOverview, DMRoom, SendMessage, UserID } from "../../common/types";
 import { MessageInput } from "./MessageInput";
-import { getMyId } from "../../api/user";
+import { useCurrentUserId } from "../../hooks/useCurrentUser";
 
 type Prop = {
   data: DMRoom;
@@ -11,9 +11,8 @@ type Prop = {
   sx?: SxProps<Theme>;
 };
 
-const id = await getMyId();
-
 export function MessageWindow(props: Prop) {
+  const id = useCurrentUserId();
   const { send, room, data } = props;
   return (
     <Box
