@@ -10,7 +10,7 @@ const UserAvatar = ({ pictureUrl, altText, width, height }: Props) => {
     <img
       src={pictureUrl}
       alt={altText}
-      style={{ width, height, objectFit: "cover" }}
+      style={{ width, height, objectFit: "cover", borderRadius: "50%" }}
     />
   ) : null;
 };

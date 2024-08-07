@@ -53,7 +53,7 @@ export default function Chat() {
     >
       <Box
         sx={{
-          width: "20%",
+          width: "25%",
           borderRight: "1px solid #ddd",
           overflowY: "auto",
         }}
@@ -87,7 +87,7 @@ export default function Chat() {
       </Box>
       <Box
         sx={{
-          width: "80%",
+          width: "75%",
           height: "100%",
           backgroundColor: "white",
           display: "flex",
