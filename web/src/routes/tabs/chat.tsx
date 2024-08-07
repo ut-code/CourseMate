@@ -87,7 +87,7 @@ export default function Chat() {
       </Box>
       <Box
         sx={{
-          width: "90%",
+          width: "80%",
           height: "100%",
           backgroundColor: "white",
           display: "flex",
@@ -95,12 +95,26 @@ export default function Chat() {
           overflow: "auto",
         }}
       >
-        {selectedRoom && messages && (
-          <MessageWindow
-            data={messages}
-            send={sendDMMessage}
-            room={selectedRoom}
-          />
+        {selectedRoom ? (
+          messages && (
+            <MessageWindow
+              data={messages}
+              send={sendDMMessage}
+              room={selectedRoom}
+            />
+          )
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+              textAlign: "center",
+            }}
+          >
+            チャットを始めよう！
+          </div>
         )}
       </Box>
     </Box>
