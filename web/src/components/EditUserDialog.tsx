@@ -11,6 +11,8 @@ import {
 
 import { UpdateUser } from "../common/types";
 import userapi from "../api/user";
+import { PhotoPreview } from "./PhotoPreview";
+import { photo } from "./data/photo-preview";
 
 type EditUserDialogProps = {
   isOpen: boolean;
@@ -24,13 +26,15 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
   const { isOpen, close, defaultValue } = props;
   const [name, setName] = useState(defaultValue.name);
   const [email, setEmail] = useState(defaultValue.email);
-  const [pictureUrl, setPictureUrl] = useState(defaultValue.pictureUrl);
 
   const handleSave = async () => {
+    let pictureUrl: string | null = null;
+    if (photo.upload) pictureUrl = await photo.upload();
+
     const data: UpdateUser = {
       name: name,
       email: email,
-      pictureUrl: pictureUrl,
+      pictureUrl: pictureUrl || defaultValue.pictureUrl,
     };
     await userapi.update(data);
     close();
@@ -63,16 +67,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <TextField
-          autoFocus
-          margin="dense"
-          label="画像の URL (TODO)"
-          type="url"
-          fullWidth
-          variant="standard"
-          value={pictureUrl}
-          onChange={(e) => setPictureUrl(e.target.value)}
-        />
+        <PhotoPreview />
       </DialogContent>
       <DialogActions>
         <Button onClick={close} color="primary">
