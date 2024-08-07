@@ -1,42 +1,13 @@
 import { Box, List, Typography } from "@mui/material";
-import * as chat from "../../api/chat/chat";
 import { useRoomsOverview } from "../../api/chat/hooks";
-import { SendMessage, UserID, DMOverview, DMRoom } from "../../common/types";
+import { DMOverview } from "../../common/types";
 import { DMStack } from "../../components/chat/DMStack";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MessageWindow } from "../../components/chat/MessageWindow";
 
 export default function Chat() {
   const { data, error, loading } = useRoomsOverview();
   const [selectedRoom, setSelectedRoom] = useState<DMOverview | null>(null);
-  const [messages, setMessages] = useState<DMRoom | null>(null);
-
-  const sendDMMessage = async (to: UserID, msg: SendMessage): Promise<void> => {
-    await chat.sendDM(to, msg);
-    if (selectedRoom) {
-      fetchMessages(selectedRoom.friendId);
-    }
-  };
-
-  const fetchMessages = async (friendId: UserID) => {
-    const newMessages = await chat.getDM(friendId);
-    setMessages(newMessages);
-  };
-
-  useEffect(() => {
-    if (selectedRoom) {
-      fetchMessages(selectedRoom.friendId);
-
-      // Set up interval to fetch messages every 10 seconds
-      const intervalId = setInterval(
-        () => fetchMessages(selectedRoom.friendId),
-        5000,
-      );
-
-      // Clear interval on component unmount or room change
-      return () => clearInterval(intervalId);
-    }
-  }, [selectedRoom]);
 
   const handleRoomClick = (room: DMOverview) => {
     setSelectedRoom(room);
@@ -96,13 +67,7 @@ export default function Chat() {
         }}
       >
         {selectedRoom ? (
-          messages && (
-            <MessageWindow
-              data={messages}
-              send={sendDMMessage}
-              room={selectedRoom}
-            />
-          )
+          <MessageWindow room={selectedRoom} />
         ) : (
           <div
             style={{
