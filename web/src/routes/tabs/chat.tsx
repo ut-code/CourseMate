@@ -2,7 +2,7 @@ import { Box, List, Typography } from "@mui/material";
 import * as chat from "../../api/chat/chat";
 import { useRoomsOverview } from "../../api/chat/hooks";
 import { SendMessage, UserID } from "../../common/types";
-import { DMStack } from "../../components/DMStack";
+import { DMStack } from "../../components/chat/DMStack";
 
 export default function Chat() {
   const { data, error, loading } = useRoomsOverview();

@@ -7,9 +7,9 @@ import {
   IconButton,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import { DMOverview, SendMessage, UserID } from "../common/types";
+import { DMOverview, SendMessage, UserID } from "../../common/types";
 import { useState } from "react";
-import * as chat from "../api/chat/chat";
+import * as chat from "../../api/chat/chat";
 
 type Props = {
   send: (to: UserID, m: SendMessage) => void;
