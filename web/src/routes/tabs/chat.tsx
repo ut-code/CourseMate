@@ -30,7 +30,7 @@ export default function Chat() {
       // Set up interval to fetch messages every 10 seconds
       const intervalId = setInterval(
         () => fetchMessages(selectedRoom.friendId),
-        10000,
+        5000,
       );
 
       // Clear interval on component unmount or room change
