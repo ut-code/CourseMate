@@ -24,8 +24,9 @@ func main() {
 	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir(serveDir))
 	mux.Handle("/", http.StripPrefix("/", fs))
+	addr := strconv.Itoa(int(addr))
 	server := http.Server{
-		Addr:    ":" + strconv.Itoa(int(addr)),
+		Addr:    ":" + addr,
 		Handler: mux,
 	}
 
@@ -33,6 +34,9 @@ func main() {
 	go func() {
 		var err error
 	restart:
+		go func() {
+			fmt.Println("[web] static hosting runnings on port " + addr + "...")
+		}()
 		err = server.ListenAndServe()
 		if restartOnError {
 			fmt.Println("Server failed with error:", err.Error())
