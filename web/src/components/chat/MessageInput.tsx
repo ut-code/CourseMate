@@ -29,6 +29,7 @@ export function MessageInput(props: Props) {
             variant="outlined"
             size="small"
             value={message}
+            fullWidth={true}
             onChange={(e) => setMessage(e.target.value)}
           />
           <IconButton type="submit" color="primary">

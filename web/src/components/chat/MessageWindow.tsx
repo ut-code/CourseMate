@@ -12,13 +12,20 @@ type Prop = {
 export function MessageWindow(props: Prop) {
   const { send, room, data } = props;
   return (
-    <>
-      <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "92%",
+        padding: 4,
+      }}
+    >
+      <div style={{ flexGrow: 1, overflowY: "auto" }}>
         {data.messages.map((m) => (
           <div key={m.id}>{m.content}</div>
         ))}
       </div>
       <MessageInput send={send} room={room} />
-    </>
+    </div>
   );
 }

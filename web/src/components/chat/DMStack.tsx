@@ -1,4 +1,4 @@
-import { Stack, Typography, ListItem } from "@mui/material";
+import { Typography, ListItem } from "@mui/material";
 import { DMOverview } from "../../common/types";
 
 type Props = {
@@ -10,24 +10,13 @@ export function DMStack(props: Props) {
   return (
     <>
       <ListItem
-        // key={room.friendId}
         sx={{
-          mb: 1,
-          border: "2px solid #1976D2",
+          border: "1px solid gray",
           borderRadius: 1,
           padding: 5,
           cursor: "pointer",
         }}
-        secondaryAction={
-          <Stack
-            direction={"row"}
-            spacing={2}
-            alignItems="center"
-            textAlign={"center"}
-          >
-            <Typography variant="body2">{room.name}</Typography>
-          </Stack>
-        }
+        secondaryAction={<Typography variant="body2">{room.name}</Typography>}
       />
     </>
   );

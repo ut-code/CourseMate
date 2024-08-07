@@ -46,7 +46,7 @@ export default function Chat() {
     <Box
       sx={{
         display: "flex",
-        height: "100vh",
+        height: "90vh",
         width: "100vw",
         overflow: "hidden",
       }}
@@ -63,7 +63,7 @@ export default function Chat() {
         ) : error ? (
           <Typography color="error">Error: {error.message}</Typography>
         ) : (
-          <List>
+          <List disablePadding>
             {data?.map((room) => {
               if (room.isDM) {
                 return (
@@ -87,11 +87,12 @@ export default function Chat() {
       </Box>
       <Box
         sx={{
-          width: "80%",
+          width: "90%",
           height: "100%",
           backgroundColor: "white",
           display: "flex",
           flexDirection: "column",
+          overflow: "auto",
         }}
       >
         {selectedRoom && messages && (
@@ -99,7 +100,6 @@ export default function Chat() {
             data={messages}
             send={sendDMMessage}
             room={selectedRoom}
-            sx={{ flex: 1 }}
           />
         )}
       </Box>
