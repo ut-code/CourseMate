@@ -22,7 +22,7 @@ export function MessageInput(props: Props) {
           setMessage("");
         }}
       >
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} alignItems="center" margin={2}>
           <TextField
             name="message"
             placeholder="メッセージを入力"
