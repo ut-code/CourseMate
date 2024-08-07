@@ -25,10 +25,11 @@ export function MessageInput(props: Props) {
         <Stack direction="row" spacing={1} alignItems="center">
           <TextField
             name="message"
-            placeholder="メッセージ"
+            placeholder="メッセージを入力"
             variant="outlined"
             size="small"
             value={message}
+            fullWidth={true}
             onChange={(e) => setMessage(e.target.value)}
           />
           <IconButton type="submit" color="primary">

@@ -1,4 +1,4 @@
-import { Stack, Typography, ListItem } from "@mui/material";
+import { Typography, ListItem } from "@mui/material";
 import { DMOverview } from "../../common/types";
 import UserAvatar from "../avatar/avatar";
 
@@ -12,8 +12,7 @@ export function DMStack(props: Props) {
     <>
       <ListItem
         sx={{
-          mb: 1,
-          border: "2px solid #1976D2",
+          border: "1px solid gray",
           borderRadius: 1,
           cursor: "pointer",
         }}

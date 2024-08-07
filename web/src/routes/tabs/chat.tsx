@@ -46,7 +46,7 @@ export default function Chat() {
     <Box
       sx={{
         display: "flex",
-        height: "100vh",
+        height: "90vh",
         width: "100vw",
         overflow: "hidden",
       }}
@@ -63,7 +63,7 @@ export default function Chat() {
         ) : error ? (
           <Typography color="error">Error: {error.message}</Typography>
         ) : (
-          <List>
+          <List disablePadding>
             {data?.map((room) => {
               if (room.isDM) {
                 return (
@@ -92,15 +92,29 @@ export default function Chat() {
           backgroundColor: "white",
           display: "flex",
           flexDirection: "column",
+          overflow: "auto",
         }}
       >
-        {selectedRoom && messages && (
-          <MessageWindow
-            data={messages}
-            send={sendDMMessage}
-            room={selectedRoom}
-            sx={{ flex: 1 }}
-          />
+        {selectedRoom ? (
+          messages && (
+            <MessageWindow
+              data={messages}
+              send={sendDMMessage}
+              room={selectedRoom}
+            />
+          )
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+              textAlign: "center",
+            }}
+          >
+            チャットを始めよう！
+          </div>
         )}
       </Box>
     </Box>
