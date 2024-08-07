@@ -1,0 +1,5 @@
+.icon-image-preview {
+  /* TODO: make it flexible */
+  max-width: 450px;
+  max-height: 450px;
+}

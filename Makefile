@@ -1,6 +1,6 @@
 default: start
 
-setup: setup-server setup-web setup-root
+setup: setup-server setup-web setup-root copy-common
 	echo "auto setup is done. now do:"
 	echo "- run make husky"
 	echo "- edit server/.env"
@@ -17,7 +17,7 @@ serve: serve-all # serve only. does not build.
 watch:
 		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
 
-docker:
+docker: copy-common
 	docker compose up --build
 
 precommit: type-check lint format-check
@@ -60,10 +60,10 @@ format-check:
 # type checks
 type-check: type-check-server type-check-web
 
-type-check-server:
+type-check-server: copy-common-to-server
 	cd server; npx tsc --noEmit
 
-type-check-web:
+type-check-web: copy-common-to-web
 	cd web; npx tsc --noEmit
 
 
@@ -72,9 +72,9 @@ type-check-web:
 start-all: build-web build-server
 	make serve-all
 
-build-web:
+build-web: copy-common-to-web
 	cd web; npm run build
-build-server:
+build-server: copy-common-to-server
 	cd server; npm run build
 
 # TODO: make SERVE_STATIC flag function
@@ -86,7 +86,15 @@ serve-web:
 serve-server:
 	cd server; npm run serve
 
-watch-web:
+watch-web: copy-common-to-web
 	cd web; npm run dev
-watch-server:
+watch-server: copy-common-to-server
 	cd server; npm run dev
+
+copy-common: copy-common-to-server copy-common-to-web
+copy-common-to-server:
+	if [ -d server/src/common ]; then rm -r server/src/common; fi
+	cp -r common server/src/common
+copy-common-to-web:
+	if [ -d web/src/common ]; then rm -r web/src/common; fi
+	cp -r common web/src/common

@@ -13,11 +13,11 @@ import { deleteMatch } from "../../api/match";
 export default function Followers() {
   // const currentUserId = useAuthContext()?.id;
 
-  const { data, isLoading, error, reload } = hooks.useMatchedUsers();
+  const { data, loading, error, reload } = hooks.useMatchedUsers();
 
   return (
     <Box>
-      {isLoading ? (
+      {loading ? (
         <p>Loading...</p>
       ) : error ? (
         <p>Error: {error.message}</p>

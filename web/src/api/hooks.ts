@@ -1,13 +1,7 @@
 import endpoints from "./internal/endpoints";
 import { useAuthorizedData } from "../hooks/useData";
-import type { User } from "../../../common/types";
-
-type Hook<T> = {
-  data: T | null;
-  isLoading: boolean;
-  error: Error | null;
-  reload: () => void;
-};
+import type { User } from "../common/types";
+import type { Hook } from "./share/types";
 
 // TODO: install typia or zod.
 
@@ -21,7 +15,13 @@ export function usePendingUsers(): Hook<User[]> {
   return useAuthorizedData<User[]>(url);
 }
 
+export function useMe(): Hook<User> {
+  const url = endpoints.me;
+  return useAuthorizedData<User>(url);
+}
+
 export default {
   useMatchedUsers,
   usePendingUsers,
+  useMe,
 };

@@ -1,8 +1,8 @@
 import { app } from "../init";
 import * as admin from "firebase-admin/auth";
 import type { Request } from "express";
-import { GUID, IDToken } from "../../../../common/types";
-import { Result, Ok, Err } from "../../../../common/lib/result";
+import { GUID, IDToken } from "../../common/types";
+import { Result, Ok, Err } from "../../common/lib/result";
 
 const auth = admin.getAuth(app);
 type DecodedIdToken = admin.DecodedIdToken;
@@ -11,7 +11,7 @@ type DecodedIdToken = admin.DecodedIdToken;
 // THROWS: if idToken is not present in request cookie, or when the token is not valid.
 export async function getGUID(req: Request): Promise<GUID> {
   const idToken = req.cookies["id-token"];
-  return (await verifyIDToken(idToken)).uid;
+  return (await verifyIDToken(idToken)).uid as GUID;
 }
 
 export async function safeGetGUID(req: Request): Promise<Result<GUID>> {

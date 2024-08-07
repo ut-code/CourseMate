@@ -5,6 +5,7 @@ import { auth } from "../firebase/firebaseconfig";
 import { useSnackbar } from "notistack";
 import Header from "../components/Header";
 import user from "../api/user";
+import type { GUID } from "../common/types";
 
 const provider = new GoogleAuthProvider();
 
@@ -43,7 +44,9 @@ export default function Login() {
               if (auth.currentUser === null) {
                 throw new Error("ログインに失敗しました");
               }
-              const userData = await user.getByGUID(auth.currentUser.uid);
+              const userData = await user.getByGUID(
+                auth.currentUser.uid as GUID,
+              );
               if (userData === null) {
                 enqueueSnackbar(
                   "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
@@ -75,7 +78,7 @@ export default function Login() {
                 throw new Error("no guid");
               }
 
-              const userExists = await user.exists(guid);
+              const userExists = await user.exists(guid as GUID);
 
               if (userExists) {
                 enqueueSnackbar(

@@ -1,13 +1,13 @@
 import { Box, Button, TextField } from "@mui/material";
 import { getAuth } from "firebase/auth";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useSnackbar } from "notistack";
-import { useState, ChangeEvent } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import userapi from "../api/user";
-import { GUID, User } from "../../../common/types";
-import { app } from "../firebase/firebaseconfig";
+import { GUID, User } from "../common/types";
+import { PhotoPreview } from "../components/PhotoPreview";
+import { photo } from "../components/data/photo-preview";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -16,12 +16,10 @@ export default function SignUp() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [pictureFile, setPictureFile] = useState<File>();
 
   //サインアップの処理
   const handleSignUp = async () => {
-    const guid = user?.uid;
+    const guid = user?.uid as GUID | undefined;
     if (!guid) {
       enqueueSnackbar("ユーザ情報が取得できませんでした", {
         variant: "error",
@@ -29,12 +27,12 @@ export default function SignUp() {
       return;
     }
     try {
-      const pictureUrl = await uploadImage(guid, pictureFile!);
+      const pictureUrl = photo.upload && (await photo.upload());
       const partialUser: Omit<User, "id"> = {
         guid,
         name,
         email,
-        pictureUrl,
+        pictureUrl: pictureUrl ?? "",
       };
       await registerUserInfo(partialUser);
       enqueueSnackbar("サインアップに成功しました", {
@@ -47,15 +45,6 @@ export default function SignUp() {
         variant: "error",
       });
       navigate("/", { replace: true });
-    }
-  };
-
-  //画像を選択する関数
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    if (event.target.files && event.target.files.length > 0) {
-      setPictureFile(event.target.files[0]);
-    } else {
-      return;
     }
   };
 
@@ -73,12 +62,7 @@ export default function SignUp() {
           onChange={(e) => setEmail(e.target.value)}
           label="Email"
         />
-        <TextField
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          label="Password"
-        />
-        <input type="file" onChange={handleImageChange} />
+        <PhotoPreview />
         <Button
           variant="outlined"
           sx={{ textTransform: "none" }}
@@ -99,26 +83,5 @@ async function registerUserInfo(partialUser: Omit<User, "id">) {
     user;
   } catch (error) {
     console.error("Error during sign-up:", error);
-  }
-}
-
-//画像をfirestoreにアップロードする関数
-async function uploadImage(guid: GUID, pictureFile: File) {
-  if (!pictureFile) {
-    return "";
-  }
-
-  const storage = getStorage(app);
-  const filePath = `${guid}/${pictureFile.name}`;
-  const storageRef = ref(storage, filePath);
-
-  try {
-    const snapshot = await uploadBytes(storageRef, pictureFile);
-    const pictureUrl = await getDownloadURL(snapshot.ref);
-    console.log("File available at", pictureUrl);
-    return pictureUrl;
-  } catch (error) {
-    console.error("Error uploading file:", error);
-    throw new Error("画像のアップロードに失敗しました");
   }
 }

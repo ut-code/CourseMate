@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { type Relationship } from "../../../common/types";
+import type { Relationship, UserID } from "../common/types";
 
 import {
   approveRequest,
@@ -8,7 +8,7 @@ import {
   sendRequest,
 } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
-import { safeParseInt } from "../../../common/lib/result/safeParseInt";
+import { safeParseInt } from "../common/lib/result/safeParseInt";
 // import { Relationship } from "@prisma/client"; // ... not used?
 
 const router = express.Router();
@@ -63,7 +63,7 @@ router.put("/send/:receiverId", async (req: Request, res: Response) => {
   try {
     const sentRequest = await sendRequest({
       senderId: senderId.value,
-      receiverId: receiverId.value,
+      receiverId: receiverId.value as UserID,
     });
     res.status(201).json(sentRequest);
   } catch (error) {
@@ -81,7 +81,7 @@ router.put("/accept/:senderId", async (req: Request, res: Response) => {
   if (!receiverId.ok) return res.status(401).send("auth error");
 
   try {
-    await approveRequest(senderId.value, receiverId.value);
+    await approveRequest(senderId.value as UserID, receiverId.value);
     res.status(201).send();
   } catch (error) {
     console.error("Error approving match request:", error);
@@ -98,7 +98,7 @@ router.put("/reject/:opponentId", async (req: Request, res: Response) => {
   if (!requesterId.ok) return res.status(401).send("auth error");
 
   try {
-    await rejectRequest(opponentId.value, requesterId.value); //TODO 名前を良いのに変える
+    await rejectRequest(opponentId.value as UserID, requesterId.value); //TODO 名前を良いのに変える
     res.status(204).send();
   } catch (error) {
     console.error("Error rejecting match request:", error);

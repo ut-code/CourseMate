@@ -4,11 +4,12 @@ dotenv.config();
 import express from "express";
 import cors from "./lib/cross-origin/multiorigin-cors";
 import nocsrf from "./lib/cross-origin/block-unknown-origin";
-import usersRoutes from "./routes/users";
-import coursesRoutes from "./routes/courses";
-import requestsRoutes from "./routes/requests";
-import matchesRoutes from "./routes/matches";
-import echoRoutes from "./routes/echo";
+import usersRoutes from "./router/users";
+import coursesRoutes from "./router/courses";
+import requestsRoutes from "./router/requests";
+import matchesRoutes from "./router/matches";
+import echoRoutes from "./router/echo";
+import chatRoutes from "./router/chat";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -42,6 +43,7 @@ app.use("/courses", coursesRoutes);
 app.use("/requests", requestsRoutes);
 app.use("/matches", matchesRoutes);
 app.use("/echo", echoRoutes);
+app.use("/chat", chatRoutes);
 
 // サーバーの起動
 app.listen(port, () => {

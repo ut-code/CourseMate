@@ -13,7 +13,6 @@ model User {
   guid        String        @unique
   name        String        @default("名無し")
   email       String        @default("")
-  password    String        @default("")
   pictureUrl  String        @default("")
   enrollments Enrollement[]
   sendingUsers Relationship[] @relation("sending")  // 自分がマッチリクエストを送ったユーザー
@@ -37,10 +36,12 @@ model Enrollement {
 model Relationship {
   id              Int            @id @default(autoincrement())
   status          MatchingStatus
-  sendingUser     User           @relation("sending", fields: [sendingUserId], references: [id])
+  sendingUser     User           @relation("sending", fields: [sendingUserId], references: [id], onDelete: Cascade)
   sendingUserId   Int 
-  receivingUser   User           @relation("receiving", fields: [receivingUserId], references: [id])
-  receivingUserId Int 
+  receivingUser   User           @relation("receiving", fields: [receivingUserId], references: [id], onDelete: Cascade)
+  receivingUserId Int
+
+  messages Message[]
 
   @@unique([sendingUserId, receivingUserId])
 }
@@ -49,4 +50,26 @@ enum MatchingStatus {
   PENDING
   MATCHED
   REJECTED
+}
+
+// TODO: lazy load MessageLog s.t. it doesn't need to be loaded on Overview query.
+// https://www.prisma.io/docs/orm/prisma-client/queries/select-fields
+model SharedRoom {
+  id Int @id @default(autoincrement())
+  thumbnail String // URL to thumbnail picture
+  name String
+  members Int[]
+  messages Message[]
+}
+
+model Message {
+  id           Int         @id @default(autoincrement())
+  creator      Int // refers to UserId
+  createdAt    DateTime    @default(now()) // @readonly
+  edited       Boolean     @default(false)
+  content      String
+  relation     Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
+  relationId   Int?
+  sharedRoom   SharedRoom? @relation(fields: [sharedRoomId], references: [id], onDelete: Cascade)
+  sharedRoomId Int?
 }
