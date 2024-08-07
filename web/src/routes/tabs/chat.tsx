@@ -41,6 +41,12 @@ export default function Chat() {
                   <Box
                     key={room.friendId}
                     onClick={() => handleRoomClick(room)}
+                    sx={{
+                      backgroundColor:
+                        selectedRoom?.friendId === room.friendId
+                          ? "gainsboro"
+                          : "white",
+                    }}
                   >
                     <DMStack room={room} />
                   </Box>

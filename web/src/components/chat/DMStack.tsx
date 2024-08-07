@@ -15,6 +15,9 @@ export function DMStack(props: Props) {
           border: "1px solid gray",
           borderRadius: 1,
           cursor: "pointer",
+          "&:hover": {
+            background: "gainsboro",
+          },
         }}
       >
         <Stack
