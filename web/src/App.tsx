@@ -6,8 +6,6 @@ import {
 import Root from "./routes/root";
 import Home from "./routes/tabs/home";
 import Profile from "./routes/tabs/profile";
-import Followers from "./routes/tabs/followers";
-import Requests from "./routes/tabs/requests";
 import Login from "./routes/login";
 import SignUp from "./routes/signUp";
 import { getAuth } from "firebase/auth";
@@ -46,14 +44,6 @@ export default function App() {
         {
           path: "profile",
           element: <Profile />,
-        },
-        {
-          path: "followers",
-          element: <Followers />,
-        },
-        {
-          path: "requests",
-          element: <Requests />,
         },
         {
           path: "chat",
