@@ -26,6 +26,10 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
   const { isOpen, close, defaultValue } = props;
   const [name, setName] = useState(defaultValue.name);
   const [email, setEmail] = useState(defaultValue.email);
+  const onClose = () => {
+    photo.upload = null;
+    close();
+  };
 
   const handleSave = async () => {
     let pictureUrl: string | null = null;
@@ -41,7 +45,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
   };
 
   return (
-    <Dialog open={isOpen} onClose={close}>
+    <Dialog open={isOpen} onClose={onClose}>
       <DialogTitle>ユーザー情報を編集</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -67,10 +71,10 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <PhotoPreview />
+        <PhotoPreview defaultValueUrl={defaultValue.pictureUrl} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={close} color="primary">
+        <Button onClick={onClose} color="primary">
           キャンセル
         </Button>
         <Button onClick={handleSave} color="primary">
