@@ -13,10 +13,6 @@ export default function Chat() {
   } = useRoomsOverview();
   const [activeRoom, setActiveRoom] = useState<DMOverview | null>(null);
 
-  const handleRoomClick = (room: DMOverview) => {
-    setActiveRoom(room);
-  };
-
   return (
     <Box
       sx={{
@@ -41,7 +37,7 @@ export default function Chat() {
           <RoomList
             roomsData={roomsData}
             activeRoom={activeRoom}
-            handleRoomClick={handleRoomClick}
+            setActiveRoom={setActiveRoom}
           />
         )}
       </Box>

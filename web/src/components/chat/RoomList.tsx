@@ -5,14 +5,10 @@ import { DMStack } from "../../components/chat/DMStack";
 interface RoomListProps {
   roomsData: RoomOverview[] | null;
   activeRoom: DMOverview | null;
-  handleRoomClick: (room: DMOverview) => void;
+  setActiveRoom: (room: DMOverview) => void;
 }
 
-const RoomList = ({
-  roomsData,
-  activeRoom,
-  handleRoomClick,
-}: RoomListProps) => {
+const RoomList = ({ roomsData, activeRoom, setActiveRoom }: RoomListProps) => {
   return (
     <List disablePadding>
       {roomsData?.map((room) => {
@@ -20,7 +16,7 @@ const RoomList = ({
           return (
             <Box
               key={room.friendId}
-              onClick={() => handleRoomClick(room)}
+              onClick={() => setActiveRoom(room)}
               sx={{
                 backgroundColor:
                   activeRoom?.friendId === room.friendId
