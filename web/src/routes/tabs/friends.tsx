@@ -4,48 +4,41 @@ import Followers from "../../components/match/followers";
 import Requests from "../../components/match/requests";
 
 export function Friends() {
-  const [value, setValue] = useState(0);
+  const [open, setOpen] = useState(0);
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+  const handleChange = (_event: React.SyntheticEvent, newOpen: number) => {
+    setOpen(newOpen);
   };
 
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={value} onChange={handleChange}>
+        <Tabs value={open} onChange={handleChange}>
           <Tab label="マッチ中" {...a11yProps(0)} />
           <Tab label="リクエスト" {...a11yProps(1)} />
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
-        <Followers />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <Requests />
+      <TabPanel open={open}>
+        {open === 0 ? <Followers /> : open === 1 ? <Requests /> : null}
       </TabPanel>
     </Box>
   );
 }
 
-type TabPanelProps = {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-};
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
+function TabPanel({
+  open,
+  children,
+}: {
+  open: number;
+  children: React.ReactNode;
+}) {
   return (
     <div
       role="tabpanel"
-      hidden={value !== index}
-      id={`tabpanel-${index}`}
-      aria-labelledby={`tab-${index}`}
-      {...other}
+      id={`tabpanel-${open}`}
+      aria-labelledby={`tab-${open}`}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      <Box sx={{ p: 3 }}>{children}</Box>
     </div>
   );
 }
