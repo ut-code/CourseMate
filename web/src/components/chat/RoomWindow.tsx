@@ -13,7 +13,7 @@ type Prop = {
 export function RoomWindow(props: Prop) {
   const id = useCurrentUserId();
   const { room } = props;
-  const [messages, setMessages] = useState<DMRoom | null>(null);
+  const [dm, setDM] = useState<DMRoom | null>(null);
 
   const sendDMMessage = async (to: UserID, msg: SendMessage): Promise<void> => {
     await chat.sendDM(to, msg);
@@ -23,8 +23,8 @@ export function RoomWindow(props: Prop) {
   };
 
   const fetchMessages = async (friendId: UserID) => {
-    const newMessages = await chat.getDM(friendId);
-    setMessages(newMessages);
+    const newDM = await chat.getDM(friendId);
+    setDM(newDM);
   };
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export function RoomWindow(props: Prop) {
         behavior: "smooth",
       });
     }
-  }, [messages]);
+  }, [dm]);
 
   return (
     <>
@@ -56,12 +56,12 @@ export function RoomWindow(props: Prop) {
           padding: 2,
         }}
       >
-        {messages ? (
+        {dm ? (
           <Box
             sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}
             ref={scrollDiv}
           >
-            {messages.messages.map((m) => (
+            {dm.messages.map((m) => (
               <Box
                 key={m.id}
                 sx={{
