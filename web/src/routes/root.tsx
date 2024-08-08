@@ -1,15 +1,14 @@
 import { BottomNavigation, BottomNavigationAction } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import EmailIcon from "@mui/icons-material/Email";
 import PeopleIcon from "@mui/icons-material/People";
 import ChatIcon from "@mui/icons-material/Chat";
 import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 
-const labels = ["Home", "Profile", "Followers", "Requests", "Chat"];
-const paths = ["/home", "/profile", "/followers", "/requests", "/chat"];
+const labels = ["Home", "Chat", "Friends", "Profile"];
+const paths = ["/home", "/chat", "/friends", "/profile"];
 
 export default function Root() {
   const location = useLocation();
@@ -46,27 +45,21 @@ export default function Root() {
         />
         <BottomNavigationAction
           component={Link}
-          to="/profile"
-          label="Profile"
-          icon={<AccountCircleIcon />}
-        />
-        <BottomNavigationAction
-          component={Link}
-          to="/followers"
-          label="Followers"
+          to="/friends"
+          label="Friends"
           icon={<PeopleIcon />}
-        />
-        <BottomNavigationAction
-          component={Link}
-          to="/requests"
-          label="Requests"
-          icon={<EmailIcon />}
         />
         <BottomNavigationAction
           component={Link}
           to="/chat"
           label="Chat"
           icon={<ChatIcon />}
+        />
+        <BottomNavigationAction
+          component={Link}
+          to="/profile"
+          label="Profile"
+          icon={<AccountCircleIcon />}
         />
       </BottomNavigation>
     </>

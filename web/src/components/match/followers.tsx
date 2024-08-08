@@ -1,7 +1,7 @@
 import { Box, Button, List, ListItem, ListItemAvatar } from "@mui/material";
 import hooks from "../../api/hooks";
 import { deleteMatch } from "../../api/match";
-import UserAvatar from "../../components/avatar/avatar";
+import UserAvatar from "../avatar/avatar";
 
 export default function Followers() {
   // const currentUserId = useAuthContext()?.id;
