@@ -3,6 +3,12 @@ import { useState } from "react";
 import Followers from "../../components/match/followers";
 import Requests from "../../components/match/requests";
 
+type TabPanelProps = {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+};
+
 export function Friends() {
   const [value, setValue] = useState(0);
 
@@ -26,11 +32,6 @@ export function Friends() {
       </CustomTabPanel>
     </Box>
   );
-}
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
 }
 
 function CustomTabPanel(props: TabPanelProps) {
