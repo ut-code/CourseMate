@@ -16,7 +16,6 @@ export default function Home() {
       if (!currentUserId) return;
 
       const matched = await user.matched();
-      console.log(matched);
       const users = await user.except(currentUserId);
       const unmatched = users.filter(
         (user) => !matched.some((matchedUser) => matchedUser.id === user.id),
