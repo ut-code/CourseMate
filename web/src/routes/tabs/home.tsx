@@ -5,6 +5,8 @@ import user from "../../api/user";
 import request from "../../api/request";
 import { useCurrentUserId } from "../../hooks/useCurrentUser";
 
+import { DraggableCard } from "../../components/DraggableCard";
+
 export default function Home() {
   const [users, setUsers] = useState<User[] | null>(null);
   const [displayedUser, setDisplayedUser] = useState<User | null>(null);
@@ -30,6 +32,7 @@ export default function Home() {
 
   const handleClickCross = (): void => {
     if (!users || !displayedUser) return;
+    alert("skipped!");
     const newUsers = users.filter((user) => user.id !== displayedUser.id);
     setUsers(newUsers);
   };
@@ -39,20 +42,19 @@ export default function Home() {
     request.send(displayedUser.id).catch((err: unknown) => {
       console.error("Error liking user:", err);
     });
+    alert("liked!");
     if (!users) return;
     const newUsers = users.filter((user) => user.id !== displayedUser.id);
     setUsers(newUsers);
   };
 
   return (
-    <Box>
-      <p>Name: {displayedUser?.name}</p>
-      <p>id: {displayedUser?.id}</p>
+    <Box display="flex" flexDirection="column" alignItems="center">
       {displayedUser?.pictureUrl && (
-        <img
-          src={displayedUser?.pictureUrl}
-          alt="Profile Picture"
-          style={{ width: "300px", height: "300px", objectFit: "cover" }} // 画像のサイズを指定
+        <DraggableCard
+          displayedUser={displayedUser}
+          onSwipeLeft={handleClickCross}
+          onSwipeRight={handleClickCircle}
         />
       )}
       <Stack direction={"row"}>
