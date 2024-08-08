@@ -4,7 +4,6 @@ import { Box, Button, Stack } from "@mui/material";
 import user from "../../api/user";
 import request from "../../api/request";
 import { useCurrentUserId } from "../../hooks/useCurrentUser";
-import UserAvatar from "../../components/avatar/avatar";
 
 import { DraggableCard } from "../../components/DraggableCard";
 
@@ -52,13 +51,11 @@ export default function Home() {
   };
 
   return (
-    <Box>
-      <p>Name: {displayedUser?.name}</p>
-      <p>id: {displayedUser?.id}</p>
-      <UserAvatar
-        pictureUrl={displayedUser?.pictureUrl}
-        width="300px"
-        height="300px"
+    <Box display="flex" flexDirection="column" alignItems="center">
+      <DraggableCard
+        displayedUser={displayedUser}
+        onSwipeLeft={handleClickCross}
+        onSwipeRight={handleClickCircle}
       />
       <Stack direction={"row"}>
         <Button onClick={handleClickCross}>X</Button>
