@@ -11,10 +11,10 @@ services:
       - coursemate_data:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready --username postgres --dbname postgres --port 5432 --quiet
-      interval: 5s
+      interval: 3s
       timeout: 1s
       retries: 3
-      start_period: 10s
+      start_period: 3s
   server:
     build:
       context: ./server
@@ -23,6 +23,12 @@ services:
       - "3000:3000"
     # environment:
     #   - DATABASE_URL=${DATABASE_URL:-postgres://postgres:mysecretpassword@coursemate_db:5432/}
+    healthcheck:
+      test: curl localhost:3000
+      interval: 1s
+      timeout: 1s
+      retries: 3
+      start_period: 2s
 
     depends_on:
       coursemate_db:
@@ -33,6 +39,9 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - "5173:5173"
+    depends_on:
+      server:
+        condition: service_healthy
 
 volumes:
   coursemate_data:
