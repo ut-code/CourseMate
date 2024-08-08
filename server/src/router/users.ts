@@ -12,6 +12,7 @@ import {
   getUser,
   updateUser,
   getAllUsers,
+  getUserByID,
 } from "../database/users";
 import { searchMatchedUser, searchPendingUsers } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
@@ -86,12 +87,29 @@ router.get("/pending", async (req: Request, res: Response) => {
   }
 });
 
-// ユーザーの取得エンドポイント
+// guidによるユーザーの取得エンドポイント
 router.get("/guid/:guid", async (req: Request, res: Response) => {
   const { guid } = req.params;
 
   try {
     const user = await getUser(guid as GUID);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const json: PublicUser = Public(user);
+    res.status(200).json(json);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Failed to fetch user" });
+  }
+});
+
+//idによるユーザーの取得エンドポイント
+router.get("/id/:id", async (req: Request, res: Response) => {
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
+  try {
+    const user = await getUserByID(userId.value);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
