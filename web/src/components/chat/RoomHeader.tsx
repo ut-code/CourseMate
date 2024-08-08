@@ -14,12 +14,7 @@ export function RoomHeader(props: Props) {
         borderBottom: "1px solid #ddd",
       }}
     >
-      <UserAvatar
-        pictureUrl={room.thumbnail}
-        altText={room.name}
-        width="50px"
-        height="50px"
-      />
+      <UserAvatar pictureUrl={room.thumbnail} width="50px" height="50px" />
       <Typography variant="h6">{room.name}</Typography>
     </Box>
   );

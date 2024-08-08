@@ -26,12 +26,7 @@ export function Room(props: Props) {
           alignItems="center"
           textAlign={"center"}
         >
-          <UserAvatar
-            pictureUrl={room.thumbnail}
-            altText={room.name}
-            width="50px"
-            height="50px"
-          />
+          <UserAvatar pictureUrl={room.thumbnail} width="50px" height="50px" />
           <Typography variant="body2">{room.name}</Typography>
         </Stack>
       </ListItem>

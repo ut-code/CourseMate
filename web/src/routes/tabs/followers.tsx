@@ -34,7 +34,6 @@ export default function Followers() {
               <ListItemAvatar>
                 <UserAvatar
                   pictureUrl={matchedUser.pictureUrl}
-                  altText={matchedUser.name}
                   width="50px"
                   height="50px"
                 />

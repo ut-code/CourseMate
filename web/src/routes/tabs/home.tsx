@@ -54,7 +54,6 @@ export default function Home() {
       <p>id: {displayedUser?.id}</p>
       <UserAvatar
         pictureUrl={displayedUser?.pictureUrl}
-        altText={displayedUser?.name}
         width="300px"
         height="300px"
       />

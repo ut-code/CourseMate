@@ -30,7 +30,6 @@ export default function Profile() {
             <p>ID: {data.id}</p>
             <UserAvatar
               pictureUrl={data.pictureUrl}
-              altText={data.name}
               width="300px"
               height="300px"
             />
