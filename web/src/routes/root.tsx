@@ -8,8 +8,15 @@ import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 
-const labels = ["Home", "Profile", "Followers", "Requests", "Chat"];
-const paths = ["/home", "/profile", "/followers", "/requests", "/chat"];
+const labels = ["Home", "Friends", "Profile", "Followers", "Requests", "Chat"];
+const paths = [
+  "/home",
+  "/friends",
+  "/profile",
+  "/followers",
+  "/requests",
+  "/chat",
+];
 
 export default function Root() {
   const location = useLocation();
@@ -43,6 +50,12 @@ export default function Root() {
           to="/home"
           label="Home"
           icon={<HomeIcon />}
+        />
+        <BottomNavigationAction
+          component={Link}
+          to="/friends"
+          label="Friends"
+          icon={<PeopleIcon />}
         />
         <BottomNavigationAction
           component={Link}

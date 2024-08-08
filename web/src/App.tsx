@@ -13,6 +13,7 @@ import SignUp from "./routes/signUp";
 import { getAuth } from "firebase/auth";
 import { SnackbarProvider } from "notistack";
 import Chat from "./routes/tabs/chat";
+import { Friends } from "./routes/tabs/friends";
 
 export default function App() {
   const PrivateRoute = () => {
@@ -37,6 +38,10 @@ export default function App() {
         {
           path: "home",
           element: <Home />,
+        },
+        {
+          path: "friends",
+          element: <Friends />,
         },
         {
           path: "profile",
