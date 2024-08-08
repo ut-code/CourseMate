@@ -72,11 +72,10 @@ start-all: build-web build-server
 	make serve-all
 
 build-web: copy-common-to-web
-	cd web/static-server; make build
+	cd web/static-server; go build -o exec .
 	cd web; npm run build
 build-server: copy-common-to-server
 	cd server; npm run build
-	cd server; go build -o serve-static .
 
 serve-all:
 	(trap 'kill 0' SIGINT; make serve-server & make serve-web & wait)
