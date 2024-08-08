@@ -3,13 +3,12 @@ import {
   List,
   ListItem,
   Button,
-  ListItemAvatar,
-  Avatar,
   Stack,
+  ListItemAvatar,
 } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
 import request from "../../api/request";
 import hooks from "../../api/hooks";
+import UserAvatar from "../avatar/avatar";
 
 export default function Requests() {
   // const currentUserId = useAuthContext()?.id;
@@ -55,10 +54,13 @@ export default function Requests() {
                 }
               >
                 <ListItemAvatar>
-                  <Avatar>
-                    <PersonIcon />
-                  </Avatar>
+                  <UserAvatar
+                    pictureUrl={matchedUser.pictureUrl}
+                    width="50px"
+                    height="50px"
+                  />
                 </ListItemAvatar>
+
                 <p>{matchedUser.name}</p>
               </ListItem>
             ))}
