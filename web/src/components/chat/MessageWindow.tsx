@@ -31,12 +31,6 @@ export function MessageWindow(props: Prop) {
   useEffect(() => {
     if (room) {
       fetchMessages(room.friendId);
-
-      // Set up interval to fetch messages every 5 seconds
-      const intervalId = setInterval(() => fetchMessages(room.friendId), 5000);
-
-      // Clear interval on component unmount or room change
-      return () => clearInterval(intervalId);
     }
   }, [room]);
 
