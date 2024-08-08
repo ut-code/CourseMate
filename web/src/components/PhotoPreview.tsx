@@ -2,8 +2,11 @@ import { useState, ChangeEvent, useEffect } from "react";
 import { uploadImage } from "../firebase/store/upload-photo";
 import { photo } from "./data/photo-preview";
 
-export function PhotoPreview() {
-  const [url, setUrl] = useState<string | null>(null);
+type Props = {
+  defaultValueUrl?: string;
+};
+export function PhotoPreview({ defaultValueUrl }: Props) {
+  const [url, setUrl] = useState<string | null>(defaultValueUrl || null);
   const [file, setFile] = useState<File | null>(null);
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>): void {
