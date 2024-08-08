@@ -1,14 +1,7 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  List,
-  ListItem,
-  ListItemAvatar,
-} from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
+import { Box, Button, List, ListItem, ListItemAvatar } from "@mui/material";
 import hooks from "../../api/hooks";
 import { deleteMatch } from "../../api/match";
+import UserAvatar from "../../components/avatar/avatar";
 
 export default function Followers() {
   // const currentUserId = useAuthContext()?.id;
@@ -39,9 +32,11 @@ export default function Followers() {
               }
             >
               <ListItemAvatar>
-                <Avatar>
-                  <PersonIcon />
-                </Avatar>
+                <UserAvatar
+                  pictureUrl={matchedUser.pictureUrl}
+                  width="50px"
+                  height="50px"
+                />
               </ListItemAvatar>
               <p>{matchedUser.name}</p>
             </ListItem>

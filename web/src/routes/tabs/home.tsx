@@ -4,6 +4,7 @@ import { Box, Button, Stack } from "@mui/material";
 import user from "../../api/user";
 import request from "../../api/request";
 import { useCurrentUserId } from "../../hooks/useCurrentUser";
+import UserAvatar from "../../components/avatar/avatar";
 
 import { DraggableCard } from "../../components/DraggableCard";
 
@@ -18,7 +19,9 @@ export default function Home() {
 
       const matched = await user.matched();
       const users = await user.except(currentUserId);
-      const unmatched = users.filter((user) => !matched.includes(user));
+      const unmatched = users.filter(
+        (user) => !matched.some((matchedUser) => matchedUser.id === user.id),
+      );
       setUsers(unmatched);
     })().catch(console.error);
   }, [currentUserId]);
@@ -49,14 +52,14 @@ export default function Home() {
   };
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
-      {displayedUser?.pictureUrl && (
-        <DraggableCard
-          displayedUser={displayedUser}
-          onSwipeLeft={handleClickCross}
-          onSwipeRight={handleClickCircle}
-        />
-      )}
+    <Box>
+      <p>Name: {displayedUser?.name}</p>
+      <p>id: {displayedUser?.id}</p>
+      <UserAvatar
+        pictureUrl={displayedUser?.pictureUrl}
+        width="300px"
+        height="300px"
+      />
       <Stack direction={"row"}>
         <Button onClick={handleClickCross}>X</Button>
         <Button onClick={handleClickCircle}>O</Button>
