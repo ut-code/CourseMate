@@ -7,8 +7,8 @@ import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 
-const labels = ["Home", "Chat", "Friends", "Profile"];
-const paths = ["/home", "/chat", "/friends", "/profile"];
+const labels = ["Home", "Friends", "Chat", "Profile"];
+const paths = ["/home", "/friends", "/chat", "/profile"];
 
 export default function Root() {
   const location = useLocation();
