@@ -6,7 +6,7 @@ type Props = {
   room: DMOverview;
 };
 
-export function DMStack(props: Props) {
+export function Room(props: Props) {
   const { room } = props;
   return (
     <>

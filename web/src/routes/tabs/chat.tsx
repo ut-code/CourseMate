@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { useRoomsOverview } from "../../api/chat/hooks";
 import { DMOverview } from "../../common/types";
 import { useState } from "react";
-import { MessageWindow } from "../../components/chat/MessageWindow";
+import { RoomWindow } from "../../components/chat/RoomWindow";
 import RoomList from "../../components/chat/RoomList";
 
 export default function Chat() {
@@ -52,7 +52,7 @@ export default function Chat() {
         }}
       >
         {activeRoom ? (
-          <MessageWindow room={activeRoom} />
+          <RoomWindow room={activeRoom} />
         ) : (
           <div
             style={{

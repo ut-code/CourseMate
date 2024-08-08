@@ -1,14 +1,15 @@
 import { Box, List, Typography } from "@mui/material";
 import { DMOverview, RoomOverview } from "../../common/types";
-import { DMStack } from "../../components/chat/DMStack";
+import { Room } from "./Room";
 
-interface RoomListProps {
+type RoomListProps = {
   roomsData: RoomOverview[] | null;
   activeRoom: DMOverview | null;
   setActiveRoom: (room: DMOverview) => void;
-}
+};
 
-const RoomList = ({ roomsData, activeRoom, setActiveRoom }: RoomListProps) => {
+export function RoomList(props: RoomListProps) {
+  const { roomsData, activeRoom, setActiveRoom } = props;
   return (
     <List disablePadding>
       {roomsData?.map((room) => {
@@ -24,7 +25,7 @@ const RoomList = ({ roomsData, activeRoom, setActiveRoom }: RoomListProps) => {
                     : "white",
               }}
             >
-              <DMStack room={room} />
+              <Room room={room} />
             </Box>
           );
         } else {
@@ -37,6 +38,6 @@ const RoomList = ({ roomsData, activeRoom, setActiveRoom }: RoomListProps) => {
       })}
     </List>
   );
-};
+}
 
 export default RoomList;

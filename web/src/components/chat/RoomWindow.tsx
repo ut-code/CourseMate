@@ -1,17 +1,16 @@
-import { Stack } from "@mui/material";
 import { Box, Paper, Typography } from "@mui/material";
 import { DMOverview, DMRoom, SendMessage, UserID } from "../../common/types";
 import { MessageInput } from "./MessageInput";
 import { useCurrentUserId } from "../../hooks/useCurrentUser";
-import UserAvatar from "../avatar/avatar";
 import { useState, useEffect, useRef } from "react";
 import * as chat from "../../api/chat/chat";
+import { RoomHeader } from "./RoomHeader";
 
 type Prop = {
   room: DMOverview;
 };
 
-export function MessageWindow(props: Prop) {
+export function RoomWindow(props: Prop) {
   const id = useCurrentUserId();
   const { room } = props;
   const [messages, setMessages] = useState<DMRoom | null>(null);
@@ -48,21 +47,7 @@ export function MessageWindow(props: Prop) {
 
   return (
     <>
-      <Stack
-        sx={{ display: "flex", paddingLeft: 4, paddingTop: 2 }}
-        spacing={2}
-        direction={"row"}
-        alignItems="center"
-        textAlign={"center"}
-      >
-        <UserAvatar
-          pictureUrl={room.thumbnail}
-          altText={room.name}
-          width="40px"
-          height="40px"
-        />
-        <Typography variant="h6">{room.name}</Typography>
-      </Stack>
+      <RoomHeader room={room} />
       <Box
         sx={{
           display: "flex",
