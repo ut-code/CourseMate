@@ -3,12 +3,6 @@ import { useState } from "react";
 import Followers from "../../components/match/followers";
 import Requests from "../../components/match/requests";
 
-type TabPanelProps = {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-};
-
 export function Friends() {
   const [value, setValue] = useState(0);
 
@@ -24,17 +18,23 @@ export function Friends() {
           <Tab label="リクエスト" {...a11yProps(1)} />
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0}>
+      <TabPanel value={value} index={0}>
         <Followers />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
         <Requests />
-      </CustomTabPanel>
+      </TabPanel>
     </Box>
   );
 }
 
-function CustomTabPanel(props: TabPanelProps) {
+type TabPanelProps = {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+};
+
+function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
