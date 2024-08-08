@@ -16,7 +16,7 @@ import (
 // dist server
 // this go file is only intended to serve /dist after building with vite build.
 
-const serveDir = "./dist"
+const serveDir = "../dist"
 const addr uint16 = 4173 // is this what server/.env:WEB_ORIGIN_BUILD meant to be?
 const restartOnError = false
 
