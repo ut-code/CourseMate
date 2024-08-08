@@ -46,7 +46,8 @@ app.use("/echo", echoRoutes);
 app.use("/chat", chatRoutes);
 
 // サーバーの起動
-for (;;) {
+// eslint-disable-next-line no-constant-condition
+while (true) {
   try {
     app.listen(port, () => {
       console.log("running");
