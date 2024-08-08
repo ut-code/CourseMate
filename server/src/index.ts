@@ -46,6 +46,12 @@ app.use("/echo", echoRoutes);
 app.use("/chat", chatRoutes);
 
 // サーバーの起動
-app.listen(port, () => {
-  console.log("running");
-});
+for (;;) {
+  try {
+    app.listen(port, () => {
+      console.log("running");
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
