@@ -97,9 +97,10 @@ export async function rejectRequest(
   });
 }
 
-//ユーザーにまつわるリクエストを探す
-export async function searchPendingUsers(userId: UserID): Promise<User[]> {
-  //俺をリクエストしているのは誰だ
+//ユーザーへのリクエストを探す 俺をリクエストしているのは誰だ
+export async function findPendingRequestsToUser(
+  userId: UserID,
+): Promise<User[]> {
   const found = await prisma.user.findMany({
     where: {
       sendingUsers: {
@@ -113,17 +114,22 @@ export async function searchPendingUsers(userId: UserID): Promise<User[]> {
   return found;
 }
 
-// export async function searchRequestingUser(userId: UserID):Promise<Relationship[]> {
-//   //俺がリクエストしているのは誰だ
-//   try {
-//     return await prisma.relationship.findMany({
-//       where: {sendingUserId: userId}
-//     });
-//   } catch(error) {
-//     console.log("failed to search sendingUsers")
-//     throw error;
-//   }
-// }
+//ユーザーがリクエストしている人を探す 俺がリクエストしているのは誰だ
+export async function findPendingRequestsFromUser(
+  userId: UserID,
+): Promise<User[]> {
+  const found = await prisma.user.findMany({
+    where: {
+      receivingUsers: {
+        some: {
+          sendingUserId: userId,
+          status: "PENDING",
+        },
+      },
+    },
+  });
+  return found;
+}
 
 //マッチした人の取得
 export async function searchMatchedUser(userId: UserID): Promise<User[]> {

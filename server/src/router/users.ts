@@ -14,7 +14,11 @@ import {
   getAllUsers,
   getUserByID,
 } from "../database/users";
-import { searchMatchedUser, searchPendingUsers } from "../database/requests";
+import {
+  findPendingRequestsFromUser,
+  findPendingRequestsToUser,
+  searchMatchedUser,
+} from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
 
@@ -72,15 +76,32 @@ router.get("/matched", async (req: Request, res: Response) => {
   }
 });
 
-// machingStatusがpendingなユーザーを取得
-router.get("/pending", async (req: Request, res: Response) => {
+// ユーザーにリクエストを送っているユーザーを取得 状態はPENDING
+router.get("/pending/to-me", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
   try {
-    const matchedUsers: User[] = await searchPendingUsers(userId.value);
-    const safeMatched = matchedUsers.map(Public);
-    res.status(200).json(safeMatched);
+    const sendingUsers: User[] = await findPendingRequestsToUser(userId.value);
+    const safeUsers = sendingUsers.map(Public);
+    res.status(200).json(safeUsers);
+  } catch (error) {
+    console.error("Error fetching matching requests", error);
+    res.status(500).json({ error: "Failed to fetch matching requests" });
+  }
+});
+
+// ユーザーがリクエストを送っているユーザーを取得 状態はPENDING
+router.get("/pending/from-me", async (req: Request, res: Response) => {
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
+
+  try {
+    const receivingUsers: User[] = await findPendingRequestsFromUser(
+      userId.value,
+    );
+    const safeUsers = receivingUsers.map(Public);
+    res.status(200).json(safeUsers);
   } catch (error) {
     console.error("Error fetching matching requests", error);
     res.status(500).json({ error: "Failed to fetch matching requests" });
