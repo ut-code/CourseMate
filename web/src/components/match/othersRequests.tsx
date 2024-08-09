@@ -11,7 +11,7 @@ import hooks from "../../api/hooks";
 import UserAvatar from "../avatar/avatar";
 
 export default function OthersReq() {
-  const { data, loading, error, reload } = hooks.usePendingUsers();
+  const { data, loading, error, reload } = hooks.usePendingRequestForUser();
 
   return (
     <Box>
@@ -22,15 +22,14 @@ export default function OthersReq() {
       ) : (
         <List>
           {data !== undefined &&
-            // FIXME: this is probably not matched user
-            data?.map((matchedUser) => (
+            data?.map((sendingUser) => (
               <ListItem
-                key={matchedUser.id.toString()}
+                key={sendingUser.id.toString()}
                 secondaryAction={
                   <Stack direction={"row"}>
                     <Button
                       onClick={() => {
-                        request.accept(matchedUser.id).then(() => reload());
+                        request.accept(sendingUser.id).then(() => reload());
                       }}
                     >
                       承認
@@ -43,7 +42,7 @@ export default function OthersReq() {
                           )
                         )
                           return;
-                        request.reject(matchedUser.id).then(() => reload());
+                        request.reject(sendingUser.id).then(() => reload());
                       }}
                     >
                       拒否
@@ -53,13 +52,12 @@ export default function OthersReq() {
               >
                 <ListItemAvatar>
                   <UserAvatar
-                    pictureUrl={matchedUser.pictureUrl}
+                    pictureUrl={sendingUser.pictureUrl}
                     width="50px"
                     height="50px"
                   />
                 </ListItemAvatar>
-
-                <p>{matchedUser.name}</p>
+                <p>{sendingUser.name}</p>
               </ListItem>
             ))}
         </List>
