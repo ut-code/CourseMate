@@ -83,7 +83,7 @@ const matchedUsers = `${origin}/users/matched`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const pendingRequestforUser = `${origin}/users/pending/forUser`;
+const pendingRequestToUser = `${origin}/users/pending/toUser`;
 
 /**
  * [v] 実装済み
@@ -94,7 +94,7 @@ const pendingRequestforUser = `${origin}/users/pending/forUser`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const pendingRequestByUser = `${origin}/users/pending/byUser`;
+const pendingRequestFromUser = `${origin}/users/pending/fromUser`;
 
 /**
  * [v] 実装済み
@@ -288,8 +288,8 @@ export default {
   userExists,
   users,
   matchedUsers,
-  pendingRequestforUser,
-  pendingRequestByUser,
+  pendingRequestToUser,
+  pendingRequestFromUser,
   match,
   matches,
   requests,

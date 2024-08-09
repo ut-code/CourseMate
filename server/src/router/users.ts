@@ -15,8 +15,8 @@ import {
   getUserByID,
 } from "../database/users";
 import {
-  findPendingRequestsByUser,
-  findPendingRequestsForUser,
+  findPendingRequestsFromUser,
+  findPendingRequestsToUser,
   searchMatchedUser,
 } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
@@ -77,12 +77,12 @@ router.get("/matched", async (req: Request, res: Response) => {
 });
 
 // ユーザーにリクエストを送っているユーザーを取得 状態はPENDING
-router.get("/pending/forUser", async (req: Request, res: Response) => {
+router.get("/pending/toUser", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
   try {
-    const sendingUsers: User[] = await findPendingRequestsForUser(userId.value);
+    const sendingUsers: User[] = await findPendingRequestsToUser(userId.value);
     const safeUsers = sendingUsers.map(Public);
     res.status(200).json(safeUsers);
   } catch (error) {
@@ -92,12 +92,12 @@ router.get("/pending/forUser", async (req: Request, res: Response) => {
 });
 
 // ユーザーがリクエストを送っているユーザーを取得 状態はPENDING
-router.get("/pending/byUser", async (req: Request, res: Response) => {
+router.get("/pending/fromUser", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
   try {
-    const receivingUsers: User[] = await findPendingRequestsByUser(
+    const receivingUsers: User[] = await findPendingRequestsFromUser(
       userId.value,
     );
     const safeUsers = receivingUsers.map(Public);

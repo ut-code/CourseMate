@@ -3,7 +3,7 @@ import hooks from "../../api/hooks";
 import UserAvatar from "../avatar/avatar";
 import { List, ListItem, ListItemAvatar } from "@mui/material";
 export default function MyReq() {
-  const { data, loading, error } = hooks.usePendingRequestByUser();
+  const { data, loading, error } = hooks.usePendingRequestFromUser();
   return (
     <Box>
       <p>
