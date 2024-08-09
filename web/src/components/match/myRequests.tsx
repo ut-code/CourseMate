@@ -6,7 +6,11 @@ export default function MyReq() {
   const { data, loading, error } = hooks.usePendingRequestByUser();
   return (
     <Box>
-      <p>送信済みリクエスト</p>
+      <p>
+        {data && data.length > 0
+          ? "以下のリクエストを送信しました"
+          : "リクエストを送信しましょう！"}
+      </p>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (

@@ -15,6 +15,11 @@ export default function OthersReq() {
 
   return (
     <Box>
+      <p>
+        {data && data.length > 0
+          ? "以下のリクエストを受け取りました"
+          : "リクエストは受け取っていません。"}
+      </p>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
