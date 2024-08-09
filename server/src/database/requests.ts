@@ -97,7 +97,7 @@ export async function rejectRequest(
   });
 }
 
-//ユーザーへのリクエストを探す  //俺をリクエストしているのは誰だ
+//ユーザーへのリクエストを探す 俺をリクエストしているのは誰だ
 export async function findPendingRequestsToUser(
   userId: UserID,
 ): Promise<User[]> {
@@ -114,7 +114,7 @@ export async function findPendingRequestsToUser(
   return found;
 }
 
-//ユーザーがリクエストしている人を探す //   //俺がリクエストしているのは誰だ
+//ユーザーがリクエストしている人を探す 俺がリクエストしているのは誰だ
 export async function findPendingRequestsFromUser(
   userId: UserID,
 ): Promise<User[]> {
