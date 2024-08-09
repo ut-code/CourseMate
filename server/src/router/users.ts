@@ -77,7 +77,7 @@ router.get("/matched", async (req: Request, res: Response) => {
 });
 
 // ユーザーにリクエストを送っているユーザーを取得 状態はPENDING
-router.get("/pending/toUser", async (req: Request, res: Response) => {
+router.get("/pending/to-me", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
@@ -92,7 +92,7 @@ router.get("/pending/toUser", async (req: Request, res: Response) => {
 });
 
 // ユーザーがリクエストを送っているユーザーを取得 状態はPENDING
-router.get("/pending/fromUser", async (req: Request, res: Response) => {
+router.get("/pending/from-me", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 

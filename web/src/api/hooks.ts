@@ -10,13 +10,13 @@ export function useMatchedUsers(): Hook<User[]> {
   return useAuthorizedData<User[]>(url);
 }
 
-export function usePendingRequestToUser(): Hook<User[]> {
-  const url = endpoints.pendingRequestToUser;
+export function usePendingRequestToMe(): Hook<User[]> {
+  const url = endpoints.pendingRequestToMe;
   return useAuthorizedData<User[]>(url);
 }
 
-export function usePendingRequestFromUser(): Hook<User[]> {
-  const url = endpoints.pendingRequestFromUser;
+export function usePendingRequestFromMe(): Hook<User[]> {
+  const url = endpoints.pendingRequestFromMe;
   return useAuthorizedData<User[]>(url);
 }
 
@@ -27,7 +27,7 @@ export function useMe(): Hook<User> {
 
 export default {
   useMatchedUsers,
-  usePendingRequestToUser,
-  usePendingRequestFromUser,
+  usePendingRequestToMe,
+  usePendingRequestFromMe,
   useMe,
 };
