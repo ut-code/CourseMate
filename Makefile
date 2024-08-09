@@ -43,7 +43,6 @@ setup-server:
 setup-root:
 	npm ci
 
-
 # Static checks
 
 ## code style
@@ -73,14 +72,18 @@ start-all: build-web build-server
 	make serve-all
 
 build-web: copy-common-to-web
+	cd web/static-server; go build -o exec .
 	cd web; npm run build
 build-server: copy-common-to-server
 	cd server; npm run build
 
-# TODO: make SERVE_STATIC flag function
 serve-all:
-	cp web/dist server/static -r
-	cd server; SERVE_STATIC=1 npm run serve
+	(trap 'kill 0' SIGINT; make serve-server & make serve-web & wait)
+serve-web:
+	cd web; ./static-server/exec;
+
+serve-server:
+	cd server; npm run serve
 
 watch-web: copy-common-to-web
 	cd web; npm run dev
