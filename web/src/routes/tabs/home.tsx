@@ -4,7 +4,8 @@ import { Box, Button, Stack } from "@mui/material";
 import user from "../../api/user";
 import request from "../../api/request";
 import { useCurrentUserId } from "../../hooks/useCurrentUser";
-import UserAvatar from "../../components/avatar/avatar";
+
+import { DraggableCard } from "../../components/DraggableCard";
 
 export default function Home() {
   const [users, setUsers] = useState<User[] | null>(null);
@@ -33,6 +34,7 @@ export default function Home() {
 
   const handleClickCross = (): void => {
     if (!users || !displayedUser) return;
+    alert("skipped!");
     const newUsers = users.filter((user) => user.id !== displayedUser.id);
     setUsers(newUsers);
   };
@@ -42,19 +44,18 @@ export default function Home() {
     request.send(displayedUser.id).catch((err: unknown) => {
       console.error("Error liking user:", err);
     });
+    alert("liked!");
     if (!users) return;
     const newUsers = users.filter((user) => user.id !== displayedUser.id);
     setUsers(newUsers);
   };
 
   return (
-    <Box>
-      <p>Name: {displayedUser?.name}</p>
-      <p>id: {displayedUser?.id}</p>
-      <UserAvatar
-        pictureUrl={displayedUser?.pictureUrl}
-        width="300px"
-        height="300px"
+    <Box display="flex" flexDirection="column" alignItems="center">
+      <DraggableCard
+        displayedUser={displayedUser}
+        onSwipeLeft={handleClickCross}
+        onSwipeRight={handleClickCircle}
       />
       <Stack direction={"row"}>
         <Button onClick={handleClickCross}>X</Button>
