@@ -39,7 +39,7 @@ export default function OthersReq() {
                       onClick={() => {
                         if (
                           !window.confirm(
-                            "本当にこのマッチリクエストを拒否しますか?"
+                            "本当にこのマッチリクエストを拒否しますか?",
                           )
                         )
                           return;
