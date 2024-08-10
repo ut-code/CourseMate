@@ -7,13 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint:mobile": "cd mobile && npm run lint",
     "format:mobile": "cd mobile && npm run format",
-    "prepare": "husky install",
+    "prepare": "husky",
     "check-branch": "if [ $(git branch --show-current) = \"main\" ]; then echo \"Cannot make commit on main! aborting...\"; exit 1; fi"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "husky": "^8.0.0"
+    "husky": "^9.1.4"
   }
 }
