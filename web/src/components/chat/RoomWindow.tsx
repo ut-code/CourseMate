@@ -5,6 +5,7 @@ import { useCurrentUserId } from "../../hooks/useCurrentUser";
 import { useState, useEffect, useRef } from "react";
 import * as chat from "../../api/chat/chat";
 import { RoomHeader } from "./RoomHeader";
+import { supabase } from "../../supabase/supabase";
 
 type Prop = {
   room: DMOverview;
@@ -31,6 +32,20 @@ export function RoomWindow(props: Prop) {
     if (room) {
       fetchMessages(room.friendId);
     }
+    const channel = supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "Message" },
+        (payload) => {
+          console.log("Change received!", payload);
+        },
+      )
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
   }, [room]);
 
   const scrollDiv = useRef<HTMLDivElement>(null);
