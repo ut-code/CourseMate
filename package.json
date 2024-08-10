@@ -6,9 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint:mobile": "cd mobile && npm run lint",
-    "format:mobile": "cd mobile && npm run format"
+    "format:mobile": "cd mobile && npm run format",
+    "prepare": "husky install",
+    "check-branch": "if [ $(git branch --show-current) = \"main\" ]; then echo \"Cannot make commit on main! aborting...\"; exit 1; fi"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^8.0.0"
+  }
 }
