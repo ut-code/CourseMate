@@ -14,23 +14,23 @@ model User {
   name        String        @default("名無し")
   email       String        @default("")
   pictureUrl  String        @default("")
-  enrollments Enrollement[]
+  enrollments Enrollment[]
   sendingUsers Relationship[] @relation("sending")  // 自分がマッチリクエストを送ったユーザー
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
 }
 
 model Course {
-  id          Int           @id @default(autoincrement())
+  id          String           @id
   name        String
-  enrollments Enrollement[]
+  enrollments Enrollment[]
 }
 
-model Enrollement {
+model Enrollment {
   id       Int    @id @default(autoincrement())
   user     User   @relation(fields: [userId], references: [id])
   userId   Int
   course   Course @relation(fields: [courseId], references: [id])
-  courseId Int
+  courseId String
 }
 
 model Relationship {

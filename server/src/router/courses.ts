@@ -12,7 +12,7 @@ const router = express.Router();
 router.get("/:courseId", async (req: Request, res: Response) => {
   const { courseId } = req.params;
   try {
-    const course = await getCourse(parseInt(courseId));
+    const course = await getCourse(courseId);
     if (!course) {
       return res.status(404).json({ error: "Course not found" });
     }
@@ -25,9 +25,9 @@ router.get("/:courseId", async (req: Request, res: Response) => {
 
 // コースの作成エンドポイント
 router.post("/", async (req: Request, res: Response) => {
-  const { name } = req.body;
+  const { id, name } = req.body;
   try {
-    const newCourse = await createCourse(name);
+    const newCourse = await createCourse(id, name);
     res.status(201).json(newCourse);
   } catch (error) {
     console.error("Error creating course:", error);
@@ -44,7 +44,7 @@ router.put("/:courseId", async (req: Request, res: Response) => {
   }
   try {
     const updatedCourse = await updateCourse({
-      courseId: parseInt(courseId),
+      courseId: courseId,
       name,
     });
     res.status(200).json(updatedCourse);
@@ -58,7 +58,7 @@ router.put("/:courseId", async (req: Request, res: Response) => {
 router.delete("/:courseId", async (req, res) => {
   const { courseId } = req.params;
   try {
-    await deleteCourse(parseInt(courseId));
+    await deleteCourse(courseId);
     res.status(204).send();
   } catch (error) {
     console.error("Error deleting course:", error);

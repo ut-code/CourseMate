@@ -3,16 +3,17 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // コースの作成
-export async function createCourse(name: string) {
+export async function createCourse(id: string, name: string) {
   return await prisma.course.create({
     data: {
+      id,
       name,
     },
   });
 }
 
 // コースの取得
-export async function getCourse(courseId: number) {
+export async function getCourse(courseId: string) {
   return await prisma.course.findUnique({
     where: {
       id: courseId,
@@ -25,7 +26,7 @@ export async function updateCourse({
   courseId,
   name,
 }: {
-  courseId: number;
+  courseId: string;
   name: string;
 }) {
   return await prisma.course.update({
@@ -39,7 +40,7 @@ export async function updateCourse({
 }
 
 // コースの削除
-export async function deleteCourse(courseId: number) {
+export async function deleteCourse(courseId: string) {
   return await prisma.course.delete({
     where: {
       id: courseId,
