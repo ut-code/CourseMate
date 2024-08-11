@@ -61,6 +61,16 @@ export type Relationship = {
   status: RelationshipStatus;
 };
 
+// ENROLLMENTS
+
+export type CourseID = string;
+
+export type Enrollment = {
+  id: number;
+  userId: UserID;
+  courseId: CourseID;
+};
+
 /*
 # Chat Rooms
 
