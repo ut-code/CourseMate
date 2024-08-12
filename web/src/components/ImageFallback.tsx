@@ -9,9 +9,9 @@ type Props = {
 
 // https://medium.com/@abhishekmicosoft/handling-img-fallback-307653b2f30
 export function ImageFallback({ width, height, url, fallback }: Props) {
-  const [isError, setIsError] = useState<boolean>(false);
+  const [ok, setOK] = useState<boolean>(true);
 
-  return isError ? (
+  return ok ? (
     <img
       src={url}
       style={{
@@ -21,7 +21,7 @@ export function ImageFallback({ width, height, url, fallback }: Props) {
         borderRadius: "50%",
         pointerEvents: "none",
       }}
-      onError={() => setIsError(true)}
+      onError={() => setOK(false)}
     />
   ) : (
     <>{fallback}</>
