@@ -37,7 +37,8 @@ export function PhotoPreview({ defaultValueUrl }: Props) {
 
   return (
     <>
-      {url && url.startsWith("blob:") && (
+       {/* url.startsWith("blob:") <=> url is a(n) url of local file <=> no SOP restriction*/}
+       {url && url.startsWith("blob:") && (
         <ImageCropper sameOriginURL={url} onImageChange={syncUploaderToFileChange} />
       )}
       <input type="file" onChange={handleImageChange} />
