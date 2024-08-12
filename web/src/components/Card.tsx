@@ -5,16 +5,10 @@ interface CardProps {
 }
 
 export const Card = ({ displayedUser }: CardProps) => {
-  const NameTag = displayedUser?.name
-    ? ({ name }: { name: string | undefined }) => <p>{name}</p>
-    : () => null;
-  const IdTag = displayedUser?.id
-    ? ({ id }: { id: number | undefined }) => <p>{id}</p>
-    : () => null;
   return (
     <div>
-      <NameTag name={displayedUser?.name} />
-      <IdTag id={displayedUser?.id} />
+      <p>Name: {displayedUser?.name}</p>
+      <p>id: {displayedUser?.id}</p>
       <UserAvatar
         pictureUrl={displayedUser?.pictureUrl}
         width="300px"
