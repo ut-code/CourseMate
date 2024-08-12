@@ -11,7 +11,7 @@ import hooks from "../../api/hooks";
 import UserAvatar from "../avatar/avatar";
 
 export default function OthersReq() {
-  const { data, loading, error, reload } = hooks.usePendingRequestToMe();
+  const { data, loading, error, reload } = hooks.usePendingRequestsToMe();
 
   return (
     <Box>
