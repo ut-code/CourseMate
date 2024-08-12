@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { UserID } from "../common/types";
 import type {
-  User,
   RoomOverview,
   RelationshipID,
   DMRoom,
@@ -22,8 +21,9 @@ const prisma = new PrismaClient();
 // ユーザーの参加しているすべての Room の概要 (Overview) の取得
 export async function overview(user: UserID): Promise<Result<RoomOverview[]>> {
   try {
-    const matched: User[] = await searchMatchedUser(user);
-    const dmov = matched.map((user) => {
+    const matched = await searchMatchedUser(user);
+    if (!matched.ok) return Err(matched.error);
+    const dmov = matched.value.map((user) => {
       const ov: DMOverview = {
         isDM: true,
         friendId: user.id,
@@ -175,9 +175,9 @@ export async function findDMbetween(
 ): Promise<Result<DMRoom>> {
   try {
     const rel = await findRelation(u1, u2);
-    if (!rel) return Err("room not found");
+    if (!rel.ok) return Err("room not found");
 
-    return await findDM(rel.id);
+    return await findDM(rel.value.id);
   } catch (e) {
     return Err(e);
   }

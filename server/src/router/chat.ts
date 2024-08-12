@@ -9,7 +9,6 @@ import type {
   PersonalizedDMRoom,
   DMRoom,
 } from "../common/types";
-import asyncMap from "../lib/async/map";
 import * as db from "../database/chat";
 import { areAllMatched, areMatched, findRelation } from "../database/matches";
 import type { UserID, InitRoom } from "../common/types";
@@ -36,13 +35,13 @@ router.post("/dm/to/:userid", async (req, res) => {
   if (!friend.ok) return res.status(400).send("bad param encoding: `userid`");
 
   const rel = await findRelation(user.value, friend.value as UserID);
-  if (!rel || rel.status !== "MATCHED")
+  if (!rel.ok || rel.value.status !== "MATCHED")
     return res.status(403).send("cannot send DM to non-friend");
 
   // they are now MATCHED
 
   const smsg: SendMessage = req.body; // todo: typia
-  if (!smsg.content) throw new Error("smsg.content not found");
+  if (!smsg.content) throw new Error("smsg.content not found"); // zod this
   const msg: Omit<Message, "id"> = {
     creator: user.value,
     createdAt: new Date(),
@@ -50,7 +49,7 @@ router.post("/dm/to/:userid", async (req, res) => {
     ...smsg,
   };
 
-  const result = await db.sendDM(rel.id, msg);
+  const result = await db.sendDM(rel.value.id, msg);
   if (!result.ok) return res.status(500).send();
   res.status(201).send();
 });
@@ -70,10 +69,11 @@ router.get("/dm/with/:userid", async (req, res) => {
   const room = await db.findDMbetween(user.value, friend.value);
   if (!room.ok) return res.status(500).send();
   const friendData = await getUserByID(friend.value as UserID);
+  if (!friendData.ok) return res.status(404).send("friend not found"); // this should not happen
 
   const personalized: PersonalizedDMRoom & DMRoom = {
-    name: friendData!.name,
-    thumbnail: friendData!.pictureUrl,
+    name: friendData.value.name,
+    thumbnail: friendData.value.pictureUrl,
     ...room.value,
   };
 
@@ -85,13 +85,9 @@ router.post(`/shared`, async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
 
-  const init: InitRoom = req.body;
+  const init: InitRoom = req.body; // zod
 
-  const allMatched = (
-    await asyncMap(init.members, async (member) => {
-      return await areMatched(user.value, member);
-    })
-  ).reduce((a, b) => a && b);
+  const allMatched = areAllMatched(user.value, init.members);
 
   if (!allMatched)
     return res.status(403).send("error: some members are not friends with you");
