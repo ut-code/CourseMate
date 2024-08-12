@@ -6,7 +6,7 @@ import { ImageCropper } from "./ImageCropper";
 type Props = {
   defaultValueUrl?: string;
 };
-function onImageChange(file: File) {
+function syncUploaderToFileChange(file: File) {
   if (file) photo.upload = async () => await uploadImage(file);
 }
 export function PhotoPreview({ defaultValueUrl }: Props) {
@@ -38,7 +38,7 @@ export function PhotoPreview({ defaultValueUrl }: Props) {
   return (
     <>
       {url && url.startsWith("blob:") && (
-        <ImageCropper sameOriginURL={url} onImageChange={onImageChange} />
+        <ImageCropper sameOriginURL={url} onImageChange={syncUploaderToFileChange} />
       )}
       <input type="file" onChange={handleImageChange} />
     </>
