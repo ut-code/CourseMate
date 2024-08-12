@@ -91,6 +91,7 @@ function operateCrop(
     );
 
     setTimeout(() => {
+      src.remove();
       dest.remove();
     }, 1000);
   });
