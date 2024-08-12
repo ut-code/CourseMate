@@ -9,8 +9,10 @@ import { DraggableCard } from "../../components/DraggableCard";
 
 export default function Home() {
   const [users, setUsers] = useState<User[] | null>(null);
+  const [skippedUsers, setSkippedUsers] = useState<User[] | null>(null);
   const [displayedUser, setDisplayedUser] = useState<User | null>(null);
   const currentUserId = useCurrentUserId();
+  const [isAllUsersLiked, setIsAllUsersLiked] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -36,7 +38,15 @@ export default function Home() {
     if (!users || !displayedUser) return;
     alert("skipped!");
     const newUsers = users.filter((user) => user.id !== displayedUser.id);
+    const newSkippedUsers = skippedUsers
+      ? [...skippedUsers, displayedUser]
+      : [displayedUser];
+    setSkippedUsers(newSkippedUsers);
     setUsers(newUsers);
+    if (newUsers.length === 0) {
+      setUsers(newSkippedUsers);
+      setSkippedUsers([]);
+    }
   };
 
   const handleClickCircle = (): void => {
@@ -48,19 +58,61 @@ export default function Home() {
     if (!users) return;
     const newUsers = users.filter((user) => user.id !== displayedUser.id);
     setUsers(newUsers);
+    if (newUsers.length === 0) {
+      if (skippedUsers) {
+        setUsers(skippedUsers);
+        setSkippedUsers(null);
+      } else {
+        setIsAllUsersLiked(true);
+      }
+    }
   };
 
+  const [dragValue, setDragValue] = useState(0); // x方向の値を保存
+
+  const handleDrag = (dragProgress: number) => {
+    setDragValue(dragProgress);
+  };
+
+  const getBackgroundColor = (x: number) => {
+    const maxVal = 255;
+    const normalizedValue = Math.max(-maxVal, Math.min(maxVal, x / 2));
+
+    // xが0に近いと白、正の方向に進むと緑、負の方向に進むと赤
+    if (normalizedValue === 0) {
+      return `rgb(${maxVal}, ${maxVal}, ${maxVal})`; // 白
+    } else if (normalizedValue > 0) {
+      const greenValue = Math.floor((normalizedValue / maxVal) * 255);
+      return `rgb(${maxVal - greenValue}, ${maxVal}, ${maxVal - greenValue})`; // 緑
+    } else {
+      const redValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
+      return `rgb(${maxVal}, ${maxVal - redValue}, ${maxVal - redValue})`; // 赤
+    }
+  };
+
+  if (isAllUsersLiked) {
+    return <div>全員にいいねを送りました！</div>;
+  }
+
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
-      <DraggableCard
-        displayedUser={displayedUser}
-        onSwipeLeft={handleClickCross}
-        onSwipeRight={handleClickCircle}
-      />
-      <Stack direction={"row"}>
-        <Button onClick={handleClickCross}>X</Button>
-        <Button onClick={handleClickCircle}>O</Button>
-      </Stack>
-    </Box>
+    <div style={{ backgroundColor: getBackgroundColor(dragValue) }}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        height={"100vh"}
+      >
+        <DraggableCard
+          displayedUser={displayedUser}
+          onSwipeLeft={handleClickCross}
+          onSwipeRight={handleClickCircle}
+          onDrag={handleDrag}
+        />
+        <Stack direction={"row"}>
+          <Button onClick={handleClickCross}>X</Button>
+          <Button onClick={handleClickCircle}>O</Button>
+        </Stack>
+      </Box>
+    </div>
   );
 }
