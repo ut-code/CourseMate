@@ -70,10 +70,7 @@ function operateCrop(
   dest.width = size.w;
   dest.height = size.h;
   const ctx = dest.getContext("2d");
-  if (!ctx)
-    throw new Error(
-      "something went wrong, but I don't know html well enough to think of a way to fix this",
-    );
+  if (!ctx) throw new Error("this shouldn't happen");
 
   const src = new Image();
   src.src = srcurl;
