@@ -58,10 +58,6 @@ function operateCrop(
   diff: { x: number; y: number },
   size: { w: number; h: number },
 ): Promise<File> {
-  // got stuck onto this bug (image being truncated down to 300x150) for like 3 hours. (P.S. it's gonna take longer)
-  // why don't they just provide a browser api that crops image?
-  // is it harder than debugging the size of a non-existent canvas?
-  //
   // Qiita: canvasのサイズ指定
   // canvasのデフォルトサイズは、幅300px、高さ150px。
   // https://qiita.com/ShinyaOkazawa/items/9e662bf2121548f79d5f
