@@ -30,6 +30,9 @@ export function ImageCropper({ sameOriginURL: url, onImageChange }: Props) {
           onCropComplete={(_, pix) => {
             const diff = { x: pix.x, y: pix.y };
             const size = { w: pix.width, h: pix.height };
+
+            // not optimal performance-wise: it operates crop on every crop action.
+            // better operate crop only once on save, but couldn't find a way to do it easily
             operateCrop(url, diff, size).then((f) => onImageChange(f));
           }}
         />
