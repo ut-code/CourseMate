@@ -18,7 +18,7 @@ export function MessageInput(props: Props) {
     console.log("setting message ", room.name, "->", m);
     _setMessage(m);
     crossRoomMessageState.set(room.friendId, m);
-  }
+  };
 
   // change input message based on currently open room
   useEffect(() => {
