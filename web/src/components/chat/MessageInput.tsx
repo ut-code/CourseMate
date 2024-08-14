@@ -1,6 +1,6 @@
 import { IconButton, Stack, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DMOverview, SendMessage, UserID } from "../../common/types";
 
 type Props = {
@@ -8,9 +8,23 @@ type Props = {
   room: DMOverview;
 };
 
+const crossRoomMessageState = new Map<number, string>();
+
 export function MessageInput(props: Props) {
-  const [message, setMessage] = useState<string>("");
   const { send, room } = props;
+
+  const [message, _setMessage] = useState<string>("");
+  const setMessage = (m: string) => {
+    console.log("setting message ", room.name, "->", m);
+    _setMessage(m);
+    crossRoomMessageState.set(room.friendId, m);
+  }
+
+  // change input message based on currently open room
+  useEffect(() => {
+    _setMessage(crossRoomMessageState.get(room.friendId) || "");
+  }, [room.friendId]);
+
   return (
     <>
       <form
