@@ -35,6 +35,27 @@ export async function deleteMessage(messageId: MessageID): Promise<void> {
   });
 }
 
+export async function updateMessage(
+  messageId: MessageID,
+  to: SendMessage,
+): Promise<void> {
+  return await doWithIdToken(async () => {
+    const res = await fetch(endpoints.message(messageId), {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(to),
+    });
+    if (res.status === 401) throw new ErrUnauthorized();
+    if (res.status !== 200)
+      throw new Error(
+        `on updateMessage(), expected status code of 200, but got ${res.status}`,
+      );
+  });
+}
+
 // 自身の参加しているすべての Room (DM グループチャットともに) の概要 (Overview) の取得 (メッセージの履歴を除く)
 export async function overview(): Promise<RoomOverview[]> {
   return await doWithIdToken(async () => {

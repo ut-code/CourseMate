@@ -5,31 +5,31 @@ import { useCurrentUserId } from "../../hooks/useCurrentUser";
 import { useState, useEffect, useRef } from "react";
 import * as chat from "../../api/chat/chat";
 import { RoomHeader } from "./RoomHeader";
+import MessagePopupDots from "./MessagePopupDots";
 
 type Prop = {
   room: DMOverview;
 };
 
-export function RoomWindow(props: Prop) {
+export function RoomWindow({ room }: Prop) {
   const id = useCurrentUserId();
-  const { room } = props;
   const [dm, setDM] = useState<DMRoom | null>(null);
 
   const sendDMMessage = async (to: UserID, msg: SendMessage): Promise<void> => {
     await chat.sendDM(to, msg);
     if (room) {
-      fetchMessages(room.friendId);
+      refreshMessages(room.friendId);
     }
   };
 
-  const fetchMessages = async (friendId: UserID) => {
+  const refreshMessages = async (friendId: UserID) => {
     const newDM = await chat.getDM(friendId);
     setDM(newDM);
   };
 
   useEffect(() => {
     if (room) {
-      fetchMessages(room.friendId);
+      refreshMessages(room.friendId);
     }
   }, [room]);
 
@@ -81,6 +81,12 @@ export function RoomWindow(props: Prop) {
                     border: 1,
                   }}
                 >
+                  {m.creator === id && (
+                    <MessagePopupDots
+                      message={m}
+                      reload={() => refreshMessages(room.friendId)}
+                    />
+                  )}
                   <Typography>{m.content}</Typography>
                 </Paper>
               </Box>

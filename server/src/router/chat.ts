@@ -167,6 +167,11 @@ router.patch("/messages/id/:id", async (req, res) => {
 router.delete("/messages/id/:id", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
+  const id = safeParseInt(req.params.id);
+  if (!id.ok) return res.status(400).send("bad `id` format");
+
+  await db.deleteMessage(id.value as MessageID, user.value);
+  return res.status(204).send();
 });
 
 export default router;

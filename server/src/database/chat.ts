@@ -215,3 +215,20 @@ export async function updateMessage(
   });
   return message;
 }
+
+export async function deleteMessage(
+  id: MessageID,
+  creatorId: UserID | undefined,
+): Promise<Message | null> {
+  try {
+    const message = await prisma.message.delete({
+      where: {
+        id: id,
+        creator: creatorId,
+      },
+    });
+    return message;
+  } catch (e) {
+    return null;
+  }
+}
