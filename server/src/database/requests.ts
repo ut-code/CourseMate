@@ -26,8 +26,8 @@ export async function sendRequest({
     // 相手がすでにこちらに Request を送っている場合は approve (accept) したとみなす
     if (existingRelationship.receivingUserId === senderId)
       approveRequest(
-        existingRelationship.senderId,
-        existingRelationship.receiverId,
+        existingRelationship.sendingUserId,
+        existingRelationship.receivingUserId,
       );
     return existingRelationship;
   }
