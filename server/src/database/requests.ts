@@ -12,6 +12,7 @@ export async function sendRequest({
   receiverId: UserID;
 }): Promise<Relationship> {
   // 既存の関係をチェック
+  // TODO: fix this findFirst to be findUnique
   const existingRelationship = await prisma.relationship.findFirst({
     where: {
       OR: [
@@ -22,6 +23,12 @@ export async function sendRequest({
   });
   // 既存の関係がある場合はそのまま返す
   if (existingRelationship) {
+    // 相手がすでにこちらに Request を送っている場合は approve (accept) したとみなす
+    if (existingRelationship.receivingUserId === senderId)
+      approveRequest(
+        existingRelationship.senderId,
+        existingRelationship.receiverId,
+      );
     return existingRelationship;
   }
   // 既存の関係がない場合は新しい関係を作成
