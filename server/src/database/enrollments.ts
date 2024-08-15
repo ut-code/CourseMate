@@ -5,6 +5,18 @@ const prisma = new PrismaClient();
 
 // 履修情報の更新
 export async function updateEnrollments(userId: UserID, courseIds: CourseID[]) {
+  const courses = await prisma.course.findMany({
+    where: {
+      id: {
+        in: courseIds,
+      },
+    },
+  });
+
+  if (courses.length !== courseIds.length) {
+    throw new Error("Invalid course IDs");
+  }
+
   const existingEnrollments = await prisma.enrollment.findMany({
     where: {
       userId,
@@ -40,11 +52,18 @@ export async function updateEnrollments(userId: UserID, courseIds: CourseID[]) {
     }),
   ]);
 
-  const updatedEnrollments = prisma.enrollment.findMany({
+  const updatedCourses = await prisma.course.findMany({
     where: {
-      userId,
+      enrollments: {
+        some: {
+          userId,
+        },
+      },
+    },
+    include: {
+      courseDayPeriods: true,
     },
   });
 
-  return updatedEnrollments;
+  return updatedCourses;
 }

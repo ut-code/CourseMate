@@ -8,21 +8,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Day {
+  MON
+  TUE
+  WED
+  THU
+  FRI
+  SAT
+}
+
 model User {
-  id          Int           @id @default(autoincrement())
-  guid        String        @unique
-  name        String        @default("名無し")
-  email       String        @default("")
-  pictureUrl  String        @default("")
-  enrollments Enrollment[]
-  sendingUsers Relationship[] @relation("sending")  // 自分がマッチリクエストを送ったユーザー
+  id             Int            @id @default(autoincrement())
+  guid           String         @unique
+  name           String         @default("名無し")
+  email          String         @default("")
+  pictureUrl     String         @default("")
+  enrollments    Enrollment[]
+  sendingUsers   Relationship[] @relation("sending") // 自分がマッチリクエストを送ったユーザー
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
 }
 
 model Course {
-  id          String           @id
-  name        String
-  enrollments Enrollment[]
+  id               String            @id
+  name             String
+  enrollments      Enrollment[]
+  courseDayPeriods CourseDayPeriod[]
+}
+
+model CourseDayPeriod {
+  id       Int    @id @default(autoincrement())
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+  period   Int
+  day      Day
 }
 
 model Enrollment {
@@ -31,13 +49,15 @@ model Enrollment {
   userId   Int
   course   Course @relation(fields: [courseId], references: [id])
   courseId String
+
+  @@unique([userId, courseId])
 }
 
 model Relationship {
   id              Int            @id @default(autoincrement())
   status          MatchingStatus
   sendingUser     User           @relation("sending", fields: [sendingUserId], references: [id], onDelete: Cascade)
-  sendingUserId   Int 
+  sendingUserId   Int
   receivingUser   User           @relation("receiving", fields: [receivingUserId], references: [id], onDelete: Cascade)
   receivingUserId Int
 
@@ -55,21 +75,21 @@ enum MatchingStatus {
 // TODO: lazy load MessageLog s.t. it doesn't need to be loaded on Overview query.
 // https://www.prisma.io/docs/orm/prisma-client/queries/select-fields
 model SharedRoom {
-  id Int @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   thumbnail String // URL to thumbnail picture
-  name String
-  members Int[]
-  messages Message[]
+  name      String
+  members   Int[]
+  messages  Message[]
 }
 
 model Message {
-  id           Int         @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
   creator      Int // refers to UserId
-  createdAt    DateTime    @default(now()) // @readonly
-  edited       Boolean     @default(false)
+  createdAt    DateTime      @default(now()) // @readonly
+  edited       Boolean       @default(false)
   content      String
   relation     Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId   Int?
-  sharedRoom   SharedRoom? @relation(fields: [sharedRoomId], references: [id], onDelete: Cascade)
+  sharedRoom   SharedRoom?   @relation(fields: [sharedRoomId], references: [id], onDelete: Cascade)
   sharedRoomId Int?
 }

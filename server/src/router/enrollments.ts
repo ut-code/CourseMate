@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { CourseID } from "../common/types";
+import { CourseID, CourseWithDayPeriods } from "../common/types";
 import { safeGetUserId } from "../firebase/auth/db";
 import { updateEnrollments } from "../database/enrollments";
 
@@ -13,8 +13,22 @@ router.put("/", async (req: Request, res: Response) => {
   // TODO: Typia
   const courseIds: CourseID[] = req.body;
   try {
-    const updatedEnrollments = await updateEnrollments(id.value, courseIds);
-    res.status(200).json(updatedEnrollments);
+    const courses = await updateEnrollments(id.value, courseIds);
+
+    const coursesWithDayPeriods: CourseWithDayPeriods[] = courses.map(
+      (course) => {
+        return {
+          ...course,
+          dayPeriods: course.courseDayPeriods.map((courseDayPeriod) => {
+            return {
+              day: courseDayPeriod.day,
+              period: courseDayPeriod.period,
+            };
+          }),
+        };
+      },
+    );
+    res.status(200).json(coursesWithDayPeriods);
   } catch (error) {
     console.error("Error updating enrollments", error);
     res.status(500).json({ error: "Failed to update enrollments" });

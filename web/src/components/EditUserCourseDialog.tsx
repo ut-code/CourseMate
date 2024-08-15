@@ -14,8 +14,12 @@ import {
   TextField,
 } from "@mui/material";
 
-import { UpdateUser } from "../common/types";
-// import userapi from "../api/user";
+import {
+  CourseWithDayPeriods,
+  PeriodDayCourseMap,
+  UpdateUser,
+} from "../common/types";
+import enrollmentApi from "../api/enrollment";
 import { photo } from "./data/photo-preview";
 
 type EditUserDialogProps = {
@@ -29,59 +33,80 @@ type Day = "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
 const sampleRows = [
   {
     name: "1限",
-    mon: ["2", "3"],
+    mon: ["2"],
     tue: ["3"],
     wed: ["1"],
-    thu: ["4"],
-    fri: ["5"],
+    thu: [""],
+    fri: [""],
     sat: [""],
   },
   {
     name: "2限",
-    mon: ["2"],
-    tue: ["3"],
-    wed: ["1"],
-    thu: ["4"],
-    fri: ["5"],
-    sat: ["3"],
+    mon: [""],
+    tue: [""],
+    wed: [""],
+    thu: [""],
+    fri: [""],
+    sat: [""],
   },
   {
     name: "3限",
-    mon: ["2"],
-    tue: ["3"],
-    wed: ["1"],
-    thu: ["4"],
-    fri: ["5"],
+    mon: [""],
+    tue: [""],
+    wed: [""],
+    thu: [""],
+    fri: [""],
     sat: [""],
   },
   {
     name: "4限",
-    mon: ["2"],
-    tue: ["3"],
-    wed: ["1"],
-    thu: ["4"],
-    fri: ["5"],
+    mon: [""],
+    tue: [""],
+    wed: [""],
+    thu: [""],
+    fri: [""],
     sat: [""],
   },
   {
     name: "5限",
-    mon: ["2"],
-    tue: ["3"],
-    wed: ["1"],
-    thu: ["4"],
-    fri: ["5"],
-    sat: ["5"],
+    mon: [""],
+    tue: [""],
+    wed: [""],
+    thu: [""],
+    fri: [""],
+    sat: [""],
   },
   {
     name: "6限",
-    mon: ["2"],
-    tue: ["3"],
-    wed: ["1"],
-    thu: ["4"],
-    fri: ["5"],
+    mon: [""],
+    tue: [""],
+    wed: [""],
+    thu: [""],
+    fri: [""],
     sat: [""],
   },
 ];
+
+function transform(courses: CourseWithDayPeriods[]): PeriodDayCourseMap {
+  const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const result: PeriodDayCourseMap = {};
+  courses.forEach((course) => {
+    course.dayPeriods.forEach((dayPeriod) => {
+      const { day, period } = dayPeriod;
+
+      if (!result[period]) {
+        result[period] = {};
+      }
+      days.forEach((day) => {
+        if (!result[period][day]) {
+          result[period][day] = [];
+        }
+      });
+      result[period][day].push({ id: course.id, name: course.name });
+    });
+  });
+  return result;
+}
 
 const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
   props: EditUserDialogProps,
@@ -124,7 +149,48 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
   };
 
   const handleSave = async () => {
-    // unimplemented
+    const flattenedIds = rows
+      .flatMap((row) => [
+        ...row.mon,
+        ...row.tue,
+        ...row.wed,
+        ...row.thu,
+        ...row.fri,
+        ...row.sat,
+      ])
+      .filter((v) => v !== "");
+    const uniqueIds = [...new Set(flattenedIds)];
+    const coursesWithDayPeriods = await enrollmentApi.update(uniqueIds);
+    const periodDayCourseMap = transform(coursesWithDayPeriods);
+
+    const newRows = Object.keys(periodDayCourseMap).map((period) => {
+      return {
+        name: `${period}限`,
+        mon: periodDayCourseMap[Number(period)]["MON"]?.map(
+          (course) => course.name,
+        ),
+        tue: periodDayCourseMap[Number(period)]["TUE"]?.map(
+          (course) => course.name,
+        ),
+        wed: periodDayCourseMap[Number(period)]["WED"]?.map(
+          (course) => course.name,
+        ),
+        thu: periodDayCourseMap[Number(period)]["THU"]?.map(
+          (course) => course.name,
+        ),
+        fri: periodDayCourseMap[Number(period)]["FRI"]?.map(
+          (course) => course.name,
+        ),
+        sat: periodDayCourseMap[Number(period)]["SAT"]?.map(
+          (course) => course.name,
+        ),
+      };
+    });
+
+    // TODO:
+    console.log(newRows);
+
+    setRows(newRows);
   };
 
   return (

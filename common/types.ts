@@ -71,6 +71,24 @@ export type Enrollment = {
   courseId: CourseID;
 };
 
+export type CourseWithDayPeriods = {
+  id: CourseID;
+  name: string;
+  dayPeriods: {
+    day: string;
+    period: number;
+  }[];
+};
+
+export type PeriodDayCourseMap = {
+  [period: string]: {
+    [day: string]: {
+      id: string;
+      name: string;
+    }[];
+  };
+};
+
 /*
 # Chat Rooms
 

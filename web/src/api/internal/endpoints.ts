@@ -149,6 +149,17 @@ const matches = `${origin}/matches`;
 const requests = `${origin}/requests`;
 
 /**
+ * [x] 実装済み
+ * PUT -> update enrollments.
+ * - statuses:
+ *   - 200: ok.
+ *     - body: CourseWithDayPeriods[]
+ *   - 401: unauthorized.
+ *   - 500: internal error.
+ **/
+const enrollments = `${origin}/enrollments`;
+
+/**
  * [v] 実装済み
  * PUT -> create request.
  * - status:
@@ -284,6 +295,7 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
+  enrollments,
   roomOverview,
   dmTo,
   dmWith,
