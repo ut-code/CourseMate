@@ -65,6 +65,11 @@ export type Relationship = {
 
 export type CourseID = string;
 
+export type Course = {
+  id: CourseID;
+  name: string;
+};
+
 export type Enrollment = {
   id: number;
   userId: UserID;
@@ -82,10 +87,7 @@ export type CourseWithDayPeriods = {
 
 export type PeriodDayCourseMap = {
   [period: string]: {
-    [day: string]: {
-      id: string;
-      name: string;
-    }[];
+    [day: string]: Course[];
   };
 };
 

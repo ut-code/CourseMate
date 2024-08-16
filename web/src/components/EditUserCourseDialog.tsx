@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 
 import {
+  Course,
   CourseWithDayPeriods,
   PeriodDayCourseMap,
   UpdateUser,
@@ -33,57 +34,57 @@ type Day = "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
 const sampleRows = [
   {
     name: "1限",
-    mon: ["2"],
-    tue: ["3"],
-    wed: ["1"],
-    thu: [""],
-    fri: [""],
-    sat: [""],
+    mon: [{ id: "2", name: "数学" }],
+    tue: [{ id: "3", name: "英語" }],
+    wed: [{ id: "1", name: "国語" }],
+    thu: [{ id: "", name: "" }],
+    fri: [{ id: "", name: "" }],
+    sat: [{ id: "", name: "" }],
   },
   {
     name: "2限",
-    mon: [""],
-    tue: [""],
-    wed: [""],
-    thu: [""],
-    fri: [""],
-    sat: [""],
+    mon: [{ id: "", name: "" }],
+    tue: [{ id: "", name: "" }],
+    wed: [{ id: "", name: "" }],
+    thu: [{ id: "", name: "" }],
+    fri: [{ id: "", name: "" }],
+    sat: [{ id: "", name: "" }],
   },
   {
     name: "3限",
-    mon: [""],
-    tue: [""],
-    wed: [""],
-    thu: [""],
-    fri: [""],
-    sat: [""],
+    mon: [{ id: "", name: "" }],
+    tue: [{ id: "", name: "" }],
+    wed: [{ id: "", name: "" }],
+    thu: [{ id: "", name: "" }],
+    fri: [{ id: "", name: "" }],
+    sat: [{ id: "", name: "" }],
   },
   {
     name: "4限",
-    mon: [""],
-    tue: [""],
-    wed: [""],
-    thu: [""],
-    fri: [""],
-    sat: [""],
+    mon: [{ id: "", name: "" }],
+    tue: [{ id: "", name: "" }],
+    wed: [{ id: "", name: "" }],
+    thu: [{ id: "", name: "" }],
+    fri: [{ id: "", name: "" }],
+    sat: [{ id: "", name: "" }],
   },
   {
     name: "5限",
-    mon: [""],
-    tue: [""],
-    wed: [""],
-    thu: [""],
-    fri: [""],
-    sat: [""],
+    mon: [{ id: "", name: "" }],
+    tue: [{ id: "", name: "" }],
+    wed: [{ id: "", name: "" }],
+    thu: [{ id: "", name: "" }],
+    fri: [{ id: "", name: "" }],
+    sat: [{ id: "", name: "" }],
   },
   {
     name: "6限",
-    mon: [""],
-    tue: [""],
-    wed: [""],
-    thu: [""],
-    fri: [""],
-    sat: [""],
+    mon: [{ id: "", name: "" }],
+    tue: [{ id: "", name: "" }],
+    wed: [{ id: "", name: "" }],
+    thu: [{ id: "", name: "" }],
+    fri: [{ id: "", name: "" }],
+    sat: [{ id: "", name: "" }],
   },
 ];
 
@@ -118,26 +119,22 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
   const [currentEdit, setCurrentEdit] = useState<{
     rowIndex: number;
     columnName: Day;
-    courseIds: string[];
+    courses: Course[];
   } | null>(null);
   const [rows, setRows] = useState<
     {
       name: string;
-      mon: string[];
-      tue: string[];
-      wed: string[];
-      thu: string[];
-      fri: string[];
-      sat: string[];
+      mon: Course[];
+      tue: Course[];
+      wed: Course[];
+      thu: Course[];
+      fri: Course[];
+      sat: Course[];
     }[]
   >(sampleRows);
 
-  const handleOpen = (
-    rowIndex: number,
-    columnName: Day,
-    courseIds: string[],
-  ) => {
-    setCurrentEdit({ rowIndex, columnName, courseIds });
+  const handleOpen = (rowIndex: number, columnName: Day, courses: Course[]) => {
+    setCurrentEdit({ rowIndex, columnName, courses });
     setIsSelectCourseDialogOpen(true);
   };
 
@@ -150,15 +147,16 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
 
   const handleSave = async () => {
     const flattenedIds = rows
-      .flatMap((row) => [
-        ...row.mon,
-        ...row.tue,
-        ...row.wed,
-        ...row.thu,
-        ...row.fri,
-        ...row.sat,
+      .map((row) => [
+        row.mon.map((course) => course.id),
+        row.tue.map((course) => course.id),
+        row.wed.map((course) => course.id),
+        row.thu.map((course) => course.id),
+        row.fri.map((course) => course.id),
+        row.sat.map((course) => course.id),
       ])
-      .filter((v) => v !== "");
+      .flat(2)
+      .filter((v) => v !== null);
     const uniqueIds = [...new Set(flattenedIds)];
     const coursesWithDayPeriods = await enrollmentApi.update(uniqueIds);
     const periodDayCourseMap = transform(coursesWithDayPeriods);
@@ -166,24 +164,12 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
     const newRows = Object.keys(periodDayCourseMap).map((period) => {
       return {
         name: `${period}限`,
-        mon: periodDayCourseMap[Number(period)]["MON"]?.map(
-          (course) => course.name,
-        ),
-        tue: periodDayCourseMap[Number(period)]["TUE"]?.map(
-          (course) => course.name,
-        ),
-        wed: periodDayCourseMap[Number(period)]["WED"]?.map(
-          (course) => course.name,
-        ),
-        thu: periodDayCourseMap[Number(period)]["THU"]?.map(
-          (course) => course.name,
-        ),
-        fri: periodDayCourseMap[Number(period)]["FRI"]?.map(
-          (course) => course.name,
-        ),
-        sat: periodDayCourseMap[Number(period)]["SAT"]?.map(
-          (course) => course.name,
-        ),
+        mon: periodDayCourseMap[Number(period)]["MON"],
+        tue: periodDayCourseMap[Number(period)]["TUE"],
+        wed: periodDayCourseMap[Number(period)]["WED"],
+        thu: periodDayCourseMap[Number(period)]["THU"],
+        fri: periodDayCourseMap[Number(period)]["FRI"],
+        sat: periodDayCourseMap[Number(period)]["SAT"],
       };
     });
 
@@ -227,7 +213,7 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
                   onClick={() => handleOpen(rowIndex, "mon", row.mon)}
                 >
                   {row.mon.map((course) => (
-                    <div>{course}</div>
+                    <div>{course.name}</div>
                   ))}
                 </TableCell>
                 <TableCell
@@ -235,7 +221,7 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
                   onClick={() => handleOpen(rowIndex, "tue", row.tue)}
                 >
                   {row.tue.map((course) => (
-                    <div>{course}</div>
+                    <div>{course.name}</div>
                   ))}
                 </TableCell>
                 <TableCell
@@ -243,7 +229,7 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
                   onClick={() => handleOpen(rowIndex, "wed", row.wed)}
                 >
                   {row.wed.map((course) => (
-                    <div>{course}</div>
+                    <div>{course.name}</div>
                   ))}
                 </TableCell>
                 <TableCell
@@ -251,7 +237,7 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
                   onClick={() => handleOpen(rowIndex, "thu", row.thu)}
                 >
                   {row.thu.map((course) => (
-                    <div>{course}</div>
+                    <div>{course.name}</div>
                   ))}
                 </TableCell>
                 <TableCell
@@ -259,7 +245,7 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
                   onClick={() => handleOpen(rowIndex, "fri", row.fri)}
                 >
                   {row.fri.map((course) => (
-                    <div>{course}</div>
+                    <div>{course.name}</div>
                   ))}
                 </TableCell>
                 <TableCell
@@ -267,7 +253,7 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
                   onClick={() => handleOpen(rowIndex, "sat", row.sat)}
                 >
                   {row.sat.map((course) => (
-                    <div>{course}</div>
+                    <div>{course.name}</div>
                   ))}
                 </TableCell>
               </TableRow>
@@ -284,14 +270,14 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
           <DialogContent>
             <DialogContentText>授業を選択してください。</DialogContentText>
             <TextField
-              value={currentEdit?.courseIds.join(",")}
-              onChange={(e) => {
-                if (!currentEdit) return;
-                setCurrentEdit({
-                  ...currentEdit,
-                  courseIds: e.target.value.split(",").map((v) => v.trim()),
-                });
-              }}
+            // value={currentEdit?.courseIds.join(",")}
+            // onChange={(e) => {
+            //   if (!currentEdit) return;
+            //   setCurrentEdit({
+            //     ...currentEdit,
+            //     courseIds: e.target.value.split(",").map((v) => v.trim()),
+            //   });
+            // }}
             />
           </DialogContent>
           <DialogActions>
@@ -303,7 +289,7 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
                 if (!currentEdit) return;
                 const newRows = [...rows];
                 newRows[currentEdit.rowIndex][currentEdit.columnName] =
-                  currentEdit.courseIds;
+                  currentEdit.courses;
                 setRows(newRows);
                 handleClose();
               }}
