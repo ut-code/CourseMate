@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Day, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -17,6 +17,24 @@ export async function getCourse(courseId: string) {
   return await prisma.course.findUnique({
     where: {
       id: courseId,
+    },
+  });
+}
+
+export async function getCoursesByDayPeriod({
+  period,
+  day,
+}: {
+  period: number;
+  day: Day;
+}) {
+  return await prisma.courseDayPeriod.findMany({
+    where: {
+      period,
+      day,
+    },
+    include: {
+      course: true,
     },
   });
 }

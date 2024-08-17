@@ -3,10 +3,16 @@ import {
   createCourse,
   deleteCourse,
   getCourse,
+  getCoursesByDayPeriod,
   updateCourse,
 } from "../database/courses";
+import { Day } from "@prisma/client";
 
 const router = express.Router();
+
+function isDay(value: string): value is Day {
+  return value in Day;
+}
 
 // コースの取得エンドポイント
 router.get("/:courseId", async (req: Request, res: Response) => {
@@ -20,6 +26,25 @@ router.get("/:courseId", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching course:", error);
     res.status(500).json({ error: "Failed to fetch course" });
+  }
+});
+
+router.get("/day/:day/period/:period", async (req: Request, res: Response) => {
+  const { day, period } = req.params;
+
+  if (isDay(day) === false) {
+    return res.status(400).json({ error: "Invalid day" });
+  }
+
+  try {
+    const courses = await getCoursesByDayPeriod({
+      period: Number(period),
+      day,
+    });
+    res.status(200).json(courses);
+  } catch (error) {
+    console.error("Error fetching courses by day period:", error);
+    res.status(500).json({ error: "Failed to fetch courses by day period" });
   }
 });
 
