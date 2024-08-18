@@ -13,7 +13,7 @@ services:
           path: ./server/
           target: /coursemate/dev/server
           ignore:
-          - node_modules/
+            - node_modules/
   web:
     build:
       context: ./web
