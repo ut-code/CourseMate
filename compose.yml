@@ -7,9 +7,25 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - "3000:3000"
+    develop:
+      watch:
+        - action: rebuild
+          path: ./server/
+          target: /coursemate/dev/server
+          ignore:
+          - node_modules/
   web:
     build:
       context: ./web
       dockerfile: ./Dockerfile
     ports:
       - "5173:5173"
+    develop:
+      watch:
+        - action: sync
+          path: ./web/
+          target: /coursemate/dev/web/
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
