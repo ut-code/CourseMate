@@ -1,9 +1,8 @@
 import express, { Request, Response } from "express";
-import type { Relationship, UserID } from "../common/types";
+import type { UserID } from "../common/types";
 
 import {
   approveRequest,
-  getRequestsByUserId,
   rejectRequest,
   sendRequest,
 } from "../database/requests";
@@ -33,24 +32,6 @@ const router = express.Router();
 //     res.status(500).json({ error: "Failed to fetch requests" });
 //   }
 // });
-
-//特定のユーザーにまつわるpendingリクエストを取得
-router.get("/", async (req: Request, res: Response) => {
-  const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error");
-
-  try {
-    const requests: Relationship[] = await getRequestsByUserId({
-      // FIXME: isn't it supposed to be receiver id?
-      senderId: userId.value,
-    });
-    const pending = requests.filter((r) => r.status === "PENDING");
-    res.status(200).json(pending);
-  } catch (error) {
-    console.error("Error fetching matching requests", error);
-    res.status(500).json({ error: "Failed to fetch matching requests" });
-  }
-});
 
 // リクエストの送信
 router.put("/send/:receiverId", async (req: Request, res: Response) => {

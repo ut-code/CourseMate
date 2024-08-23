@@ -157,7 +157,6 @@ const matches = `${origin}/matches`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const requests = `${origin}/requests`;
 
 /**
  * [v] 実装済み
@@ -292,7 +291,6 @@ export default {
   pendingRequestsFromMe,
   match,
   matches,
-  requests,
   sendRequest,
   acceptRequest,
   rejectRequest,
