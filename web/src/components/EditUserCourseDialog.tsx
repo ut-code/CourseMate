@@ -229,7 +229,7 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
                   <Select
                     labelId="courses-by-day-period-label"
                     id="courses-by-day-period"
-                    value={currentEdit?.courses[0]} // TODO: 複数授業の登録に対応する
+                    value={currentEdit?.courses[0].id} // TODO: 複数授業の登録に対応する
                     label="Age"
                     onChange={(e) => {
                       if (!currentEdit) return;
