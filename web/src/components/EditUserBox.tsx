@@ -47,11 +47,21 @@ export function EditUserBox({
         onChange={(e) => setName(e.target.value)}
         label="Name"
       />
-      <TextField
-        value={grade}
-        onChange={(e) => setGrade(e.target.value)}
-        label="Grade"
-      />
+      <FormControl fullWidth>
+        <InputLabel>学年</InputLabel>
+        <Select
+          value={grade}
+          label="Grade"
+          onChange={(e) => setGrade(e.target.value)}
+        >
+          <MenuItem value={"B1"}>一年生 (B1)</MenuItem>
+          <MenuItem value={"B2"}>二年生 (B2)</MenuItem>
+          <MenuItem value={"B3"}>三年生 (B3)</MenuItem>
+          <MenuItem value={"B4"}>四年生 (B4)</MenuItem>
+          <MenuItem value={"M1"}>修士一年 (M1)</MenuItem>
+          <MenuItem value={"M2"}>修士二年 (M2)</MenuItem>
+        </Select>
+      </FormControl>
       <FormControl fullWidth>
         <InputLabel>性別</InputLabel>
         <Select
@@ -72,12 +82,12 @@ export function EditUserBox({
       />
       <TextField
         value={introS}
-        label="自己紹介 (短め)"
+        label="ひとことコメント"
         onChange={(e) => setIntroS(e.target.value)}
       />
       <TextField
         value={introL}
-        label="自己紹介 (長め)"
+        label="自己紹介"
         onChange={(e) => setIntroL(e.target.value)}
       />
       <PhotoPreview />
