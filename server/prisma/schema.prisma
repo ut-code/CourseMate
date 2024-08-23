@@ -11,10 +11,15 @@ datasource db {
 model User {
   id          Int           @id @default(autoincrement())
   guid        String        @unique
-  name        String        @default("名無し")
-  email       String        @default("")
-  pictureUrl  String        @default("")
-  enrollments Enrollement[]
+  name        String        
+  pictureUrl  String        
+  gender      Gender
+  intro_short String
+  intro_long  String @default("")
+  hobby       String @default("")
+  grade String @default("")
+
+  enrollments Enrollement[] // TODO
   sendingUsers Relationship[] @relation("sending")  // 自分がマッチリクエストを送ったユーザー
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
 }
