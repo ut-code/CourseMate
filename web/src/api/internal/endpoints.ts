@@ -1,4 +1,4 @@
-import { GUID } from "../../common/types";
+import { Day, GUID } from "../../common/types";
 import { MessageID, ShareRoomID } from "../../common/types";
 
 const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
@@ -150,6 +150,19 @@ const requests = `${origin}/requests`;
 
 /**
  * [x] 実装済み
+ * GET -> courses that exist on the given day and period.
+ * - statuses:
+ *   - 200: ok.
+ *     - body: Course[]
+ *   - 401: unauthorized.
+ *   - 500: internal error.
+ **/
+const coursesByDayPeriod = (day: Day, period: number) => {
+  return `${origin}/courses/day/${day}/period/${period}`;
+};
+
+/**
+ * [x] 実装済み
  * PUT -> update enrollments.
  * - statuses:
  *   - 200: ok.
@@ -295,6 +308,7 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
+  coursesByDayPeriod,
   enrollments,
   roomOverview,
   dmTo,

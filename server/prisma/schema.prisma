@@ -9,12 +9,12 @@ datasource db {
 }
 
 enum Day {
-  MON
-  TUE
-  WED
-  THU
-  FRI
-  SAT
+  mon
+  tue
+  wed
+  thu
+  fri
+  sat
 }
 
 model User {

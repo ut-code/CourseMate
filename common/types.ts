@@ -76,6 +76,9 @@ export type Enrollment = {
   courseId: CourseID;
 };
 
+// TODO: schema.prisma との二重化を解消する
+export type Day = "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
+
 export type CourseWithDayPeriods = {
   id: CourseID;
   name: string;

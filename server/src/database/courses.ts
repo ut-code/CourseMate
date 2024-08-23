@@ -21,7 +21,7 @@ export async function getCourse(courseId: string) {
   });
 }
 
-export async function getCoursesByDayPeriod({
+export async function getCourseDayPeriod({
   period,
   day,
 }: {

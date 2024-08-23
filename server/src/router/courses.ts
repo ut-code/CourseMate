@@ -3,7 +3,7 @@ import {
   createCourse,
   deleteCourse,
   getCourse,
-  getCoursesByDayPeriod,
+  getCourseDayPeriod as getCourseDayPeriods,
   updateCourse,
 } from "../database/courses";
 import { Day } from "@prisma/client";
@@ -37,10 +37,13 @@ router.get("/day/:day/period/:period", async (req: Request, res: Response) => {
   }
 
   try {
-    const courses = await getCoursesByDayPeriod({
+    const courseDayPeriods = await getCourseDayPeriods({
       period: Number(period),
       day,
     });
+    const courses = courseDayPeriods.map(
+      (courseDayPeriod) => courseDayPeriod.course,
+    );
     res.status(200).json(courses);
   } catch (error) {
     console.error("Error fetching courses by day period:", error);

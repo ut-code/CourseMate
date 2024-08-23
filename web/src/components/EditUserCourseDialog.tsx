@@ -11,16 +11,22 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  TextField,
+  Typography,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 
 import {
   Course,
   CourseWithDayPeriods,
+  Day,
   PeriodDayCourseMap,
   UpdateUser,
 } from "../common/types";
 import enrollmentApi from "../api/enrollment";
+import courseApi from "../api/course";
 import { photo } from "./data/photo-preview";
 
 type EditUserDialogProps = {
@@ -29,67 +35,22 @@ type EditUserDialogProps = {
   defaultValue: UpdateUser;
 };
 
-type Day = "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
-
-const sampleRows = [
-  {
-    name: "1限",
-    mon: [{ id: "2", name: "数学" }],
-    tue: [{ id: "3", name: "英語" }],
-    wed: [{ id: "1", name: "国語" }],
-    thu: [{ id: "", name: "" }],
-    fri: [{ id: "", name: "" }],
-    sat: [{ id: "", name: "" }],
-  },
-  {
-    name: "2限",
-    mon: [{ id: "", name: "" }],
-    tue: [{ id: "", name: "" }],
-    wed: [{ id: "", name: "" }],
-    thu: [{ id: "", name: "" }],
-    fri: [{ id: "", name: "" }],
-    sat: [{ id: "", name: "" }],
-  },
-  {
-    name: "3限",
-    mon: [{ id: "", name: "" }],
-    tue: [{ id: "", name: "" }],
-    wed: [{ id: "", name: "" }],
-    thu: [{ id: "", name: "" }],
-    fri: [{ id: "", name: "" }],
-    sat: [{ id: "", name: "" }],
-  },
-  {
-    name: "4限",
-    mon: [{ id: "", name: "" }],
-    tue: [{ id: "", name: "" }],
-    wed: [{ id: "", name: "" }],
-    thu: [{ id: "", name: "" }],
-    fri: [{ id: "", name: "" }],
-    sat: [{ id: "", name: "" }],
-  },
-  {
-    name: "5限",
-    mon: [{ id: "", name: "" }],
-    tue: [{ id: "", name: "" }],
-    wed: [{ id: "", name: "" }],
-    thu: [{ id: "", name: "" }],
-    fri: [{ id: "", name: "" }],
-    sat: [{ id: "", name: "" }],
-  },
-  {
-    name: "6限",
-    mon: [{ id: "", name: "" }],
-    tue: [{ id: "", name: "" }],
-    wed: [{ id: "", name: "" }],
-    thu: [{ id: "", name: "" }],
-    fri: [{ id: "", name: "" }],
-    sat: [{ id: "", name: "" }],
-  },
-];
+const defaultRows = Array(6)
+  .fill(null)
+  .map((_, i) => {
+    return {
+      name: `${i + 1}限`,
+      mon: [{ id: "", name: "" }],
+      tue: [{ id: "", name: "" }],
+      wed: [{ id: "", name: "" }],
+      thu: [{ id: "", name: "" }],
+      fri: [{ id: "", name: "" }],
+      sat: [{ id: "", name: "" }],
+    };
+  });
 
 function transform(courses: CourseWithDayPeriods[]): PeriodDayCourseMap {
-  const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const days = ["mon", "tue", "wed", "thu", "fri", "sat"];
   const result: PeriodDayCourseMap = {};
   courses.forEach((course) => {
     course.dayPeriods.forEach((dayPeriod) => {
@@ -121,6 +82,10 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
     columnName: Day;
     courses: Course[];
   } | null>(null);
+  const [coursesOnCurrentDayPeriod, setCoursesOnCurrentDayPeriod] = useState<
+    Course[]
+  >([]);
+  // const [selectedCourseIds, setSelectedCourseIds] = useState<string[]>([""]);
   const [rows, setRows] = useState<
     {
       name: string;
@@ -131,10 +96,19 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
       fri: Course[];
       sat: Course[];
     }[]
-  >(sampleRows);
+  >(defaultRows);
 
-  const handleOpen = (rowIndex: number, columnName: Day, courses: Course[]) => {
+  const handleOpen = async (
+    rowIndex: number,
+    columnName: Day,
+    courses: Course[],
+  ) => {
     setCurrentEdit({ rowIndex, columnName, courses });
+    const coursesOnDayPeriod = await courseApi.getByDayPeriod({
+      day: columnName,
+      period: rowIndex + 1,
+    });
+    setCoursesOnCurrentDayPeriod(coursesOnDayPeriod);
     setIsSelectCourseDialogOpen(true);
   };
 
@@ -156,7 +130,7 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
         row.sat.map((course) => course.id),
       ])
       .flat(2)
-      .filter((v) => v !== null);
+      .filter((v) => v !== null && v !== "");
     const uniqueIds = [...new Set(flattenedIds)];
     const coursesWithDayPeriods = await enrollmentApi.update(uniqueIds);
     const periodDayCourseMap = transform(coursesWithDayPeriods);
@@ -164,12 +138,12 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
     const newRows = Object.keys(periodDayCourseMap).map((period) => {
       return {
         name: `${period}限`,
-        mon: periodDayCourseMap[Number(period)]["MON"],
-        tue: periodDayCourseMap[Number(period)]["TUE"],
-        wed: periodDayCourseMap[Number(period)]["WED"],
-        thu: periodDayCourseMap[Number(period)]["THU"],
-        fri: periodDayCourseMap[Number(period)]["FRI"],
-        sat: periodDayCourseMap[Number(period)]["SAT"],
+        mon: periodDayCourseMap[Number(period)]["mon"],
+        tue: periodDayCourseMap[Number(period)]["tue"],
+        wed: periodDayCourseMap[Number(period)]["wed"],
+        thu: periodDayCourseMap[Number(period)]["thu"],
+        fri: periodDayCourseMap[Number(period)]["fri"],
+        sat: periodDayCourseMap[Number(period)]["sat"],
       };
     });
 
@@ -269,16 +243,39 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
           </DialogTitle>
           <DialogContent>
             <DialogContentText>授業を選択してください。</DialogContentText>
-            <TextField
-            // value={currentEdit?.courseIds.join(",")}
-            // onChange={(e) => {
-            //   if (!currentEdit) return;
-            //   setCurrentEdit({
-            //     ...currentEdit,
-            //     courseIds: e.target.value.split(",").map((v) => v.trim()),
-            //   });
-            // }}
-            />
+            <Typography>現在の授業</Typography>
+            <Typography>
+              {currentEdit?.courses.map((course) => course.name).join(",")}
+            </Typography>
+            {/* TODO: UI として複数授業の登録に対応する */}
+            <FormControl fullWidth>
+              <InputLabel id="courses-by-day-period-label">授業</InputLabel>
+              <Select
+                labelId="courses-by-day-period-label"
+                id="courses-by-day-period"
+                value={currentEdit?.courses[0]} // TODO: 複数授業の登録に対応する
+                label="Age"
+                onChange={(e) => {
+                  if (!currentEdit) return;
+                  setCurrentEdit({
+                    ...currentEdit,
+                    courses: [
+                      {
+                        id: e.target.value as string,
+                        name:
+                          coursesOnCurrentDayPeriod.find(
+                            (course) => course.id === e.target.value,
+                          )?.name || "",
+                      },
+                    ], // TODO: 複数授業の登録に対応する
+                  });
+                }}
+              >
+                {coursesOnCurrentDayPeriod.map((course) => (
+                  <MenuItem value={course.id}>{course.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
