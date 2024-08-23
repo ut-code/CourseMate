@@ -87,9 +87,10 @@ router.post(`/shared`, async (req, res) => {
 
   const init: InitRoom = req.body; // zod
 
-  const allMatched = areAllMatched(user.value, init.members);
+  const allMatched = await areAllMatched(user.value, init.members);
+  if (!allMatched.ok) return res.status(500).send("db error");
 
-  if (!allMatched)
+  if (!allMatched.value)
     return res.status(403).send("error: some members are not friends with you");
 
   const room = await db.createSharedRoom(init);
@@ -104,8 +105,13 @@ router.get("/shared/:roomId", async (req, res) => {
   const roomId = safeParseInt(req.params.roomId);
   if (!roomId.ok) return res.status(400).send("invalid formatting of :room");
 
-  if (!(await db.isUserInRoom(roomId.value as ShareRoomID, user.value)))
-    res.status(403).send("you don't belong to that room!");
+  const userInRoom = await db.isUserInRoom(
+    roomId.value as ShareRoomID,
+    user.value,
+  );
+  if (!userInRoom.ok) return res.status(500).send("db error");
+  if (!userInRoom.value)
+    return res.status(403).send("you don't belong to that room!");
 
   const room = await db.findSharedRoom(roomId.value as ShareRoomID);
   if (!room.ok) return res.status(500).send();

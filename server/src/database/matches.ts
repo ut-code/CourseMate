@@ -51,15 +51,17 @@ export async function areMatched(u1: UserID, u2: UserID): Promise<boolean> {
 export async function areAllMatched(
   user: UserID,
   friends: UserID[],
-): Promise<boolean> {
+): Promise<Result<boolean>> {
   try {
-    return (
-      await asyncMap(friends, (friend) => {
-        return areMatched(user, friend);
-      })
-    ).reduce((a, b) => a && b);
-  } catch (_) {
-    return false;
+    return Ok(
+      (
+        await asyncMap(friends, (friend) => {
+          return areMatched(user, friend);
+        })
+      ).reduce((a, b) => a && b),
+    );
+  } catch (e) {
+    return Err(e);
   }
 }
 
@@ -129,7 +131,7 @@ export async function deleteMatch(
 
     // `No matching records found for senderId=${senderId} and receiverId=${receiverId}`,
     return Err(404);
-  } catch (_) {
-    return Err("something went wrong in deleting match");
+  } catch (e) {
+    return Err(e);
   }
 }

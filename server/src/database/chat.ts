@@ -105,7 +105,7 @@ export async function createSharedRoom(
 export async function isUserInRoom(
   roomId: ShareRoomID,
   userId: UserID,
-): Promise<boolean> {
+): Promise<Result<boolean>> {
   try {
     const room = await prisma.sharedRoom.findUnique({
       where: {
@@ -116,9 +116,9 @@ export async function isUserInRoom(
       },
     });
 
-    return room !== null;
-  } catch (_) {
-    return false;
+    return Ok(room !== null);
+  } catch (e) {
+    return Err(e);
   }
 }
 
