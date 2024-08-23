@@ -1,10 +1,14 @@
 import { useState, ChangeEvent, useEffect } from "react";
 import { uploadImage } from "../firebase/store/upload-photo";
 import { photo } from "./data/photo-preview";
+import { ImageCropper } from "./ImageCropper";
 
 type Props = {
   defaultValueUrl?: string;
 };
+function syncUploaderToFileChange(file: File) {
+  if (file) photo.upload = async () => await uploadImage(file);
+}
 export function PhotoPreview({ defaultValueUrl }: Props) {
   const [url, setUrl] = useState<string | null>(defaultValueUrl || null);
   const [file, setFile] = useState<File | null>(null);
@@ -33,7 +37,13 @@ export function PhotoPreview({ defaultValueUrl }: Props) {
 
   return (
     <>
-      {url && <img className="icon-image-preview" src={url} />}
+      {/* url.startsWith("blob:") <=> url is a(n) url of local file <=> no SOP restriction*/}
+      {url && url.startsWith("blob:") && (
+        <ImageCropper
+          sameOriginURL={url}
+          onImageChange={syncUploaderToFileChange}
+        />
+      )}
       <input type="file" onChange={handleImageChange} />
     </>
   );

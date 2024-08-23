@@ -20,6 +20,9 @@ watch:
 docker: copy-common
 	@# defer `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
 	trap 'docker compose down' EXIT; docker compose up --build
+	docker compose up --build
+docker-watch: copy-common
+	docker compose up -d --build --watch
 
 precommit: type-check lint format-check
 
