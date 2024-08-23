@@ -54,12 +54,12 @@ export function EditUserBox({
           label="Grade"
           onChange={(e) => setGrade(e.target.value)}
         >
-          <MenuItem value={"B1"}>一年生 (B1)</MenuItem>
-          <MenuItem value={"B2"}>二年生 (B2)</MenuItem>
-          <MenuItem value={"B3"}>三年生 (B3)</MenuItem>
-          <MenuItem value={"B4"}>四年生 (B4)</MenuItem>
-          <MenuItem value={"M1"}>修士一年 (M1)</MenuItem>
-          <MenuItem value={"M2"}>修士二年 (M2)</MenuItem>
+          <MenuItem value={"B1"}>&emsp14;1&emsp14;年生 (B1)</MenuItem>
+          <MenuItem value={"B2"}>&emps14;2&emsp14;年生 (B2)</MenuItem>
+          <MenuItem value={"B3"}>&emsp14;3&emsp14;年生 (B3)</MenuItem>
+          <MenuItem value={"B4"}>&emsp14;4&emsp14;年生 (B4)</MenuItem>
+          <MenuItem value={"M1"}>修士&emsp14;1&emsp14;年 (M1)</MenuItem>
+          <MenuItem value={"M2"}>修士&emsp14;2&emsp14;年 (M2)</MenuItem>
         </Select>
       </FormControl>
       <FormControl fullWidth>
