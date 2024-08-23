@@ -156,6 +156,11 @@ export async function findDM(relID: RelationshipID): Promise<DMRoom | null> {
     where: {
       relationId: relID,
     },
+    orderBy: [
+      {
+        createdAt: "desc",
+      },
+    ],
   });
 
   return {
@@ -179,6 +184,11 @@ export async function findSharedRoom(
     where: {
       sharedRoomId: room.id,
     },
+    orderBy: [
+      {
+        createdAt: "desc",
+      },
+    ],
   });
   return {
     id: room.id as ShareRoomID,
