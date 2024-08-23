@@ -7,6 +7,22 @@ import { useCurrentUserId } from "../../hooks/useCurrentUser";
 
 import { DraggableCard } from "../../components/DraggableCard";
 
+const getBackgroundColor = (x: number) => {
+  const maxVal = 255;
+  const normalizedValue = Math.max(-maxVal, Math.min(maxVal, x / 2));
+
+  // xが0に近いと白、正の方向に進むと緑、負の方向に進むと赤
+  if (normalizedValue === 0) {
+    return `rgb(${maxVal}, ${maxVal}, ${maxVal})`; // 白
+  } else if (normalizedValue > 0) {
+    const greenValue = Math.floor((normalizedValue / maxVal) * 255);
+    return `rgb(${maxVal - greenValue}, ${maxVal}, ${maxVal - greenValue})`; // 緑
+  } else {
+    const redValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
+    return `rgb(${maxVal}, ${maxVal - redValue}, ${maxVal - redValue})`; // 赤
+  }
+};
+
 export default function Home() {
   const [users, setUsers] = useState<User[] | null>(null);
   const [skippedUsers, setSkippedUsers] = useState<User[] | null>(null);
@@ -34,7 +50,7 @@ export default function Home() {
     }
   }, [users]);
 
-  const handleClickCross = (): void => {
+  const handleReject = (): void => {
     if (!users || !displayedUser) return;
     alert("skipped!");
     const newUsers = users.filter((user) => user.id !== displayedUser.id);
@@ -49,7 +65,7 @@ export default function Home() {
     }
   };
 
-  const handleClickCircle = (): void => {
+  const handleAccept = (): void => {
     if (!displayedUser) return;
     request.send(displayedUser.id).catch((err: unknown) => {
       console.error("Error liking user:", err);
@@ -74,22 +90,6 @@ export default function Home() {
     setDragValue(dragProgress);
   };
 
-  const getBackgroundColor = (x: number) => {
-    const maxVal = 255;
-    const normalizedValue = Math.max(-maxVal, Math.min(maxVal, x / 2));
-
-    // xが0に近いと白、正の方向に進むと緑、負の方向に進むと赤
-    if (normalizedValue === 0) {
-      return `rgb(${maxVal}, ${maxVal}, ${maxVal})`; // 白
-    } else if (normalizedValue > 0) {
-      const greenValue = Math.floor((normalizedValue / maxVal) * 255);
-      return `rgb(${maxVal - greenValue}, ${maxVal}, ${maxVal - greenValue})`; // 緑
-    } else {
-      const redValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
-      return `rgb(${maxVal}, ${maxVal - redValue}, ${maxVal - redValue})`; // 赤
-    }
-  };
-
   if (isAllUsersLiked) {
     return <div>全員にいいねを送りました！</div>;
   }
@@ -104,13 +104,13 @@ export default function Home() {
       >
         <DraggableCard
           displayedUser={displayedUser}
-          onSwipeLeft={handleClickCross}
-          onSwipeRight={handleClickCircle}
+          onSwipeLeft={handleReject}
+          onSwipeRight={handleAccept}
           onDrag={handleDrag}
         />
         <Stack direction={"row"}>
-          <Button onClick={handleClickCross}>X</Button>
-          <Button onClick={handleClickCircle}>O</Button>
+          <Button onClick={handleReject}>X</Button>
+          <Button onClick={handleAccept}>O</Button>
         </Stack>
       </Box>
     </div>
