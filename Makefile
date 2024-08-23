@@ -19,6 +19,8 @@ watch:
 
 docker: copy-common
 	docker compose up --build
+docker-watch: copy-common
+	docker compose up -d --build --watch
 
 precommit: type-check lint format-check
 
