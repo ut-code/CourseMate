@@ -15,7 +15,6 @@ export function MessageInput(props: Props) {
 
   const [message, _setMessage] = useState<string>("");
   const setMessage = (m: string) => {
-    console.log("setting message ", room.name, "->", m);
     _setMessage(m);
     crossRoomMessageState.set(room.friendId, m);
   };
