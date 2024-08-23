@@ -11,7 +11,6 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Typography,
   FormControl,
   InputLabel,
   MenuItem,
@@ -48,6 +47,15 @@ const defaultRows = Array(6)
       sat: [{ id: "", name: "" }],
     };
   });
+
+const dayCodeToDayMap: { [dayCode in Day]: string } = {
+  mon: "月",
+  tue: "火",
+  wed: "水",
+  thu: "木",
+  fri: "金",
+  sat: "土",
+};
 
 function transform(courses: CourseWithDayPeriods[]): PeriodDayCourseMap {
   const days = ["mon", "tue", "wed", "thu", "fri", "sat"];
@@ -160,17 +168,15 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
         <DialogContentText>
           曜限を選択し、授業を登録してください。
         </DialogContentText>
-        {/* <div>現在の授業</div> */}
         <Table>
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
-              <TableCell align="center">月</TableCell>
-              <TableCell align="center">火</TableCell>
-              <TableCell align="center">水</TableCell>
-              <TableCell align="center">木</TableCell>
-              <TableCell align="center">金</TableCell>
-              <TableCell align="center">土</TableCell>
+              {Object.keys(dayCodeToDayMap).map((dayCode) => (
+                <TableCell align="center">
+                  {dayCodeToDayMap[dayCode as Day]}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -182,54 +188,18 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
-                <TableCell
-                  align="center"
-                  onClick={() => handleOpen(rowIndex, "mon", row.mon)}
-                >
-                  {row.mon.map((course) => (
-                    <div>{course.name}</div>
-                  ))}
-                </TableCell>
-                <TableCell
-                  align="center"
-                  onClick={() => handleOpen(rowIndex, "tue", row.tue)}
-                >
-                  {row.tue.map((course) => (
-                    <div>{course.name}</div>
-                  ))}
-                </TableCell>
-                <TableCell
-                  align="center"
-                  onClick={() => handleOpen(rowIndex, "wed", row.wed)}
-                >
-                  {row.wed.map((course) => (
-                    <div>{course.name}</div>
-                  ))}
-                </TableCell>
-                <TableCell
-                  align="center"
-                  onClick={() => handleOpen(rowIndex, "thu", row.thu)}
-                >
-                  {row.thu.map((course) => (
-                    <div>{course.name}</div>
-                  ))}
-                </TableCell>
-                <TableCell
-                  align="center"
-                  onClick={() => handleOpen(rowIndex, "fri", row.fri)}
-                >
-                  {row.fri.map((course) => (
-                    <div>{course.name}</div>
-                  ))}
-                </TableCell>
-                <TableCell
-                  align="center"
-                  onClick={() => handleOpen(rowIndex, "sat", row.sat)}
-                >
-                  {row.sat.map((course) => (
-                    <div>{course.name}</div>
-                  ))}
-                </TableCell>
+                {Object.keys(dayCodeToDayMap).map((dayCode) => (
+                  <TableCell
+                    align="center"
+                    onClick={() =>
+                      handleOpen(rowIndex, dayCode as Day, row[dayCode as Day])
+                    }
+                  >
+                    {row[dayCode as Day].map((course) => (
+                      <div>{course.name}</div>
+                    ))}
+                  </TableCell>
+                ))}
               </TableRow>
             ))}
           </TableBody>
@@ -242,39 +212,47 @@ const EditUserCourseDialog: React.FC<EditUserDialogProps> = (
               : "授業を選択"}
           </DialogTitle>
           <DialogContent>
-            <DialogContentText>授業を選択してください。</DialogContentText>
-            <Typography>現在の授業</Typography>
-            <Typography>
-              {currentEdit?.courses.map((course) => course.name).join(",")}
-            </Typography>
+            {/* <Typography>現在の授業</Typography>
+            <Typography>{currentEdit?.courses.map((course) => course.name).join(",")}</Typography> */}
             {/* TODO: UI として複数授業の登録に対応する */}
             <FormControl fullWidth>
-              <InputLabel id="courses-by-day-period-label">授業</InputLabel>
-              <Select
-                labelId="courses-by-day-period-label"
-                id="courses-by-day-period"
-                value={currentEdit?.courses[0]} // TODO: 複数授業の登録に対応する
-                label="Age"
-                onChange={(e) => {
-                  if (!currentEdit) return;
-                  setCurrentEdit({
-                    ...currentEdit,
-                    courses: [
-                      {
-                        id: e.target.value as string,
-                        name:
-                          coursesOnCurrentDayPeriod.find(
-                            (course) => course.id === e.target.value,
-                          )?.name || "",
-                      },
-                    ], // TODO: 複数授業の登録に対応する
-                  });
-                }}
-              >
-                {coursesOnCurrentDayPeriod.map((course) => (
-                  <MenuItem value={course.id}>{course.name}</MenuItem>
-                ))}
-              </Select>
+              {coursesOnCurrentDayPeriod.length === 0 ? (
+                <DialogContentText>
+                  この曜限の授業はありません。
+                </DialogContentText>
+              ) : (
+                <>
+                  <DialogContentText>
+                    授業を選択してください。
+                  </DialogContentText>
+                  <InputLabel id="courses-by-day-period-label">授業</InputLabel>
+                  <Select
+                    labelId="courses-by-day-period-label"
+                    id="courses-by-day-period"
+                    value={currentEdit?.courses[0]} // TODO: 複数授業の登録に対応する
+                    label="Age"
+                    onChange={(e) => {
+                      if (!currentEdit) return;
+                      setCurrentEdit({
+                        ...currentEdit,
+                        courses: [
+                          {
+                            id: e.target.value as string,
+                            name:
+                              coursesOnCurrentDayPeriod.find(
+                                (course) => course.id === e.target.value,
+                              )?.name || "",
+                          },
+                        ], // TODO: 複数授業の登録に対応する
+                      });
+                    }}
+                  >
+                    {coursesOnCurrentDayPeriod.map((course) => (
+                      <MenuItem value={course.id}>{course.name}</MenuItem>
+                    ))}
+                  </Select>
+                </>
+              )}
             </FormControl>
           </DialogContent>
           <DialogActions>
