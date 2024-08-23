@@ -1,0 +1,113 @@
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import { Gender, User } from "../common/types";
+import { photo } from "../components/data/photo-preview";
+
+import { useState } from "react";
+import { PhotoPreview } from "./PhotoPreview";
+
+type Props = {
+  save: (userData: UserData) => Promise<void>;
+  onSave?: () => void;
+  saveButtonText: string;
+  allowClose: boolean;
+  onClose?: () => void;
+  defaultValue?: UserData;
+};
+export type UserData = Omit<Omit<User, "id">, "guid">;
+
+export function EditUserBox({
+  save,
+  onSave,
+  saveButtonText,
+  allowClose,
+  onClose,
+  defaultValue: def,
+}: Props) {
+  const [name, setName] = useState(def?.name || "");
+  const [grade, setGrade] = useState(def?.grade || "");
+  const [gender, setGender] = useState<Gender>(
+    (def?.gender as Gender) || "その他",
+  );
+  const [hobby, setHobby] = useState(def?.hobby || "");
+  const [introS, setIntroS] = useState(def?.intro_short || "");
+  const [introL, setIntroL] = useState(def?.intro_long || "");
+
+  return (
+    <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
+      <TextField
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        label="Name"
+      />
+      <TextField
+        value={grade}
+        onChange={(e) => setGrade(e.target.value)}
+        label="Grade"
+      />
+      <FormControl fullWidth>
+        <InputLabel>性別</InputLabel>
+        <Select
+          value={gender}
+          label="Gender"
+          onChange={(e) => setGender(e.target.value as Gender)}
+        >
+          <MenuItem value={"男性"}>男性</MenuItem>
+          <MenuItem value={"女性"}>女性</MenuItem>
+          <MenuItem value={"その他"}>その他</MenuItem>
+          <MenuItem value={"秘密"}>秘密</MenuItem>
+        </Select>
+      </FormControl>
+      <TextField
+        value={hobby}
+        label="趣味"
+        onChange={(e) => setHobby(e.target.value)}
+      />
+      <TextField
+        value={introS}
+        label="自己紹介 (短め)"
+        onChange={(e) => setIntroS(e.target.value)}
+      />
+      <TextField
+        value={introL}
+        label="自己紹介 (長め)"
+        onChange={(e) => setIntroL(e.target.value)}
+      />
+      <PhotoPreview />
+      {allowClose && (
+        <Button onClick={onClose} color="primary">
+          キャンセル
+        </Button>
+      )}
+      <Button
+        variant="outlined"
+        sx={{ textTransform: "none" }}
+        onClick={() =>
+          (async () => {
+            const pictureUrl = photo.upload && (await photo.upload());
+            const data: UserData = {
+              name,
+              grade,
+              gender,
+              intro_short: introS,
+              intro_long: introL,
+              hobby,
+              pictureUrl: pictureUrl || "",
+            };
+            await save(data);
+            if (onSave) onSave();
+          })()
+        }
+      >
+        {saveButtonText}
+      </Button>
+    </Box>
+  );
+}

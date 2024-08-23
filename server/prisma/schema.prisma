@@ -13,11 +13,11 @@ model User {
   guid        String        @unique
   name        String        
   pictureUrl  String        
-  gender      Gender
+  grade       String @default("")
+  gender      String
+  hobby       String @default("")
   intro_short String
   intro_long  String @default("")
-  hobby       String @default("")
-  grade String @default("")
 
   enrollments Enrollement[] // TODO
   sendingUsers Relationship[] @relation("sending")  // 自分がマッチリクエストを送ったユーザー

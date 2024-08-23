@@ -125,7 +125,7 @@ export async function findPendingRequestsToUser(
 export async function findPendingRequestsFromUser(
   userId: UserID,
 ): Promise<User[]> {
-  const found = await prisma.user.findMany({
+  const found = (await prisma.user.findMany({
     where: {
       receivingUsers: {
         some: {
@@ -134,7 +134,7 @@ export async function findPendingRequestsFromUser(
         },
       },
     },
-  });
+  })) as User[];
   return found;
 }
 
