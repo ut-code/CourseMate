@@ -1,5 +1,4 @@
 import { getAuth } from "firebase/auth";
-import { setIdTokenCookie } from "../../api/echo";
 import { type IDToken } from "../../common/types";
 
 export class ErrUnauthorized extends Error {}
@@ -12,12 +11,6 @@ export async function getIdToken(): Promise<IDToken> {
   return idtoken;
 }
 
-// sometimes throws error.
-export async function refreshIdToken(): Promise<void> {
-  const idToken = await getIdToken();
-  await setIdTokenCookie(idToken);
-}
-
 /**
  * given func runs at most twice. do not mutate external variables inside the function.
  * throws error when:
@@ -25,15 +18,24 @@ export async function refreshIdToken(): Promise<void> {
  * - the func threw an error that is not ErrUnauthorized
  * - the func failed with id token
  **/
-export async function doWithIdToken<T>(func: () => Promise<T>): Promise<T> {
-  try {
-    return await func();
-  } catch (e) {
-    if (e instanceof ErrUnauthorized) {
-      await refreshIdToken();
-      return await func();
-    } else {
-      throw e;
-    }
+
+type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+export async function credFetch(
+  method: RequestMethod,
+  path: string,
+  body?: unknown,
+): Promise<Response> {
+  const idToken = await getIdToken();
+  const init: RequestInit = { method };
+  if (body) {
+    init.body = JSON.stringify(body);
+    init.headers = {
+      "Content-Type": "application/json",
+    };
   }
+
+  const res = await fetch(`${path}?token=${idToken}`, init);
+  if (res.status == 401) throw new ErrUnauthorized();
+  if (!res.ok) throw new Error("response was not ok");
+  return res;
 }
