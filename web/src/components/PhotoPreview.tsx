@@ -4,6 +4,8 @@ import { photo } from "./data/photo-preview";
 import { ImageCropper } from "./ImageCropper";
 import { Button } from "@mui/material";
 
+const MAX_SIZE_IN_BYTES = 5 * 1024 * 1024; // 5MB
+
 type Props = {
   defaultValueUrl?: string;
 };
@@ -18,8 +20,7 @@ export function PhotoPreview({ defaultValueUrl }: Props) {
     if (!event.target.files || event.target.files!.length <= 0) {
       return;
     }
-    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
-    if (event.target.files[0].size > maxSizeInBytes) {
+    if (event.target.files[0].size > MAX_SIZE_IN_BYTES) {
       alert(
         "ファイルサイズが大きすぎます。5MB以下の画像をアップロードしてください。",
       );
