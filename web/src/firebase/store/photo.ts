@@ -29,18 +29,10 @@ export async function uploadImage(pictureFile: File): Promise<string> {
 
 //画像をfirebase strageにアップロードする関数
 export async function deleteImage(desertFileUrl: string) {
-  const guid = getAuth().currentUser?.uid;
-  if (!guid) throw new Error("Failed to get user");
-
   const storage = getStorage(app);
   const desertRef = ref(storage, desertFileUrl);
 
-  deleteObject(desertRef)
-    .then(() => {
-      console.log("過去の画像を削除しました");
-    })
-    .catch((e) => {
-      console.log("過去の画像を削除できなかったです");
-      throw e;
-    });
+  deleteObject(desertRef).catch((e) => {
+    throw e;
+  });
 }
