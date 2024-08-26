@@ -2,6 +2,9 @@ import { useState, ChangeEvent, useEffect } from "react";
 import { uploadImage } from "../firebase/store/upload-photo";
 import { photo } from "./data/photo-preview";
 import { ImageCropper } from "./ImageCropper";
+import { Button } from "@mui/material";
+
+const MAX_SIZE_IN_BYTES = 5 * 1024 * 1024; // 5MB
 
 type Props = {
   defaultValueUrl?: string;
@@ -14,6 +17,15 @@ export function PhotoPreview({ defaultValueUrl }: Props) {
   const [file, setFile] = useState<File | null>(null);
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>): void {
+    if (!event.target.files || event.target.files!.length <= 0) {
+      return;
+    }
+    if (event.target.files[0].size > MAX_SIZE_IN_BYTES) {
+      alert(
+        "ファイルサイズが大きすぎます。5MB以下の画像をアップロードしてください。",
+      );
+      return;
+    }
     if (event.target.files && event.target.files.length > 0) {
       setFile(event.target.files[0]);
     }
@@ -44,7 +56,18 @@ export function PhotoPreview({ defaultValueUrl }: Props) {
           onImageChange={syncUploaderToFileChange}
         />
       )}
-      <input type="file" onChange={handleImageChange} />
+      <Button>
+        <label htmlFor="file-upload" className="custom-file-label">
+          写真を選択
+        </label>
+      </Button>
+      <input
+        id="file-upload"
+        type="file"
+        onChange={handleImageChange}
+        accept=".png, .jpeg, .jpg"
+        style={{ display: "none" }}
+      />
     </>
   );
 }
