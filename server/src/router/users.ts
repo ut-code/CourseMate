@@ -21,16 +21,39 @@ import {
 } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
+import { getMatchesByUserId } from "../database/matches";
 
 const router = express.Router();
 
 // 全ユーザーの取得エンドポイント
-router.get("/", async (_: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   const users = await getAllUsers();
   if (!users.ok) {
     console.error(users.error);
     return res.status(500).send();
   }
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error");
+
+  const all = await getMatchesByUserId(userId.value);
+  if (!all.ok) return res.status(500).send();
+
+  const matches = all.value.filter((relation) => relation.status === "MATCHED");
+
+  users.value.forEach((user) => {
+    const isMatched = matches.some(
+      (match) =>
+        match.sendingUserId === user.id || match.receivingUserId === user.id,
+    );
+    if (!isMatched) {
+      user.grade = "";
+      user.gender = "";
+      user.hobby = "";
+      user.intro_short = "";
+      user.intro_long = "";
+    }
+  });
+
   res.status(200).json(users.value);
 });
 
@@ -63,8 +86,7 @@ router.get("/matched", async (req: Request, res: Response) => {
   const matchedUsers = await searchMatchedUser(userId.value);
   if (!matchedUsers.ok) return res.status(500).send();
 
-  const safeMatched = matchedUsers.value.map(Public);
-  res.status(200).json(safeMatched);
+  res.status(200).json(matchedUsers.value);
 });
 
 // ユーザーにリクエストを送っているユーザーを取得 状態はPENDING
