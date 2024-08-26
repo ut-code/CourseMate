@@ -270,16 +270,6 @@ const roomInvite = (roomId: ShareRoomID) =>
 const message = (messageId: MessageID) =>
   `${origin}/chat/messages/id/` + messageId;
 
-/**
- * GET -> echo back the same cookie as Set-Cookie header
- * - param: Map<string, string>
- * - status:
- *   - 204: No content. successful.
- *   - 400: Bad formatting.
- *   - 500: internal error.
- */
-const echoSetCookie = `${origin}/echo/set-cookie`;
-
 export default {
   user,
   me,
@@ -301,6 +291,4 @@ export default {
   sharedRooms,
   roomInvite,
   message,
-
-  echoSetCookie,
 };
