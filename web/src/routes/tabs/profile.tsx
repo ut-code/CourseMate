@@ -2,7 +2,7 @@ import { Box, Button } from "@mui/material";
 import LogOutButton from "../../components/LogOutButton";
 import { useState } from "react";
 import EditUserDialog from "../../components/EditUserDialog";
-import EditUserCourseDialog from "../../components/EditUserCourseDialog";
+import CoursesDialog from "../../components/CoursesDialog";
 import hooks from "../../api/hooks";
 import UserAvatar from "../../components/avatar/avatar";
 
@@ -23,7 +23,7 @@ export default function Profile() {
     setIsCourseDialogOpen(true);
   };
 
-  const handleCourseDialogClose = () => {
+  const handleCoursesDialogClose = () => {
     setIsCourseDialogOpen(false);
   };
 
@@ -59,11 +59,11 @@ export default function Profile() {
               reload();
             }}
           />
-          <EditUserCourseDialog
+          <CoursesDialog
             defaultValue={data}
             isOpen={isCourseDialogOpen}
             close={() => {
-              handleCourseDialogClose();
+              handleCoursesDialogClose();
               reload();
             }}
           />

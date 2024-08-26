@@ -65,6 +65,23 @@ const me = `${origin}/users/me`;
 
 /**
  * [v] 実装済み
+ * GET -> get my courses.
+ * - statuses:
+ *  - 200: ok.
+ *   - body:(Course & {courseDayPeriods: CourseDayPeriod[]})[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ * PATCH → update my courses.
+ * - statuses:
+ *  - 200: ok.
+ *   - body: (Course & {courseDayPeriods: CourseDayPeriod[]})[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ */
+const meCourses = `${origin}/users/me/courses`;
+
+/**
+ * [v] 実装済み
  * GET -> list all matched users.
  * - statuses:
  *   - 200: ok.
@@ -149,7 +166,7 @@ const matches = `${origin}/matches`;
 const requests = `${origin}/requests`;
 
 /**
- * [x] 実装済み
+ * TODO:
  * GET -> courses that exist on the given day and period.
  * - statuses:
  *   - 200: ok.
@@ -157,7 +174,7 @@ const requests = `${origin}/requests`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const coursesByDayPeriod = (day: Day, period: number) => {
+const coursesOnDayPeriod = (day: Day, period: number) => {
   return `${origin}/courses/day/${day}/period/${period}`;
 };
 
@@ -297,6 +314,7 @@ const echoSetCookie = `${origin}/echo/set-cookie`;
 export default {
   user,
   me,
+  meCourses,
   userByGUID,
   userExists,
   users,
@@ -308,7 +326,7 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
-  coursesByDayPeriod,
+  coursesOnDayPeriod,
   enrollments,
   roomOverview,
   dmTo,

@@ -5,6 +5,7 @@ import {
   UpdateUser,
   User,
   GUID,
+  CourseDayPeriod,
 } from "../common/types";
 import {
   createUser,
@@ -17,6 +18,8 @@ import {
 import { searchMatchedUser, searchPendingUsers } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
+import { getCoursesWithDayPeriodsByUser } from "../database/courses";
+import { updateEnrollments } from "../database/enrollments";
 
 const router = express.Router();
 
@@ -161,6 +164,39 @@ router.delete("/me", async (req, res) => {
   } catch (error) {
     console.error("Error deleting user:", error);
     res.status(500).json({ error: "Failed to delete user" });
+  }
+});
+
+// 自分の講義を取得
+router.get("/me/courses", async (req: Request, res: Response) => {
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error");
+
+  try {
+    const courses = await getCoursesWithDayPeriodsByUser(userId.value);
+    return res.status(200).json(courses);
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    res.status(500).json({ error: "Failed to fetch courses" });
+  }
+});
+
+// 自分の講義を編集
+router.patch("/me/courses", async (req: Request, res: Response) => {
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error");
+
+  const courseDayPeriod: CourseDayPeriod = req.body;
+
+  try {
+    const updatedCourses = await updateEnrollments(
+      courseDayPeriod,
+      userId.value,
+    );
+    res.status(200).json(updatedCourses);
+  } catch (error) {
+    console.error("Error updating courses:", error);
+    res.status(500).json({ error: "Failed to update courses" });
   }
 });
 

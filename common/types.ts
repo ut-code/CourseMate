@@ -79,19 +79,10 @@ export type Enrollment = {
 // TODO: schema.prisma との二重化を解消する
 export type Day = "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
 
-export type CourseWithDayPeriods = {
-  id: CourseID;
-  name: string;
-  dayPeriods: {
-    day: string;
-    period: number;
-  }[];
-};
-
-export type PeriodDayCourseMap = {
-  [period: string]: {
-    [day: string]: Course[];
-  };
+export type CourseDayPeriod = {
+  courseId: CourseID;
+  day: Day;
+  period: number;
 };
 
 /*

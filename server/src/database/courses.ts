@@ -1,4 +1,5 @@
 import { Day, PrismaClient } from "@prisma/client";
+import { UserID } from "../common/types";
 
 const prisma = new PrismaClient();
 
@@ -14,14 +15,66 @@ export async function createCourse(id: string, name: string) {
 
 // コースの取得
 export async function getCourse(courseId: string) {
-  return await prisma.course.findUnique({
+  const course = await prisma.course.findUnique({
     where: {
       id: courseId,
     },
+    include: {
+      courseDayPeriods: true,
+    },
   });
+  return course;
 }
 
-export async function getCourseDayPeriod({
+// ユーザーの履修コースの取得
+export async function getCoursesWithDayPeriodsByUser(userId: UserID) {
+  const courses = await prisma.course.findMany({
+    where: {
+      enrollments: {
+        some: {
+          userId,
+        },
+      },
+    },
+    include: {
+      courseDayPeriods: true,
+    },
+  });
+
+  return courses;
+}
+
+export async function getCourseByDayPeriodAndUser({
+  day,
+  period,
+  userId,
+}: {
+  day: Day;
+  period: number;
+  userId: UserID;
+}) {
+  const course = await prisma.course.findFirst({
+    where: {
+      enrollments: {
+        some: {
+          userId,
+        },
+      },
+      courseDayPeriods: {
+        some: {
+          day,
+          period,
+        },
+      },
+    },
+    include: {
+      courseDayPeriods: true,
+    },
+  });
+  return course;
+}
+
+export async function getCourseDayPeriods({
   period,
   day,
 }: {
