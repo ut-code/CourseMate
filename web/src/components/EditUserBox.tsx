@@ -12,6 +12,7 @@ import { photo } from "../components/data/photo-preview";
 
 import { useState } from "react";
 import { PhotoPreview } from "./PhotoPreview";
+import { deleteImage } from "../firebase/store/photo";
 
 type Props = {
   save: (userData: UserData) => Promise<void>;
@@ -113,6 +114,9 @@ export function EditUserBox({
             };
             await save(data);
             if (onSave) onSave();
+            if (def?.pictureUrl && pictureUrl !== null) {
+              deleteImage(def.pictureUrl);
+            }
           })()
         }
       >

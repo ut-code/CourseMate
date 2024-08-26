@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, useEffect } from "react";
-import { uploadImage } from "../firebase/store/upload-photo";
+import { uploadImage } from "../firebase/store/photo";
 import { photo } from "./data/photo-preview";
 import { ImageCropper } from "./ImageCropper";
 
