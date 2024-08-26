@@ -35,13 +35,11 @@ router.get("/", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error");
 
-  const all = await getMatchesByUserId(userId.value);
-  if (!all.ok) return res.status(500).send();
-
-  const matches = all.value.filter((relation) => relation.status === "MATCHED");
+  const matches = await getMatchesByUserId(userId.value);
+  if (!matches.ok) return res.status(500).send();
 
   users.value.forEach((user) => {
-    const isMatched = matches.some(
+    const isMatched = matches.value.some(
       (match) =>
         match.sendingUserId === user.id || match.receivingUserId === user.id,
     );
