@@ -5,15 +5,12 @@ export const GUIDSchema = z.string();
 export const IDTokenSchema = z.string();
 
 //TODO: make z.union([
-  // enum Gender {
 //   MALE
 //   FEMALE
 //   OTHER
 //   SECRET
-// }
 // ])
 export const GenderSchema = z.string();
-
 
 export const RelationshipStatusSchema = z.union([
   z.literal("PENDING"),

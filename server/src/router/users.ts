@@ -1,10 +1,5 @@
 import express, { Request, Response } from "express";
-import {
-  PublicUser,
-  UpdateUser,
-  User,
-  GUID,
-} from "../common/types";
+import { PublicUser, UpdateUser, User, GUID } from "../common/types";
 import {
   createUser,
   deleteUser,
