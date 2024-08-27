@@ -14,7 +14,7 @@ model User {
   name        String @default("")
   pictureUrl  String @default("")
   grade       String @default("")
-  gender      String @default("")
+  gender      Gender
   hobby       String @default("")
   intro_short String @default("")
   intro_long  String @default("")
@@ -23,6 +23,15 @@ model User {
   sendingUsers   Relationship[] @relation("sending") // 自分がマッチリクエストを送ったユーザー
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
 }
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  SECRET
+}
+
+
 
 model Course {
   id          Int           @id @default(autoincrement())
