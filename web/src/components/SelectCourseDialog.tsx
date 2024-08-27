@@ -9,7 +9,10 @@ import {
   MenuItem,
   DialogActions,
   Button,
+  Box,
 } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 import courseApi, { modifyEnrollments } from "../api/course";
 import { Course, CourseDayPeriod, Day } from "../common/types";
 import { useEffect, useState } from "react";
@@ -67,29 +70,46 @@ export default function SelectCourseDialog({
             <DialogContentText sx={{ mb: 2 }}>
               授業を選択してください。
             </DialogContentText>
-            <FormControl fullWidth>
-              <InputLabel id="courses-by-day-period-label">授業</InputLabel>
-              <Select
-                labelId="courses-by-day-period-label"
-                id="courses-by-day-period"
-                value={currentSelect?.id || ""}
-                label="Course"
-                onChange={(e) => {
+            <Box display={"flex"} sx={{ width: "100%" }}>
+              <FormControl fullWidth>
+                <InputLabel id="courses-by-day-period-label">授業</InputLabel>
+                <Select
+                  labelId="courses-by-day-period-label"
+                  id="courses-by-day-period"
+                  value={currentSelect?.id || ""}
+                  label="Course"
+                  onChange={(e) => {
+                    if (!currentEdit) return;
+                    setCurrentSelect({
+                      id: e.target.value as Day,
+                      name:
+                        availableCourses.find(
+                          (course) => course.id === e.target.value,
+                        )?.name || "",
+                    });
+                  }}
+                >
+                  {availableCourses.map((course) => (
+                    <MenuItem value={course.id}>{course.name}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <IconButton
+                aria-label="delete"
+                onClick={async () => {
                   if (!currentEdit) return;
-                  setCurrentSelect({
-                    id: e.target.value as Day,
-                    name:
-                      availableCourses.find(
-                        (course) => course.id === e.target.value,
-                      )?.name || "",
+                  const newCourses = await modifyEnrollments({
+                    courseId: "",
+                    day: currentEdit.columnName,
+                    period: currentEdit.rowIndex + 1,
                   });
+                  handleCoursesUpdate(newCourses);
+                  onClose();
                 }}
               >
-                {availableCourses.map((course) => (
-                  <MenuItem value={course.id}>{course.name}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                <DeleteIcon />
+              </IconButton>
+            </Box>
           </>
         )}
       </DialogContent>

@@ -58,17 +58,16 @@ export async function updateEnrollments(
     },
   });
 
-  await prisma.$transaction([
+  await prisma.$transaction(async (tx) => {
     // delete current course if exists
-    prisma.enrollment.deleteMany({
+    await tx.enrollment.deleteMany({
       where: {
         userId,
         courseId: currentCourse?.id ?? "",
       },
-    }),
-
+    });
     // delete courses in the same day and period as the new course
-    prisma.enrollment.deleteMany({
+    await tx.enrollment.deleteMany({
       where: {
         userId,
         course: {
@@ -81,16 +80,17 @@ export async function updateEnrollments(
           },
         },
       },
-    }),
-
-    // add new course
-    prisma.enrollment.create({
-      data: {
-        userId,
-        courseId: courseDayPeriod.courseId,
-      },
-    }),
-  ]);
+    });
+    if (courseDayPeriod.courseId !== "") {
+      // add current course
+      await tx.enrollment.create({
+        data: {
+          userId,
+          courseId: courseDayPeriod.courseId,
+        },
+      });
+    }
+  });
 
   const updatedCourses = await getCoursesWithDayPeriodsByUser(userId);
 
