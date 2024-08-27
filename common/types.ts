@@ -24,12 +24,17 @@ export type UserID = number;
  **/
 export type IDToken = string;
 
+export type Gender = "男性" | "女性" | "その他" | "秘密";
 export type User = {
   id: UserID;
   guid: GUID;
   name: string;
-  email: string;
   pictureUrl: string;
+  grade: string;
+  gender: string; // TODO: use Gender instead of string
+  hobby: string;
+  intro_short: string;
+  intro_long: string;
 };
 
 export type InitUser = Omit<User, "id">;

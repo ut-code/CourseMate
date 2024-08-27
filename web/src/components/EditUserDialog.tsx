@@ -1,18 +1,10 @@
-import React, { useState } from "react";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  Button,
-} from "@mui/material";
+import React from "react";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 import { UpdateUser } from "../common/types";
 import userapi from "../api/user";
-import { PhotoPreview } from "./PhotoPreview";
 import { photo } from "./data/photo-preview";
+import { EditUserBox, UserData } from "./EditUserBox";
 
 type EditUserDialogProps = {
   isOpen: boolean;
@@ -24,23 +16,15 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
   props: EditUserDialogProps,
 ) => {
   const { isOpen, close, defaultValue } = props;
-  const [name, setName] = useState(defaultValue.name);
-  const [email, setEmail] = useState(defaultValue.email);
   const onClose = () => {
     photo.upload = null;
     close();
   };
 
-  const handleSave = async () => {
-    let pictureUrl: string | null = null;
-    if (photo.upload) pictureUrl = await photo.upload();
-
-    const data: UpdateUser = {
-      name: name,
-      email: email,
-      pictureUrl: pictureUrl || defaultValue.pictureUrl,
-    };
+  const save = async (data: UserData) => {
     await userapi.update(data);
+  };
+  const onSave = () => {
     close();
   };
 
@@ -48,39 +32,14 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
     <Dialog open={isOpen} onClose={onClose}>
       <DialogTitle>ユーザー情報を編集</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          ユーザーのIDとパスワードを編集してください。
-        </DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          label="名前"
-          type="text"
-          fullWidth
-          variant="standard"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+        <EditUserBox
+          defaultValue={defaultValue}
+          save={save}
+          onSave={onSave}
+          saveButtonText="保存"
+          allowClose={true}
         />
-        <TextField
-          autoFocus
-          margin="dense"
-          label="連絡先"
-          type="text"
-          fullWidth
-          variant="standard"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <PhotoPreview defaultValueUrl={defaultValue.pictureUrl} />
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">
-          キャンセル
-        </Button>
-        <Button onClick={handleSave} color="primary">
-          保存
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

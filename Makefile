@@ -22,7 +22,7 @@ docker: copy-common
 	trap 'docker compose down' EXIT; docker compose up --build
 	docker compose up --build
 docker-watch: copy-common
-	docker compose up -d --build --watch
+	docker compose up --build --watch
 
 precommit: type-check lint format-check
 
