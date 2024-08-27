@@ -32,7 +32,10 @@ export async function deleteImage(desertFileUrl: string) {
   const storage = getStorage(app);
   const desertRef = ref(storage, desertFileUrl);
 
-  deleteObject(desertRef).catch((e) => {
-    throw e;
-  });
+  try {
+    await deleteObject(desertRef);
+  } catch (e) {
+    console.error("Error deleting file:", e);
+    throw new Error("既存の画像の削除に失敗しました");
+  }
 }
