@@ -4,23 +4,16 @@ export const UserIDSchema = z.number();
 export const GUIDSchema = z.string();
 export const IDTokenSchema = z.string();
 
-export const GenderSchema = z.union([
-  z.literal("MALE"),
-  z.literal("FEMALE"),
-  z.literal("OTHER"),
-  z.literal("SECRET"),
-]);
+//TODO: make z.union([
+  // enum Gender {
+//   MALE
+//   FEMALE
+//   OTHER
+//   SECRET
+// }
+// ])
+export const GenderSchema = z.string();
 
-// 日本語ラベルへのマッピング
-const genderLabels = {
-  MALE: "男性",
-  FEMALE: "女性",
-  OTHER: "その他",
-  SECRET: "秘密",
-} as const;
-
-// 日本語ラベルに変換する型
-export const TransformedGenderSchema = GenderSchema.transform((value) => genderLabels[value]);
 
 export const RelationshipStatusSchema = z.union([
   z.literal("PENDING"),

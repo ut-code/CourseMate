@@ -14,7 +14,7 @@ model User {
   name        String @default("")
   pictureUrl  String @default("")
   grade       String @default("")
-  gender      Gender
+  gender      String @default("")
   hobby       String @default("")
   intro_short String @default("")
   intro_long  String @default("")
@@ -24,12 +24,12 @@ model User {
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
 }
 
-enum Gender {
-  MALE
-  FEMALE
-  OTHER
-  SECRET
-}
+// enum Gender {
+//   MALE
+//   FEMALE
+//   OTHER
+//   SECRET
+// }
 
 
 

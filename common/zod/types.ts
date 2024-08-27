@@ -3,7 +3,7 @@ import {
   UserIDSchema,
   GUIDSchema,
   IDTokenSchema,
-  // GenderSchema,
+  GenderSchema,
   RelationshipStatusSchema,
   UserSchema,
   InitUserSchema,
@@ -24,14 +24,12 @@ import {
   UpdateRoomSchema,
   InitRoomSchema,
   InitSharedRoomSchema,
-  TransformedGenderSchema,
 } from "./schemas";
 
 export type UserID = z.infer<typeof UserIDSchema>;
 export type GUID = z.infer<typeof GUIDSchema>;
 export type IDToken = z.infer<typeof IDTokenSchema>;
-// export type Gender = z.infer<typeof GenderSchema>;
-export type Gender = z.infer<typeof TransformedGenderSchema>;
+export type Gender = z.infer<typeof GenderSchema>;
 export type RelationshipStatus = z.infer<typeof RelationshipStatusSchema>;
 export type User = z.infer<typeof UserSchema>;
 export type InitUser = z.infer<typeof InitUserSchema>;
