@@ -14,6 +14,15 @@ import courseApi, { modifyEnrollments } from "../api/course";
 import { Course, CourseDayPeriod, Day } from "../common/types";
 import { useEffect, useState } from "react";
 
+const dayCodeToDayMap: { [dayCode in Day]: string } = {
+  mon: "月",
+  tue: "火",
+  wed: "水",
+  thu: "木",
+  fri: "金",
+  sat: "土",
+};
+
 export default function SelectCourseDialog({
   open,
   onClose,
@@ -47,16 +56,18 @@ export default function SelectCourseDialog({
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
         {currentEdit
-          ? `${currentEdit.columnName} ${currentEdit.rowIndex + 1}限の授業を選択`
+          ? `${dayCodeToDayMap[currentEdit.columnName]}曜${currentEdit.rowIndex + 1}限`
           : "授業を選択"}
       </DialogTitle>
       <DialogContent>
-        <FormControl fullWidth>
-          {availableCourses.length === 0 ? (
-            <DialogContentText>この曜限の授業はありません。</DialogContentText>
-          ) : (
-            <>
-              <DialogContentText>授業を選択してください。</DialogContentText>
+        {availableCourses.length === 0 ? (
+          <DialogContentText>この曜限の授業はありません。</DialogContentText>
+        ) : (
+          <>
+            <DialogContentText sx={{ mb: 2 }}>
+              授業を選択してください。
+            </DialogContentText>
+            <FormControl fullWidth>
               <InputLabel id="courses-by-day-period-label">授業</InputLabel>
               <Select
                 labelId="courses-by-day-period-label"
@@ -78,9 +89,9 @@ export default function SelectCourseDialog({
                   <MenuItem value={course.id}>{course.name}</MenuItem>
                 ))}
               </Select>
-            </>
-          )}
-        </FormControl>
+            </FormControl>
+          </>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
