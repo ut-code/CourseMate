@@ -10,7 +10,8 @@ type DecodedIdToken = admin.DecodedIdToken;
 // REQUIRE: cookieParser middleware before this
 // THROWS: if idToken is not present in request cookie, or when the token is not valid.
 export async function getGUID(req: Request): Promise<GUID> {
-  const idToken = req.cookies["id-token"];
+  const idToken = req.header("id-token");
+  if (!idToken) throw new Error();
   return (await verifyIDToken(idToken)).uid as GUID;
 }
 
