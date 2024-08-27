@@ -44,6 +44,7 @@ export type PublicUser = {
   id: UserID;
   name: string;
   pictureUrl: string;
+  intro_short: string;
 };
 
 export function Public(u: User): PublicUser {
@@ -51,6 +52,7 @@ export function Public(u: User): PublicUser {
     id: u.id,
     name: u.name,
     pictureUrl: u.pictureUrl,
+    intro_short: u.intro_short,
   };
 }
 // MATCHES

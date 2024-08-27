@@ -47,7 +47,6 @@ router.get("/", async (req: Request, res: Response) => {
       user.grade = "";
       user.gender = "";
       user.hobby = "";
-      user.intro_short = "";
       user.intro_long = "";
     }
   });
