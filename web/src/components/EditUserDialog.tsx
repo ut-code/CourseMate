@@ -42,6 +42,6 @@ function EditUserDialog(props: EditUserDialogProps) {
       </DialogContent>
     </Dialog>
   );
-};
+}
 
 export default EditUserDialog;
