@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 import { UpdateUser } from "../common/types";
@@ -14,7 +13,6 @@ type EditUserDialogProps = {
 
 function EditUserDialog(props: EditUserDialogProps) {
   const { isOpen, close, defaultValue } = props;
-  useEffect(() => console.log(defaultValue), []);
   const onClose = () => {
     photo.upload = null;
     close();
