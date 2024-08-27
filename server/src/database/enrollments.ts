@@ -58,7 +58,7 @@ export async function updateEnrollments(
     },
   });
 
-  const [a, b, c] = await prisma.$transaction([
+  await prisma.$transaction([
     // delete current course if exists
     prisma.enrollment.deleteMany({
       where: {
@@ -91,7 +91,6 @@ export async function updateEnrollments(
       },
     }),
   ]);
-  console.log(a, b, c);
 
   const updatedCourses = await getCoursesWithDayPeriodsByUser(userId);
 
