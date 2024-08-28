@@ -37,7 +37,7 @@ export const PublicUserSchema = z.object({
   id: UserIDSchema,
   name: z.string(),
   pictureUrl: z.string().url(),
-  intro_short: z.string()
+  intro_short: z.string(),
 });
 
 export const RelationshipIDSchema = z.number();
