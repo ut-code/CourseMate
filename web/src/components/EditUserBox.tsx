@@ -114,7 +114,7 @@ export function EditUserBox({
             };
             await save(data);
             if (onSave) onSave();
-            if (def?.pictureUrl && pictureUrl !== null) {
+            if (def?.pictureUrl && pictureUrl) {
               deleteImage(def.pictureUrl);
             }
           })()

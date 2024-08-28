@@ -49,11 +49,12 @@ export async function getUserByID(id: UserID): Promise<Result<User>> {
 // ユーザーの更新
 export async function updateUser(
   userId: UserID,
-  partialUser: UpdateUser,
+  partialUser: Partial<UpdateUser>,
 ): Promise<Result<User>> {
   // undefined means do nothing to this field
   // https://www.prisma.io/docs/orm/prisma-client/special-fields-and-types/null-and-undefined#use-case-null-and-undefined-in-a-graphql-resolver
   try {
+    if (!partialUser.pictureUrl) partialUser.pictureUrl = undefined; // don't delete picture if not provided
     const updateUser = {
       id: undefined,
       guid: undefined,
