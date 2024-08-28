@@ -12,6 +12,7 @@ import { photo } from "../components/data/photo-preview";
 
 import { useState } from "react";
 import { PhotoPreview } from "./PhotoPreview";
+import { deleteImage } from "../firebase/store/photo";
 
 type Props = {
   save: (userData: UserData) => Promise<void>;
@@ -54,12 +55,12 @@ export function EditUserBox({
           label="Grade"
           onChange={(e) => setGrade(e.target.value)}
         >
-          <MenuItem value={"B1"}>&emsp14;1&emsp14;年生 (B1)</MenuItem>
-          <MenuItem value={"B2"}>&emps14;2&emsp14;年生 (B2)</MenuItem>
-          <MenuItem value={"B3"}>&emsp14;3&emsp14;年生 (B3)</MenuItem>
-          <MenuItem value={"B4"}>&emsp14;4&emsp14;年生 (B4)</MenuItem>
-          <MenuItem value={"M1"}>修士&emsp14;1&emsp14;年 (M1)</MenuItem>
-          <MenuItem value={"M2"}>修士&emsp14;2&emsp14;年 (M2)</MenuItem>
+          <MenuItem value={"B1"}>1年生 (B1)</MenuItem>
+          <MenuItem value={"B2"}>2年生 (B2)</MenuItem>
+          <MenuItem value={"B3"}>3年生 (B3)</MenuItem>
+          <MenuItem value={"B4"}>4年生 (B4)</MenuItem>
+          <MenuItem value={"M1"}>修士1年 (M1)</MenuItem>
+          <MenuItem value={"M2"}>修士2年 (M2)</MenuItem>
         </Select>
       </FormControl>
       <FormControl fullWidth>
@@ -113,6 +114,9 @@ export function EditUserBox({
             };
             await save(data);
             if (onSave) onSave();
+            if (def?.pictureUrl && pictureUrl !== null) {
+              deleteImage(def.pictureUrl);
+            }
           })()
         }
       >
