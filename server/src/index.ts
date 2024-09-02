@@ -2,6 +2,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
+import { Server } from 'socket.io';
 import cors from "./lib/cross-origin/multiorigin-cors";
 import nocsrf from "./lib/cross-origin/block-unknown-origin";
 import usersRoutes from "./router/users";
@@ -46,6 +47,26 @@ app.use("/echo", echoRoutes);
 app.use("/chat", chatRoutes);
 
 // サーバーの起動
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log("running");
+});
+
+// Socket.IOの初期化
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigins.map((s) => s || "").filter((s) => s !== ""),
+    methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
+    credentials: true,
+  },
+});
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', msg);
+    console.log('message: ' + msg);
+  });
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
 });
