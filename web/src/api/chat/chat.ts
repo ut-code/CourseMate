@@ -24,7 +24,7 @@ export async function deleteMessage(messageId: MessageID): Promise<void> {
   const res = await credFetch("DELETE", endpoints.message(messageId));
   if (res.status !== 204)
     throw new Error(
-      `on deleteMessage(), expected status code of 204, but got ${res.status}`
+      `on deleteMessage(), expected status code of 204, but got ${res.status}`,
     );
 }
 
@@ -44,7 +44,7 @@ export async function sendDM(friend: UserID, msg: SendMessage): Promise<void> {
   if (res.status === 401) throw new ErrUnauthorized();
   if (res.status !== 201)
     throw new Error(
-      `createDM() failed: expected status code 201, got ${res.status}`
+      `createDM() failed: expected status code 201, got ${res.status}`,
     );
   return res.json();
 }
@@ -55,7 +55,7 @@ export async function getDM(friendId: UserID): Promise<DMRoom> {
   if (res.status === 401) throw new ErrUnauthorized();
   if (res.status !== 201)
     throw new Error(
-      `createDM() failed: expected status code 201, got ${res.status}`
+      `createDM() failed: expected status code 201, got ${res.status}`,
     );
   return res.json();
 }
@@ -67,14 +67,14 @@ export async function createRoom(initRoom: InitRoom): Promise<void> {
   const res = await credFetch("POST", endpoints.sharedRooms, initRoom);
   if (res.status !== 201)
     throw new Error(
-      `in createRoom(), expected res status to equal 201, but instead got ${res.status}`
+      `in createRoom(), expected res status to equal 201, but instead got ${res.status}`,
     );
 }
 
 // グループチャットにメンバーを招待する
 export async function invite(
   roomId: ShareRoomID,
-  memberIDs: UserID[]
+  memberIDs: UserID[],
 ): Promise<void> {
   const res = await credFetch("POST", endpoints.roomInvite(roomId), memberIDs);
   if (res.status === 401) throw new ErrUnauthorized();
@@ -83,12 +83,12 @@ export async function invite(
 // グループチャットの情報を更新する
 export async function patchRoom(
   roomId: ShareRoomID,
-  room: Partial<UpdateRoom>
+  room: Partial<UpdateRoom>,
 ): Promise<SharedRoom> {
   const res = await credFetch("PATCH", endpoints.sharedRoom(roomId), room);
   if (res.status !== 200)
     throw new Error(
-      `in patchRoom(), expected status code 200 but got ${res.status}`
+      `in patchRoom(), expected status code 200 but got ${res.status}`,
     );
   return await res.json();
 }
@@ -116,11 +116,11 @@ export async function getSharedRoom(roomId: ShareRoomID): Promise<SharedRoom> {
 // グループチャットでメッセージを送信する
 export async function send(
   roomId: ShareRoomID,
-  msg: SendMessage
+  msg: SendMessage,
 ): Promise<void> {
   const res = await credFetch("POST", endpoints.sharedRoom(roomId), msg);
   if (res.status !== 201)
     throw new Error(
-      `on send(), expected status code of 201, but got ${res.status}`
+      `on send(), expected status code of 201, but got ${res.status}`,
     );
 }
