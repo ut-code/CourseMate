@@ -75,7 +75,9 @@ export default function SelectCourseDialog({
         ) : (
           <>
             <Box display="flex" alignItems="center" sx={{ width: "100%" }}>
-              <Typography variant="body1">現在の授業:{}</Typography>
+              <Typography variant="body1">
+                現在の授業: {currentEdit?.course?.name ?? "-"}
+              </Typography>
               <IconButton
                 aria-label="delete"
                 onClick={async () => {
@@ -84,6 +86,7 @@ export default function SelectCourseDialog({
                     currentEdit.course.id,
                   );
                   handleCoursesUpdate(newCourses);
+                  onClose();
                 }}
               >
                 <DeleteIcon />
@@ -99,6 +102,7 @@ export default function SelectCourseDialog({
                         if (!currentEdit) return;
                         const newCourses = await modifyEnrollments(course.id);
                         handleCoursesUpdate(newCourses);
+                        onClose();
                       }}
                     >
                       {course.name}
