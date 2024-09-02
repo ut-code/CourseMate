@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { deleteMatch, getMatchesByUserId } from "../database/matches";
-import type { Relationship, UserID } from "../common/types";
+import type { UserID } from "../common/types";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeParseInt } from "../common/lib/result/safeParseInt";
 
@@ -12,8 +12,11 @@ router.get("/", async (req: Request, res: Response) => {
   if (!userId.ok) return res.status(401).send("auth error");
 
   try {
-    const all: Relationship[] = await getMatchesByUserId(userId.value);
-    const matched = all.filter((relation) => relation.status === "MATCHED");
+    const all = await getMatchesByUserId(userId.value);
+    if (!all.ok) return res.status(500).send();
+    const matched = all.value.filter(
+      (relation) => relation.status === "MATCHED",
+    );
     res.status(200).json(matched);
   } catch (error) {
     console.error("Error fetching matches:", error);

@@ -38,6 +38,8 @@ const user = (userId: UserID) => {
  **/
 const users = `${origin}/users`;
 
+const usersPublic = `${origin}/users/public`;
+
 /**
  * [v] 実装済み
  * GET -> get info of me.
@@ -157,7 +159,6 @@ const matches = `${origin}/matches`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const requests = `${origin}/requests`;
 
 /**
  * [v] 実装済み
@@ -287,12 +288,12 @@ export default {
   userByGUID,
   userExists,
   users,
+  usersPublic,
   matchedUsers,
   pendingRequestsToMe,
   pendingRequestsFromMe,
   match,
   matches,
-  requests,
   sendRequest,
   acceptRequest,
   rejectRequest,

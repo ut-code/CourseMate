@@ -3,18 +3,20 @@ import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { User } from "../common/types";
 import { Card } from "./Card";
 
-const SWIPE_THRESHOLD = 100;
+const SWIPE_THRESHOLD = 200;
 
 interface DraggableCardProps {
   displayedUser: User | null;
   onSwipeRight: () => void;
   onSwipeLeft: () => void;
+  onDrag?: (X: number) => void;
 }
 
 export const DraggableCard = ({
   displayedUser,
   onSwipeRight,
   onSwipeLeft,
+  onDrag,
 }: DraggableCardProps) => {
   const dragProgress = useMotionValue(0);
   const [dragging, setDragging] = useState(false);
@@ -22,8 +24,14 @@ export const DraggableCard = ({
   useMotionValueEvent(dragProgress, "change", (latest) => {
     if (typeof latest === "number" && dragging) {
       dragProgress.set(latest);
+      if (onDrag) {
+        onDrag(latest);
+      }
     } else {
       dragProgress.set(0);
+      if (onDrag) {
+        onDrag(0);
+      }
     }
   });
 
@@ -42,7 +50,7 @@ export const DraggableCard = ({
     <section style={{ pointerEvents: dragging ? "none" : undefined }}>
       <motion.div
         drag="x"
-        dragElastic={0.35}
+        dragElastic={0.9}
         dragListener={true}
         dragConstraints={{ left: 0, right: 0 }}
         onDragStart={() => setDragging(true)}
