@@ -40,7 +40,10 @@ export async function overview(): Promise<RoomOverview[]> {
 
 // TODO
 // 指定したユーザーにDMを送る
-export async function sendDM(friend: UserID, msg: SendMessage): Promise<Message> {
+export async function sendDM(
+  friend: UserID,
+  msg: SendMessage,
+): Promise<Message> {
   const res = await credFetch("POST", endpoints.dmTo(friend), msg);
   if (res.status === 401) throw new ErrUnauthorized();
   if (res.status !== 201)
