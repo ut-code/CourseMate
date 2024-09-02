@@ -13,7 +13,6 @@ import * as db from "../database/chat";
 import { areAllMatched, areMatched, findRelation } from "../database/matches";
 import type { UserID, InitRoom } from "../common/types";
 import { getUserByID } from "../database/users";
-import { Ok } from "../common/lib/result";
 
 const router = express.Router();
 
