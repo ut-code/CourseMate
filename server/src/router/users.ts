@@ -1,11 +1,5 @@
 import express, { Request, Response } from "express";
-import {
-  type PublicUser,
-  Public,
-  UpdateUser,
-  User,
-  GUID,
-} from "../common/types";
+import { PublicUser, UpdateUser, User, GUID } from "../common/types";
 import {
   createUser,
   deleteUser,
@@ -24,6 +18,15 @@ import { safeGetGUID } from "../firebase/auth/lib";
 import { getMatchesByUserId } from "../database/matches";
 
 const router = express.Router();
+
+export function Public(u: User): PublicUser {
+  return {
+    id: u.id,
+    name: u.name,
+    pictureUrl: u.pictureUrl,
+    intro_short: u.intro_short,
+  };
+}
 
 // 全ユーザーの取得エンドポイント
 router.get("/", async (req: Request, res: Response) => {
