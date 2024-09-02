@@ -11,15 +11,14 @@ export async function getIdToken(): Promise<IDToken> {
   return idtoken;
 }
 
-/**
- * given func runs at most twice. do not mutate external variables inside the function.
- * throws error when:
- * - it failed to get id token
- * - the func threw an error that is not ErrUnauthorized
- * - the func failed with id token
- **/
-
 type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+/*
+  do NOT include query params such as `https://domain/path?query=param`, otherwise the URL will be invalid.
+  if you (really) want to include the query parameter, then you have two options:
+  - fix this function s.t. this function can take query params as arg and encode it
+  - fix the implementation s.t. it pass tokens in Request-Header (don't forget to fix server/firebase/auth/lib)
+*/
 export async function credFetch(
   method: RequestMethod,
   path: string,
