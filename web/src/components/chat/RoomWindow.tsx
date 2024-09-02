@@ -5,6 +5,7 @@ import { useCurrentUserId } from "../../hooks/useCurrentUser";
 import { useState, useEffect, useRef } from "react";
 import * as chat from "../../api/chat/chat";
 import { RoomHeader } from "./RoomHeader";
+import { socket } from "../data/socket";
 
 type Prop = {
   room: DMOverview;
@@ -27,6 +28,31 @@ export function RoomWindow(props: Prop) {
     setDM(newDM);
   };
 
+  // 初回レンダリング時にサーバーに登録し、メッセージリスナーを設定する
+  useEffect(() => {
+    socket.emit('register', id);
+    console.log("私のID:",id);
+
+    // メッセージ受信時のイベントリスナーを設定
+    socket.on('newMessage', (message) => {
+      console.log("メッセージゲットだぜ!: ",message)
+      setDM((prevDM) => {
+        if (prevDM) {
+          return {
+            ...prevDM,
+            messages: [...prevDM.messages, message],
+          };
+        }
+        return prevDM;
+      });
+    });
+
+    // クリーンアップ関数でイベントリスナーを削除
+    return () => {
+      socket.off('newMessage');
+    };
+  }, [room.friendId]); // 依存関係を空にして初回マウント時のみ実行
+
   useEffect(() => {
     if (room) {
       fetchMessages(room.friendId);
@@ -40,7 +66,7 @@ export function RoomWindow(props: Prop) {
       const element = scrollDiv.current;
       element.scrollTo({
         top: element.scrollHeight,
-        behavior: "smooth",
+        behavior: "instant",
       });
     }
   }, [dm]);

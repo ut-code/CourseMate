@@ -33,7 +33,10 @@ export function MessageInput(props: Props) {
           send(room.friendId, {
             content: message,
           });
-          socket.emit('chat message', message);
+          socket.emit("chat message", {
+            friendId: room.friendId,
+            message: message,
+          });
           setMessage("");
         }}
       >
