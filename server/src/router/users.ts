@@ -54,6 +54,17 @@ router.get("/", async (req: Request, res: Response) => {
   res.status(200).json(users.value);
 });
 
+// 全ユーザーの公開情報の取得エンドポイント
+router.get("/public", async (req: Request, res: Response) => {
+  const users = await getAllUsers();
+  if (!users.ok) {
+    console.error(users.error);
+    return res.status(500).send();
+  }
+  const safeUsers = users.value.map(Public);
+  res.status(200).json(safeUsers);
+});
+
 // 自分の情報を確認するエンドポイント。
 router.get("/me", async (req: Request, res: Response) => {
   const guid = await safeGetGUID(req);

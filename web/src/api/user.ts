@@ -1,5 +1,11 @@
 import endpoints from "./internal/endpoints.ts";
-import type { GUID, UpdateUser, User, UserID } from "../common/types";
+import type {
+  GUID,
+  PublicUser,
+  UpdateUser,
+  User,
+  UserID,
+} from "../common/types";
 import { doWithIdToken, ErrUnauthorized } from "../firebase/auth/lib.ts";
 
 // TODO: migrate to safe functions
@@ -10,6 +16,13 @@ export async function all(): Promise<User[]> {
     credentials: "include",
   });
   // TODO: typia
+  return res.json();
+}
+
+export async function allPublic(): Promise<PublicUser[]> {
+  const res = await fetch(endpoints.usersPublic, {
+    credentials: "include",
+  });
   return res.json();
 }
 
@@ -74,10 +87,10 @@ export async function remove(): Promise<void> {
 }
 
 //指定した id のユーザ情報を除いた全てのユーザ情報を取得する
-export async function except(id: UserID): Promise<User[]> {
+export async function except(id: UserID): Promise<PublicUser[]> {
   try {
-    const data = await all();
-    return data.filter((user: User) => user.id !== id);
+    const data = await allPublic();
+    return data.filter((user: PublicUser) => user.id !== id);
   } catch (err) {
     console.error("Error fetching data:", err);
     throw err;
