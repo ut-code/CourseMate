@@ -61,12 +61,14 @@ const io = new Server(server, {
   connectionStateRecovery: {},
 });
 
+//Socketをfriend key に基づいて保存
 const users: { [key: string]: Socket } = {};
+
 io.on("connection", (socket) => {
   console.log("a user connected");
 
   socket.on("register", (userId) => {
-    users[userId] = socket; // friendIdをキーにしてソケットIDを保存する
+    users[userId] = socket;
     console.log(`User registered: ${userId}`);
   });
 
