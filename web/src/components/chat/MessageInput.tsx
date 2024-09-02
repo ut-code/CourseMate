@@ -29,10 +29,12 @@ export function MessageInput(props: Props) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          send(room.friendId, {
-            content: message,
-          });
-          setMessage("");
+          if (message.trim()) {
+            send(room.friendId, {
+              content: message,
+            });
+            setMessage("");
+          }
         }}
       >
         <Stack direction="row" spacing={1} alignItems="center" margin={2}>
