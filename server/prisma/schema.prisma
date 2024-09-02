@@ -24,6 +24,15 @@ model User {
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
 }
 
+// enum Gender {
+//   MALE
+//   FEMALE
+//   OTHER
+//   SECRET
+// }
+
+
+
 model Course {
   id          Int           @id @default(autoincrement())
   name        String

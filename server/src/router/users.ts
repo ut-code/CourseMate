@@ -1,11 +1,5 @@
 import express, { Request, Response } from "express";
-import {
-  type PublicUser,
-  Public,
-  UpdateUser,
-  User,
-  GUID,
-} from "../common/types";
+import { PublicUser, UpdateUser, User, GUID } from "../common/types";
 import {
   createUser,
   deleteUser,
@@ -21,17 +15,57 @@ import {
 } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
+import { getMatchesByUserId } from "../database/matches";
 
 const router = express.Router();
 
+export function Public(u: User): PublicUser {
+  return {
+    id: u.id,
+    name: u.name,
+    pictureUrl: u.pictureUrl,
+    intro_short: u.intro_short,
+  };
+}
+
 // 全ユーザーの取得エンドポイント
-router.get("/", async (_: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   const users = await getAllUsers();
   if (!users.ok) {
     console.error(users.error);
     return res.status(500).send();
   }
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error");
+
+  const matches = await getMatchesByUserId(userId.value);
+  if (!matches.ok) return res.status(500).send();
+
+  users.value.forEach((user) => {
+    const isMatched = matches.value.some(
+      (match) =>
+        match.sendingUserId === user.id || match.receivingUserId === user.id,
+    );
+    if (!isMatched) {
+      user.grade = "";
+      user.gender = "";
+      user.hobby = "";
+      user.intro_long = "";
+    }
+  });
+
   res.status(200).json(users.value);
+});
+
+// 全ユーザーの公開情報の取得エンドポイント
+router.get("/public", async (req: Request, res: Response) => {
+  const users = await getAllUsers();
+  if (!users.ok) {
+    console.error(users.error);
+    return res.status(500).send();
+  }
+  const safeUsers = users.value.map(Public);
+  res.status(200).json(safeUsers);
 });
 
 // 自分の情報を確認するエンドポイント。
@@ -63,8 +97,7 @@ router.get("/matched", async (req: Request, res: Response) => {
   const matchedUsers = await searchMatchedUser(userId.value);
   if (!matchedUsers.ok) return res.status(500).send();
 
-  const safeMatched = matchedUsers.value.map(Public);
-  res.status(200).json(safeMatched);
+  res.status(200).json(matchedUsers.value);
 });
 
 // ユーザーにリクエストを送っているユーザーを取得 状態はPENDING
