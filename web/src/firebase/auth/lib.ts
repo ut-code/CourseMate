@@ -1,5 +1,4 @@
 import { getAuth } from "firebase/auth";
-import { setIdTokenCookie } from "../../api/echo";
 import { type IDToken } from "../../common/types";
 
 export class ErrUnauthorized extends Error {}
@@ -12,28 +11,30 @@ export async function getIdToken(): Promise<IDToken> {
   return idtoken;
 }
 
-// sometimes throws error.
-export async function refreshIdToken(): Promise<void> {
-  const idToken = await getIdToken();
-  await setIdTokenCookie(idToken);
-}
+type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-/**
- * given func runs at most twice. do not mutate external variables inside the function.
- * throws error when:
- * - it failed to get id token
- * - the func threw an error that is not ErrUnauthorized
- * - the func failed with id token
- **/
-export async function doWithIdToken<T>(func: () => Promise<T>): Promise<T> {
-  try {
-    return await func();
-  } catch (e) {
-    if (e instanceof ErrUnauthorized) {
-      await refreshIdToken();
-      return await func();
-    } else {
-      throw e;
-    }
+/*
+  do NOT include query params such as `https://domain/path?query=param`, otherwise the URL will be invalid.
+  if you (really) want to include the query parameter, then you have two options:
+  - fix this function s.t. this function can take query params as arg and encode it
+  - fix the implementation s.t. it pass tokens in Request-Header (don't forget to fix server/firebase/auth/lib)
+*/
+export async function credFetch(
+  method: RequestMethod,
+  path: string,
+  body?: unknown,
+): Promise<Response> {
+  const idToken = await getIdToken();
+  const init: RequestInit = { method };
+  if (body) {
+    init.body = JSON.stringify(body);
+    init.headers = {
+      "Content-Type": "application/json",
+    };
   }
+
+  const res = await fetch(`${path}?token=${idToken}`, init);
+  if (res.status == 401) throw new ErrUnauthorized();
+  if (!res.ok) throw new Error("response was not ok");
+  return res;
 }
