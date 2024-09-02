@@ -12,12 +12,19 @@ type Prop = {
 };
 
 export function RoomWindow(props: Prop) {
-  const { currentUserId, loading } = useCurrentUserId();
   const { room } = props;
+
+  const { currentUserId, loading } = useCurrentUserId();
   const [dm, setDM] = useState<Message[] | null>(null);
 
   async function sendDMMessage(to: UserID, msg: SendMessage): Promise<void> {
     const message = await chat.sendDM(to, msg);
+
+    //送信して返ってきたものをまたWebsocketで送る
+    socket.emit("chat message", {
+      friendId: room.friendId,
+      message: message,
+    });
 
     //メッセージを送信したら、そのメッセージが追加される
     setDM((prevDM) => {
@@ -33,19 +40,15 @@ export function RoomWindow(props: Prop) {
     if (!loading && currentUserId) {
       // loadingがfalseでcurrentUserIdが存在する場合のみ実行
       socket.emit("register", currentUserId);
-      console.log("私のID:", currentUserId);
 
       // メッセージ受信時のイベントリスナーを設定
       socket.on("newMessage", (message) => {
         console.log("メッセージゲットだぜ!: ", message);
         setDM((prevDM) => {
           if (prevDM) {
-            return {
-              ...prevDM,
-              messages: [...prevDM, message],
-            };
+            return [...prevDM, message];
           }
-          return prevDM;
+          return [message];
         });
       });
 

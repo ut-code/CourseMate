@@ -2,7 +2,6 @@ import { IconButton, Stack, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useEffect, useState } from "react";
 import { DMOverview, SendMessage, UserID } from "../../common/types";
-import { socket } from "../data/socket";
 
 type Props = {
   send: (to: UserID, m: SendMessage) => void;
@@ -32,10 +31,6 @@ export function MessageInput(props: Props) {
           e.preventDefault();
           send(room.friendId, {
             content: message,
-          });
-          socket.emit("chat message", {
-            friendId: room.friendId,
-            message: message,
           });
           setMessage("");
         }}
