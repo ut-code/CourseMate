@@ -8,10 +8,11 @@ import MessagePopup from "./MessagePopup";
 type Props = {
   message: Message;
   reload: () => void;
+  edit: () => void;
 };
-export default function MessagePopupDots({ message, reload }: Props) {
-  const [open, setOpen] = useState<boolean>(false);
 
+export default function MessagePopupDots({ message, reload, edit }: Props) {
+  const [open, setOpen] = useState<boolean>(false);
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchor(open ? null : event.currentTarget);
@@ -20,16 +21,13 @@ export default function MessagePopupDots({ message, reload }: Props) {
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <div>
-        {/* FIXME:
-              1. MoreHorizon icon doesn't show up 
-              2. it doesn't want to align to right top
-        */}
+      <div
+        style={{ position: "relative", display: "inline" }}
+        onClick={handleClick}
+      >
         <MoreHorizIcon
           aria-describedby="open popup that edits message"
-          component={"div"} // ?
-          color="info"
-          onClick={handleClick}
+          color="action"
         />
         <Popper
           open={open}
@@ -38,7 +36,7 @@ export default function MessagePopupDots({ message, reload }: Props) {
             position: "absolute",
           }}
         >
-          <MessagePopup message={message} reload={reload} />
+          <MessagePopup message={message} reload={reload} edit={edit} />
         </Popper>
       </div>
     </ClickAwayListener>

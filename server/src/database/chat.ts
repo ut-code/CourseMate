@@ -189,6 +189,9 @@ export async function findDM(relID: RelationshipID): Promise<Result<DMRoom>> {
       where: {
         relationId: relID,
       },
+      orderBy: {
+        createdAt: "asc",
+      },
     });
 
     return Ok({

@@ -1,33 +1,44 @@
-import { deleteMessage, updateMessage } from "../../api/chat/chat";
+import { deleteMessage } from "../../api/chat/chat";
 import { Message } from "../../common/types";
+import { Box, Button } from "@mui/material";
 
 export default function MessagePopup({
   message,
   reload,
+  edit,
 }: {
   message: Message;
   reload: () => void;
+  edit: () => void;
 }) {
+  const handleDelete = async () => {
+    await deleteMessage(message.id);
+    reload();
+  };
   return (
-    <>
-      <button
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        bgcolor: "background.paper",
+        padding: 1,
+        borderRadius: 2,
+      }}
+    >
+      <Button
         onClick={async () => {
-          await updateMessage(message.id, {
-            content: "このメッセージは更新されました",
-          });
-          reload();
+          edit();
         }}
       >
         update
-      </button>
-      <button
-        onClick={async () => {
-          await deleteMessage(message.id);
-          reload();
+      </Button>
+      <Button
+        onClick={() => {
+          window.confirm("メッセージを消去しますか？") && handleDelete();
         }}
       >
         delete
-      </button>
-    </>
+      </Button>
+    </Box>
   );
 }
