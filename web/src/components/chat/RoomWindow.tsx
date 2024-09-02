@@ -43,7 +43,6 @@ export function RoomWindow(props: Prop) {
 
       // メッセージ受信時のイベントリスナーを設定
       socket.on("newMessage", (message) => {
-        console.log("メッセージゲットだぜ!: ", message);
         setDM((prevDM) => {
           if (prevDM) {
             return [...prevDM, message];
