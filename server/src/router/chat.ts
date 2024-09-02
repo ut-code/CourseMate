@@ -13,7 +13,6 @@ import * as db from "../database/chat";
 import { areAllMatched, areMatched, findRelation } from "../database/matches";
 import type { UserID, InitRoom } from "../common/types";
 import { getUserByID } from "../database/users";
-import { Ok } from "../common/lib/result";
 
 const router = express.Router();
 
@@ -53,7 +52,6 @@ router.post("/dm/to/:userid", async (req, res) => {
   const result = await db.sendDM(rel.value.id, msg);
   if (!result.ok) return res.status(500).send();
   res.status(201).send(result.value);
-  //TODO: resultをWebsocketに送る
 });
 
 // GET a DM Room with userid, CREATE one if not found.

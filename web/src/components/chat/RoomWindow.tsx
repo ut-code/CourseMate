@@ -28,7 +28,7 @@ export function RoomWindow(props: Prop) {
 
     //メッセージを送信したら、そのメッセージが追加される
     setDM((prevDM) => {
-      if (prevDM) {
+      if (prevDM !== null) {
         return [...prevDM, message];
       }
       return [message];
@@ -43,7 +43,6 @@ export function RoomWindow(props: Prop) {
 
       // メッセージ受信時のイベントリスナーを設定
       socket.on("newMessage", (message) => {
-        console.log("メッセージゲットだぜ!: ", message);
         setDM((prevDM) => {
           if (prevDM) {
             return [...prevDM, message];
