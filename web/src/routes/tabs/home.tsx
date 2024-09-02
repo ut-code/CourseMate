@@ -27,13 +27,12 @@ export default function Home() {
   const [users, setUsers] = useState<User[] | null>(null);
   const [skippedUsers, setSkippedUsers] = useState<User[] | null>(null);
   const [displayedUser, setDisplayedUser] = useState<User | null>(null);
-  const currentUserId = useCurrentUserId();
+  const { currentUserId, loading } = useCurrentUserId();
   const [isAllUsersLiked, setIsAllUsersLiked] = useState(false);
 
   useEffect(() => {
     (async () => {
-      if (!currentUserId) return;
-
+      if (loading || !currentUserId) return;
       const matched = await user.matched();
       const usersPublic = await user.except(currentUserId);
       const users = usersPublic as User[];

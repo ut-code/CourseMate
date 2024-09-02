@@ -4,7 +4,6 @@ import {
   DMRoom,
   InitRoom,
   Message,
-  // Message,
   MessageID,
   RoomOverview,
   SendMessage,
@@ -51,7 +50,10 @@ export async function overview(): Promise<RoomOverview[]> {
 
 // TODO
 // 指定したユーザーにDMを送る
-export async function sendDM(friend: UserID, msg: SendMessage): Promise<Message> {
+export async function sendDM(
+  friend: UserID,
+  msg: SendMessage,
+): Promise<Message> {
   return await doWithIdToken(async () => {
     const res = await fetch(endpoints.dmTo(friend), {
       method: "POST",

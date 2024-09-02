@@ -12,63 +12,62 @@ type Prop = {
 };
 
 export function RoomWindow(props: Prop) {
-  const id = useCurrentUserId();
+  const { currentUserId, loading } = useCurrentUserId();
   const { room } = props;
   const [dm, setDM] = useState<Message[] | null>(null);
 
-  const sendDMMessage = async (to: UserID, msg: SendMessage): Promise<void> => {
+  async function sendDMMessage(to: UserID, msg: SendMessage): Promise<void> {
     const message = await chat.sendDM(to, msg);
 
     //メッセージを送信したら、そのメッセージが追加される
     setDM((prevDM) => {
       if (prevDM) {
-        return {
-          ...prevDM,
-          messages: [...prevDM, message],
-        };
+        return [...prevDM, message];
       }
-      return prevDM;
+      return [message];
     });
-  };
+  }
 
-  
   // 初回レンダリング時にサーバーに登録し、メッセージリスナーを設定する
   useEffect(() => {
-    socket.emit("register", id);
-    console.log("私のID:", id);
-    
-    // メッセージ受信時のイベントリスナーを設定
-    socket.on("newMessage", (message) => {
-      console.log("メッセージゲットだぜ!: ", message);
-      setDM((prevDM) => {
-        if (prevDM) {
-          return {
-            ...prevDM,
-            messages: [...prevDM, message],
-          };
-        }
-        return prevDM;
+    if (!loading && currentUserId) {
+      // loadingがfalseでcurrentUserIdが存在する場合のみ実行
+      socket.emit("register", currentUserId);
+      console.log("私のID:", currentUserId);
+
+      // メッセージ受信時のイベントリスナーを設定
+      socket.on("newMessage", (message) => {
+        console.log("メッセージゲットだぜ!: ", message);
+        setDM((prevDM) => {
+          if (prevDM) {
+            return {
+              ...prevDM,
+              messages: [...prevDM, message],
+            };
+          }
+          return prevDM;
+        });
       });
-    });
-    
-    // クリーンアップ関数でイベントリスナーを削除
-    return () => {
-      socket.off("newMessage");
-    };
-  }, [room.friendId]); // 依存関係を空にして初回マウント時のみ実行
-  
-  const fetchMessages = async (friendId: UserID) => {
+
+      // クリーンアップ関数でイベントリスナーを削除
+      return () => {
+        socket.off("newMessage");
+      };
+    }
+  }, [loading, currentUserId, room.friendId]);
+
+  async function fetchMessages(friendId: UserID) {
     const newDM = await chat.getDM(friendId);
     setDM(newDM.messages);
-  };
+  }
   useEffect(() => {
     if (room) {
       fetchMessages(room.friendId);
     }
   }, [room]);
-  
+
+  //画面スクロール
   const scrollDiv = useRef<HTMLDivElement>(null);
-  
   useEffect(() => {
     if (scrollDiv.current) {
       const element = scrollDiv.current;
@@ -100,7 +99,8 @@ export function RoomWindow(props: Prop) {
                 key={m.id}
                 sx={{
                   display: "flex",
-                  justifyContent: m.creator === id ? "flex-end" : "flex-start",
+                  justifyContent:
+                    m.creator === currentUserId ? "flex-end" : "flex-start",
                   marginBottom: 1,
                 }}
               >
@@ -110,7 +110,8 @@ export function RoomWindow(props: Prop) {
                     maxWidth: "60%",
                     padding: 1,
                     borderRadius: 2,
-                    backgroundColor: m.creator === id ? "#DCF8C6" : "#FFF",
+                    backgroundColor:
+                      m.creator === currentUserId ? "#DCF8C6" : "#FFF",
                     boxShadow: 1,
                     border: 1,
                   }}

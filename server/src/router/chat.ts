@@ -52,7 +52,7 @@ router.post("/dm/to/:userid", async (req, res) => {
 
   const result = await db.sendDM(rel.value.id, msg);
   if (!result.ok) return res.status(500).send();
-  res.status(201).send(result);
+  res.status(201).send(result.value);
   //TODO: resultをWebsocketに送る
 });
 

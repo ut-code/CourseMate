@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
-import { Server ,Socket} from "socket.io";
+import { Server, Socket } from "socket.io";
 import cors from "./lib/cross-origin/multiorigin-cors";
 import nocsrf from "./lib/cross-origin/block-unknown-origin";
 import usersRoutes from "./router/users";
@@ -64,8 +64,8 @@ const io = new Server(server, {
 const users: { [key: string]: Socket } = {};
 io.on("connection", (socket) => {
   console.log("a user connected");
-  
-  socket.on('register', (userId) => {
+
+  socket.on("register", (userId) => {
     users[userId] = socket; // friendIdをキーにしてソケットIDを保存する
     console.log(`User registered: ${userId}`);
   });
@@ -74,7 +74,7 @@ io.on("connection", (socket) => {
     const { friendId, message } = data;
     const socket = users[friendId];
     if (socket) {
-      socket.emit('newMessage', message);
+      socket.emit("newMessage", message);
       console.log(`Message sent to ${friendId}: ${message}`);
     } else {
       console.log(`User ${friendId} is not connected`);
