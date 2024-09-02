@@ -2,18 +2,21 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  FormControl,
   DialogContentText,
-  InputLabel,
-  Select,
-  MenuItem,
   DialogActions,
   Button,
   Box,
+  List,
+  Divider,
+  Typography,
+  ListItemButton,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import courseApi, { modifyEnrollments } from "../../api/course";
+import courseApi, {
+  deleteEnrollment,
+  modifyEnrollments,
+} from "../../api/course";
 import { Course, CourseDayPeriod, Day } from "../../common/types";
 import { useEffect, useState } from "react";
 
@@ -34,7 +37,11 @@ export default function SelectCourseDialog({
 }: {
   open: boolean;
   onClose: () => void;
-  currentEdit: { rowIndex: number; columnName: Day } | null;
+  currentEdit: {
+    rowIndex: number;
+    columnName: Day;
+    course: Course | null;
+  } | null;
   handleCoursesUpdate: (
     courses: (Course & {
       courseDayPeriods: CourseDayPeriod[];
@@ -42,7 +49,6 @@ export default function SelectCourseDialog({
   ) => void;
 }) {
   const [availableCourses, setAvailableCourses] = useState<Course[]>([]);
-  const [currentSelect, setCurrentSelect] = useState<Course | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -51,6 +57,7 @@ export default function SelectCourseDialog({
         day: currentEdit.columnName,
         period: currentEdit.rowIndex + 1,
       });
+
       setAvailableCourses(courses);
     })();
   }, [currentEdit]);
@@ -59,7 +66,7 @@ export default function SelectCourseDialog({
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
         {currentEdit
-          ? `${dayCodeToDayMap[currentEdit.columnName]}曜${currentEdit.rowIndex + 1}限`
+          ? `${dayCodeToDayMap[currentEdit.columnName]}曜${currentEdit.rowIndex + 1}限の授業を選択`
           : "授業を選択"}
       </DialogTitle>
       <DialogContent>
@@ -67,70 +74,46 @@ export default function SelectCourseDialog({
           <DialogContentText>この曜限の授業はありません。</DialogContentText>
         ) : (
           <>
-            <DialogContentText sx={{ mb: 2 }}>
-              授業を選択してください。
-            </DialogContentText>
-            <Box display={"flex"} sx={{ width: "100%" }}>
-              <FormControl fullWidth>
-                <InputLabel id="courses-by-day-period-label">授業</InputLabel>
-                <Select
-                  labelId="courses-by-day-period-label"
-                  id="courses-by-day-period"
-                  value={currentSelect?.id || ""}
-                  label="Course"
-                  onChange={(e) => {
-                    if (!currentEdit) return;
-                    setCurrentSelect({
-                      id: e.target.value as Day,
-                      name:
-                        availableCourses.find(
-                          (course) => course.id === e.target.value,
-                        )?.name || "",
-                    });
-                  }}
-                >
-                  {availableCourses.map((course) => (
-                    <MenuItem value={course.id}>{course.name}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            <Box display="flex" alignItems="center" sx={{ width: "100%" }}>
+              <Typography variant="body1">現在の授業:{}</Typography>
               <IconButton
                 aria-label="delete"
                 onClick={async () => {
-                  if (!currentEdit) return;
-                  const newCourses = await modifyEnrollments({
-                    courseId: "",
-                    day: currentEdit.columnName,
-                    period: currentEdit.rowIndex + 1,
-                  });
+                  if (!currentEdit?.course?.id) return;
+                  const newCourses = await deleteEnrollment(
+                    currentEdit.course.id,
+                  );
                   handleCoursesUpdate(newCourses);
-                  onClose();
                 }}
               >
                 <DeleteIcon />
               </IconButton>
+            </Box>
+            <Box sx={{ width: "100%" }}>
+              <List>
+                {availableCourses.map((course, index) => (
+                  <>
+                    <ListItemButton
+                      key={course.id}
+                      onClick={async () => {
+                        if (!currentEdit) return;
+                        const newCourses = await modifyEnrollments(course.id);
+                        handleCoursesUpdate(newCourses);
+                      }}
+                    >
+                      {course.name}
+                    </ListItemButton>
+                    {index < availableCourses.length - 1 && <Divider />}
+                  </>
+                ))}
+              </List>
             </Box>
           </>
         )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
-          キャンセル
-        </Button>
-        <Button
-          onClick={async () => {
-            if (!currentEdit) return;
-            const newCourses = await modifyEnrollments({
-              courseId: currentSelect?.id || "",
-              day: currentEdit.columnName,
-              period: currentEdit.rowIndex + 1,
-            });
-            handleCoursesUpdate(newCourses);
-            onClose();
-          }}
-          color="primary"
-        >
-          保存
+          閉じる
         </Button>
       </DialogActions>
     </Dialog>

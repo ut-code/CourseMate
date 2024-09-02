@@ -30,8 +30,8 @@ const dayCodeToDayMap: { [dayCode in Day]: string } = {
   sat: "土",
 };
 
-type DayToCoursesByPeriodMap = {
-  [day in Day]: Course[];
+type DayToCourseByPeriodMap = {
+  [day in Day]: Course | null;
 };
 
 const CoursesDialog: React.FC<CoursesDialogProps> = (
@@ -43,17 +43,19 @@ const CoursesDialog: React.FC<CoursesDialogProps> = (
   const [currentEdit, setCurrentEdit] = useState<{
     rowIndex: number;
     columnName: Day;
+    course: Course | null;
   } | null>(null);
 
   const [transposedRows, setTransposedRows] = useState<
-    DayToCoursesByPeriodMap[] | null
+    DayToCourseByPeriodMap[] | null
   >(null);
 
   const handleSelectCourseDialogOpen = async (
     rowIndex: number,
     columnName: Day,
+    course: Course | null,
   ) => {
-    setCurrentEdit({ rowIndex, columnName });
+    setCurrentEdit({ rowIndex, columnName, course });
     setIsSelectCourseDialogOpen(true);
   };
 
@@ -66,21 +68,21 @@ const CoursesDialog: React.FC<CoursesDialogProps> = (
       courseDayPeriods: CourseDayPeriod[];
     })[],
   ) => {
-    const newCourses: DayToCoursesByPeriodMap[] = Array.from(
+    const newCourses: DayToCourseByPeriodMap[] = Array.from(
       { length: 6 },
       () => ({
-        mon: [],
-        tue: [],
-        wed: [],
-        thu: [],
-        fri: [],
-        sat: [],
+        mon: null,
+        tue: null,
+        wed: null,
+        thu: null,
+        fri: null,
+        sat: null,
       }),
     );
     courses.forEach((course) => {
       course.courseDayPeriods.forEach((dayPeriod) => {
         const { day, period } = dayPeriod;
-        newCourses[period - 1][day].push(course);
+        newCourses[period - 1][day] = course;
       });
     });
     setTransposedRows(newCourses);
@@ -125,12 +127,14 @@ const CoursesDialog: React.FC<CoursesDialogProps> = (
                     <TableCell
                       align="center"
                       onClick={() =>
-                        handleSelectCourseDialogOpen(rowIndex, dayCode as Day)
+                        handleSelectCourseDialogOpen(
+                          rowIndex,
+                          dayCode as Day,
+                          row[dayCode as Day] ?? null,
+                        )
                       }
                     >
-                      {row[dayCode as Day].map((course) => (
-                        <div>{course.name}</div>
-                      ))}
+                      {row[dayCode as Day]?.name ?? "-"}
                     </TableCell>
                   ))}
                 </TableRow>

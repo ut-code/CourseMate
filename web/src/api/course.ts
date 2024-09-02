@@ -1,4 +1,4 @@
-import { Day, Course, CourseDayPeriod } from "../common/types";
+import { Day, Course, CourseDayPeriod, CourseID } from "../common/types";
 import endpoints from "./internal/endpoints";
 
 // TODO: migrate to safe functions
@@ -26,11 +26,12 @@ export async function getByDayPeriod({
   return res.json();
 }
 
-export async function modifyEnrollments({
-  courseId,
-  day,
-  period,
-}: CourseDayPeriod) {
+/**
+ *
+ * @param courseId 新たに登録する講義のID
+ * @returns 更新後のすべての講義情報
+ */
+export async function modifyEnrollments(courseId: CourseID) {
   const res = await fetch(endpoints.meCourses, {
     method: "PATCH",
     credentials: "include",
@@ -39,8 +40,27 @@ export async function modifyEnrollments({
     },
     body: JSON.stringify({
       courseId,
-      day,
-      period,
+    }),
+  });
+  return res.json() as Promise<
+    (Course & { courseDayPeriods: CourseDayPeriod[] })[]
+  >;
+}
+
+/**
+ *
+ * @param courseId 削除する講義のID
+ * @returns 更新後のすべての講義情報
+ */
+export async function deleteEnrollment(courseId: CourseID) {
+  const res = await fetch(endpoints.meCourses, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      courseId,
     }),
   });
   return res.json() as Promise<
@@ -51,4 +71,6 @@ export async function modifyEnrollments({
 export default {
   getMyCourses,
   getByDayPeriod,
+  modifyEnrollments,
+  deleteEnrollment,
 };

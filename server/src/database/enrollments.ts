@@ -1,9 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { CourseDayPeriod, CourseID, UserID } from "../common/types";
-import {
-  getCourseByDayPeriodAndUser,
-  getCoursesWithDayPeriodsByUser,
-} from "./courses";
+import { CourseID, UserID } from "../common/types";
+import { getCoursesWithDayPeriodsByUser } from "./courses";
 
 const prisma = new PrismaClient();
 
@@ -39,31 +36,29 @@ export async function deleteEnrollment({
       },
     },
   });
+  const updatedCourses = await getCoursesWithDayPeriodsByUser(userId);
+  return updatedCourses;
 }
 
 // 履修情報の更新
-export async function updateEnrollments(
-  courseDayPeriod: CourseDayPeriod,
-  userId: UserID,
-) {
-  const currentCourse = await getCourseByDayPeriodAndUser({
-    day: courseDayPeriod.day,
-    period: courseDayPeriod.period,
-    userId,
-  });
-
+export async function updateEnrollments({
+  userId,
+  courseId,
+}: {
+  userId: UserID;
+  courseId: CourseID;
+}) {
   const newCourseDayPeriods = await prisma.courseDayPeriod.findMany({
     where: {
-      courseId: courseDayPeriod.courseId,
+      courseId,
     },
   });
-
   await prisma.$transaction(async (tx) => {
     // delete current course if exists
     await tx.enrollment.deleteMany({
       where: {
         userId,
-        courseId: currentCourse?.id ?? "",
+        courseId,
       },
     });
     // delete courses in the same day and period as the new course
@@ -81,12 +76,12 @@ export async function updateEnrollments(
         },
       },
     });
-    if (courseDayPeriod.courseId !== "") {
+    if (courseId !== "") {
       // add current course
       await tx.enrollment.create({
         data: {
           userId,
-          courseId: courseDayPeriod.courseId,
+          courseId,
         },
       });
     }

@@ -5,7 +5,6 @@ import {
   UpdateUser,
   User,
   GUID,
-  CourseDayPeriod,
 } from "../common/types";
 import {
   createUser,
@@ -18,8 +17,8 @@ import {
 import { searchMatchedUser, searchPendingUsers } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
-import { getCoursesWithDayPeriodsByUser } from "../database/courses";
-import { updateEnrollments } from "../database/enrollments";
+import { getCourse, getCoursesWithDayPeriodsByUser } from "../database/courses";
+import { deleteEnrollment, updateEnrollments } from "../database/enrollments";
 
 const router = express.Router();
 
@@ -185,18 +184,53 @@ router.get("/me/courses", async (req: Request, res: Response) => {
 router.patch("/me/courses", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error");
-
-  const courseDayPeriod: CourseDayPeriod = req.body;
-
+  const { courseId } = req.body;
+  // 指定された講義の存在確認
   try {
-    const updatedCourses = await updateEnrollments(
-      courseDayPeriod,
-      userId.value,
-    );
+    const newCourse = await getCourse(courseId);
+    if (!newCourse) {
+      return res.status(404).json({ error: "Course not found" });
+    }
+  } catch (err) {
+    console.error("Error fetching course:", err);
+    res.status(500).json({ error: "Failed to fetch course" });
+  }
+  try {
+    const updatedCourses = await updateEnrollments({
+      courseId: courseId,
+      userId: userId.value,
+    });
     res.status(200).json(updatedCourses);
   } catch (error) {
     console.error("Error updating courses:", error);
     res.status(500).json({ error: "Failed to update courses" });
+  }
+});
+
+// 自分の講義を削除
+router.delete("/me/courses", async (req: Request, res: Response) => {
+  const userId = await safeGetUserId(req);
+  if (!userId.ok) return res.status(401).send("auth error");
+  const { courseId } = req.body;
+  // 指定された講義の存在確認
+  try {
+    const newCourse = await getCourse(courseId);
+    if (!newCourse) {
+      return res.status(404).json({ error: "Course not found" });
+    }
+  } catch (err) {
+    console.error("Error fetching course:", err);
+    res.status(500).json({ error: "Failed to fetch course" });
+  }
+  try {
+    const updatedCourses = await deleteEnrollment({
+      courseId: courseId,
+      userId: userId.value,
+    });
+    res.status(200).json(updatedCourses);
+  } catch (error) {
+    console.error("Error deleting courses:", error);
+    res.status(500).json({ error: "Failed to delete courses" });
   }
 });
 

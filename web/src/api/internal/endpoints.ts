@@ -72,6 +72,7 @@ const me = `${origin}/users/me`;
  *  - 401: unauthorized.
  *  - 500: internal error.
  * PATCH → update my courses.
+ * - request body: CourseId
  * - statuses:
  *  - 200: ok.
  *   - body: (Course & {courseDayPeriods: CourseDayPeriod[]})[]
