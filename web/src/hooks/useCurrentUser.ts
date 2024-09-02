@@ -8,6 +8,9 @@ export const useCurrentUserId = () => {
     const fetchUserId = async () => {
       try {
         const id = await getMyId();
+        if (id == null) {
+          throw new Error("User not found!");
+        }
         setCurrentUserId(id);
       } catch (error) {
         console.error("Error fetching user ID:", error);

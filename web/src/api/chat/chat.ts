@@ -3,6 +3,7 @@ import endpoints from "../internal/endpoints";
 import {
   DMRoom,
   InitRoom,
+  Message,
   // Message,
   MessageID,
   RoomOverview,
@@ -50,9 +51,9 @@ export async function overview(): Promise<RoomOverview[]> {
 
 // TODO
 // 指定したユーザーにDMを送る
-export async function sendDM(friend: UserID, msg: SendMessage): Promise<void> {
+export async function sendDM(friend: UserID, msg: SendMessage): Promise<Message> {
   return await doWithIdToken(async () => {
-    await fetch(endpoints.dmTo(friend), {
+    const res = await fetch(endpoints.dmTo(friend), {
       method: "POST",
       credentials: "include",
       headers: {
@@ -61,6 +62,12 @@ export async function sendDM(friend: UserID, msg: SendMessage): Promise<void> {
       },
       body: JSON.stringify(msg),
     });
+    if (res.status === 401) throw new ErrUnauthorized();
+    if (res.status !== 201)
+      throw new Error(
+        `createDM() failed: expected status code 201, got ${res.status}`,
+      );
+    return res.json();
   });
 }
 
