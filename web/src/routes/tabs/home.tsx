@@ -41,7 +41,7 @@ export default function Home() {
       );
       setUsers(unmatched);
     })().catch(console.error);
-  }, [currentUserId,loading]);
+  }, [currentUserId, loading]);
 
   useEffect(() => {
     if (users) {
