@@ -2,7 +2,6 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
-import { Server, Socket } from "socket.io";
 import cors from "./lib/cross-origin/multiorigin-cors";
 import nocsrf from "./lib/cross-origin/block-unknown-origin";
 import usersRoutes from "./router/users";
@@ -11,6 +10,7 @@ import requestsRoutes from "./router/requests";
 import matchesRoutes from "./router/matches";
 import chatRoutes from "./router/chat";
 import cookieParser from "cookie-parser";
+import { initializeSocket } from "./lib/socket/socket";
 
 const app = express();
 const port = 3000;
@@ -20,7 +20,7 @@ const allowedOrigins = [
   process.env.MOBILE_ORIGIN,
   process.env.WEB_ORIGIN_BUILD,
 ];
-const corsOptions = {
+export const corsOptions = {
   origins: allowedOrigins.map((s) => s || "").filter((s) => s !== ""),
   methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
   credentials: true,
@@ -45,49 +45,7 @@ app.use("/matches", matchesRoutes);
 app.use("/chat", chatRoutes);
 
 // サーバーの起動
-const server = app.listen(port, () => {
+export const server = app.listen(port, () => {
   console.log("running");
 });
-
-// Socket.IOの初期化
-const io = new Server(server, {
-  cors: {
-    origin: allowedOrigins.map((s) => s || "").filter((s) => s !== ""),
-    methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
-    credentials: true,
-  },
-  connectionStateRecovery: {},
-});
-
-//Socketをfriend key に基づいて保存
-const users: { [key: string]: Socket } = {};
-
-io.on("connection", (socket) => {
-  console.log("a user connected");
-
-  socket.on("register", (userId) => {
-    users[userId] = socket;
-    console.log(`User registered: ${userId}`);
-  });
-
-  socket.on("chat message", (data) => {
-    const { friendId, message } = data;
-    const socket = users[friendId];
-    if (socket) {
-      socket.emit("newMessage", message);
-      console.log(`Message sent to ${friendId}: ${message}`);
-    } else {
-      console.log(`User ${friendId} is not connected`);
-    }
-  });
-
-  socket.on("disconnect", () => {
-    for (const [id, socket2] of Object.entries(users)) {
-      if (socket2.id === socket.id) {
-        delete users[id];
-        console.log(`User ${id} disconnected`);
-        break;
-      }
-    }
-  });
-});
+initializeSocket();
