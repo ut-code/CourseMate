@@ -13,8 +13,8 @@ import {
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import courseApi, { modifyEnrollments } from "../api/course";
-import { Course, CourseDayPeriod, Day } from "../common/types";
+import courseApi, { modifyEnrollments } from "../../api/course";
+import { Course, CourseDayPeriod, Day } from "../../common/types";
 import { useEffect, useState } from "react";
 
 const dayCodeToDayMap: { [dayCode in Day]: string } = {

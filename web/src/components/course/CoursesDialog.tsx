@@ -11,8 +11,8 @@ import {
   TableBody,
 } from "@mui/material";
 
-import { Course, CourseDayPeriod, Day, UpdateUser } from "../common/types";
-import courseApi from "../api/course";
+import { Course, CourseDayPeriod, Day, UpdateUser } from "../../common/types";
+import courseApi from "../../api/course";
 import SelectCourseDialog from "./SelectCourseDialog";
 
 type CoursesDialogProps = {

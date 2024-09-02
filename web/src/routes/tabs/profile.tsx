@@ -2,7 +2,7 @@ import { Box, Button } from "@mui/material";
 import LogOutButton from "../../components/LogOutButton";
 import { useState } from "react";
 import EditUserDialog from "../../components/EditUserDialog";
-import CoursesDialog from "../../components/CoursesDialog";
+import CoursesDialog from "../../components/course/CoursesDialog";
 import hooks from "../../api/hooks";
 import UserAvatar from "../../components/avatar/avatar";
 
