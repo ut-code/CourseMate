@@ -1,4 +1,3 @@
-import React from "react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 import { UpdateUser } from "../common/types";
@@ -12,9 +11,7 @@ type EditUserDialogProps = {
   defaultValue: UpdateUser;
 };
 
-const EditUserDialog: React.FC<EditUserDialogProps> = (
-  props: EditUserDialogProps,
-) => {
+function EditUserDialog(props: EditUserDialogProps) {
   const { isOpen, close, defaultValue } = props;
   const onClose = () => {
     photo.upload = null;
@@ -38,10 +35,11 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (
           onSave={onSave}
           saveButtonText="保存"
           allowClose={true}
+          onClose={onClose}
         />
       </DialogContent>
     </Dialog>
   );
-};
+}
 
 export default EditUserDialog;
