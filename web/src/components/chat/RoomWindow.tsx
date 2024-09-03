@@ -15,7 +15,7 @@ type Prop = {
 export function RoomWindow(props: Prop) {
   const { room } = props;
   const { currentUserId, loading } = useCurrentUserId();
-  const [dm, setDM] = useState<Message[] | null>(null);
+  const [dm, setDM] = useState<Message[]>([]);
 
   async function sendDMMessage(to: UserID, msg: SendMessage): Promise<void> {
     const message = await chat.sendDM(to, msg);
@@ -25,10 +25,7 @@ export function RoomWindow(props: Prop) {
   //メッセージの追加
   function appendMessage(newMessage: Message) {
     setDM((prevDM) => {
-      if (prevDM !== null) {
-        return [...prevDM, newMessage];
-      }
-      return [newMessage];
+      return [...prevDM, newMessage];
     });
   }
   async function fetchMessages(friendId: UserID) {
@@ -80,39 +77,37 @@ export function RoomWindow(props: Prop) {
           padding: 2,
         }}
       >
-        {dm ? (
-          <Box
-            sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}
-            ref={scrollDiv}
-          >
-            {dm.map((m) => (
-              <Box
-                key={m.id}
+        <Box
+          sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}
+          ref={scrollDiv}
+        >
+          {dm.map((m) => (
+            <Box
+              key={m.id}
+              sx={{
+                display: "flex",
+                justifyContent:
+                  m.creator === currentUserId ? "flex-end" : "flex-start",
+                marginBottom: 1,
+              }}
+            >
+              <Paper
                 sx={{
                   display: "flex",
-                  justifyContent:
-                    m.creator === currentUserId ? "flex-end" : "flex-start",
-                  marginBottom: 1,
+                  maxWidth: "60%",
+                  padding: 1,
+                  borderRadius: 2,
+                  backgroundColor:
+                    m.creator === currentUserId ? "#DCF8C6" : "#FFF",
+                  boxShadow: 1,
+                  border: 1,
                 }}
               >
-                <Paper
-                  sx={{
-                    display: "flex",
-                    maxWidth: "60%",
-                    padding: 1,
-                    borderRadius: 2,
-                    backgroundColor:
-                      m.creator === currentUserId ? "#DCF8C6" : "#FFF",
-                    boxShadow: 1,
-                    border: 1,
-                  }}
-                >
-                  <Typography>{m.content}</Typography>
-                </Paper>
-              </Box>
-            ))}
-          </Box>
-        ) : null}
+                <Typography>{m.content}</Typography>
+              </Paper>
+            </Box>
+          ))}
+        </Box>
 
         <MessageInput send={sendDMMessage} room={room} />
       </Box>
