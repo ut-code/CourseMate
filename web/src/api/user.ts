@@ -1,4 +1,5 @@
 import endpoints from "./internal/endpoints.ts";
+import { credFetch } from "../firebase/auth/lib.ts";
 import type {
   GUID,
   PublicUser,
@@ -6,15 +7,12 @@ import type {
   User,
   UserID,
 } from "../common/types";
-import { doWithIdToken, ErrUnauthorized } from "../firebase/auth/lib.ts";
 
 // TODO: migrate to safe functions
 
 //全てのユーザ情報を取得する
 export async function all(): Promise<User[]> {
-  const res = await fetch(endpoints.users, {
-    credentials: "include",
-  });
+  const res = await credFetch("GET", endpoints.users);
   // TODO: typia
   return res.json();
 }
@@ -27,21 +25,14 @@ export async function allPublic(): Promise<PublicUser[]> {
 }
 
 export async function matched(): Promise<User[]> {
-  const res = await fetch(endpoints.matchedUsers, {
-    credentials: "include",
-  });
+  const res = await credFetch("GET", endpoints.matchedUsers);
   return res.json();
 }
 
 // 自身のユーザー情報を取得する
 export async function aboutMe(): Promise<User> {
-  return await doWithIdToken(async () => {
-    const res = await fetch(endpoints.me, {
-      credentials: "include",
-    });
-    if (res.status === 401) throw new ErrUnauthorized();
-    return res.json();
-  });
+  const res = await credFetch("GET", endpoints.me);
+  return res.json();
 }
 
 // 自身のユーザーIDを取得する
@@ -52,38 +43,13 @@ export async function getMyId(): Promise<UserID> {
 
 // 自身のユーザ情報を更新する
 export async function update(newData: UpdateUser): Promise<void> {
-  return await doWithIdToken(async () => {
-    const url = endpoints.me;
-    const res = await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newData),
-      credentials: "include",
-    });
-
-    if (res.status === 401) throw new ErrUnauthorized();
-    if (!res.ok) {
-      throw new Error("Network res was not ok");
-    }
-  });
+  const url = endpoints.me;
+  await credFetch("PUT", url, newData);
 }
 
 // 自身のユーザ情報を削除する
 export async function remove(): Promise<void> {
-  return await doWithIdToken(async () => {
-    const url = endpoints.me;
-    const res = await fetch(url, {
-      method: "DELETE",
-      credentials: "include",
-    });
-    if (res.status === 401) throw new ErrUnauthorized();
-
-    if (!res.ok) {
-      throw new Error("Network res was not ok");
-    }
-  });
+  await credFetch("DELETE", endpoints.me);
 }
 
 //指定した id のユーザ情報を除いた全てのユーザ情報を取得する
@@ -104,53 +70,29 @@ export async function except(id: UserID): Promise<PublicUser[]> {
  * @throws network error and type error
  */
 export async function getByGUID(guid: GUID): Promise<User | null> {
-  return await doWithIdToken<User | null>(async () => {
-    const res = await fetch(endpoints.userByGUID(guid), {
-      credentials: "include",
-    });
-    if (res.status === 404) {
-      return null;
-    }
-    const data = await res.json();
-    // TODO: properly convert this into User instead of assigning any
-    return data;
-  });
+  const res = await credFetch("GET", endpoints.userByGUID(guid));
+  const data = await res.json();
+  // TODO: properly convert this into User instead of assigning any
+  return data;
 }
 
 //指定した guid のユーザが存在するかどうかを取得する
 export async function exists(guid: GUID): Promise<boolean> {
-  const res = await fetch(endpoints.userExists(guid), {
-    credentials: "include",
-  });
+  const res = await credFetch("GET", endpoints.userExists(guid));
   if (res.status === 404) return false;
   return true;
 }
 
 // 指定した id のユーザ情報を取得する
 export async function get(id: UserID): Promise<User | null> {
-  const res = await fetch(endpoints.user(id));
-  if (res.status === 404) {
-    return null;
-  }
-  const data = await res.json();
-  // TODO: properly convert this into User instead of assigning any
-  return data;
+  const res = await credFetch("GET", endpoints.user(id));
+  return await res.json();
 }
 
 //ユーザ情報を作成する
 export async function create(userdata: Omit<User, "id">): Promise<User> {
-  const res = await fetch(endpoints.users, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userdata),
-    credentials: "include",
-  });
-  if (!res.ok) {
-    console.error("res.ok was not true");
-    throw new Error("res.ok was not true");
-  }
-  const user = res.json();
-  return user;
+  const res = await credFetch("POST", endpoints.users, userdata);
+  return await res.json();
 }
 
 export default {

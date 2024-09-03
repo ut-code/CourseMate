@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ErrUnauthorized, refreshIdToken } from "../firebase/auth/lib";
+import { credFetch } from "../firebase/auth/lib";
 import { Result, Ok, Err } from "../dev/copied/common/lib/result";
 
 // TODO: separate this into concrete types and urls s.t. there is no unsafe any
@@ -36,11 +36,7 @@ export default function useData<T>(url: string) {
 
 async function safeReadData<T>(url: string): Promise<Result<T>> {
   try {
-    const res = await fetch(url, {
-      credentials: "include",
-    });
-    if (res.status === 401) throw new ErrUnauthorized();
-    if (!res.ok) throw new Error("Response was not ok.");
+    const res = await credFetch("GET", url);
     const result = await res.json();
     // TODO: typia
     return Ok(result);
@@ -59,24 +55,15 @@ export function useAuthorizedData<T>(url: string) {
     setLoading(true);
     setError(null);
 
-    // this never throws. I'm only using this to use finally
-    try {
-      let result = await safeReadData<T>(url);
-      if (result.ok) {
-        setData(result.value);
-        return;
-      }
-      await refreshIdToken();
-      result = await safeReadData<T>(url);
-      if (result.ok) {
-        setData(result.value);
-        return;
-      }
-      setError(result.error as Error);
-      setData(null);
-    } finally {
+    const result = await safeReadData<T>(url);
+    if (result.ok) {
+      setData(result.value);
       setLoading(false);
+      return;
     }
+    setError(result.error as Error);
+    setData(null);
+    setLoading(false);
   }, [url]);
 
   useEffect(() => {
