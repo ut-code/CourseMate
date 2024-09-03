@@ -1,14 +1,14 @@
-import { credFetch, ErrUnauthorized } from "../../firebase/auth/lib";
+import { ErrUnauthorized, credFetch } from "../../firebase/auth/lib";
 import endpoints from "../internal/endpoints";
 import {
   DMRoom,
   InitRoom,
-  // Message,
+  Message,
   MessageID,
   RoomOverview,
   SendMessage,
-  SharedRoom,
   ShareRoomID,
+  SharedRoom,
   UpdateRoom,
   UserID,
 } from "../../common/types";
@@ -32,6 +32,7 @@ export async function deleteMessage(messageId: MessageID): Promise<void> {
 // 自身の参加しているすべての Room (DM グループチャットともに) の概要 (Overview) の取得 (メッセージの履歴を除く)
 export async function overview(): Promise<RoomOverview[]> {
   const res = await credFetch("GET", endpoints.roomOverview);
+  if (res.status === 401) throw new ErrUnauthorized();
   return await res.json();
 }
 
@@ -39,8 +40,17 @@ export async function overview(): Promise<RoomOverview[]> {
 
 // TODO
 // 指定したユーザーにDMを送る
-export async function sendDM(friend: UserID, msg: SendMessage): Promise<void> {
-  await credFetch("POST", endpoints.dmTo(friend), msg);
+export async function sendDM(
+  friend: UserID,
+  msg: SendMessage,
+): Promise<Message> {
+  const res = await credFetch("POST", endpoints.dmTo(friend), msg);
+  if (res.status === 401) throw new ErrUnauthorized();
+  if (res.status !== 201)
+    throw new Error(
+      `createDM() failed: expected status code 201, got ${res.status}`,
+    );
+  return res.json();
 }
 
 // 相手のIDを指定して、
@@ -70,7 +80,8 @@ export async function invite(
   roomId: ShareRoomID,
   memberIDs: UserID[],
 ): Promise<void> {
-  await credFetch("POST", endpoints.roomInvite(roomId), memberIDs);
+  const res = await credFetch("POST", endpoints.roomInvite(roomId), memberIDs);
+  if (res.status === 401) throw new ErrUnauthorized();
 }
 
 // グループチャットの情報を更新する
@@ -101,6 +112,7 @@ export async function patchRoom(
 //指定したグループチャットの部屋情報を得る
 export async function getSharedRoom(roomId: ShareRoomID): Promise<SharedRoom> {
   const res = await credFetch("GET", endpoints.sharedRoom(roomId));
+  if (res.status === 404) throw new ErrUnauthorized();
   return await res.json();
 }
 

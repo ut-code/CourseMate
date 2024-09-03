@@ -15,6 +15,12 @@ export async function getGUID(req: Request): Promise<GUID> {
   return (await verifyIDToken(idToken)).uid as GUID;
 }
 
+export async function getGUIDFromToken(token: IDToken): Promise<GUID> {
+  const idToken = token;
+  if (typeof idToken !== "string") throw new Error();
+  return (await verifyIDToken(idToken)).uid as GUID;
+}
+
 export async function safeGetGUID(req: Request): Promise<Result<GUID>> {
   try {
     return Ok(await getGUID(req));
