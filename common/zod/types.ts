@@ -24,11 +24,15 @@ import {
   UpdateRoomSchema,
   InitRoomSchema,
   InitSharedRoomSchema,
+  NameSchema,
+  PictureUrlSchema,
 } from "./schemas";
 
 export type UserID = z.infer<typeof UserIDSchema>;
 export type GUID = z.infer<typeof GUIDSchema>;
 export type IDToken = z.infer<typeof IDTokenSchema>;
+export type Name = z.infer<typeof NameSchema>
+export type PictureUrl = z.infer<typeof PictureUrlSchema>
 export type Gender = z.infer<typeof GenderSchema>;
 export type RelationshipStatus = z.infer<typeof RelationshipStatusSchema>;
 export type User = z.infer<typeof UserSchema>;

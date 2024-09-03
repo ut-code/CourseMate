@@ -23,6 +23,8 @@ import {
   InitRoomSchema,
   InitSharedRoomSchema,
   UpdateRoomSchema,
+  NameSchema,
+  PictureUrlSchema
 } from "./schemas";
 
 export function parseUserID(data: unknown) {
@@ -35,6 +37,14 @@ export function parseGUID(data: unknown) {
 
 export function parseIDToken(data: unknown) {
   return IDTokenSchema.parse(data);
+}
+
+export function parseName(data:unknown){
+  return NameSchema.parse(data)
+}
+
+export function parsePictureUrl(data:unknown){
+  return PictureUrlSchema.parse(data);
 }
 
 export function parseGender(data: unknown) {
