@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import * as chat from "../../api/chat/chat";
 import { RoomHeader } from "./RoomHeader";
 import { socket } from "../data/socket";
+import { getIdToken } from "../../firebase/auth/lib";
 
 type Prop = {
   room: DMOverview;
@@ -30,25 +31,28 @@ export function RoomWindow(props: Prop) {
       return [newMessage];
     });
   }
-
   async function fetchMessages(friendId: UserID) {
     const newDM = await chat.getDM(friendId);
     setDM(newDM.messages);
   }
+  async function registerSocket() {
+    const idToken = await getIdToken();
+    socket.emit("register", idToken);
+    socket.on("newMessage", (msg) => {
+      appendMessage(msg);
+    });
+    // Clean up
+    return () => {
+      socket.off("newMessage");
+    };
+  }
 
-  // 初回レンダリング時にサーバーに登録し、メッセージリスナーを設定する
   useEffect(() => {
     if (room) {
       fetchMessages(room.friendId);
     }
     if (!loading && currentUserId) {
-      socket.emit("register", currentUserId);
-      socket.on("newMessage", (msg) => {
-        appendMessage(msg);
-      });
-      return () => {
-        socket.off("newMessage");
-      };
+      registerSocket();
     }
   }, [loading, currentUserId, room]);
 
@@ -107,9 +111,7 @@ export function RoomWindow(props: Prop) {
               </Box>
             ))}
           </Box>
-        ) : (
-          <Typography>最初のメッセージを送ってみましょう！</Typography>
-        )}
+        ) : null}
 
         <MessageInput send={sendDMMessage} room={room} />
       </Box>

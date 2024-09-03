@@ -1,6 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { corsOptions, server } from "../..";
 import { Message, UserID } from "../../common/types";
+import { getUserIdfromToken } from "../../firebase/auth/db";
 
 const users: { [key: string]: Socket } = {};
 
@@ -13,7 +14,8 @@ export function initializeSocket() {
   io.on("connection", (socket) => {
     console.log("a user connected");
 
-    socket.on("register", (userId) => {
+    socket.on("register", async (token) => {
+      const userId = await getUserIdfromToken(token);
       users[userId] = socket;
       console.log(`User registered: ${userId}`);
     });
