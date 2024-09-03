@@ -58,7 +58,7 @@ export function PhotoPreview({ defaultValueUrl }: Props) {
       )}
       <Button>
         <label htmlFor="file-upload" className="custom-file-label">
-          写真を選択
+          写真を選択(必須)
         </label>
       </Button>
       <input

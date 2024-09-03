@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import { Gender, User } from "../common/types";
 import { photo } from "../components/data/photo-preview";
-
 import { useState } from "react";
 import { PhotoPreview } from "./PhotoPreview";
 import { deleteImage } from "../firebase/store/photo";
@@ -40,14 +39,49 @@ export function EditUserBox({
   const [hobby, setHobby] = useState(def?.hobby || "");
   const [introS, setIntroS] = useState(def?.intro_short || "");
   const [introL, setIntroL] = useState(def?.intro_long || "");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSave = async () => {
+    if (!name) {
+      setErrorMessage("名前は入力必須です。");
+      return;
+    }
+    if (!introS) {
+      setErrorMessage("ひとことコメントは入力必須です。");
+      return;
+    }
+    const pictureUrl = photo.upload && (await photo.upload());
+    if (!pictureUrl) {
+      setErrorMessage("画像は入力必須です。");
+      return;
+    }
+
+    const data: UserData = {
+      name,
+      grade,
+      gender,
+      intro_short: introS,
+      intro_long: introL,
+      hobby,
+      pictureUrl: pictureUrl || "",
+    };
+
+    await save(data);
+    if (onSave) onSave();
+    if (def?.pictureUrl && pictureUrl) {
+      deleteImage(def.pictureUrl);
+    }
+  };
 
   return (
     <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
-      <TextField
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        label="Name"
-      />
+      <FormControl fullWidth>
+        <TextField
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          label="名前(必須)"
+        />
+      </FormControl>
       <FormControl fullWidth>
         <InputLabel>学年</InputLabel>
         <Select
@@ -76,22 +110,35 @@ export function EditUserBox({
           <MenuItem value={"秘密"}>秘密</MenuItem>
         </Select>
       </FormControl>
-      <TextField
-        value={hobby}
-        label="趣味"
-        onChange={(e) => setHobby(e.target.value)}
-      />
-      <TextField
-        value={introS}
-        label="ひとことコメント"
-        onChange={(e) => setIntroS(e.target.value)}
-      />
-      <TextField
-        value={introL}
-        label="自己紹介"
-        onChange={(e) => setIntroL(e.target.value)}
-      />
-      <PhotoPreview />
+      <FormControl fullWidth>
+        <TextField
+          value={hobby}
+          label="趣味"
+          onChange={(e) => setHobby(e.target.value)}
+        />
+      </FormControl>
+      <FormControl fullWidth>
+        <TextField
+          value={introS}
+          label="ひとことコメント(必須)"
+          onChange={(e) => setIntroS(e.target.value)}
+        />
+      </FormControl>
+      <FormControl fullWidth>
+        <TextField
+          value={introL}
+          label="自己紹介"
+          onChange={(e) => setIntroL(e.target.value)}
+        />
+      </FormControl>
+      <FormControl fullWidth>
+        <PhotoPreview />
+      </FormControl>
+      {errorMessage && (
+        <Box color="red" mb={2}>
+          {errorMessage}
+        </Box>
+      )}
       {allowClose && (
         <Button onClick={onClose} color="primary">
           キャンセル
@@ -100,25 +147,7 @@ export function EditUserBox({
       <Button
         variant="outlined"
         sx={{ textTransform: "none" }}
-        onClick={() =>
-          (async () => {
-            const pictureUrl = photo.upload && (await photo.upload());
-            const data: UserData = {
-              name,
-              grade,
-              gender,
-              intro_short: introS,
-              intro_long: introL,
-              hobby,
-              pictureUrl: pictureUrl || "",
-            };
-            await save(data);
-            if (onSave) onSave();
-            if (def?.pictureUrl && pictureUrl) {
-              deleteImage(def.pictureUrl);
-            }
-          })()
-        }
+        onClick={handleSave}
       >
         {saveButtonText}
       </Button>
