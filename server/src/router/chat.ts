@@ -21,7 +21,10 @@ router.get("/overview", async (req, res) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
   const overview = await db.overview(id.value);
-  if (!overview.ok) return res.status(500).send();
+  if (!overview.ok) {
+    console.error(overview.error);
+    return res.status(500).send();
+  }
 
   // SEND: RoomOverview[].
   // this is NOT ordered. you need to sort it on frontend.
