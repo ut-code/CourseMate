@@ -1,8 +1,8 @@
 import type { Request } from "express";
 import { Result, Ok, Err } from "../../common/lib/result";
-import { getGUID } from "./lib";
+import { getGUID, getGUIDFromToken } from "./lib";
 import { PrismaClient } from "@prisma/client";
-import { UserID } from "../../common/types";
+import { IDToken, UserID } from "../../common/types";
 
 const prisma = new PrismaClient();
 /**
@@ -20,6 +20,17 @@ const prisma = new PrismaClient();
  **/
 export async function getUserId(req: Request): Promise<UserID> {
   const guid = await getGUID(req);
+  const user = await prisma.user.findUnique({
+    where: {
+      guid: guid,
+    },
+  });
+  if (!user) throw new Error("User not found!");
+  return user.id;
+}
+
+export async function getUserIdfromToken(token: IDToken): Promise<UserID> {
+  const guid = await getGUIDFromToken(token);
   const user = await prisma.user.findUnique({
     where: {
       guid: guid,
