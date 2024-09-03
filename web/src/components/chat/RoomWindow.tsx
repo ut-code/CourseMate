@@ -13,54 +13,44 @@ type Prop = {
 
 export function RoomWindow(props: Prop) {
   const { room } = props;
-
   const { currentUserId, loading } = useCurrentUserId();
   const [dm, setDM] = useState<Message[] | null>(null);
 
   async function sendDMMessage(to: UserID, msg: SendMessage): Promise<void> {
     const message = await chat.sendDM(to, msg);
-
-    //メッセージを送信したら、そのメッセージが追加される
-    setDM((prevDM) => {
-      if (prevDM !== null) {
-        return [...prevDM, message];
-      }
-      return [message];
-    });
+    appendMessage(message);
   }
 
-  // 初回レンダリング時にサーバーに登録し、メッセージリスナーを設定する
-  useEffect(() => {
-    if (!loading && currentUserId) {
-      // loadingがfalseでcurrentUserIdが存在する場合のみ実行
-      socket.emit("register", currentUserId);
-
-      // メッセージ受信時のイベントリスナーを設定
-      socket.on("newMessage", (message) => {
-        setDM((prevDM) => {
-          if (prevDM) {
-            return [...prevDM, message];
-          }
-          return [message];
-        });
-      });
-
-      // クリーンアップ関数でイベントリスナーを削除
-      return () => {
-        socket.off("newMessage");
-      };
-    }
-  }, [loading, currentUserId, room.friendId]);
+  //メッセージの追加
+  function appendMessage(newMessage: Message) {
+    setDM((prevDM) => {
+      if (prevDM !== null) {
+        return [...prevDM, newMessage];
+      }
+      return [newMessage];
+    });
+  }
 
   async function fetchMessages(friendId: UserID) {
     const newDM = await chat.getDM(friendId);
     setDM(newDM.messages);
   }
+
+  // 初回レンダリング時にサーバーに登録し、メッセージリスナーを設定する
   useEffect(() => {
     if (room) {
       fetchMessages(room.friendId);
     }
-  }, [room]);
+    if (!loading && currentUserId) {
+      socket.emit("register", currentUserId);
+      socket.on("newMessage", (msg) => {
+        appendMessage(msg);
+      });
+      return () => {
+        socket.off("newMessage");
+      };
+    }
+  }, [loading, currentUserId, room]);
 
   //画面スクロール
   const scrollDiv = useRef<HTMLDivElement>(null);

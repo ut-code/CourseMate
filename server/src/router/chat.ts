@@ -110,7 +110,7 @@ router.get("/shared/:roomId", async (req, res) => {
 
   const userInRoom = await db.isUserInRoom(
     roomId.value as ShareRoomID,
-    user.value
+    user.value,
   );
   if (!userInRoom.ok) return res.status(500).send("db error");
   if (!userInRoom.value)
@@ -155,7 +155,7 @@ router.post("/shared/id/:room/invite", async (req, res) => {
 
   const room = await db.inviteUserToSharedRoom(
     roomId.value as ShareRoomID,
-    invited
+    invited,
   );
   if (!room.ok) return res.status(500).send();
 
