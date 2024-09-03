@@ -63,11 +63,15 @@ export const RelationshipSchema = z.object({
 export const MessageIDSchema = z.number(); // TODO! Add __internal_prevent_cast_MessageID: PhantomData
 export const ShareRoomIDSchema = z.number();
 
+export const ContentSchema = z
+  .string()
+  .min(1, { message: "Content must not be empty." });
+
 export const MessageSchema = z.object({
   id: MessageIDSchema,
   creator: UserIDSchema,
   createdAt: z.date(),
-  content: z.string().min(1, { message: "Content must not be empty." }),
+  content: ContentSchema,
   edited: z.boolean(),
 });
 

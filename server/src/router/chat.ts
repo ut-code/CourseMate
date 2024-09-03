@@ -14,8 +14,8 @@ import { areAllMatched, areMatched, findRelation } from "../database/matches";
 import type { UserID, InitRoom } from "../common/types";
 import { getUserByID } from "../database/users";
 import {
+  parseContent,
   parseInitRoom,
-  parseMessage,
   parseName,
   parseSendMessage,
   parseUserID,
@@ -103,7 +103,7 @@ router.post(`/shared`, async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
 
-  const init: InitRoom = req.body; // zod
+  const init: InitRoom = req.body;
   try {
     parseInitRoom(init);
   } catch (e) {
@@ -130,7 +130,7 @@ router.get("/shared/:roomId", async (req, res) => {
 
   const userInRoom = await db.isUserInRoom(
     roomId.value as ShareRoomID,
-    user.value
+    user.value,
   );
   if (!userInRoom.ok) return res.status(500).send("db error");
   if (!userInRoom.value)
@@ -185,7 +185,7 @@ router.post("/shared/id/:room/invite", async (req, res) => {
 
   const room = await db.inviteUserToSharedRoom(
     roomId.value as ShareRoomID,
-    invited
+    invited,
   );
   if (!room.ok) return res.status(500).send();
 
@@ -203,7 +203,12 @@ router.patch("/messages/id/:id", async (req, res) => {
   if (old.value.creator !== user.value)
     return res.status(403).send("cannot edit others' message");
 
-  const content: string = req.body.content; // zod
+  const content: string = req.body.content;
+  try {
+    parseContent(content);
+  } catch (e) {
+    return res.status(400).send("invalid format");
+  }
 
   const msg = await db.updateMessage(id.value as MessageID, content);
   if (!msg.ok) return res.status(500).send();
