@@ -16,6 +16,7 @@ import {
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
 import { getMatchesByUserId } from "../database/matches";
+import { parseInitUser, parseUpdateUser } from "../common/zod/methods";
 
 const router = express.Router();
 
@@ -154,7 +155,12 @@ router.get("/id/:id", async (req: Request, res: Response) => {
 
 // ユーザーの作成エンドポイント
 router.post("/", async (req: Request, res: Response) => {
-  const partialUser: Omit<User, "id"> = req.body; // is any
+  const partialUser: Omit<User, "id"> = req.body;
+  try {
+    parseInitUser(partialUser);
+  } catch (e) {
+    return res.status(400).send("invalid format");
+  }
 
   const user = await createUser(partialUser);
   if (!user.ok) return res.status(500).send();
@@ -166,8 +172,12 @@ router.put("/me", async (req: Request, res: Response) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
 
-  // TODO: Typia
   const user: UpdateUser = req.body;
+  try {
+    parseUpdateUser(user);
+  } catch (e) {
+    return res.status(400).send("invalid format");
+  }
   const updated = await updateUser(id.value, user);
   if (!updated.ok) return res.status(500).send();
   res.status(200).json(updated.value);
