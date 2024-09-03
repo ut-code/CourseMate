@@ -13,6 +13,7 @@ import * as db from "../database/chat";
 import { areAllMatched, areMatched, findRelation } from "../database/matches";
 import type { UserID, InitRoom } from "../common/types";
 import { getUserByID } from "../database/users";
+import * as ws from "../lib/socket/socket";
 
 const router = express.Router();
 
@@ -51,6 +52,8 @@ router.post("/dm/to/:userid", async (req, res) => {
 
   const result = await db.sendDM(rel.value.id, msg);
   if (!result.ok) return res.status(500).send();
+  ws.sendMessage(result.value, friend.value);
+
   res.status(201).send(result.value);
 });
 
@@ -107,7 +110,7 @@ router.get("/shared/:roomId", async (req, res) => {
 
   const userInRoom = await db.isUserInRoom(
     roomId.value as ShareRoomID,
-    user.value,
+    user.value
   );
   if (!userInRoom.ok) return res.status(500).send("db error");
   if (!userInRoom.value)
@@ -152,7 +155,7 @@ router.post("/shared/id/:room/invite", async (req, res) => {
 
   const room = await db.inviteUserToSharedRoom(
     roomId.value as ShareRoomID,
-    invited,
+    invited
   );
   if (!room.ok) return res.status(500).send();
 

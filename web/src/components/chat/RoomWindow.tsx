@@ -20,12 +20,6 @@ export function RoomWindow(props: Prop) {
   async function sendDMMessage(to: UserID, msg: SendMessage): Promise<void> {
     const message = await chat.sendDM(to, msg);
 
-    //送信して返ってきたものをまたWebsocketで送る
-    socket.emit("chat message", {
-      friendId: room.friendId,
-      message: message,
-    });
-
     //メッセージを送信したら、そのメッセージが追加される
     setDM((prevDM) => {
       if (prevDM !== null) {

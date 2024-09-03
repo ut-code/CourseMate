@@ -1,5 +1,8 @@
 import { Server, Socket } from "socket.io";
 import { corsOptions, server } from "../..";
+import { Message, SendMessage, UserID } from "../../common/types";
+
+const users: { [key: string]: Socket } = {};
 
 export function initializeSocket() {
   // Socket.IOの初期化
@@ -9,7 +12,6 @@ export function initializeSocket() {
   });
 
   //Socketをfriend key に基づいて保存
-  const users: { [key: string]: Socket } = {};
 
   io.on("connection", (socket) => {
     console.log("a user connected");
@@ -19,16 +21,16 @@ export function initializeSocket() {
       console.log(`User registered: ${userId}`);
     });
 
-    socket.on("chat message", (data) => {
-      const { friendId, message } = data;
-      const socket = users[friendId];
-      if (socket) {
-        socket.emit("newMessage", message);
-        console.log(`Message sent to ${friendId}: ${message}`);
-      } else {
-        console.log(`User ${friendId} is not connected`);
-      }
-    });
+    // socket.on("chat message", (data) => {
+    //   const { friendId, message } = data;
+    //   const socket = users[friendId];
+    //   if (socket) {
+    //     socket.emit("newMessage", message);
+    //     console.log(`Message sent to ${friendId}: ${message}`);
+    //   } else {
+    //     console.log(`User ${friendId} is not connected`);
+    //   }
+    // });
 
     socket.on("disconnect", () => {
       for (const [id, socket2] of Object.entries(users)) {
@@ -40,4 +42,14 @@ export function initializeSocket() {
       }
     });
   });
+}
+
+export function sendMessage(message: Message, friendId: UserID) {
+  const socket = users[friendId];
+  if (socket) {
+    socket.emit("newMessage", message);
+    console.log(`Message sent to ${friendId}: ${message}`);
+  } else {
+    console.log(`User ${friendId} is not connected`);
+  }
 }
