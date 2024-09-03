@@ -10,7 +10,14 @@ export const IDTokenSchema = z.string();
 //   OTHER
 //   SECRET
 // ])
-export const GenderSchema = z.string();
+export const NameSchema = z
+  .string()
+  .min(1, { message: "Name must not be empty." });
+export const PictureUrlSchema = z.string().url();
+
+export const GenderSchema = z
+  .string()
+  .min(1, { message: "Gender must not be empty." });
 
 export const RelationshipStatusSchema = z.union([
   z.literal("PENDING"),
@@ -21,12 +28,14 @@ export const RelationshipStatusSchema = z.union([
 export const UserSchema = z.object({
   id: UserIDSchema,
   guid: GUIDSchema,
-  name: z.string(),
-  pictureUrl: z.string().url(),
+  name: NameSchema,
+  pictureUrl: PictureUrlSchema,
   grade: z.string(),
   gender: GenderSchema,
   hobby: z.string(),
-  intro_short: z.string(),
+  intro_short: z
+    .string()
+    .min(1, { message: "Short introduction must not be empty." }),
   intro_long: z.string(),
 });
 
@@ -35,9 +44,11 @@ export const UpdateUserSchema = InitUserSchema.omit({ guid: true });
 
 export const PublicUserSchema = z.object({
   id: UserIDSchema,
-  name: z.string(),
-  pictureUrl: z.string().url(),
-  intro_short: z.string(),
+  name: NameSchema,
+  pictureUrl: PictureUrlSchema,
+  intro_short: z
+    .string()
+    .min(1, { message: "Short introduction must not be empty." }),
 });
 
 export const RelationshipIDSchema = z.number();
@@ -56,18 +67,18 @@ export const MessageSchema = z.object({
   id: MessageIDSchema,
   creator: UserIDSchema,
   createdAt: z.date(),
-  content: z.string(),
+  content: z.string().min(1, { message: "Content must not be empty." }),
   edited: z.boolean(),
 });
 
 export const SendMessageSchema = z.object({
-  content: z.string(),
+  content: z.string().min(1, { message: "Content must not be empty." }),
 });
 
 export const DMOverviewSchema = z.object({
   isDM: z.literal(true),
   friendId: UserIDSchema,
-  name: z.string(),
+  name: NameSchema,
   thumbnail: z.string(),
   lastmsg: MessageSchema.optional(),
 });
@@ -75,7 +86,7 @@ export const DMOverviewSchema = z.object({
 export const SharedRoomOverviewSchema = z.object({
   isDM: z.literal(false),
   roomId: ShareRoomIDSchema,
-  name: z.string(),
+  name: NameSchema,
   thumbnail: z.string(),
   lastmsg: MessageSchema.optional(),
 });
@@ -92,14 +103,14 @@ export const DMRoomSchema = z.object({
 });
 
 export const PersonalizedDMRoomSchema = z.object({
-  name: z.string(),
+  name: NameSchema,
   thumbnail: z.string(),
 });
 
 export const SharedRoomSchema = z.object({
   id: ShareRoomIDSchema,
   thumbnail: z.string(),
-  name: z.string(),
+  name: NameSchema,
   isDM: z.literal(false),
   members: z.array(UserIDSchema),
   messages: z.array(MessageSchema),
@@ -112,6 +123,6 @@ export const InitSharedRoomSchema = InitRoomSchema.extend({
 });
 
 export const UpdateRoomSchema = z.object({
-  name: z.string(),
-  pictureUrl: z.string().url(),
+  name: NameSchema,
+  pictureUrl: PictureUrlSchema,
 });
