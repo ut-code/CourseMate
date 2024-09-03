@@ -35,19 +35,20 @@ export function RoomWindow(props: Prop) {
     const newDM = await chat.getDM(friendId);
     setDM(newDM.messages);
   }
-  async function registerSocket() {
-    const idToken = await getIdToken();
-    socket.emit("register", idToken);
-    socket.on("newMessage", (msg) => {
-      appendMessage(msg);
-    });
-    // Clean up
-    return () => {
-      socket.off("newMessage");
-    };
-  }
 
   useEffect(() => {
+    async function registerSocket() {
+      const idToken = await getIdToken();
+      socket.emit("register", idToken);
+      socket.on("newMessage", (msg) => {
+        appendMessage(msg);
+      });
+      // Clean up
+      return () => {
+        socket.off("newMessage");
+      };
+    }
+
     if (room) {
       fetchMessages(room.friendId);
     }
