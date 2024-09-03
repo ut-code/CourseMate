@@ -7,6 +7,8 @@ import * as chat from "../../api/chat/chat";
 import { RoomHeader } from "./RoomHeader";
 import { socket } from "../data/socket";
 import { getIdToken } from "../../firebase/auth/lib";
+import { useSnackbar } from "notistack";
+import user from "../../api/user";
 
 type Prop = {
   room: DMOverview;
@@ -16,6 +18,7 @@ export function RoomWindow(props: Prop) {
   const { room } = props;
   const { currentUserId, loading } = useCurrentUserId();
   const [dm, setDM] = useState<Message[]>([]);
+  const { enqueueSnackbar } = useSnackbar();
 
   async function sendDMMessage(to: UserID, msg: SendMessage): Promise<void> {
     const message = await chat.sendDM(to, msg);
@@ -37,22 +40,32 @@ export function RoomWindow(props: Prop) {
     async function registerSocket() {
       const idToken = await getIdToken();
       socket.emit("register", idToken);
-      socket.on("newMessage", (msg) => {
-        appendMessage(msg);
+      socket.on("newMessage", async (msg) => {
+        if (msg.creator === room.friendId) {
+          appendMessage(msg);
+        } else {
+          const creator = await user.get(msg.creator);
+          if (creator == null) return;
+          enqueueSnackbar(
+            `${creator.name}さんからのメッセージ : ${msg.content}`,
+            {
+              variant: "info",
+            }
+          );
+        }
       });
-      // Clean up
-      return () => {
-        socket.off("newMessage");
-      };
     }
-
     if (room) {
       fetchMessages(room.friendId);
     }
     if (!loading && currentUserId) {
       registerSocket();
     }
-  }, [loading, currentUserId, room]);
+    // Clean up
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [loading, currentUserId, room, enqueueSnackbar]);
 
   //画面スクロール
   const scrollDiv = useRef<HTMLDivElement>(null);
