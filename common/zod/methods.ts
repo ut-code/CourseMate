@@ -26,6 +26,9 @@ import {
   NameSchema,
   PictureUrlSchema,
   ContentSchema,
+  HobbySchema,
+  IntroShortSchema,
+  IntroLongSchema,
 } from "./schemas";
 
 export function parseUserID(data: unknown) {
@@ -134,4 +137,16 @@ export function parseUpdateRoom(data: unknown) {
 
 export function parseContent(data: unknown) {
   return ContentSchema.parse(data);
+}
+
+export function parseHobby(data: unknown) {
+  return HobbySchema.parse(data);
+}
+
+export function parseIntroShort(data: unknown) {
+  return IntroShortSchema.parse(data);
+}
+
+export function parseIntroLong(data: unknown) {
+  return IntroLongSchema.parse(data);
 }

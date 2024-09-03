@@ -12,18 +12,25 @@ export const IDTokenSchema = z.string();
 // ])
 export const NameSchema = z
   .string()
-  .min(1, { message: "Name must not be empty." });
+  .min(1, { message: "名前は1文字以上です" })
+  .max(10, { message: "名前は10文字以下です" });
 export const PictureUrlSchema = z.string().url();
-
 export const GenderSchema = z
   .string()
   .min(1, { message: "Gender must not be empty." });
 
-export const RelationshipStatusSchema = z.union([
-  z.literal("PENDING"),
-  z.literal("MATCHED"),
-  z.literal("REJECTED"),
-]);
+export const HobbySchema = z
+  .string()
+  // .min(1, { message: "趣味は1文字以上です" })
+  .max(25, { message: "趣味は25文字以下です" });
+export const IntroShortSchema = z
+  .string()
+  .min(2, { message: "コメントは2文字以上です" })
+  .max(25, { message: "コメントは25文字以下です" });
+export const IntroLongSchema = z
+  .string()
+  // .min(2, { message: "自己紹介文は2文字以上です" })
+  .max(225, { message: "自己紹介文は225文字以下です" });
 
 export const UserSchema = z.object({
   id: UserIDSchema,
@@ -32,12 +39,16 @@ export const UserSchema = z.object({
   pictureUrl: PictureUrlSchema,
   grade: z.string(),
   gender: GenderSchema,
-  hobby: z.string(),
-  intro_short: z
-    .string()
-    .min(1, { message: "Short introduction must not be empty." }),
-  intro_long: z.string(),
+  hobby: HobbySchema,
+  intro_short: IntroShortSchema,
+  intro_long: IntroLongSchema,
 });
+
+export const RelationshipStatusSchema = z.union([
+  z.literal("PENDING"),
+  z.literal("MATCHED"),
+  z.literal("REJECTED"),
+]);
 
 export const InitUserSchema = UserSchema.omit({ id: true });
 export const UpdateUserSchema = InitUserSchema.omit({ guid: true });

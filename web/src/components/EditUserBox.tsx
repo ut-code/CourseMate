@@ -12,6 +12,7 @@ import { photo } from "../components/data/photo-preview";
 import { useState } from "react";
 import { PhotoPreview } from "./PhotoPreview";
 import { deleteImage } from "../firebase/store/photo";
+import { parseUpdateUser } from "../common/zod/methods";
 
 type Props = {
   save: (userData: UserData) => Promise<void>;
@@ -42,34 +43,38 @@ export function EditUserBox({
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSave = async () => {
-    if (!name) {
-      setErrorMessage("名前は入力必須です。");
-      return;
-    }
-    if (!introS) {
-      setErrorMessage("ひとことコメントは入力必須です。");
-      return;
-    }
-    const pictureUrl = photo.upload && (await photo.upload());
-    if (!pictureUrl) {
-      setErrorMessage("画像は入力必須です。");
-      return;
-    }
+    try {
+      if (!introS) {
+        throw new Error("ひとことコメントは入力必須です。");
+      }
 
-    const data: UserData = {
-      name,
-      grade,
-      gender,
-      intro_short: introS,
-      intro_long: introL,
-      hobby,
-      pictureUrl: pictureUrl || "",
-    };
+      const pictureUrl = photo.upload && (await photo.upload());
+      if (!pictureUrl) {
+        throw new Error("画像は入力必須です。");
+      }
 
-    await save(data);
-    if (onSave) onSave();
-    if (def?.pictureUrl && pictureUrl) {
-      deleteImage(def.pictureUrl);
+      const data: UserData = {
+        name: name,
+        grade: grade,
+        gender: gender,
+        intro_short: introS,
+        intro_long: introL,
+        hobby: hobby,
+        pictureUrl: pictureUrl || "",
+      };
+      parseUpdateUser(data);
+
+      await save(data);
+      if (onSave) onSave();
+      if (def?.pictureUrl && pictureUrl) {
+        deleteImage(def.pictureUrl);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("入力に誤りがあります。");
+      }
     }
   };
 
