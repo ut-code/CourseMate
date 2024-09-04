@@ -6,6 +6,15 @@
 
 ## 開発
 
+### Makefile
+
+GNU Make が導入されています。以下は、ユーザーが使うことが想定されているコマンドの一部です。
+
+- make setup (セットアップします。)
+- make start (build -> serve します。)
+- make watch (ホットリロードします。)
+- make precommit (type-check, format-check, lint を実行します。husky で自動実行されます。)
+
 ### 環境構築
 
 1. The Nix Way
@@ -30,6 +39,13 @@
 
 終わったら、 `server/.env` と `web/.env` をコピーしてきましょう。
 
+### 環境変数
+
+- `mobile`
+- `web`
+- `server`
+  - `DATABASE_URL` : `postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample` の形式
+
 ### server、webの起動
 
 ```sh
@@ -39,19 +55,3 @@ make watch
 # または
 make docker
 ```
-
-### 環境変数
-
-- `mobile`
-- `web`
-- `server`
-  - `DATABASE_URL` : `postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample` の形式
-
-### Makefile
-
-GNU Make が導入されています。以下は、ユーザーが使うことが想定されているコマンドの一部です。
-
-- make setup (セットアップします。)
-- make start (build -> serve します。)
-- make watch (ホットリロードします。)
-- make precommit (type-check, format-check, lint を実行します。husky で自動実行されます。)
