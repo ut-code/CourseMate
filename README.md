@@ -23,7 +23,14 @@ GNU Make が導入されています。以下は、ユーザーが使うこと�
 - `direnv allow` を実行します。
   他は勝手についてきます。
 
-2. The Original Way
+2. The Nix Way (but no direnv)
+
+- Nix をインストールします
+- `nix develop` を実行します。
+  - 仮想依存環境が作成されます。
+- 開発を終わるときは、 `exit` を実行して Nix shell から出るようにしましょう。
+
+3. The Original Way
 
 - install:
 
@@ -41,10 +48,7 @@ GNU Make が導入されています。以下は、ユーザーが使うこと�
 
 ### 環境変数
 
-- `mobile`
-- `web`
-- `server`
-  - `DATABASE_URL` : `postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample` の形式
+ut.code(); Slack に参加し、環境変数をメンバーに聞きましょう。
 
 ### server、webの起動
 
