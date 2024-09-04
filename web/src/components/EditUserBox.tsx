@@ -49,7 +49,7 @@ export function EditUserBox({
       }
 
       const pictureUrl = photo.upload && (await photo.upload());
-      if (!pictureUrl) {
+      if (!def?.pictureUrl && !pictureUrl) {
         throw new Error("画像は入力必須です。");
       }
 
@@ -71,7 +71,20 @@ export function EditUserBox({
       }
     } catch (error) {
       if (error instanceof Error) {
-        setErrorMessage(error.message);
+        let errorMessages;
+        try {
+          const parsedError = JSON.parse(error.message);
+          if (Array.isArray(parsedError)) {
+            errorMessages = parsedError.map((err) => err.message).join(", ");
+          } else {
+            errorMessages = error.message;
+          }
+        } catch (e) {
+          errorMessages = error.message;
+        }
+
+        // エラーメッセージをセット
+        setErrorMessage(errorMessages);
       } else {
         setErrorMessage("入力に誤りがあります。");
       }

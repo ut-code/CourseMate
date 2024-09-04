@@ -36,7 +36,7 @@ export const UserSchema = z.object({
   id: UserIDSchema,
   guid: GUIDSchema,
   name: NameSchema,
-  pictureUrl: PictureUrlSchema,
+  pictureUrl: z.string(),
   grade: z.string(),
   gender: GenderSchema,
   hobby: HobbySchema,
