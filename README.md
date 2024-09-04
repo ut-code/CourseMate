@@ -6,31 +6,31 @@
 
 ## 開発
 
-### 環境変数
+### 環境構築
 
-- `mobile`
-- `web`
-- `server`
-  - `DATABASE_URL` : `postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample` の形式
+1. The Nix Way
 
-## Makefile
+- Nix と nix-direnv をインストールします。
+- `direnv allow` を実行します。
+  他は勝手についてきます。
 
-GNU Make が導入されています。以下は、ユーザーが使うことが想定されているコマンドの一部です。
+2. The Original Way
 
-- make setup (セットアップします。)
-- make start (build -> serve します。)
-- make watch (ホットリロードします。)
-- make precommit (type-check, format-check, lint を実行します。husky で自動実行されます。)
+- install:
 
-## 環境構築
+  - Node.js v22
+  - Node Package Manager / npm
+  - nvm (optional)
+  - GNU Make (optional)
 
-```sh
-make setup
-```
+- run:
+  ```sh
+  make setup
+  ```
 
 終わったら、 `server/.env` と `web/.env` をコピーしてきましょう。
 
-## server、webの起動
+### server、webの起動
 
 ```sh
 make start
@@ -39,3 +39,19 @@ make watch
 # または
 make docker
 ```
+
+### 環境変数
+
+- `mobile`
+- `web`
+- `server`
+  - `DATABASE_URL` : `postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample` の形式
+
+### Makefile
+
+GNU Make が導入されています。以下は、ユーザーが使うことが想定されているコマンドの一部です。
+
+- make setup (セットアップします。)
+- make start (build -> serve します。)
+- make watch (ホットリロードします。)
+- make precommit (type-check, format-check, lint を実行します。husky で自動実行されます。)
