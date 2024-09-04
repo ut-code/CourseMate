@@ -16,7 +16,7 @@
           buildInputs = with pkgs; [
             nodePackages.prisma
             nodePackages.npm
-            nodejs-slim
+            nodejs-slim_22
             gnumake
           ];
           shellHook = with pkgs; ''
