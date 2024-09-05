@@ -23,7 +23,6 @@ export default function CourseRegisterConfirmDialog({
   useEffect(() => {
     (async () => {
       const courses = await getOverlappingCourses(course?.id ?? "");
-      console.log(courses);
       setOverlapCourses(courses);
     })();
   }, [course]);
@@ -42,6 +41,7 @@ export default function CourseRegisterConfirmDialog({
           onClick={async () => {
             const newCourses = await modifyEnrollments(course?.id ?? "");
             handleCoursesUpdate(newCourses);
+            onClose();
             handleSelectDialogClose();
           }}
         >
