@@ -2,13 +2,12 @@ import { Box, Button } from "@mui/material";
 import LogOutButton from "../../components/LogOutButton";
 import { useState } from "react";
 import EditUserDialog from "../../components/EditUserDialog";
-import CoursesDialog from "../../components/course/CoursesDialog";
+import CoursesTable from "../../components/course/CoursesTable";
 import hooks from "../../api/hooks";
 import UserAvatar from "../../components/avatar/avatar";
 
 export default function Profile() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isCourseDialogOpen, setIsCourseDialogOpen] = useState(false);
   const { data, loading, error, reload } = hooks.useMe();
 
   const handleDialogOpen = () => {
@@ -17,14 +16,6 @@ export default function Profile() {
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
-  };
-
-  const handleCourseDialogOpen = () => {
-    setIsCourseDialogOpen(true);
-  };
-
-  const handleCoursesDialogClose = () => {
-    setIsCourseDialogOpen(false);
   };
 
   return (
@@ -43,27 +34,17 @@ export default function Profile() {
               width="300px"
               height="300px"
             />
+            <CoursesTable />
           </Box>
           <LogOutButton />
           <Button color="inherit" onClick={handleDialogOpen}>
             プロフィールを編集
-          </Button>
-          <Button color="inherit" onClick={handleCourseDialogOpen}>
-            授業情報を編集
           </Button>
           <EditUserDialog
             defaultValue={data}
             isOpen={isDialogOpen}
             close={() => {
               handleDialogClose();
-              reload();
-            }}
-          />
-          <CoursesDialog
-            defaultValue={data}
-            isOpen={isCourseDialogOpen}
-            close={() => {
-              handleCoursesDialogClose();
               reload();
             }}
           />
