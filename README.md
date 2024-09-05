@@ -24,28 +24,26 @@ GNU Make が導入されています。以下は、ユーザーが使うこと�
 
 - Nix と nix-direnv をインストールします。
 - `direnv allow` を実行します。
-  他は勝手についてきます。
+- `make setup` を実行します。
 
 2. The Nix Way (but no direnv)
 
 - Nix をインストールします
 - `nix develop` を実行します。
   - 仮想依存環境が作成されます。
-- 開発を終わるときは、 `exit` を実行して Nix shell から出るようにしましょう。
+  - 開発を終わるときは、 `exit` を実行して Nix shell から出るようにしましょう。
+- `make setup` を実行します。
 
 3. The Original Way
 
-- install:
+- 以下をインストールします:
 
   - Node.js v22
   - Node Package Manager / npm
   - nvm (optional)
   - GNU Make (optional)
 
-- run:
-  ```sh
-  make setup
-  ```
+- `make setup` を実行します。
 
 ### 環境変数
 
