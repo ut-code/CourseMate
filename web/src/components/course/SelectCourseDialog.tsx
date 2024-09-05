@@ -7,10 +7,10 @@ import {
   Button,
   Box,
   List,
-  Divider,
   Typography,
   ListItemButton,
   TextField,
+  ListItem,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -112,10 +112,9 @@ export default function SelectCourseDialog({
           ) : (
             <Box sx={{ width: "100%" }}>
               <List>
-                {filteredAvailableCourses.map((course, index) => (
-                  <>
+                {filteredAvailableCourses.map((course) => (
+                  <ListItem key={course.id} disablePadding>
                     <ListItemButton
-                      key={course.id}
                       onClick={() => {
                         setNewCourse(course);
                         setIsConfirmDialogOpen(true);
@@ -123,20 +122,21 @@ export default function SelectCourseDialog({
                     >
                       {course.name}
                     </ListItemButton>
-                    {index < filteredAvailableCourses.length - 1 && <Divider />}
-                  </>
+                  </ListItem>
                 ))}
               </List>
             </Box>
           )}
         </>
-        <CourseRegisterConfirmDialog
-          open={isConfirmDialogOpen}
-          onClose={() => setIsConfirmDialogOpen(false)}
-          course={newCourse}
-          handleSelectDialogClose={onClose}
-          handleCoursesUpdate={handleCoursesUpdate}
-        />
+        {newCourse && (
+          <CourseRegisterConfirmDialog
+            open={isConfirmDialogOpen}
+            onClose={() => setIsConfirmDialogOpen(false)}
+            course={newCourse}
+            handleSelectDialogClose={onClose}
+            handleCoursesUpdate={handleCoursesUpdate}
+          />
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">

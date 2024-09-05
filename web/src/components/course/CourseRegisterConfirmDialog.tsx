@@ -1,4 +1,13 @@
-import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import { Course, CourseDayPeriod } from "../../common/types";
 import { getOverlappingCourses, modifyEnrollments } from "../../api/course";
 import { useEffect, useState } from "react";
@@ -12,7 +21,7 @@ export default function CourseRegisterConfirmDialog({
 }: {
   open: boolean;
   onClose: () => void;
-  course: Course | null;
+  course: Course;
   handleSelectDialogClose: () => void;
   handleCoursesUpdate: (
     courses: (Course & { courseDayPeriods: CourseDayPeriod[] })[],
@@ -22,24 +31,35 @@ export default function CourseRegisterConfirmDialog({
 
   useEffect(() => {
     (async () => {
-      const courses = await getOverlappingCourses(course?.id ?? "");
+      const courses = await getOverlappingCourses(course.id);
       setOverlapCourses(courses);
     })();
   }, [course]);
 
-  // TODO: courseId は null ではないのでいい感じに型をやる
   return (
     <Dialog open={open} onClose={onClose}>
+      <DialogTitle>変更の確認</DialogTitle>
       <DialogContent>
-        追加される授業: {course?.name}
-        削除される授業:{" "}
-        {overlapCourses.map((overlapCourse) => overlapCourse.name).join(", ")}
+        <DialogContentText>
+          次のように変更します。よろしいですか？
+        </DialogContentText>
+        <Box mt={2}>
+          <Alert color="success" icon={false} severity="info">
+            追加: {course.name}
+          </Alert>
+          <Alert color="error" icon={false} severity="info" sx={{ mt: 1 }}>
+            削除:{" "}
+            {overlapCourses
+              .map((overlapCourse) => overlapCourse.name)
+              .join("・") || "なし"}
+          </Alert>
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>キャンセル</Button>
         <Button
           onClick={async () => {
-            const newCourses = await modifyEnrollments(course?.id ?? "");
+            const newCourses = await modifyEnrollments(course.id);
             handleCoursesUpdate(newCourses);
             onClose();
             handleSelectDialogClose();

@@ -85,7 +85,7 @@ const CoursesTable: React.FC = () => {
           <TableRow>
             <TableCell></TableCell>
             {Object.keys(dayCodeToDayMap).map((dayCode) => (
-              <TableCell align="center">
+              <TableCell align="center" key={`header-${dayCode}`}>
                 {dayCodeToDayMap[dayCode as Day]}
               </TableCell>
             ))}
@@ -95,14 +95,19 @@ const CoursesTable: React.FC = () => {
           {transposedRows &&
             transposedRows.map((row, rowIndex) => (
               <TableRow
-                key={`period ${rowIndex + 1}`}
+                key={`period-${rowIndex + 1}`}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
+                <TableCell
+                  component="th"
+                  scope="row"
+                  key={`header-period-${rowIndex + 1}`}
+                >
                   {`${rowIndex + 1}限`}
                 </TableCell>
                 {Object.keys(dayCodeToDayMap).map((dayCode) => (
                   <TableCell
+                    key={`cell-${dayCode}-${rowIndex}`}
                     align="center"
                     onClick={() =>
                       handleSelectCourseDialogOpen(
