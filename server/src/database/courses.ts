@@ -13,7 +13,9 @@ export async function createCourse(id: string, name: string) {
   });
 }
 
-// コースの取得
+/**
+ * 講義IDによって講義を取得
+ */
 export async function getCourse(courseId: string) {
   const course = await prisma.course.findUnique({
     where: {
@@ -44,6 +46,9 @@ export async function getCoursesWithDayPeriodsByUser(userId: UserID) {
   return courses;
 }
 
+/**
+ * 曜限・ユーザによって講義を取得
+ */
 export async function getCourseByDayPeriodAndUser({
   day,
   period,

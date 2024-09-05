@@ -1,4 +1,4 @@
-import { Day, GUID } from "../../common/types";
+import { CourseID, Day, GUID } from "../../common/types";
 import { MessageID, ShareRoomID } from "../../common/types";
 
 const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
@@ -80,6 +80,19 @@ const me = `${origin}/users/me`;
  *  - 500: internal error.
  */
 const meCourses = `${origin}/users/me/courses`;
+
+/**
+ * [v] 実装済み
+ * GET → get courses that overlap with the given course.
+ * - statuses:
+ *  - 200: ok.
+ *    - body: (Course & {courseDayPeriods: CourseDayPeriod[]})[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ */
+const meCoursesOverlaps = (courseId: CourseID) => {
+  return `${origin}/users/me/courses/overlaps/${courseId}`;
+};
 
 /**
  * [v] 実装済み
@@ -165,6 +178,28 @@ const matches = `${origin}/matches`;
  *   - 500: internal error.
  **/
 const requests = `${origin}/requests`;
+
+/**
+ * [v] 実装済み
+ * GET -> get all courses with day periods.
+ * - statuses:
+ *  - 200: ok.
+ *  - body: CourseWithDayPeriods
+ * - 401: unauthorized.
+ * - 500: internal error.
+ */
+const courseWithDayPeriods = `${origin}/courses?includeDayPeriods=true`;
+
+/**
+ * [v] 実装済み
+ * GET -> get all courses without day periods.
+ * - statuses:
+ * - 200: ok.
+ * - body: Course
+ * - 401: unauthorized.
+ * - 500: internal error.
+ */
+const courseWithoutDayPeriods = `${origin}/courses?includeDayPeriods=false`;
 
 /**
  * TODO:
@@ -316,6 +351,7 @@ export default {
   user,
   me,
   meCourses,
+  meCoursesOverlaps,
   userByGUID,
   userExists,
   users,
@@ -328,6 +364,8 @@ export default {
   acceptRequest,
   rejectRequest,
   coursesOnDayPeriod,
+  courseWithDayPeriods,
+  courseWithoutDayPeriods,
   enrollments,
   roomOverview,
   dmTo,

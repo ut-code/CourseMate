@@ -27,6 +27,16 @@ export async function getByDayPeriod({
 }
 
 /**
+ * 指定した講義と重複する講義を取得する
+ */
+export async function getOverlappingCourses(courseId: CourseID) {
+  const res = await fetch(endpoints.meCoursesOverlaps(courseId), {
+    credentials: "include",
+  });
+  return res.json() as Promise<Course[]>;
+}
+
+/**
  *
  * @param courseId 新たに登録する講義のID
  * @returns 更新後のすべての講義情報

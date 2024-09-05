@@ -17,7 +17,11 @@ import {
 import { searchMatchedUser, searchPendingUsers } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
-import { getCourse, getCoursesWithDayPeriodsByUser } from "../database/courses";
+import {
+  getCourse,
+  getCourseByDayPeriodAndUser,
+  getCoursesWithDayPeriodsByUser,
+} from "../database/courses";
 import { deleteEnrollment, updateEnrollments } from "../database/enrollments";
 
 const router = express.Router();
@@ -179,6 +183,42 @@ router.get("/me/courses", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to fetch courses" });
   }
 });
+
+// ある講義と重複している講義を取得
+router.get(
+  "/me/courses/overlaps/:courseId",
+  async (req: Request, res: Response) => {
+    const userId = await safeGetUserId(req);
+    if (!userId.ok) return res.status(401).send("auth error");
+
+    try {
+      const courseWithDayPeriods = await getCourse(req.params.courseId);
+      if (!courseWithDayPeriods) {
+        return res.status(404).json({ error: "Course not found" });
+      }
+      const overlappingCourses = await Promise.all(
+        courseWithDayPeriods.courseDayPeriods.map(
+          async (courseDayPeriod) =>
+            await getCourseByDayPeriodAndUser({
+              day: courseDayPeriod.day,
+              period: courseDayPeriod.period,
+              userId: userId.value,
+            }),
+        ),
+      );
+      const filteredOverlappingCourses = overlappingCourses
+        .filter((course) => course !== null)
+        .filter(
+          (course, index, self) =>
+            self.findIndex((c) => c?.id === course?.id) === index,
+        ); // id の重複を排除
+      res.status(200).json(filteredOverlappingCourses);
+    } catch (error) {
+      console.error("Error fetching overlapping courses:", error);
+      res.status(500).json({ error: "Failed to fetch overlapping courses" });
+    }
+  },
+);
 
 // 自分の講義を編集
 router.patch("/me/courses", async (req: Request, res: Response) => {

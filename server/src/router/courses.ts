@@ -17,12 +17,16 @@ function isDay(value: string): value is Day {
 // コースの取得エンドポイント
 router.get("/:courseId", async (req: Request, res: Response) => {
   const { courseId } = req.params;
+  const { includeDayPeriods } = req.query;
   try {
     const course = await getCourse(courseId);
     if (!course) {
       return res.status(404).json({ error: "Course not found" });
     }
-    res.status(200).json({ id: course.id, name: course.name });
+    if (includeDayPeriods) {
+      return res.status(200).json(course);
+    }
+    return res.status(200).json({ id: course.id, name: course.name });
   } catch (error) {
     console.error("Error fetching course:", error);
     res.status(500).json({ error: "Failed to fetch course" });

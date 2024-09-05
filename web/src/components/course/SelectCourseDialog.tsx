@@ -13,12 +13,10 @@ import {
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import courseApi, {
-  deleteEnrollment,
-  modifyEnrollments,
-} from "../../api/course";
+import courseApi, { deleteEnrollment } from "../../api/course";
 import { Course, CourseDayPeriod, Day } from "../../common/types";
 import { useEffect, useState } from "react";
+import CourseRegisterConfirmDialog from "./CourseRegisterConfirmDialog";
 
 const dayCodeToDayMap: { [dayCode in Day]: string } = {
   mon: "月",
@@ -49,6 +47,8 @@ export default function SelectCourseDialog({
   ) => void;
 }) {
   const [availableCourses, setAvailableCourses] = useState<Course[]>([]);
+  const [newCourse, setNewCourse] = useState<Course | null>(null);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -98,11 +98,9 @@ export default function SelectCourseDialog({
                   <>
                     <ListItemButton
                       key={course.id}
-                      onClick={async () => {
-                        if (!currentEdit) return;
-                        const newCourses = await modifyEnrollments(course.id);
-                        handleCoursesUpdate(newCourses);
-                        onClose();
+                      onClick={() => {
+                        setNewCourse(course);
+                        setIsConfirmDialogOpen(true);
                       }}
                     >
                       {course.name}
@@ -114,6 +112,13 @@ export default function SelectCourseDialog({
             </Box>
           </>
         )}
+        <CourseRegisterConfirmDialog
+          open={isConfirmDialogOpen}
+          onClose={() => setIsConfirmDialogOpen(false)}
+          course={newCourse}
+          handleSelectDialogClose={onClose}
+          handleCoursesUpdate={handleCoursesUpdate}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
