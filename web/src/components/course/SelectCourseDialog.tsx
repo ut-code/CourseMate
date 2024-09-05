@@ -10,6 +10,7 @@ import {
   Divider,
   Typography,
   ListItemButton,
+  TextField,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -46,7 +47,10 @@ export default function SelectCourseDialog({
     })[],
   ) => void;
 }) {
-  const [availableCourses, setAvailableCourses] = useState<Course[]>([]);
+  const [availableCourses, setAvailableCourses] = useState<Course[]>([]); // その曜限で登録可能なすべての講義
+  const [filteredAvailableCourses, setFilteredAvailableCourses] = useState<
+    Course[]
+  >([]); // 登録可能な全ての講義のうち、検索条件に合う講義
   const [newCourse, setNewCourse] = useState<Course | null>(null);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
@@ -59,6 +63,7 @@ export default function SelectCourseDialog({
       });
 
       setAvailableCourses(courses);
+      setFilteredAvailableCourses(courses);
     })();
   }, [currentEdit]);
 
@@ -70,31 +75,44 @@ export default function SelectCourseDialog({
           : "授業を選択"}
       </DialogTitle>
       <DialogContent>
-        {availableCourses.length === 0 ? (
-          <DialogContentText>この曜限の授業はありません。</DialogContentText>
-        ) : (
-          <>
-            <Box display="flex" alignItems="center" sx={{ width: "100%" }}>
-              <Typography variant="body1">
-                現在の授業: {currentEdit?.course?.name ?? "-"}
-              </Typography>
-              <IconButton
-                aria-label="delete"
-                onClick={async () => {
-                  if (!currentEdit?.course?.id) return;
-                  const newCourses = await deleteEnrollment(
-                    currentEdit.course.id,
-                  );
-                  handleCoursesUpdate(newCourses);
-                  onClose();
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Box>
+        <>
+          <Box display="flex" alignItems="center" sx={{ width: "100%" }}>
+            <Typography variant="body1">
+              現在の授業: {currentEdit?.course?.name ?? "-"}
+            </Typography>
+            <IconButton
+              aria-label="delete"
+              onClick={async () => {
+                if (!currentEdit?.course?.id) return;
+                const newCourses = await deleteEnrollment(
+                  currentEdit.course.id,
+                );
+                handleCoursesUpdate(newCourses);
+                onClose();
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+          <TextField
+            onChange={(e) => {
+              const newFilteredCourses = availableCourses.filter((course) =>
+                course.name.includes(e.target.value.trim()),
+              );
+              setFilteredAvailableCourses(newFilteredCourses);
+            }}
+            label="授業名で検索"
+            fullWidth
+            size="small"
+          />
+          {filteredAvailableCourses.length === 0 ? (
+            <DialogContentText>
+              条件に当てはまる授業はありません。
+            </DialogContentText>
+          ) : (
             <Box sx={{ width: "100%" }}>
               <List>
-                {availableCourses.map((course, index) => (
+                {filteredAvailableCourses.map((course, index) => (
                   <>
                     <ListItemButton
                       key={course.id}
@@ -105,13 +123,13 @@ export default function SelectCourseDialog({
                     >
                       {course.name}
                     </ListItemButton>
-                    {index < availableCourses.length - 1 && <Divider />}
+                    {index < filteredAvailableCourses.length - 1 && <Divider />}
                   </>
                 ))}
               </List>
             </Box>
-          </>
-        )}
+          )}
+        </>
         <CourseRegisterConfirmDialog
           open={isConfirmDialogOpen}
           onClose={() => setIsConfirmDialogOpen(false)}
