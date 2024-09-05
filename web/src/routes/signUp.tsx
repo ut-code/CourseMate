@@ -1,24 +1,19 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import userapi from "../api/user";
 import { GUID, User } from "../common/types";
-import { PhotoPreview } from "../components/PhotoPreview";
-import { photo } from "../components/data/photo-preview";
+import { EditUserBox, UserData } from "../components/EditUserBox";
 
 export default function SignUp() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const user = getAuth().currentUser;
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-
   //サインアップの処理
-  const handleSignUp = async () => {
+  const handleSignUp = async (partial: UserData) => {
     const guid = user?.uid as GUID | undefined;
     if (!guid) {
       enqueueSnackbar("ユーザ情報が取得できませんでした", {
@@ -27,14 +22,7 @@ export default function SignUp() {
       return;
     }
     try {
-      const pictureUrl = photo.upload && (await photo.upload());
-      const partialUser: Omit<User, "id"> = {
-        guid,
-        name,
-        email,
-        pictureUrl: pictureUrl ?? "",
-      };
-      await registerUserInfo(partialUser);
+      await registerUserInfo({ guid, ...partial });
       enqueueSnackbar("サインアップに成功しました", {
         variant: "success",
       });
@@ -51,26 +39,11 @@ export default function SignUp() {
   return (
     <Box>
       <Header title="Sign Up" />
-      <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
-        <TextField
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          label="Name"
-        />
-        <TextField
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          label="Email"
-        />
-        <PhotoPreview />
-        <Button
-          variant="outlined"
-          sx={{ textTransform: "none" }}
-          onClick={handleSignUp}
-        >
-          Sign Up
-        </Button>
-      </Box>
+      <EditUserBox
+        save={handleSignUp}
+        saveButtonText="登録"
+        allowClose={false}
+      />
     </Box>
   );
 }

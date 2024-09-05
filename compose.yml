@@ -1,38 +1,31 @@
 # Dockerfile that is intended to be used for development.
 
 services:
-  coursemate_db:
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: mysecretpassword
-    ports:
-      - "5432:5432"
-    volumes:
-      - coursemate_data:/var/lib/postgresql/data
-    healthcheck:
-      test: pg_isready --username postgres --dbname postgres --port 5432 --quiet
-      interval: 5s
-      timeout: 1s
-      retries: 3
-      start_period: 10s
   server:
     build:
       context: ./server
       dockerfile: ./Dockerfile
     ports:
       - "3000:3000"
-    # environment:
-    #   - DATABASE_URL=${DATABASE_URL:-postgres://postgres:mysecretpassword@coursemate_db:5432/}
-
-    depends_on:
-      coursemate_db:
-        condition: service_healthy
+    develop:
+      watch:
+        - action: rebuild
+          path: ./server/
+          target: /coursemate/dev/server
+          ignore:
+            - node_modules/
   web:
     build:
       context: ./web
       dockerfile: ./Dockerfile
     ports:
       - "5173:5173"
-
-volumes:
-  coursemate_data:
+    develop:
+      watch:
+        - action: sync
+          path: ./web/
+          target: /coursemate/dev/web/
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json

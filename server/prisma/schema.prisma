@@ -21,12 +21,23 @@ model User {
   id             Int            @id @default(autoincrement())
   guid           String         @unique
   name           String         @default("名無し")
-  email          String         @default("")
   pictureUrl     String         @default("")
+  grade          String         @default("")
+  gender         String         @default("")
+  hobby          String         @default("")
+  intro_short    String         @default("")
+  intro_long     String         @default("")
   enrollments    Enrollment[]
   sendingUsers   Relationship[] @relation("sending") // 自分がマッチリクエストを送ったユーザー
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
 }
+
+// enum Gender {
+//   MALE
+//   FEMALE
+//   OTHER
+//   SECRET
+// }
 
 model Course {
   id               String            @id

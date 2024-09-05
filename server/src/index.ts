@@ -8,9 +8,9 @@ import usersRoutes from "./router/users";
 import coursesRoutes from "./router/courses";
 import requestsRoutes from "./router/requests";
 import matchesRoutes from "./router/matches";
-import echoRoutes from "./router/echo";
 import chatRoutes from "./router/chat";
 import cookieParser from "cookie-parser";
+import { initializeSocket } from "./lib/socket/socket";
 
 const app = express();
 const port = 3000;
@@ -20,7 +20,7 @@ const allowedOrigins = [
   process.env.MOBILE_ORIGIN,
   process.env.WEB_ORIGIN_BUILD,
 ];
-const corsOptions = {
+export const corsOptions = {
   origins: allowedOrigins.map((s) => s || "").filter((s) => s !== ""),
   methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
   credentials: true,
@@ -42,10 +42,10 @@ app.use("/users", usersRoutes);
 app.use("/courses", coursesRoutes);
 app.use("/requests", requestsRoutes);
 app.use("/matches", matchesRoutes);
-app.use("/echo", echoRoutes);
 app.use("/chat", chatRoutes);
 
 // サーバーの起動
-app.listen(port, () => {
+export const server = app.listen(port, () => {
   console.log("running");
 });
+initializeSocket();

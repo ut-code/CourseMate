@@ -1,119 +1,137 @@
 import { PrismaClient } from "@prisma/client";
-import { UserID, Relationship, RelationshipID } from "../common/types";
+import { UserID, Relationship } from "../common/types";
 import asyncMap from "../lib/async/map";
+import { Err, Ok, Result } from "../common/lib/result";
 
 const prisma = new PrismaClient();
 
 export async function findRelation(
   u1: UserID,
   u2: UserID,
-): Promise<Relationship | null> {
-  // TODO!!!! FIXME!!!!!! FIX THIS findMany!!!!!
-  const rel = await prisma.relationship.findMany({
-    where: {
-      OR: [
-        { sendingUserId: u1, receivingUserId: u2 },
-        { sendingUserId: u2, receivingUserId: u1 },
-      ],
-    },
-  });
-  return rel[0]
-    ? {
-        id: rel[0].id as RelationshipID,
-        sendingUserId: rel[0].sendingUserId as UserID,
-        receivingUserId: rel[0].receivingUserId as UserID,
-        status: rel[0].status,
-      }
-    : null;
+): Promise<Result<Relationship>> {
+  try {
+    // TODO!!!! FIXME!!!!!! FIX THIS findMany!!!!!
+    const rel = await prisma.relationship.findMany({
+      where: {
+        OR: [
+          { sendingUserId: u1, receivingUserId: u2 },
+          { sendingUserId: u2, receivingUserId: u1 },
+        ],
+      },
+    });
+    return rel[0] ? Ok(rel[0]) : Err(404);
+  } catch (e) {
+    return Err(e);
+  }
 }
 
-export async function findRelations(user: UserID): Promise<Relationship[]> {
-  const rels: Relationship[] = await prisma.relationship.findMany({
-    where: {
-      OR: [{ sendingUserId: user }, { receivingUserId: user }],
-    },
-  });
-  return rels;
+export async function findRelations(
+  user: UserID,
+): Promise<Result<Relationship[]>> {
+  try {
+    const rels: Relationship[] = await prisma.relationship.findMany({
+      where: {
+        OR: [{ sendingUserId: user }, { receivingUserId: user }],
+      },
+    });
+    return Ok(rels);
+  } catch (e) {
+    return Err(e);
+  }
 }
 
 // returns false if u1 or u2 is not present.
 export async function areMatched(u1: UserID, u2: UserID): Promise<boolean> {
   const match = await findRelation(u1, u2);
+  if (!match.ok) return false;
 
-  return match !== null && match.status === "MATCHED";
+  return match.value.status === "MATCHED";
 }
 
 export async function areAllMatched(
   user: UserID,
   friends: UserID[],
-): Promise<boolean> {
-  return (
-    await asyncMap(friends, (friend) => {
-      return areMatched(user, friend);
-    })
-  ).reduce((a, b) => a && b);
+): Promise<Result<boolean>> {
+  try {
+    return Ok(
+      (
+        await asyncMap(friends, (friend) => {
+          return areMatched(user, friend);
+        })
+      ).reduce((a, b) => a && b),
+    );
+  } catch (e) {
+    return Err(e);
+  }
 }
 
 // 特定のユーザIDを含むマッチの取得
-export async function getMatchesByUserId(userId: UserID) {
-  return await prisma.relationship.findMany({
-    where: {
-      AND: [
-        { status: "MATCHED" },
-        { OR: [{ sendingUserId: userId }, { receivingUserId: userId }] },
-      ],
-    },
-  });
+export async function getMatchesByUserId(
+  userId: UserID,
+): Promise<Result<Relationship[]>> {
+  try {
+    const m = await prisma.relationship.findMany({
+      where: {
+        AND: [
+          { status: "MATCHED" },
+          { OR: [{ sendingUserId: userId }, { receivingUserId: userId }] },
+        ],
+      },
+    });
+    return Ok(m);
+  } catch (e) {
+    return Err(e);
+  }
 }
 
 // マッチの削除
-export async function deleteMatch(senderId: UserID, receiverId: UserID) {
-  console.log("delete starting...");
-  // 最初の条件で削除を試みる
-  const recordToDelete = await prisma.relationship.findUnique({
-    where: {
-      sendingUserId_receivingUserId: {
-        sendingUserId: senderId,
-        receivingUserId: receiverId,
-      },
-    },
-  });
-
-  if (recordToDelete) {
-    await prisma.relationship.delete({
+export async function deleteMatch(
+  senderId: UserID,
+  receiverId: UserID,
+): Promise<Result<void>> {
+  try {
+    console.log("delete starting...");
+    // 最初の条件で削除を試みる
+    const recordToDelete = await prisma.relationship.findUnique({
       where: {
-        id: recordToDelete.id,
+        sendingUserId_receivingUserId: {
+          sendingUserId: senderId,
+          receivingUserId: receiverId,
+        },
       },
     });
-    console.log(
-      `Deleted record with senderId=${senderId} and receiverId=${receiverId}`,
-    );
-    return;
-  }
 
-  // 次の条件で削除を試みる
-  const altRecordToDelete = await prisma.relationship.findUnique({
-    where: {
-      sendingUserId_receivingUserId: {
-        sendingUserId: receiverId,
-        receivingUserId: senderId,
-      },
-    },
-  });
+    if (recordToDelete) {
+      await prisma.relationship.delete({
+        where: {
+          id: recordToDelete.id,
+        },
+      });
+      return Ok(undefined);
+    }
 
-  if (altRecordToDelete) {
-    await prisma.relationship.delete({
+    // 次の条件で削除を試みる
+    const altRecordToDelete = await prisma.relationship.findUnique({
       where: {
-        id: altRecordToDelete.id,
+        sendingUserId_receivingUserId: {
+          sendingUserId: receiverId,
+          receivingUserId: senderId,
+        },
       },
     });
-    console.log(
-      `Deleted record with senderId=${receiverId} and receiverId=${senderId}`,
-    );
-    return;
-  }
 
-  console.log(
-    `No matching records found for senderId=${senderId} and receiverId=${receiverId}`,
-  );
+    if (altRecordToDelete) {
+      await prisma.relationship.delete({
+        where: {
+          id: altRecordToDelete.id,
+        },
+      });
+      return Ok(undefined);
+    }
+
+    // `No matching records found for senderId=${senderId} and receiverId=${receiverId}`,
+    return Err(404);
+  } catch (e) {
+    return Err(e);
+  }
 }

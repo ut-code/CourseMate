@@ -38,6 +38,8 @@ const user = (userId: UserID) => {
  **/
 const users = `${origin}/users`;
 
+const usersPublic = `${origin}/users/public`;
+
 /**
  * [v] 実装済み
  * GET -> get info of me.
@@ -114,7 +116,18 @@ const matchedUsers = `${origin}/users/matched`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const pendingUsers = `${origin}/users/pending`;
+const pendingRequestsToMe = `${origin}/users/pending/to-me`;
+
+/**
+ * [v] 実装済み
+ * GET -> list all users that you sent request.
+ * - statuses:
+ *   - 200: ok.
+ *     - body: User[]
+ *   - 401: unauthorized.
+ *   - 500: internal error.
+ **/
+const pendingRequestsFromMe = `${origin}/users/pending/from-me`;
 
 /**
  * [v] 実装済み
@@ -177,7 +190,6 @@ const matches = `${origin}/matches`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const requests = `${origin}/requests`;
 
 /**
  * [v] 実装済み
@@ -337,16 +349,6 @@ const roomInvite = (roomId: ShareRoomID) =>
 const message = (messageId: MessageID) =>
   `${origin}/chat/messages/id/` + messageId;
 
-/**
- * GET -> echo back the same cookie as Set-Cookie header
- * - param: Map<string, string>
- * - status:
- *   - 204: No content. successful.
- *   - 400: Bad formatting.
- *   - 500: internal error.
- */
-const echoSetCookie = `${origin}/echo/set-cookie`;
-
 export default {
   user,
   me,
@@ -355,11 +357,12 @@ export default {
   userByGUID,
   userExists,
   users,
+  usersPublic,
   matchedUsers,
-  pendingUsers,
+  pendingRequestsToMe,
+  pendingRequestsFromMe,
   match,
   matches,
-  requests,
   sendRequest,
   acceptRequest,
   rejectRequest,
@@ -374,6 +377,4 @@ export default {
   sharedRooms,
   roomInvite,
   message,
-
-  echoSetCookie,
 };
