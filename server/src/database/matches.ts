@@ -5,7 +5,7 @@ import { Err, Ok, Result } from "../common/lib/result";
 
 const prisma = new PrismaClient();
 
-export async function findRelation(
+export async function getRelation(
   u1: UserID,
   u2: UserID,
 ): Promise<Result<Relationship>> {
@@ -25,7 +25,7 @@ export async function findRelation(
   }
 }
 
-export async function findRelations(
+export async function getRelations(
   user: UserID,
 ): Promise<Result<Relationship[]>> {
   try {
@@ -42,7 +42,7 @@ export async function findRelations(
 
 // returns false if u1 or u2 is not present.
 export async function areMatched(u1: UserID, u2: UserID): Promise<boolean> {
-  const match = await findRelation(u1, u2);
+  const match = await getRelation(u1, u2);
   if (!match.ok) return false;
 
   return match.value.status === "MATCHED";

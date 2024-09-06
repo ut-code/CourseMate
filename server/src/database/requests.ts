@@ -93,7 +93,7 @@ export async function rejectRequest(
 }
 
 //ユーザーへのリクエストを探す 俺をリクエストしているのは誰だ
-export async function findPendingRequestsToUser(
+export async function getPendingRequestsToUser(
   userId: UserID,
 ): Promise<Result<User[]>> {
   try {
@@ -114,7 +114,7 @@ export async function findPendingRequestsToUser(
 }
 
 //ユーザーがリクエストしている人を探す 俺がリクエストしているのは誰だ
-export async function findPendingRequestsFromUser(
+export async function getPendingRequestsFromUser(
   userId: UserID,
 ): Promise<Result<User[]>> {
   try {
@@ -135,9 +135,7 @@ export async function findPendingRequestsFromUser(
 }
 
 //マッチした人の取得
-export async function searchMatchedUser(
-  userId: UserID,
-): Promise<Result<User[]>> {
+export async function getMatchedUser(userId: UserID): Promise<Result<User[]>> {
   try {
     const found = await prisma.user.findMany({
       where: {

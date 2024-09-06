@@ -9,9 +9,9 @@ import {
   getUserByID,
 } from "../database/users";
 import {
-  findPendingRequestsFromUser,
-  findPendingRequestsToUser,
-  searchMatchedUser,
+  getPendingRequestsFromUser,
+  getPendingRequestsToUser,
+  getMatchedUser,
 } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
@@ -22,6 +22,7 @@ import {
 } from "../database/courses";
 import { deleteEnrollment, updateEnrollments } from "../database/enrollments";
 import { getMatchesByUserId } from "../database/matches";
+import { parseInitUser, parseUpdateUser } from "../common/zod/methods";
 
 const router = express.Router();
 
@@ -100,7 +101,7 @@ router.get("/matched", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
-  const matchedUsers = await searchMatchedUser(userId.value);
+  const matchedUsers = await getMatchedUser(userId.value);
   if (!matchedUsers.ok) return res.status(500).send();
 
   res.status(200).json(matchedUsers.value);
@@ -111,7 +112,7 @@ router.get("/pending/to-me", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
-  const sendingUsers = await findPendingRequestsToUser(userId.value);
+  const sendingUsers = await getPendingRequestsToUser(userId.value);
   if (!sendingUsers.ok) {
     console.log(sendingUsers.error);
     return res.status(500).send();
@@ -125,7 +126,7 @@ router.get("/pending/from-me", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
-  const receivers = await findPendingRequestsFromUser(userId.value);
+  const receivers = await getPendingRequestsFromUser(userId.value);
   if (!receivers.ok) {
     console.log(receivers.error);
     return res.status(500).send();
@@ -160,7 +161,12 @@ router.get("/id/:id", async (req: Request, res: Response) => {
 
 // ユーザーの作成エンドポイント
 router.post("/", async (req: Request, res: Response) => {
-  const partialUser: Omit<User, "id"> = req.body; // is any
+  const partialUser: Omit<User, "id"> = req.body;
+  try {
+    parseInitUser(partialUser);
+  } catch (e) {
+    return res.status(400).send("invalid format");
+  }
 
   const user = await createUser(partialUser);
   if (!user.ok) return res.status(500).send();
@@ -172,8 +178,12 @@ router.put("/me", async (req: Request, res: Response) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
 
-  // TODO: Typia
   const user: UpdateUser = req.body;
+  try {
+    parseUpdateUser(user);
+  } catch (e) {
+    return res.status(400).send("invalid format");
+  }
   const updated = await updateUser(id.value, user);
   if (!updated.ok) return res.status(500).send();
   res.status(200).json(updated.value);
