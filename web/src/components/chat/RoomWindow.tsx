@@ -53,7 +53,7 @@ export function RoomWindow({ room }: Prop) {
   };
 
   const handleSaveEdit = async () => {
-    if (!editingMessageId) return;
+    if (!editingMessageId || editedContent === "") return;
     await chat.updateMessage(editingMessageId, { content: editedContent });
     setEditingMessageId(null);
     setEditedContent("");
