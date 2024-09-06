@@ -80,7 +80,7 @@ build-server: copy-common-to-server
 serve-all:
 	(trap 'kill 0' EXIT; make serve-web & make serve-server & wait)
 serve-web:
-	cd web; npm run preview # todo: make serve function
+	cd web/static-server; go run .
 serve-server:
 	cd server; npm run serve
 

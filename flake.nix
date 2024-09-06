@@ -17,6 +17,7 @@
             nodePackages.prisma
             nodePackages.npm
             nodejs-slim_22
+            go
             gnumake
           ];
           shellHook = with pkgs; ''
