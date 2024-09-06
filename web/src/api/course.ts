@@ -1,4 +1,5 @@
 import { Day, Course, CourseDayPeriod, CourseID } from "../common/types";
+import { credFetch } from "../firebase/auth/lib";
 import endpoints from "./internal/endpoints";
 
 // TODO: migrate to safe functions
@@ -6,9 +7,7 @@ import endpoints from "./internal/endpoints";
 export async function getMyCourses(): Promise<
   (Course & { courseDayPeriods: CourseDayPeriod[] })[]
 > {
-  const res = await fetch(endpoints.meCourses, {
-    credentials: "include",
-  });
+  const res = await credFetch("GET", endpoints.meCourses);
   return res.json();
 }
 
@@ -20,9 +19,7 @@ export async function getByDayPeriod({
   day: Day;
   period: number;
 }): Promise<Course[]> {
-  const res = await fetch(endpoints.coursesOnDayPeriod(day, period), {
-    credentials: "include",
-  });
+  const res = await credFetch("GET", endpoints.coursesOnDayPeriod(day, period));
   return res.json();
 }
 
@@ -30,9 +27,7 @@ export async function getByDayPeriod({
  * 指定した講義と重複する講義を取得する
  */
 export async function getOverlappingCourses(courseId: CourseID) {
-  const res = await fetch(endpoints.meCoursesOverlaps(courseId), {
-    credentials: "include",
-  });
+  const res = await credFetch("GET", endpoints.meCoursesOverlaps(courseId));
   return res.json() as Promise<Course[]>;
 }
 
@@ -42,15 +37,8 @@ export async function getOverlappingCourses(courseId: CourseID) {
  * @returns 更新後のすべての講義情報
  */
 export async function modifyEnrollments(courseId: CourseID) {
-  const res = await fetch(endpoints.meCourses, {
-    method: "PATCH",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      courseId,
-    }),
+  const res = await credFetch("PATCH", endpoints.meCourses, {
+    courseId,
   });
   return res.json() as Promise<
     (Course & { courseDayPeriods: CourseDayPeriod[] })[]
@@ -63,16 +51,7 @@ export async function modifyEnrollments(courseId: CourseID) {
  * @returns 更新後のすべての講義情報
  */
 export async function deleteEnrollment(courseId: CourseID) {
-  const res = await fetch(endpoints.meCourses, {
-    method: "DELETE",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      courseId,
-    }),
-  });
+  const res = await credFetch("DELETE", endpoints.meCourses, { courseId });
   return res.json() as Promise<
     (Course & { courseDayPeriods: CourseDayPeriod[] })[]
   >;
