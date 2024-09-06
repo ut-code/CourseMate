@@ -23,6 +23,12 @@ import {
   InitRoomSchema,
   InitSharedRoomSchema,
   UpdateRoomSchema,
+  NameSchema,
+  PictureUrlSchema,
+  ContentSchema,
+  HobbySchema,
+  IntroShortSchema,
+  IntroLongSchema,
 } from "./schemas";
 
 export function parseUserID(data: unknown) {
@@ -35,6 +41,14 @@ export function parseGUID(data: unknown) {
 
 export function parseIDToken(data: unknown) {
   return IDTokenSchema.parse(data);
+}
+
+export function parseName(data: unknown) {
+  return NameSchema.parse(data);
+}
+
+export function parsePictureUrl(data: unknown) {
+  return PictureUrlSchema.parse(data);
 }
 
 export function parseGender(data: unknown) {
@@ -119,4 +133,20 @@ export function parseInitSharedRoom(data: unknown) {
 
 export function parseUpdateRoom(data: unknown) {
   return UpdateRoomSchema.parse(data);
+}
+
+export function parseContent(data: unknown) {
+  return ContentSchema.parse(data);
+}
+
+export function parseHobby(data: unknown) {
+  return HobbySchema.parse(data);
+}
+
+export function parseIntroShort(data: unknown) {
+  return IntroShortSchema.parse(data);
+}
+
+export function parseIntroLong(data: unknown) {
+  return IntroLongSchema.parse(data);
 }

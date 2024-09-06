@@ -13,6 +13,14 @@ import * as db from "../database/chat";
 import { areAllMatched, areMatched, findRelation } from "../database/matches";
 import type { UserID, InitRoom } from "../common/types";
 import { getUserByID } from "../database/users";
+import {
+  parseContent,
+  parseInitRoom,
+  parseName,
+  parseSendMessage,
+  parseUserID,
+} from "../common/zod/methods";
+import { Name } from "../common/zod/types";
 import * as ws from "../lib/socket/socket";
 
 const router = express.Router();
@@ -45,7 +53,11 @@ router.post("/dm/to/:userid", async (req, res) => {
   // they are now MATCHED
 
   const smsg: SendMessage = req.body; // todo: typia
-  if (!smsg.content) throw new Error("smsg.content not found"); // zod this
+  try {
+    parseSendMessage(smsg);
+  } catch (e) {
+    return res.status(400).send("invalid format");
+  }
   const msg: Omit<Message, "id"> = {
     creator: user.value,
     createdAt: new Date(),
@@ -91,7 +103,12 @@ router.post(`/shared`, async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
 
-  const init: InitRoom = req.body; // zod
+  const init: InitRoom = req.body;
+  try {
+    parseInitRoom(init);
+  } catch (e) {
+    return res.status(400).send("invalid format");
+  }
 
   const allMatched = await areAllMatched(user.value, init.members);
   if (!allMatched.ok) return res.status(500).send("db error");
@@ -137,7 +154,12 @@ router.patch("/shared/:room", async (req, res) => {
   if (!(await db.isUserInRoom(roomId.value, user.value)))
     return res.status(403).send();
 
-  const name: string = req.body.name; // typia
+  const name: Name = req.body.name;
+  try {
+    parseName(name);
+  } catch (e) {
+    return res.status(400).send("invalid format");
+  }
   const room = await db.updateRoomName(roomId.value as ShareRoomID, name);
   if (!room.ok) return res.status(500).send();
 
@@ -151,7 +173,12 @@ router.post("/shared/id/:room/invite", async (req, res) => {
   const roomId = safeParseInt(req.params.room);
   if (!roomId.ok) return res.status(400).send("invalid :room");
 
-  const invited: UserID[] = req.body; // typia
+  const invited: UserID[] = req.body;
+  try {
+    invited.map(parseUserID);
+  } catch (e) {
+    return res.status(400).send("invalid format");
+  }
 
   if (!(await areAllMatched(user.value, invited)))
     return res.status(403).send("some of the members are not friends with you");
@@ -176,7 +203,12 @@ router.patch("/messages/id/:id", async (req, res) => {
   if (old.value.creator !== user.value)
     return res.status(403).send("cannot edit others' message");
 
-  const content: string = req.body.content; // typia
+  const content: string = req.body.content;
+  try {
+    parseContent(content);
+  } catch (e) {
+    return res.status(400).send("invalid format");
+  }
 
   const msg = await db.updateMessage(id.value as MessageID, content);
   if (!msg.ok) return res.status(500).send();
