@@ -10,7 +10,7 @@ import type {
   DMRoom,
 } from "../common/types";
 import * as db from "../database/chat";
-import { areAllMatched, areMatched, findRelation } from "../database/matches";
+import { areAllMatched, areMatched, getRelation } from "../database/matches";
 import type { UserID, InitRoom } from "../common/types";
 import { getUserByID } from "../database/users";
 import {
@@ -28,7 +28,7 @@ const router = express.Router();
 router.get("/overview", async (req, res) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
-  const overview = await db.overview(id.value);
+  const overview = await db.getOverview(id.value);
   if (!overview.ok) {
     console.error(overview.error);
     return res.status(500).send();
@@ -46,7 +46,7 @@ router.post("/dm/to/:userid", async (req, res) => {
   const friend = safeParseInt(req.params.userid);
   if (!friend.ok) return res.status(400).send("bad param encoding: `userid`");
 
-  const rel = await findRelation(user.value, friend.value as UserID);
+  const rel = await getRelation(user.value, friend.value as UserID);
   if (!rel.ok || rel.value.status !== "MATCHED")
     return res.status(403).send("cannot send DM to non-friend");
 
@@ -84,7 +84,7 @@ router.get("/dm/with/:userid", async (req, res) => {
   if (!areMatched(user.value, friend.value as UserID))
     return res.status(403).send("cannot DM with a non-friend");
 
-  const room = await db.findDMbetween(user.value, friend.value);
+  const room = await db.getDMbetween(user.value, friend.value);
   if (!room.ok) return res.status(500).send();
   const friendData = await getUserByID(friend.value as UserID);
   if (!friendData.ok) return res.status(404).send("friend not found"); // this should not happen
@@ -136,7 +136,7 @@ router.get("/shared/:roomId", async (req, res) => {
   if (!userInRoom.value)
     return res.status(403).send("you don't belong to that room!");
 
-  const room = await db.findSharedRoom(roomId.value as ShareRoomID);
+  const room = await db.getSharedRoom(roomId.value as ShareRoomID);
   if (!room.ok) return res.status(500).send();
 
   res.status(200).send(room.value);
@@ -198,7 +198,7 @@ router.patch("/messages/id/:id", async (req, res) => {
   const id = safeParseInt(req.params.id);
   if (!id.ok) return res.status(400).send("invalid :id");
 
-  const old = await db.findMessage(id.value as MessageID);
+  const old = await db.getMessage(id.value as MessageID);
   if (!old.ok) return res.status(404).send("couldn't find message");
   if (old.value.creator !== user.value)
     return res.status(403).send("cannot edit others' message");

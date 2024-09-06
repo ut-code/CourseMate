@@ -9,9 +9,9 @@ import {
   getUserByID,
 } from "../database/users";
 import {
-  findPendingRequestsFromUser,
-  findPendingRequestsToUser,
-  searchMatchedUser,
+  getPendingRequestsFromUser,
+  getPendingRequestsToUser,
+  getMatchedUser,
 } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
@@ -95,7 +95,7 @@ router.get("/matched", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
-  const matchedUsers = await searchMatchedUser(userId.value);
+  const matchedUsers = await getMatchedUser(userId.value);
   if (!matchedUsers.ok) return res.status(500).send();
 
   res.status(200).json(matchedUsers.value);
@@ -106,7 +106,7 @@ router.get("/pending/to-me", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
-  const sendingUsers = await findPendingRequestsToUser(userId.value);
+  const sendingUsers = await getPendingRequestsToUser(userId.value);
   if (!sendingUsers.ok) {
     console.log(sendingUsers.error);
     return res.status(500).send();
@@ -120,7 +120,7 @@ router.get("/pending/from-me", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
-  const receivers = await findPendingRequestsFromUser(userId.value);
+  const receivers = await getPendingRequestsFromUser(userId.value);
   if (!receivers.ok) {
     console.log(receivers.error);
     return res.status(500).send();
