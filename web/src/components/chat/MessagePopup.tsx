@@ -1,20 +1,12 @@
-import { deleteMessage } from "../../api/chat/chat";
-import { Message } from "../../common/types";
 import { Box, Button } from "@mui/material";
 
 export default function MessagePopup({
-  message,
-  reload,
-  edit,
+  handleEdit,
+  handleDelete,
 }: {
-  message: Message;
-  reload: () => void;
-  edit: () => void;
+  handleEdit: () => void;
+  handleDelete: () => void;
 }) {
-  const handleDelete = async () => {
-    await deleteMessage(message.id);
-    reload();
-  };
   return (
     <Box
       sx={{
@@ -27,7 +19,7 @@ export default function MessagePopup({
     >
       <Button
         onClick={async () => {
-          edit();
+          handleEdit();
         }}
       >
         update

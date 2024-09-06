@@ -170,16 +170,18 @@ router.patch("/messages/id/:id", async (req, res) => {
   if (!user.ok) return res.status(401).send("auth error");
   const id = safeParseInt(req.params.id);
   if (!id.ok) return res.status(400).send("invalid :id");
+  const friend = req.body.friend;
 
   const old = await db.findMessage(id.value as MessageID);
   if (!old.ok) return res.status(404).send("couldn't find message");
   if (old.value.creator !== user.value)
     return res.status(403).send("cannot edit others' message");
 
-  const content: string = req.body.content; // typia
+  const content: string = req.body.newMessage.content; // typia
 
   const msg = await db.updateMessage(id.value as MessageID, content);
   if (!msg.ok) return res.status(500).send();
+  ws.updateMessage(msg.value, friend);
 
   res.status(200).send(msg.value);
 });
@@ -189,8 +191,10 @@ router.delete("/messages/id/:id", async (req, res) => {
   if (!user.ok) return res.status(401).send("auth error");
   const id = safeParseInt(req.params.id);
   if (!id.ok) return res.status(400).send("bad `id` format");
+  const friend = req.body.friend;
 
   await db.deleteMessage(id.value as MessageID, user.value);
+  ws.deleteMessage(id.value, friend);
   return res.status(204).send();
 });
 

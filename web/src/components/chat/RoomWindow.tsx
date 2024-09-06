@@ -39,12 +39,22 @@ export function RoomWindow(props: Prop) {
     const newDM = await chat.getDM(friendId);
     setDM(newDM.messages);
   }
+  function updateMessages(updatedMessage: Message) {
+    setDM((prevDM) => {
+      return prevDM.map((m) => {
+        if (m.id === updatedMessage.id) {
+          return updatedMessage;
+        }
+        return m;
+      });
+    });
+  }
 
   useEffect(() => {
     async function registerSocket() {
       const idToken = await getIdToken();
       socket.emit("register", idToken);
-      socket.on("newMessage", async (msg) => {
+      socket.on("newMessage", async (msg: Message) => {
         if (msg.creator === room.friendId) {
           appendMessage(msg);
         } else {
@@ -57,6 +67,16 @@ export function RoomWindow(props: Prop) {
             },
           );
         }
+      });
+      socket.on("updateMessage", async (msg: Message) => {
+        if (msg.creator === room.friendId) {
+          updateMessages(msg);
+        }
+      });
+      socket.on("deleteMessage", async (msgId: number) => {
+        setDM((prevDM) => {
+          return prevDM.filter((m) => m.id !== msgId);
+        });
       });
     }
     if (!loading && currentUserId) {
@@ -93,17 +113,26 @@ export function RoomWindow(props: Prop) {
 
   const handleSaveEdit = async () => {
     if (!editingMessageId || editedContent === "") return;
-    await chat.updateMessage(editingMessageId, { content: editedContent });
+    const editedMessage = await chat.updateMessage(
+      editingMessageId,
+      { content: editedContent },
+      room.friendId,
+    );
     setEditingMessageId(null);
     setEditedContent("");
-    if (room) {
-      refreshMessages(room.friendId);
-    }
+    updateMessages(editedMessage);
   };
 
   const handleCancelEdit = () => {
     setEditingMessageId(null);
     setEditedContent("");
+  };
+
+  const handleDelete = async (messageId: number, friendId: UserID) => {
+    await chat.deleteMessage(messageId, friendId);
+    setDM((prevDM) => {
+      return prevDM.filter((m) => m.id !== messageId);
+    });
   };
 
   return (
@@ -179,9 +208,8 @@ export function RoomWindow(props: Prop) {
                     </Typography>
                     {m.creator === id.currentUserId && (
                       <MessagePopupDots
-                        message={m}
-                        reload={() => refreshMessages(room.friendId)}
-                        edit={() => handleEdit(m.id, m.content)}
+                        handleEdit={() => handleEdit(m.id, m.content)}
+                        handleDelete={() => handleDelete(m.id, room.friendId)}
                       />
                     )}
                   </Paper>

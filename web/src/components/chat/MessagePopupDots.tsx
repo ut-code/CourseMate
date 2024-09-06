@@ -2,16 +2,14 @@ import React, { useState } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Popper } from "@mui/base/Popper";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-import { Message } from "../../common/types";
 import MessagePopup from "./MessagePopup";
 
 type Props = {
-  message: Message;
-  reload: () => void;
-  edit: () => void;
+  handleEdit: () => void;
+  handleDelete: () => void;
 };
 
-export default function MessagePopupDots({ message, reload, edit }: Props) {
+export default function MessagePopupDots({ handleEdit, handleDelete }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -36,7 +34,7 @@ export default function MessagePopupDots({ message, reload, edit }: Props) {
             position: "absolute",
           }}
         >
-          <MessagePopup message={message} reload={reload} edit={edit} />
+          <MessagePopup handleEdit={handleEdit} handleDelete={handleDelete} />
         </Popper>
       </div>
     </ClickAwayListener>

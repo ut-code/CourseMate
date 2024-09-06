@@ -21,8 +21,13 @@ import type { User } from "../common/types";
 //// DM グループチャット 共通////
 
 //指定したメッセージを削除する
-export async function deleteMessage(messageId: MessageID): Promise<void> {
-  const res = await credFetch("DELETE", endpoints.message(messageId));
+export async function deleteMessage(
+  messageId: MessageID,
+  friend: UserID,
+): Promise<void> {
+  const res = await credFetch("DELETE", endpoints.message(messageId), {
+    friend,
+  });
   if (res.status !== 204)
     throw new Error(
       `on deleteMessage(), expected status code of 204, but got ${res.status}`,
@@ -31,13 +36,18 @@ export async function deleteMessage(messageId: MessageID): Promise<void> {
 
 export async function updateMessage(
   messageId: MessageID,
-  to: SendMessage,
-): Promise<void> {
-  const res = await credFetch("PATCH", endpoints.message(messageId), to);
+  newMessage: SendMessage,
+  friend: UserID,
+): Promise<Message> {
+  const res = await credFetch("PATCH", endpoints.message(messageId), {
+    newMessage,
+    friend,
+  });
   if (res.status !== 200)
     throw new Error(
       `on updateMessage(), expected status code of 200, but got ${res.status}`,
     );
+  return res.json();
 }
 // 自身の参加しているすべての Room (DM グループチャットともに) の概要 (Overview) の取得 (メッセージの履歴を除く)
 export async function overview(): Promise<RoomOverview[]> {
