@@ -1,48 +1,87 @@
 import { Box, Paper, Typography, TextField, Button } from "@mui/material";
-import { DMOverview, DMRoom, SendMessage, UserID } from "../../common/types";
+import { DMOverview, Message, SendMessage, UserID } from "../../common/types";
 import { MessageInput } from "./MessageInput";
 import { useCurrentUserId } from "../../hooks/useCurrentUser";
 import { useState, useEffect, useRef } from "react";
 import * as chat from "../../api/chat/chat";
 import { RoomHeader } from "./RoomHeader";
 import MessagePopupDots from "./MessagePopupDots";
+import { socket } from "../data/socket";
+import { getIdToken } from "../../firebase/auth/lib";
+import { useSnackbar } from "notistack";
+import user from "../../api/user";
 
 type Prop = {
   room: DMOverview;
 };
 
-export function RoomWindow({ room }: Prop) {
+export function RoomWindow(props: Prop) {
+  const { room } = props;
+  const { currentUserId, loading } = useCurrentUserId();
+  const [dm, setDM] = useState<Message[]>([]);
+  const { enqueueSnackbar } = useSnackbar();
   const id = useCurrentUserId();
-  const [dm, setDM] = useState<DMRoom | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState<string>("");
 
-  const sendDMMessage = async (to: UserID, msg: SendMessage): Promise<void> => {
-    await chat.sendDM(to, msg);
-    if (room) {
-      refreshMessages(room.friendId);
-    }
-  };
+  async function sendDMMessage(to: UserID, msg: SendMessage): Promise<void> {
+    const message = await chat.sendDM(to, msg);
+    appendMessage(message);
+  }
 
-  const refreshMessages = async (friendId: UserID) => {
+  //メッセージの追加
+  function appendMessage(newMessage: Message) {
+    setDM((prevDM) => {
+      return [...prevDM, newMessage];
+    });
+  }
+  async function refreshMessages(friendId: UserID) {
     const newDM = await chat.getDM(friendId);
-    setDM(newDM);
-  };
+    setDM(newDM.messages);
+  }
 
   useEffect(() => {
-    if (room) {
+    async function registerSocket() {
+      const idToken = await getIdToken();
+      socket.emit("register", idToken);
+      socket.on("newMessage", async (msg) => {
+        if (msg.creator === room.friendId) {
+          appendMessage(msg);
+        } else {
+          const creator = await user.get(msg.creator);
+          if (creator == null) return;
+          enqueueSnackbar(
+            `${creator.name}さんからのメッセージ : ${msg.content}`,
+            {
+              variant: "info",
+            },
+          );
+        }
+      });
+    }
+    if (!loading && currentUserId) {
+      registerSocket();
+    }
+    // Clean up
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [loading, currentUserId, room.friendId, enqueueSnackbar]);
+
+  useEffect(() => {
+    if (room?.friendId) {
       refreshMessages(room.friendId);
     }
-  }, [room]);
+  }, [room.friendId]);
 
+  //画面スクロール
   const scrollDiv = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (scrollDiv.current) {
       const element = scrollDiv.current;
       element.scrollTo({
         top: element.scrollHeight,
-        behavior: "smooth",
+        behavior: "instant",
       });
     }
   }, [dm]);
@@ -83,12 +122,13 @@ export function RoomWindow({ room }: Prop) {
             sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}
             ref={scrollDiv}
           >
-            {dm.messages.map((m) => (
+            {dm.map((m) => (
               <Box
                 key={m.id}
                 sx={{
                   display: "flex",
-                  justifyContent: m.creator === id ? "flex-end" : "flex-start",
+                  justifyContent:
+                    m.creator === id.currentUserId ? "flex-end" : "flex-start",
                   marginBottom: 1,
                 }}
               >
@@ -126,16 +166,18 @@ export function RoomWindow({ room }: Prop) {
                       maxWidth: "60%",
                       padding: 1,
                       borderRadius: 2,
-                      backgroundColor: m.creator === id ? "#DCF8C6" : "#FFF",
+                      backgroundColor:
+                        m.creator === id.currentUserId ? "#DCF8C6" : "#FFF",
                       boxShadow: 1,
                       border: 1,
-                      cursor: m.creator === id ? "pointer" : "default",
+                      cursor:
+                        m.creator === id.currentUserId ? "pointer" : "default",
                     }}
                   >
                     <Typography sx={{ wordBreak: "break-word" }}>
                       {m.content}
                     </Typography>
-                    {m.creator === id && (
+                    {m.creator === id.currentUserId && (
                       <MessagePopupDots
                         message={m}
                         reload={() => refreshMessages(room.friendId)}

@@ -13,6 +13,7 @@ import * as db from "../database/chat";
 import { areAllMatched, areMatched, findRelation } from "../database/matches";
 import type { UserID, InitRoom } from "../common/types";
 import { getUserByID } from "../database/users";
+import * as ws from "../lib/socket/socket";
 
 const router = express.Router();
 
@@ -20,7 +21,10 @@ router.get("/overview", async (req, res) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
   const overview = await db.overview(id.value);
-  if (!overview.ok) return res.status(500).send();
+  if (!overview.ok) {
+    console.error(overview.error);
+    return res.status(500).send();
+  }
 
   // SEND: RoomOverview[].
   // this is NOT ordered. you need to sort it on frontend.
@@ -51,7 +55,9 @@ router.post("/dm/to/:userid", async (req, res) => {
 
   const result = await db.sendDM(rel.value.id, msg);
   if (!result.ok) return res.status(500).send();
-  res.status(201).send();
+  ws.sendMessage(result.value, friend.value);
+
+  res.status(201).send(result.value);
 });
 
 // GET a DM Room with userid, CREATE one if not found.

@@ -66,15 +66,15 @@ export async function overview(user: UserID): Promise<Result<RoomOverview[]>> {
 export async function sendDM(
   relation: RelationshipID,
   content: Omit<Message, "id">,
-): Promise<Result<void>> {
+): Promise<Result<Message>> {
   try {
-    await prisma.message.create({
+    const message = await prisma.message.create({
       data: {
         relationId: relation,
         ...content,
       },
     });
-    return Ok(undefined);
+    return Ok(message);
   } catch (e) {
     return Err(e);
   }

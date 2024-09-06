@@ -70,17 +70,25 @@ export async function except(id: UserID): Promise<PublicUser[]> {
  * @throws network error and type error
  */
 export async function getByGUID(guid: GUID): Promise<User | null> {
-  const res = await credFetch("GET", endpoints.userByGUID(guid));
-  const data = await res.json();
-  // TODO: properly convert this into User instead of assigning any
-  return data;
+  try {
+    const res = await credFetch("GET", endpoints.userByGUID(guid));
+    const data = await res.json();
+    // TODO: properly convert this into User instead of assigning any
+    return data;
+  } catch (e) {
+    return null;
+  }
 }
 
 //指定した guid のユーザが存在するかどうかを取得する
 export async function exists(guid: GUID): Promise<boolean> {
-  const res = await credFetch("GET", endpoints.userExists(guid));
-  if (res.status === 404) return false;
-  return true;
+  try {
+    const res = await credFetch("GET", endpoints.userExists(guid));
+    if (res.status === 404) return false;
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 // 指定した id のユーザ情報を取得する
