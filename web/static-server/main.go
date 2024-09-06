@@ -19,17 +19,14 @@ const PORT uint16 = 4173
 const SERVE_DIR string = "../dist"
 
 func main() {
-	mux := http.NewServeMux()
-	fs := http.FileServer(http.Dir(SERVE_DIR))
-	mux.Handle("/", http.StripPrefix("/", fs))
 	server := http.Server{
 		Addr:    ":" + fmt.Sprint(PORT),
-		Handler: mux,
+		Handler: http.FileServer(http.Dir(SERVE_DIR)),
 	}
 
 	var errch chan error
 	go func() {
-		go log.Println("[web] Serving static directory...")
+		log.Println("[web] Serving static directory...")
 		errch <- server.ListenAndServe()
 	}()
 
