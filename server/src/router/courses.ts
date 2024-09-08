@@ -8,6 +8,7 @@ import {
 import { Day } from "@prisma/client";
 import { safeGetUserId } from "../firebase/auth/db";
 import { createEnrollment, deleteEnrollment } from "../database/enrollments";
+import { DaySchema, PeriodSchema } from "../common/zod/schemas";
 
 const router = express.Router();
 
@@ -15,19 +16,21 @@ function isDay(value: string): value is Day {
   return value in Day;
 }
 
-router.get("/day/:day/period/:period", async (req: Request, res: Response) => {
-  const { day, period } = req.params;
+// ある曜限に存在する全ての講義を取得
+router.get("/slot", async (req: Request, res: Response) => {
+  const day = DaySchema.safeParse(req.query.day);
+  const period = PeriodSchema.safeParse(parseInt(req.query.period as string));
 
-  if (!isDay(day)) {
+  if (!day.success || !period.success || !isDay(day.data)) {
     return res.status(400).json({ error: "Invalid day" });
   }
 
   try {
-    const courses = await getCoursesBySlot(day, parseInt(period));
+    const courses = await getCoursesBySlot(day.data, period.data);
     res.status(200).json(courses);
   } catch (error) {
-    console.error("Error fetching courses by day period:", error);
-    res.status(500).json({ error: "Failed to fetch courses by day period" });
+    console.error("Error fetching courses by slot:", error);
+    res.status(500).json({ error: "Failed to fetch courses by slot" });
   }
 });
 

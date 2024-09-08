@@ -199,7 +199,7 @@ const meCoursesOverlaps = (courseId: CourseID) => {
 };
 
 /**
- * TODO: FIXME:
+ * [v] 実装済み
  * GET -> courses that exist on the given day and period.
  * - statuses:
  *   - 200: ok.
@@ -208,7 +208,7 @@ const meCoursesOverlaps = (courseId: CourseID) => {
  *   - 500: internal error.
  **/
 const coursesBySlot = (day: Day, period: number) => {
-  return `${origin}/courses/day/${day}/period/${period}`;
+  return `${origin}/courses/slot?day=${day}&period=${period}`;
 };
 
 /**

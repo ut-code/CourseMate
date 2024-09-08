@@ -83,9 +83,11 @@ export const DaySchema = z.enum([
   "sun",
 ]);
 
+export const PeriodSchema = z.number().min(1).max(6);
+
 export const SlotSchema = z.object({
   day: DaySchema,
-  period: z.number(),
+  period: PeriodSchema,
   courseId: CourseIDSchema,
 });
 

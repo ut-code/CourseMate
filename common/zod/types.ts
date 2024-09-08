@@ -35,6 +35,7 @@ import {
   CourseSchema,
   EnrollmentSchema,
   DaySchema,
+  PeriodSchema,
 } from "./schemas";
 
 export type UserID = z.infer<typeof UserIDSchema>;
@@ -55,6 +56,7 @@ export type Slot = z.infer<typeof SlotSchema>;
 export type Course = z.infer<typeof CourseSchema>;
 export type Enrollment = z.infer<typeof EnrollmentSchema>;
 export type Day = z.infer<typeof DaySchema>;
+export type Period = z.infer<typeof PeriodSchema>;
 export type MessageID = z.infer<typeof MessageIDSchema>;
 export type ShareRoomID = z.infer<typeof ShareRoomIDSchema>;
 export type Message = z.infer<typeof MessageSchema>;
