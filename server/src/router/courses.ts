@@ -118,10 +118,7 @@ router.delete("/mine", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to fetch course" });
   }
   try {
-    const updatedCourses = await deleteEnrollment({
-      courseId: courseId,
-      userId: userId.value,
-    });
+    const updatedCourses = await deleteEnrollment(userId.value, courseId);
     res.status(200).json(updatedCourses);
   } catch (error) {
     console.error("Error deleting courses:", error);
