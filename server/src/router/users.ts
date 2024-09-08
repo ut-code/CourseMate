@@ -15,12 +15,6 @@ import {
 } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
-import {
-  getCourseByCourseId,
-  getCourseBySlotAndUserId,
-  getCoursesByUserId,
-} from "../database/courses";
-import { deleteEnrollment, createEnrollment } from "../database/enrollments";
 import { getMatchesByUserId } from "../database/matches";
 import { parseInitUser, parseUpdateUser } from "../common/zod/methods";
 
@@ -197,103 +191,6 @@ router.delete("/me", async (req, res) => {
   const deleted = await deleteUser(id.value);
   if (!deleted.ok) return res.status(500).send();
   res.status(204).send();
-});
-
-// 自分の講義を取得
-router.get("/me/courses", async (req: Request, res: Response) => {
-  const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error");
-
-  try {
-    const courses = await getCoursesByUserId(userId.value);
-    return res.status(200).json(courses);
-  } catch (error) {
-    console.error("Error fetching courses:", error);
-    res.status(500).json({ error: "Failed to fetch courses" });
-  }
-});
-
-// ある講義と重複している講義を取得
-router.get(
-  "/me/courses/overlaps/:courseId",
-  async (req: Request, res: Response) => {
-    const userId = await safeGetUserId(req);
-    if (!userId.ok) return res.status(401).send("auth error");
-
-    try {
-      const targetCourse = await getCourseByCourseId(req.params.courseId);
-      if (!targetCourse) {
-        return res.status(404).json({ error: "Course not found" });
-      }
-      const overlappingCourses = await Promise.all(
-        targetCourse.slots.map(
-          async (slot) =>
-            await getCourseBySlotAndUserId(slot.day, slot.period, userId.value),
-        ),
-      );
-      const filteredOverlappingCourses = overlappingCourses
-        .filter((course) => course !== null)
-        .filter(
-          (course, index, self) =>
-            self.findIndex((c) => c?.id === course?.id) === index,
-        ); // id の重複を排除
-      res.status(200).json(filteredOverlappingCourses);
-    } catch (error) {
-      console.error("Error fetching overlapping courses:", error);
-      res.status(500).json({ error: "Failed to fetch overlapping courses" });
-    }
-  },
-);
-
-// 自分の講義を編集
-router.patch("/me/courses", async (req: Request, res: Response) => {
-  const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error");
-  const { courseId } = req.body;
-  // 指定された講義の存在確認
-  try {
-    const newCourse = await getCourseByCourseId(courseId);
-    if (!newCourse) {
-      return res.status(404).json({ error: "Course not found" });
-    }
-  } catch (err) {
-    console.error("Error fetching course:", err);
-    res.status(500).json({ error: "Failed to fetch course" });
-  }
-  try {
-    const updatedCourses = await createEnrollment(courseId, userId.value);
-    res.status(200).json(updatedCourses);
-  } catch (error) {
-    console.error("Error updating courses:", error);
-    res.status(500).json({ error: "Failed to update courses" });
-  }
-});
-
-// 自分の講義を削除
-router.delete("/me/courses", async (req: Request, res: Response) => {
-  const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error");
-  const { courseId } = req.body;
-  // 指定された講義の存在確認
-  try {
-    const newCourse = await getCourseByCourseId(courseId);
-    if (!newCourse) {
-      return res.status(404).json({ error: "Course not found" });
-    }
-  } catch (err) {
-    console.error("Error fetching course:", err);
-    res.status(500).json({ error: "Failed to fetch course" });
-  }
-  try {
-    const updatedCourses = await deleteEnrollment({
-      courseId: courseId,
-      userId: userId.value,
-    });
-    res.status(200).json(updatedCourses);
-  } catch (error) {
-    console.error("Error deleting courses:", error);
-    res.status(500).json({ error: "Failed to delete courses" });
-  }
 });
 
 export default router;

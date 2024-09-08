@@ -65,37 +65,6 @@ const usersPublic = `${origin}/users/public`;
  **/
 const me = `${origin}/users/me`;
 
-/** FIXME:
- * [v] 実装済み
- * GET -> get my courses.
- * - statuses:
- *  - 200: ok.
- *   - body:(Course & {courseDayPeriods: CourseDayPeriod[]})[]
- *  - 401: unauthorized.
- *  - 500: internal error.
- * PATCH → update my courses.
- * - request body: CourseId
- * - statuses:
- *  - 200: ok.
- *   - body: (Course & {courseDayPeriods: CourseDayPeriod[]})[]
- *  - 401: unauthorized.
- *  - 500: internal error.
- */
-const meCourses = `${origin}/users/me/courses`;
-
-/** FIXME:
- * [v] 実装済み
- * GET → get courses that overlap with the given course.
- * - statuses:
- *  - 200: ok.
- *    - body: (Course & {courseDayPeriods: CourseDayPeriod[]})[]
- *  - 401: unauthorized.
- *  - 500: internal error.
- */
-const meCoursesOverlaps = (courseId: CourseID) => {
-  return `${origin}/users/me/courses/overlaps/${courseId}`;
-};
-
 /**
  * [v] 実装済み
  * GET -> list all matched users.
@@ -200,18 +169,45 @@ const matches = `${origin}/matches`;
  * - 401: unauthorized.
  * - 500: internal error.
  */
-const courseWithDayPeriods = `${origin}/courses?includeDayPeriods=true`;
+const courseWithDayPeriods = `${origin}/courses/id?includeDayPeriods=true`;
 
-/** FIXME:
+/**
  * [v] 実装済み
- * GET -> get all courses without day periods.
+ * GET -> get my courses.
  * - statuses:
- * - 200: ok.
- * - body: Course
- * - 401: unauthorized.
- * - 500: internal error.
+ *  - 200: ok.
+ *   - body: Course[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ * PATCH → update my courses.
+ * - request body: CourseId
+ * - statuses:
+ *  - 200: ok.
+ *   - body: Course[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ * DELETE → delete my courses.
+ * - request body: CourseId
+ * - statuses:
+ *  - 200: ok.
+ *   - body: Course[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
  */
-const courseWithoutDayPeriods = `${origin}/courses?includeDayPeriods=false`;
+const meCourses = `${origin}/courses/mine`;
+
+/**
+ * [v] 実装済み
+ * GET → get courses that overlap with the given course.
+ * - statuses:
+ *  - 200: ok.
+ *    - body: (Course & {courseDayPeriods: CourseDayPeriod[]})[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ */
+const meCoursesOverlaps = (courseId: CourseID) => {
+  return `${origin}/courses/mine/overlaps/${courseId}`;
+};
 
 /**
  * TODO: FIXME:
@@ -368,7 +364,6 @@ export default {
   rejectRequest,
   coursesBySlot,
   courseWithDayPeriods,
-  courseWithoutDayPeriods,
   enrollments,
   roomOverview,
   dmTo,
