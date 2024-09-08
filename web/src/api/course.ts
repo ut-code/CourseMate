@@ -8,7 +8,7 @@ import endpoints from "./internal/endpoints";
  * 自身の講義（自身が履修している講義）をすべて取得する
  */
 export async function getMyCourses(): Promise<Course[]> {
-  const res = await credFetch("GET", endpoints.meCourses);
+  const res = await credFetch("GET", endpoints.coursesMine);
   return res.json();
 }
 
@@ -19,7 +19,7 @@ export async function getCoursesBySlot(
   day: Day,
   period: number,
 ): Promise<Course[]> {
-  const res = await credFetch("GET", endpoints.coursesBySlot(day, period));
+  const res = await credFetch("GET", endpoints.coursesSlot(day, period));
   return res.json();
 }
 
@@ -31,7 +31,7 @@ export async function getCoursesBySlot(
 export async function getMyCoursesOverlapWith(
   courseId: CourseID,
 ): Promise<Course[]> {
-  const res = await credFetch("GET", endpoints.meCoursesOverlaps(courseId));
+  const res = await credFetch("GET", endpoints.coursesMineOverlaps(courseId));
   return res.json();
 }
 
@@ -41,7 +41,7 @@ export async function getMyCoursesOverlapWith(
  * @returns 更新後の自身が履修している講義
  */
 export async function addMyCourse(courseId: CourseID): Promise<Course[]> {
-  const res = await credFetch("PATCH", endpoints.meCourses, {
+  const res = await credFetch("PATCH", endpoints.coursesMine, {
     courseId,
   });
   return res.json();
@@ -53,7 +53,7 @@ export async function addMyCourse(courseId: CourseID): Promise<Course[]> {
  * @returns 更新後のすべての講義情報
  */
 export async function deleteMyCourse(courseId: CourseID): Promise<Course[]> {
-  const res = await credFetch("DELETE", endpoints.meCourses, { courseId });
+  const res = await credFetch("DELETE", endpoints.coursesMine, { courseId });
   return res.json();
 }
 

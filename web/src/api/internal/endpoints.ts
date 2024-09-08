@@ -183,7 +183,7 @@ const matches = `${origin}/matches`;
  *  - 401: unauthorized.
  *  - 500: internal error.
  */
-const meCourses = `${origin}/courses/mine`;
+const coursesMine = `${origin}/courses/mine`;
 
 /**
  * [v] 実装済み
@@ -194,7 +194,7 @@ const meCourses = `${origin}/courses/mine`;
  *  - 401: unauthorized.
  *  - 500: internal error.
  */
-const meCoursesOverlaps = (courseId: CourseID) => {
+const coursesMineOverlaps = (courseId: CourseID) => {
   return `${origin}/courses/mine/overlaps/${courseId}`;
 };
 
@@ -207,20 +207,9 @@ const meCoursesOverlaps = (courseId: CourseID) => {
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const coursesBySlot = (day: Day, period: number) => {
+const coursesSlot = (day: Day, period: number) => {
   return `${origin}/courses/slot?day=${day}&period=${period}`;
 };
-
-/**
- * [x] 実装済み
- * PUT -> update enrollments.
- * - statuses:
- *   - 200: ok.
- *     - body: CourseWithDayPeriods[]
- *   - 401: unauthorized.
- *   - 500: internal error.
- **/
-const enrollments = `${origin}/enrollments`;
 
 /**
  * [v] 実装済み
@@ -337,8 +326,8 @@ const message = (messageId: MessageID) =>
 export default {
   user,
   me,
-  meCourses,
-  meCoursesOverlaps,
+  coursesMine,
+  coursesMineOverlaps,
   userByGUID,
   userExists,
   users,
@@ -351,8 +340,7 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
-  coursesBySlot,
-  enrollments,
+  coursesSlot,
   roomOverview,
   dmTo,
   dmWith,
