@@ -8,8 +8,8 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { Course, CourseDayPeriod } from "../../common/types";
-import { getOverlappingCourses, modifyEnrollments } from "../../api/course";
+import { Course } from "../../common/types";
+import { getMyCoursesOverlapWith, addMyCourse } from "../../api/course";
 import { useEffect, useState } from "react";
 
 export default function CourseRegisterConfirmDialog({
@@ -23,15 +23,13 @@ export default function CourseRegisterConfirmDialog({
   onClose: () => void;
   course: Course;
   handleSelectDialogClose: () => void;
-  handleCoursesUpdate: (
-    courses: (Course & { courseDayPeriods: CourseDayPeriod[] })[],
-  ) => void;
+  handleCoursesUpdate: (courses: Course[]) => void;
 }) {
   const [overlapCourses, setOverlapCourses] = useState<Course[]>([]);
 
   useEffect(() => {
     (async () => {
-      const courses = await getOverlappingCourses(course.id);
+      const courses = await getMyCoursesOverlapWith(course.id);
       setOverlapCourses(courses);
     })();
   }, [course]);
@@ -59,7 +57,7 @@ export default function CourseRegisterConfirmDialog({
         <Button onClick={onClose}>キャンセル</Button>
         <Button
           onClick={async () => {
-            const newCourses = await modifyEnrollments(course.id);
+            const newCourses = await addMyCourse(course.id);
             handleCoursesUpdate(newCourses);
             onClose();
             handleSelectDialogClose();

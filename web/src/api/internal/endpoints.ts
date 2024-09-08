@@ -65,7 +65,7 @@ const usersPublic = `${origin}/users/public`;
  **/
 const me = `${origin}/users/me`;
 
-/**
+/** FIXME:
  * [v] 実装済み
  * GET -> get my courses.
  * - statuses:
@@ -83,7 +83,7 @@ const me = `${origin}/users/me`;
  */
 const meCourses = `${origin}/users/me/courses`;
 
-/**
+/** FIXME:
  * [v] 実装済み
  * GET → get courses that overlap with the given course.
  * - statuses:
@@ -191,7 +191,7 @@ const matches = `${origin}/matches`;
  *   - 500: internal error.
  **/
 
-/**
+/** FIXME:
  * [v] 実装済み
  * GET -> get all courses with day periods.
  * - statuses:
@@ -202,7 +202,7 @@ const matches = `${origin}/matches`;
  */
 const courseWithDayPeriods = `${origin}/courses?includeDayPeriods=true`;
 
-/**
+/** FIXME:
  * [v] 実装済み
  * GET -> get all courses without day periods.
  * - statuses:
@@ -214,7 +214,7 @@ const courseWithDayPeriods = `${origin}/courses?includeDayPeriods=true`;
 const courseWithoutDayPeriods = `${origin}/courses?includeDayPeriods=false`;
 
 /**
- * TODO:
+ * TODO: FIXME:
  * GET -> courses that exist on the given day and period.
  * - statuses:
  *   - 200: ok.
@@ -222,7 +222,7 @@ const courseWithoutDayPeriods = `${origin}/courses?includeDayPeriods=false`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const coursesOnDayPeriod = (day: Day, period: number) => {
+const coursesBySlot = (day: Day, period: number) => {
   return `${origin}/courses/day/${day}/period/${period}`;
 };
 
@@ -366,7 +366,7 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
-  coursesOnDayPeriod,
+  coursesBySlot,
   courseWithDayPeriods,
   courseWithoutDayPeriods,
   enrollments,

@@ -16,11 +16,11 @@ import {
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
 import {
-  getCourse,
-  getCourseByDayPeriodAndUser,
-  getCoursesWithDayPeriodsByUser,
+  getCourseByCourseId,
+  getCourseBySlotAndUserId,
+  getCoursesByUserId,
 } from "../database/courses";
-import { deleteEnrollment, updateEnrollments } from "../database/enrollments";
+import { deleteEnrollment, createEnrollment } from "../database/enrollments";
 import { getMatchesByUserId } from "../database/matches";
 import { parseInitUser, parseUpdateUser } from "../common/zod/methods";
 
@@ -205,7 +205,7 @@ router.get("/me/courses", async (req: Request, res: Response) => {
   if (!userId.ok) return res.status(401).send("auth error");
 
   try {
-    const courses = await getCoursesWithDayPeriodsByUser(userId.value);
+    const courses = await getCoursesByUserId(userId.value);
     return res.status(200).json(courses);
   } catch (error) {
     console.error("Error fetching courses:", error);
@@ -221,18 +221,14 @@ router.get(
     if (!userId.ok) return res.status(401).send("auth error");
 
     try {
-      const courseWithDayPeriods = await getCourse(req.params.courseId);
-      if (!courseWithDayPeriods) {
+      const targetCourse = await getCourseByCourseId(req.params.courseId);
+      if (!targetCourse) {
         return res.status(404).json({ error: "Course not found" });
       }
       const overlappingCourses = await Promise.all(
-        courseWithDayPeriods.courseDayPeriods.map(
-          async (courseDayPeriod) =>
-            await getCourseByDayPeriodAndUser({
-              day: courseDayPeriod.day,
-              period: courseDayPeriod.period,
-              userId: userId.value,
-            }),
+        targetCourse.slots.map(
+          async (slot) =>
+            await getCourseBySlotAndUserId(slot.day, slot.period, userId.value),
         ),
       );
       const filteredOverlappingCourses = overlappingCourses
@@ -256,7 +252,7 @@ router.patch("/me/courses", async (req: Request, res: Response) => {
   const { courseId } = req.body;
   // 指定された講義の存在確認
   try {
-    const newCourse = await getCourse(courseId);
+    const newCourse = await getCourseByCourseId(courseId);
     if (!newCourse) {
       return res.status(404).json({ error: "Course not found" });
     }
@@ -265,10 +261,7 @@ router.patch("/me/courses", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to fetch course" });
   }
   try {
-    const updatedCourses = await updateEnrollments({
-      courseId: courseId,
-      userId: userId.value,
-    });
+    const updatedCourses = await createEnrollment(courseId, userId.value);
     res.status(200).json(updatedCourses);
   } catch (error) {
     console.error("Error updating courses:", error);
@@ -283,7 +276,7 @@ router.delete("/me/courses", async (req: Request, res: Response) => {
   const { courseId } = req.body;
   // 指定された講義の存在確認
   try {
-    const newCourse = await getCourse(courseId);
+    const newCourse = await getCourseByCourseId(courseId);
     if (!newCourse) {
       return res.status(404).json({ error: "Course not found" });
     }

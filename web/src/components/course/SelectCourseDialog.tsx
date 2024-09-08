@@ -14,11 +14,12 @@ import {
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import courseApi, { deleteEnrollment } from "../../api/course";
-import { Course, CourseDayPeriod, Day } from "../../common/types";
+import courseApi, { deleteMyCourse } from "../../api/course";
+import { Course, Day } from "../../common/types";
 import { useEffect, useState } from "react";
 import CourseRegisterConfirmDialog from "./CourseRegisterConfirmDialog";
 
+// FIXME:
 const dayCodeToDayMap: { [dayCode in Day]: string } = {
   mon: "月",
   tue: "火",
@@ -26,6 +27,7 @@ const dayCodeToDayMap: { [dayCode in Day]: string } = {
   thu: "木",
   fri: "金",
   sat: "土",
+  sun: "日",
 };
 
 export default function SelectCourseDialog({
@@ -41,11 +43,7 @@ export default function SelectCourseDialog({
     columnName: Day;
     course: Course | null;
   } | null;
-  handleCoursesUpdate: (
-    courses: (Course & {
-      courseDayPeriods: CourseDayPeriod[];
-    })[],
-  ) => void;
+  handleCoursesUpdate: (courses: Course[]) => void;
 }) {
   const [availableCourses, setAvailableCourses] = useState<Course[]>([]); // その曜限で登録可能なすべての講義
   const [filteredAvailableCourses, setFilteredAvailableCourses] = useState<
@@ -57,10 +55,10 @@ export default function SelectCourseDialog({
   useEffect(() => {
     (async () => {
       if (!currentEdit) return;
-      const courses = await courseApi.getByDayPeriod({
-        day: currentEdit.columnName,
-        period: currentEdit.rowIndex + 1,
-      });
+      const courses = await courseApi.getCoursesBySlot(
+        currentEdit.columnName,
+        currentEdit.rowIndex + 1,
+      );
 
       setAvailableCourses(courses);
       setFilteredAvailableCourses(courses);
@@ -84,9 +82,7 @@ export default function SelectCourseDialog({
               aria-label="delete"
               onClick={async () => {
                 if (!currentEdit?.course?.id) return;
-                const newCourses = await deleteEnrollment(
-                  currentEdit.course.id,
-                );
+                const newCourses = await deleteMyCourse(currentEdit.course.id);
                 handleCoursesUpdate(newCourses);
                 onClose();
               }}

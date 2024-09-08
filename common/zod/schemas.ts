@@ -71,6 +71,36 @@ export const RelationshipSchema = z.object({
   status: RelationshipStatusSchema,
 });
 
+export const CourseIDSchema = z.string();
+
+export const DaySchema = z.enum([
+  "mon",
+  "tue",
+  "wed",
+  "thu",
+  "fri",
+  "sat",
+  "sun",
+]);
+
+export const SlotSchema = z.object({
+  day: DaySchema,
+  period: z.number(),
+  courseId: CourseIDSchema,
+});
+
+export const CourseSchema = z.object({
+  id: CourseIDSchema,
+  name: z.string(),
+  slots: SlotSchema.array(),
+});
+
+export const EnrollmentSchema = z.object({
+  id: z.number(),
+  userId: UserIDSchema,
+  courseId: CourseIDSchema,
+});
+
 export const MessageIDSchema = z.number(); // TODO! Add __internal_prevent_cast_MessageID: PhantomData
 export const ShareRoomIDSchema = z.number();
 

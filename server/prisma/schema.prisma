@@ -15,6 +15,7 @@ enum Day {
   thu
   fri
   sat
+  sun
 }
 
 model User {
@@ -43,10 +44,10 @@ model Course {
   id               String            @id
   name             String
   enrollments      Enrollment[]
-  courseDayPeriods CourseDayPeriod[]
+  slots Slot[]
 }
 
-model CourseDayPeriod {
+model Slot {
   id       Int    @id @default(autoincrement())
   course   Course @relation(fields: [courseId], references: [id])
   courseId String

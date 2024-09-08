@@ -30,6 +30,11 @@ import {
   HobbySchema,
   IntroShortSchema,
   IntroLongSchema,
+  CourseIDSchema,
+  SlotSchema,
+  CourseSchema,
+  EnrollmentSchema,
+  DaySchema,
 } from "./schemas";
 
 export type UserID = z.infer<typeof UserIDSchema>;
@@ -45,6 +50,11 @@ export type UpdateUser = z.infer<typeof UpdateUserSchema>;
 export type PublicUser = z.infer<typeof PublicUserSchema>;
 export type RelationshipID = z.infer<typeof RelationshipIDSchema>;
 export type Relationship = z.infer<typeof RelationshipSchema>;
+export type CourseID = z.infer<typeof CourseIDSchema>;
+export type Slot = z.infer<typeof SlotSchema>;
+export type Course = z.infer<typeof CourseSchema>;
+export type Enrollment = z.infer<typeof EnrollmentSchema>;
+export type Day = z.infer<typeof DaySchema>;
 export type MessageID = z.infer<typeof MessageIDSchema>;
 export type ShareRoomID = z.infer<typeof ShareRoomIDSchema>;
 export type Message = z.infer<typeof MessageSchema>;

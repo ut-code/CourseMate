@@ -7,10 +7,11 @@ import {
   TableBody,
 } from "@mui/material";
 
-import { Course, CourseDayPeriod, Day } from "../../common/types";
+import { Course, Day } from "../../common/types";
 import courseApi from "../../api/course";
 import SelectCourseDialog from "./SelectCourseDialog";
 
+// FIXME:
 const dayCodeToDayMap: { [dayCode in Day]: string } = {
   mon: "月",
   tue: "火",
@@ -18,6 +19,7 @@ const dayCodeToDayMap: { [dayCode in Day]: string } = {
   thu: "木",
   fri: "金",
   sat: "土",
+  sun: "日",
 };
 
 type DayToCourseByPeriodMap = {
@@ -46,11 +48,7 @@ const CoursesTable: React.FC = () => {
     setIsSelectCourseDialogOpen(true);
   };
 
-  const handleCoursesUpdate = (
-    courses: (Course & {
-      courseDayPeriods: CourseDayPeriod[];
-    })[],
-  ) => {
+  const handleCoursesUpdate = (courses: Course[]) => {
     const newCourses: DayToCourseByPeriodMap[] = Array.from(
       { length: 6 },
       () => ({
@@ -60,11 +58,12 @@ const CoursesTable: React.FC = () => {
         thu: null,
         fri: null,
         sat: null,
+        sun: null,
       }),
     );
     courses.forEach((course) => {
-      course.courseDayPeriods.forEach((dayPeriod) => {
-        const { day, period } = dayPeriod;
+      course.slots.forEach((slot) => {
+        const { day, period } = slot;
         newCourses[period - 1][day] = course;
       });
     });

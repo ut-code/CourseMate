@@ -1,36 +1,28 @@
 import { Day, PrismaClient } from "@prisma/client";
-import { UserID } from "../common/types";
+import { Course, UserID } from "../common/types";
 
 const prisma = new PrismaClient();
-
-// コースの作成
-export async function createCourse(id: string, name: string) {
-  return await prisma.course.create({
-    data: {
-      id,
-      name,
-    },
-  });
-}
 
 /**
  * 講義IDによって講義を取得
  */
-export async function getCourse(courseId: string) {
-  const course = await prisma.course.findUnique({
+export async function getCourseByCourseId(courseId: string) {
+  const course: Course | null = await prisma.course.findUnique({
     where: {
       id: courseId,
     },
     include: {
-      courseDayPeriods: true,
+      slots: true,
     },
   });
   return course;
 }
 
-// ユーザーの履修コースの取得
-export async function getCoursesWithDayPeriodsByUser(userId: UserID) {
-  const courses = await prisma.course.findMany({
+/**
+ * `userId` のユーザが履修している講義を取得
+ */
+export async function getCoursesByUserId(userId: UserID) {
+  const courses: Course[] = await prisma.course.findMany({
     where: {
       enrollments: {
         some: {
@@ -39,33 +31,28 @@ export async function getCoursesWithDayPeriodsByUser(userId: UserID) {
       },
     },
     include: {
-      courseDayPeriods: true,
+      slots: true,
     },
   });
-
   return courses;
 }
 
 /**
- * 曜限・ユーザによって講義を取得
+ * `userId` のユーザが `day` 曜 `period` 限に履修している講義を取得
  */
-export async function getCourseByDayPeriodAndUser({
-  day,
-  period,
-  userId,
-}: {
-  day: Day;
-  period: number;
-  userId: UserID;
-}) {
-  const course = await prisma.course.findFirst({
+export async function getCourseBySlotAndUserId(
+  day: Day,
+  period: number,
+  userId: UserID,
+) {
+  const course: Course | null = await prisma.course.findFirst({
     where: {
       enrollments: {
         some: {
           userId,
         },
       },
-      courseDayPeriods: {
+      slots: {
         some: {
           day,
           period,
@@ -73,12 +60,13 @@ export async function getCourseByDayPeriodAndUser({
       },
     },
     include: {
-      courseDayPeriods: true,
+      slots: true,
     },
   });
   return course;
 }
 
+// FIXME: 不要なら消す
 export async function getCourseDayPeriods({
   period,
   day,
@@ -86,40 +74,13 @@ export async function getCourseDayPeriods({
   period: number;
   day: Day;
 }) {
-  return await prisma.courseDayPeriod.findMany({
+  return await prisma.slot.findMany({
     where: {
       period,
       day,
     },
     include: {
       course: true,
-    },
-  });
-}
-
-// コースの更新
-export async function updateCourse({
-  courseId,
-  name,
-}: {
-  courseId: string;
-  name: string;
-}) {
-  return await prisma.course.update({
-    where: {
-      id: courseId,
-    },
-    data: {
-      name,
-    },
-  });
-}
-
-// コースの削除
-export async function deleteCourse(courseId: string) {
-  return await prisma.course.delete({
-    where: {
-      id: courseId,
     },
   });
 }
