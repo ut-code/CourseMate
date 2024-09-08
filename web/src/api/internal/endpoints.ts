@@ -160,17 +160,6 @@ const matches = `${origin}/matches`;
  *   - 500: internal error.
  **/
 
-/** FIXME:
- * [v] 実装済み
- * GET -> get all courses with day periods.
- * - statuses:
- *  - 200: ok.
- *  - body: CourseWithDayPeriods
- * - 401: unauthorized.
- * - 500: internal error.
- */
-const courseWithDayPeriods = `${origin}/courses/id?includeDayPeriods=true`;
-
 /**
  * [v] 実装済み
  * GET -> get my courses.
@@ -363,7 +352,6 @@ export default {
   acceptRequest,
   rejectRequest,
   coursesBySlot,
-  courseWithDayPeriods,
   enrollments,
   roomOverview,
   dmTo,
