@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { getCourseByCourseId, getCourseDayPeriods } from "../database/courses";
+import { getCourseByCourseId, getCoursesBySlot } from "../database/courses";
 import { Day } from "@prisma/client";
 
 const router = express.Router();
@@ -34,14 +34,7 @@ router.get("/day/:day/period/:period", async (req: Request, res: Response) => {
   }
 
   try {
-    // FIXME: course を直接クエリするようにする
-    const courseDayPeriods = await getCourseDayPeriods({
-      period: Number(period),
-      day,
-    });
-    const courses = courseDayPeriods.map(
-      (courseDayPeriod) => courseDayPeriod.course,
-    );
+    const courses = await getCoursesBySlot(day, parseInt(period));
     res.status(200).json(courses);
   } catch (error) {
     console.error("Error fetching courses by day period:", error);
