@@ -18,7 +18,7 @@ function isDay(value: string): value is Day {
 router.get("/day/:day/period/:period", async (req: Request, res: Response) => {
   const { day, period } = req.params;
 
-  if (isDay(day) === false) {
+  if (!isDay(day)) {
     return res.status(400).json({ error: "Invalid day" });
   }
 
