@@ -124,9 +124,9 @@ export async function isUserInRoom(
   }
 }
 
-export async function updateRoomName(
+export async function updateRoom(
   roomId: ShareRoomID,
-  newName: string,
+  newRoom: Partial<Omit<SharedRoom, "messages">>,
 ): Promise<Result<Omit<SharedRoom, "messages">>> {
   try {
     type UpdatedRoom = Omit<Omit<SharedRoom, "isDM">, "messages">;
@@ -134,9 +134,7 @@ export async function updateRoomName(
       where: {
         id: roomId,
       },
-      data: {
-        name: newName,
-      },
+      data: newRoom,
     });
     return Ok({
       isDM: false,

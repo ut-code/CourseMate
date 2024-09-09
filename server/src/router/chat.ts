@@ -22,12 +22,17 @@ import {
 } from "../common/zod/methods";
 import { Name } from "../common/zod/types";
 import * as ws from "../lib/socket/socket";
+import * as core from "../functions/chat";
+import { InitRoomSchema, SendMessageSchema, SharedRoomSchema } from "../common/zod/schemas";
 
 const router = express.Router();
 
 router.get("/overview", async (req, res) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
+
+  const result = await core.getOverview(id.value);
+  res.status(result.code).send(result.body);
 });
 
 // send DM to userid.
@@ -37,30 +42,16 @@ router.post("/dm/to/:userid", async (req, res) => {
   const friend = safeParseInt(req.params.userid);
   if (!friend.ok) return res.status(400).send("bad param encoding: `userid`");
 
-  const rel = await getRelation(user.value, friend.value as UserID);
-  if (!rel.ok || rel.value.status !== "MATCHED")
-    return res.status(403).send("cannot send DM to non-friend");
-
-  // they are now MATCHED
-
-  const smsg: SendMessage = req.body; // todo: typia
-  try {
-    parseSendMessage(smsg);
-  } catch (e) {
+  const smsg = SendMessageSchema.safeParse(req.body);
+  if (!smsg.success) {
     return res.status(400).send("invalid format");
   }
-  const msg: Omit<Message, "id"> = {
-    creator: user.value,
-    createdAt: new Date(),
-    edited: false,
-    ...smsg,
-  };
 
-  const result = await db.sendDM(rel.value.id, msg);
-  if (!result.ok) return res.status(500).send();
-  ws.sendMessage(result.value, friend.value);
-
-  res.status(201).send(result.value);
+  const result = await core.sendDM(user.value, friend.value, smsg.data);
+  if (result.ok) {
+    ws.sendMessage(result?.body, friend.value);
+  }
+  res.status(result.code).send(result.body);
 });
 
 // GET a DM Room with userid, CREATE one if not found.
@@ -72,21 +63,9 @@ router.get("/dm/with/:userid", async (req, res) => {
   if (!friend.ok)
     return res.status(400).send("invalid param `userid` fomatting");
 
-  if (!areMatched(user.value, friend.value as UserID))
-    return res.status(403).send("cannot DM with a non-friend");
+  const result = await core.getDM(user.value, friend.value);
 
-  const room = await db.getDMbetween(user.value, friend.value);
-  if (!room.ok) return res.status(500).send();
-  const friendData = await getUserByID(friend.value as UserID);
-  if (!friendData.ok) return res.status(404).send("friend not found"); // this should not happen
-
-  const personalized: PersonalizedDMRoom & DMRoom = {
-    name: friendData.value.name,
-    thumbnail: friendData.value.pictureUrl,
-    ...room.value,
-  };
-
-  return res.status(201).send(personalized);
+  return res.status(result.code).send(result.body);
 });
 
 // create a shared chat room.
@@ -94,43 +73,23 @@ router.post(`/shared`, async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
 
-  const init: InitRoom = req.body;
-  try {
-    parseInitRoom(init);
-  } catch (e) {
+  const init = InitRoomSchema.safeParse(req.body);
+  if (!init.success)
     return res.status(400).send("invalid format");
-  }
 
-  const allMatched = await areAllMatched(user.value, init.members);
-  if (!allMatched.ok) return res.status(500).send("db error");
+  const result = await core.createRoom(user.value, init.data);
 
-  if (!allMatched.value)
-    return res.status(403).send("error: some members are not friends with you");
-
-  const room = await db.createSharedRoom(init);
-  if (!room.ok) return res.status(500).send();
-
-  res.status(201).send(room.value);
+  return res.status(result.code).send(result.body);
 });
 
 router.get("/shared/:roomId", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
   const roomId = safeParseInt(req.params.roomId);
-  if (!roomId.ok) return res.status(400).send("invalid formatting of :room");
+  if (!roomId.ok) return res.status(400).send("invalid formatting of :roomId");
 
-  const userInRoom = await db.isUserInRoom(
-    roomId.value as ShareRoomID,
-    user.value,
-  );
-  if (!userInRoom.ok) return res.status(500).send("db error");
-  if (!userInRoom.value)
-    return res.status(403).send("you don't belong to that room!");
-
-  const room = await db.getSharedRoom(roomId.value as ShareRoomID);
-  if (!room.ok) return res.status(500).send();
-
-  res.status(200).send(room.value);
+  const result = await core.getRoom(user.value, roomId.value);
+  return res.status(result.code).send(result.body);
 });
 
 /**
@@ -142,19 +101,13 @@ router.patch("/shared/:room", async (req, res) => {
   if (!user.ok) return res.status(401).send("auth error");
   const roomId = safeParseInt(req.params.room);
   if (!roomId.ok) return res.status(400).send("invalid :room");
-  if (!(await db.isUserInRoom(roomId.value, user.value)))
-    return res.status(403).send();
 
-  const name: Name = req.body.name;
-  try {
-    parseName(name);
-  } catch (e) {
-    return res.status(400).send("invalid format");
-  }
-  const room = await db.updateRoomName(roomId.value as ShareRoomID, name);
-  if (!room.ok) return res.status(500).send();
+  const room = SharedRoomSchema.safeParse(req.body);
+  if (!room.success) return res.status(400).send("invalid format");
 
-  res.status(201).send(room.value);
+  // todo: type check
+  const result = await core.patchRoom(user.value, roomId.value, room.data);
+  res.status(result.code).send(result.body);
 });
 
 // POST: authorized body=UserID[]
