@@ -10,21 +10,7 @@ import {
 import { Course, Day } from "../../common/types";
 import courseApi from "../../api/course";
 import SelectCourseDialog from "./SelectCourseDialog";
-
-// FIXME:
-const dayCodeToDayMap: { [dayCode in Day]: string } = {
-  mon: "月",
-  tue: "火",
-  wed: "水",
-  thu: "木",
-  fri: "金",
-  sat: "土",
-  sun: "日",
-};
-
-type DayToCourseByPeriodMap = {
-  [day in Day]: Course | null;
-};
+import { dayCodeToDayMap } from "../../common/consts";
 
 const CoursesTable: React.FC = () => {
   const [isSelectCourseDialogOpen, setIsSelectCourseDialogOpen] =
@@ -36,7 +22,10 @@ const CoursesTable: React.FC = () => {
   } | null>(null);
 
   const [transposedRows, setTransposedRows] = useState<
-    DayToCourseByPeriodMap[] | null
+    | {
+        [day in Day]: Course | null;
+      }[]
+    | null
   >(null);
 
   const handleSelectCourseDialogOpen = async (
@@ -49,18 +38,17 @@ const CoursesTable: React.FC = () => {
   };
 
   const handleCoursesUpdate = (courses: Course[]) => {
-    const newCourses: DayToCourseByPeriodMap[] = Array.from(
-      { length: 6 },
-      () => ({
-        mon: null,
-        tue: null,
-        wed: null,
-        thu: null,
-        fri: null,
-        sat: null,
-        sun: null,
-      }),
-    );
+    const newCourses: {
+      [day in Day]: Course | null;
+    }[] = Array.from({ length: 6 }, () => ({
+      mon: null,
+      tue: null,
+      wed: null,
+      thu: null,
+      fri: null,
+      sat: null,
+      sun: null,
+    }));
     courses.forEach((course) => {
       course.slots.forEach((slot) => {
         const { day, period } = slot;
@@ -83,9 +71,9 @@ const CoursesTable: React.FC = () => {
         <TableHead>
           <TableRow>
             <TableCell></TableCell>
-            {Object.keys(dayCodeToDayMap).map((dayCode) => (
+            {Array.from(dayCodeToDayMap.keys()).map((dayCode) => (
               <TableCell align="center" key={`header-${dayCode}`}>
-                {dayCodeToDayMap[dayCode as Day]}
+                {dayCodeToDayMap.get(dayCode as Day)}
               </TableCell>
             ))}
           </TableRow>
@@ -104,7 +92,7 @@ const CoursesTable: React.FC = () => {
                 >
                   {`${rowIndex + 1}限`}
                 </TableCell>
-                {Object.keys(dayCodeToDayMap).map((dayCode) => (
+                {Array.from(dayCodeToDayMap.keys()).map((dayCode) => (
                   <TableCell
                     key={`cell-${dayCode}-${rowIndex}`}
                     align="center"

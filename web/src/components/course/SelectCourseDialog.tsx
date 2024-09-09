@@ -18,17 +18,7 @@ import courseApi, { deleteMyCourse } from "../../api/course";
 import { Course, Day } from "../../common/types";
 import { useEffect, useState } from "react";
 import CourseRegisterConfirmDialog from "./CourseRegisterConfirmDialog";
-
-// FIXME:
-const dayCodeToDayMap: { [dayCode in Day]: string } = {
-  mon: "月",
-  tue: "火",
-  wed: "水",
-  thu: "木",
-  fri: "金",
-  sat: "土",
-  sun: "日",
-};
+import { dayCodeToDayMap } from "../../common/consts";
 
 export default function SelectCourseDialog({
   open,
@@ -69,7 +59,7 @@ export default function SelectCourseDialog({
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
         {currentEdit
-          ? `${dayCodeToDayMap[currentEdit.columnName]}曜${currentEdit.rowIndex + 1}限の授業を選択`
+          ? `${dayCodeToDayMap.get(currentEdit.columnName)}曜${currentEdit.rowIndex + 1}限の授業を選択`
           : "授業を選択"}
       </DialogTitle>
       <DialogContent>
