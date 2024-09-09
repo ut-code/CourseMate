@@ -37,7 +37,11 @@ export default function Login() {
       <Box mt={2} mx={2} display="flex" gap={1}>
         <Button
           variant="outlined"
-          sx={{ textTransform: "none" }}
+          sx={{
+            textTransform: "none",
+            width: "340px",
+            height: "77px",
+          }}
           onClick={async () => {
             try {
               await signInWithGoogle();
@@ -70,7 +74,18 @@ export default function Login() {
         </Button>
         <Button
           variant="outlined"
-          sx={{ textTransform: "none" }}
+          sx={{
+            textTransform: "none",
+            width: "340px",
+            height: "77px",
+            background: "#039BE5C2",
+            borderRadius: "98px",
+            color: "white",
+            border: "none",
+            "&:hover": {
+              background: "#039BE5",
+            },
+          }}
           onClick={async () => {
             try {
               const guid = await signInWithGoogle();
@@ -95,7 +110,7 @@ export default function Login() {
             }
           }}
         >
-          Sign Up
+          新しいアカウントを作成
         </Button>
       </Box>
     </Box>
