@@ -47,12 +47,15 @@ model Course {
   slots Slot[]
 }
 
+// コマ。1つの講義に対して複数存在しうる。
 model Slot {
   id       Int    @id @default(autoincrement())
   course   Course @relation(fields: [courseId], references: [id])
   courseId String
   period   Int
   day      Day
+
+  @@unique([courseId, period, day])
 }
 
 model Enrollment {
