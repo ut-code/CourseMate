@@ -45,7 +45,7 @@ export default function SelectCourseDialog({
   useEffect(() => {
     (async () => {
       if (!currentEdit) return;
-      const courses = await courseApi.getCoursesBySlot(
+      const courses = await courseApi.getCoursesByDayAndPeriod(
         currentEdit.columnName,
         currentEdit.rowIndex + 1,
       );

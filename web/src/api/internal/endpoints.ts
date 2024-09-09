@@ -207,8 +207,8 @@ const coursesMineOverlaps = (courseId: CourseID) => {
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const coursesSlot = (day: Day, period: number) => {
-  return `${origin}/courses/slot?day=${day}&period=${period}`;
+const coursesDayPeriod = (day: Day, period: number) => {
+  return `${origin}/courses/day-period?day=${day}&period=${period}`;
 };
 
 /**
@@ -340,7 +340,7 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
-  coursesSlot,
+  coursesDayPeriod,
   roomOverview,
   dmTo,
   dmWith,

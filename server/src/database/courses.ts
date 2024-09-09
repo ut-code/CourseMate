@@ -37,7 +37,7 @@ export async function getCoursesByUserId(userId: UserID): Promise<Course[]> {
 /**
  * `userId` のユーザが `day` 曜 `period` 限に履修している講義を取得
  */
-export async function getCourseBySlotAndUserId(
+export async function getCourseByDayPeriodAndUserId(
   day: Day,
   period: number,
   userId: UserID,
@@ -66,7 +66,7 @@ export async function getCourseBySlotAndUserId(
 /**
  * `day` 曜 `period` 限に存在するすべての講義を取得
  */
-export async function getCoursesBySlot(
+export async function getCoursesByDayAndPeriod(
   day: Day,
   period: number,
 ): Promise<Course[]> {

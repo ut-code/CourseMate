@@ -15,11 +15,11 @@ export async function getMyCourses(): Promise<Course[]> {
 /**
  * ある曜限のすべての講義を取得する
  */
-export async function getCoursesBySlot(
+export async function getCoursesByDayAndPeriod(
   day: Day,
   period: number,
 ): Promise<Course[]> {
-  const res = await credFetch("GET", endpoints.coursesSlot(day, period));
+  const res = await credFetch("GET", endpoints.coursesDayPeriod(day, period));
   return res.json();
 }
 
@@ -59,7 +59,7 @@ export async function deleteMyCourse(courseId: CourseID): Promise<Course[]> {
 
 export default {
   getMyCourses,
-  getCoursesBySlot,
+  getCoursesByDayAndPeriod,
   addMyCourse,
   deleteMyCourse,
 };

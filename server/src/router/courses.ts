@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import {
   getCourseByCourseId,
-  getCourseBySlotAndUserId,
-  getCoursesBySlot,
+  getCourseByDayPeriodAndUserId,
+  getCoursesByDayAndPeriod,
   getCoursesByUserId,
 } from "../database/courses";
 import { Day } from "@prisma/client";
@@ -17,7 +17,7 @@ function isDay(value: string): value is Day {
 }
 
 // ある曜限に存在する全ての講義を取得
-router.get("/slot", async (req: Request, res: Response) => {
+router.get("/day-period", async (req: Request, res: Response) => {
   const day = DaySchema.safeParse(req.query.day);
   // TODO: as の使用をやめ、Request 型を適切に拡張する https://stackoverflow.com/questions/63538665/how-to-type-request-query-in-express-using-typescript
   const period = PeriodSchema.safeParse(parseInt(req.query.period as string));
@@ -27,11 +27,13 @@ router.get("/slot", async (req: Request, res: Response) => {
   }
 
   try {
-    const courses = await getCoursesBySlot(day.data, period.data);
+    const courses = await getCoursesByDayAndPeriod(day.data, period.data);
     res.status(200).json(courses);
   } catch (error) {
-    console.error("Error fetching courses by slot:", error);
-    res.status(500).json({ error: "Failed to fetch courses by slot" });
+    console.error("Error fetching courses by day and period:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to fetch courses by day and period" });
   }
 });
 
@@ -62,7 +64,11 @@ router.get("/mine/overlaps/:courseId", async (req: Request, res: Response) => {
     const overlappingCourses = await Promise.all(
       targetCourse.slots.map(
         async (slot) =>
-          await getCourseBySlotAndUserId(slot.day, slot.period, userId.value),
+          await getCourseByDayPeriodAndUserId(
+            slot.day,
+            slot.period,
+            userId.value,
+          ),
       ),
     );
     const filteredOverlappingCourses = overlappingCourses.filter(
