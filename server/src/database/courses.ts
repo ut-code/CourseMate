@@ -3,9 +3,6 @@ import { Course, UserID } from "../common/types";
 
 const prisma = new PrismaClient();
 
-/**
- * 講義IDによって講義を取得
- */
 export async function getCourseByCourseId(
   courseId: string,
 ): Promise<Course | null> {

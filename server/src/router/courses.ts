@@ -19,6 +19,7 @@ function isDay(value: string): value is Day {
 // ある曜限に存在する全ての講義を取得
 router.get("/slot", async (req: Request, res: Response) => {
   const day = DaySchema.safeParse(req.query.day);
+  // TODO: as の使用をやめ、Request 型を適切に拡張する https://stackoverflow.com/questions/63538665/how-to-type-request-query-in-express-using-typescript
   const period = PeriodSchema.safeParse(parseInt(req.query.period as string));
 
   if (!day.success || !period.success || !isDay(day.data)) {
