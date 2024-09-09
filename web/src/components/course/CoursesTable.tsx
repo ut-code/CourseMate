@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableHead,
@@ -12,7 +12,7 @@ import courseApi from "../../api/course";
 import SelectCourseDialog from "./SelectCourseDialog";
 import { dayCodeToDayMap } from "../../common/consts";
 
-const CoursesTable: React.FC = () => {
+export default function CoursesTable() {
   const [isSelectCourseDialogOpen, setIsSelectCourseDialogOpen] =
     useState(false);
   const [currentEdit, setCurrentEdit] = useState<{
@@ -28,16 +28,16 @@ const CoursesTable: React.FC = () => {
     | null
   >(null);
 
-  const handleSelectCourseDialogOpen = async (
+  async function handleSelectCourseDialogOpen(
     rowIndex: number,
     columnName: Day,
     course: Course | null,
-  ) => {
+  ) {
     setCurrentEdit({ rowIndex, columnName, course });
     setIsSelectCourseDialogOpen(true);
-  };
+  }
 
-  const handleCoursesUpdate = (courses: Course[]) => {
+  function handleCoursesUpdate(courses: Course[]) {
     const newCourses: {
       [day in Day]: Course | null;
     }[] = Array.from({ length: 6 }, () => ({
@@ -56,7 +56,7 @@ const CoursesTable: React.FC = () => {
       });
     });
     setTransposedRows(newCourses);
-  };
+  }
 
   useEffect(() => {
     (async () => {
@@ -119,6 +119,4 @@ const CoursesTable: React.FC = () => {
       />
     </>
   );
-};
-
-export default CoursesTable;
+}
