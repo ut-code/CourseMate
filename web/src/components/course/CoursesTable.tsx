@@ -10,7 +10,7 @@ import {
 import { Course, Day } from "../../common/types";
 import courseApi from "../../api/course";
 import SelectCourseDialog from "./SelectCourseDialog";
-import { dayCodeToDayMap } from "../../common/consts";
+import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "../../common/consts";
 
 export default function CoursesTable() {
   const [isSelectCourseDialogOpen, setIsSelectCourseDialogOpen] =
@@ -71,9 +71,9 @@ export default function CoursesTable() {
         <TableHead>
           <TableRow>
             <TableCell></TableCell>
-            {Array.from(dayCodeToDayMap.keys()).map((dayCode) => (
-              <TableCell align="center" key={`header-${dayCode}`}>
-                {dayCodeToDayMap.get(dayCode as Day)}
+            {ACTIVE_DAYS.map((activeDay) => (
+              <TableCell align="center" key={`header-${activeDay}`}>
+                {DAY_TO_JAPANESE_MAP.get(activeDay as Day)}
               </TableCell>
             ))}
           </TableRow>
@@ -92,19 +92,19 @@ export default function CoursesTable() {
                 >
                   {`${rowIndex + 1}限`}
                 </TableCell>
-                {Array.from(dayCodeToDayMap.keys()).map((dayCode) => (
+                {ACTIVE_DAYS.map((activeDay) => (
                   <TableCell
-                    key={`cell-${dayCode}-${rowIndex}`}
+                    key={`cell-${activeDay}-${rowIndex}`}
                     align="center"
                     onClick={() =>
                       handleSelectCourseDialogOpen(
                         rowIndex,
-                        dayCode as Day,
-                        row[dayCode as Day] ?? null,
+                        activeDay as Day,
+                        row[activeDay as Day] ?? null,
                       )
                     }
                   >
-                    {row[dayCode as Day]?.name ?? "-"}
+                    {row[activeDay as Day]?.name ?? "-"}
                   </TableCell>
                 ))}
               </TableRow>

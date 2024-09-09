@@ -18,7 +18,7 @@ import courseApi, { deleteMyCourse } from "../../api/course";
 import { Course, Day } from "../../common/types";
 import { useEffect, useState } from "react";
 import CourseRegisterConfirmDialog from "./CourseRegisterConfirmDialog";
-import { dayCodeToDayMap } from "../../common/consts";
+import { DAY_TO_JAPANESE_MAP } from "../../common/consts";
 
 export default function SelectCourseDialog({
   open,
@@ -59,7 +59,7 @@ export default function SelectCourseDialog({
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
         {currentEdit
-          ? `${dayCodeToDayMap.get(currentEdit.columnName)}曜${currentEdit.rowIndex + 1}限の授業を選択`
+          ? `${DAY_TO_JAPANESE_MAP.get(currentEdit.columnName)}曜${currentEdit.rowIndex + 1}限の授業を選択`
           : "授業を選択"}
       </DialogTitle>
       <DialogContent>
