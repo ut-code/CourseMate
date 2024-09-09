@@ -57,4 +57,6 @@ make start
 make watch
 # または
 make docker
+# または
+make docker-watch
 ```
