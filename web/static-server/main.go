@@ -20,7 +20,7 @@ func main() {
 	}
 
 	log.Println("[web] Serving static directory...")
-	if err := server.ListenAndServe(); errors.Is(err, http.ErrServerClosed) {
+	if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 		log.Fatalln(err)
 	}
 }
