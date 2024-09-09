@@ -190,7 +190,7 @@ const coursesMine = `${origin}/courses/mine`;
  * GET → get courses that overlap with the given course.
  * - statuses:
  *  - 200: ok.
- *    - body: (Course & {courseDayPeriods: CourseDayPeriod[]})[]
+ *    - body: Course[]
  *  - 401: unauthorized.
  *  - 500: internal error.
  */
