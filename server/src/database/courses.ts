@@ -45,6 +45,7 @@ export async function getCourseBySlotAndUserId(
   period: number,
   userId: UserID,
 ): Promise<Course | null> {
+  // TODO: findUnique で取れるような制約を掛ける
   return await prisma.course.findFirst({
     where: {
       enrollments: {
