@@ -30,6 +30,9 @@ export function ProfileModal({
           {selectedUser?.intro_short && (
             <p>Intro Short: {selectedUser.intro_short}</p>
           )}
+          {selectedUser?.intro_long && (
+            <p>Intro Long: {selectedUser.intro_long}</p>
+          )}
         </div>
       </Box>
     </Modal>

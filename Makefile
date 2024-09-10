@@ -1,20 +1,16 @@
 default: start
 
 setup: setup-server setup-web setup-root copy-common
+	npx husky
 	echo "auto setup is done. now do:"
 	echo "- run make husky"
 	echo "- edit server/.env"
 	echo "- edit web/.env"
 
-husky:
-	npx husky
-	git checkout .husky
-	# rm .husky/pre-commit
-
 start: start-all # build -> serve
 build: build-server build-web
 serve: serve-all # serve only. does not build.
-watch:
+watch: setup
 		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
 
 docker: copy-common
@@ -81,10 +77,12 @@ build-web: copy-common-to-web
 build-server: copy-common-to-server
 	cd server; npm run build
 
-# TODO: make SERVE_STATIC flag function
 serve-all:
-	cp web/dist server/static -r
-	cd server; SERVE_STATIC=1 npm run serve
+	(trap 'kill 0' EXIT; make serve-web & make serve-server & wait)
+serve-web:
+	cd web; npm run preview # todo: make serve function
+serve-server:
+	cd server; npm run serve
 
 watch-web: copy-common-to-web
 	cd web; npm run dev

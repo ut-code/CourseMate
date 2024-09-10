@@ -12,16 +12,18 @@ import type {
   DMOverview,
   SharedRoomOverview,
 } from "../common/types";
-import { findRelation } from "./matches";
-import { searchMatchedUser } from "./requests";
+import { getRelation } from "./matches";
+import { getMatchedUser } from "./requests";
 import { Err, Ok, Result } from "../common/lib/result";
 
 const prisma = new PrismaClient();
 
 // ユーザーの参加しているすべての Room の概要 (Overview) の取得
-export async function overview(user: UserID): Promise<Result<RoomOverview[]>> {
+export async function getOverview(
+  user: UserID,
+): Promise<Result<RoomOverview[]>> {
   try {
-    const matched = await searchMatchedUser(user);
+    const matched = await getMatchedUser(user);
     if (!matched.ok) return Err(matched.error);
     const dmov = matched.value.map((user) => {
       const ov: DMOverview = {
@@ -169,12 +171,12 @@ export async function inviteUserToSharedRoom(
   }
 }
 
-export async function findDMbetween(
+export async function getDMbetween(
   u1: UserID,
   u2: UserID,
 ): Promise<Result<DMRoom>> {
   try {
-    const rel = await findRelation(u1, u2);
+    const rel = await getRelation(u1, u2);
     if (!rel.ok) return Err("room not found");
 
     return await findDM(rel.value.id);
@@ -204,7 +206,7 @@ export async function findDM(relID: RelationshipID): Promise<Result<DMRoom>> {
   }
 }
 
-export async function findSharedRoom(
+export async function getSharedRoom(
   roomId: ShareRoomID,
 ): Promise<Result<SharedRoom | null>> {
   try {
@@ -230,7 +232,7 @@ export async function findSharedRoom(
   }
 }
 
-export async function findMessage(id: MessageID): Promise<Result<Message>> {
+export async function getMessage(id: MessageID): Promise<Result<Message>> {
   try {
     const message = await prisma.message.findUnique({
       where: {
