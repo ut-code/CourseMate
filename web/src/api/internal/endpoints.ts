@@ -1,4 +1,4 @@
-import { GUID } from "../../common/types";
+import { CourseID, Day, GUID } from "../../common/types";
 import { MessageID, ShareRoomID } from "../../common/types";
 
 const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
@@ -162,6 +162,57 @@ const matches = `${origin}/matches`;
 
 /**
  * [v] 実装済み
+ * GET -> get my courses.
+ * - statuses:
+ *  - 200: ok.
+ *   - body: Course[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ * PATCH → update my courses.
+ * - request body: CourseId
+ * - statuses:
+ *  - 200: ok.
+ *   - body: Course[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ * DELETE → delete my courses.
+ * - request body: CourseId
+ * - statuses:
+ *  - 200: ok.
+ *   - body: Course[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ */
+const coursesMine = `${origin}/courses/mine`;
+
+/**
+ * [v] 実装済み
+ * GET → get courses that overlap with the given course.
+ * - statuses:
+ *  - 200: ok.
+ *    - body: Course[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ */
+const coursesMineOverlaps = (courseId: CourseID) => {
+  return `${origin}/courses/mine/overlaps/${courseId}`;
+};
+
+/**
+ * [v] 実装済み
+ * GET -> courses that exist on the given day and period.
+ * - statuses:
+ *   - 200: ok.
+ *     - body: Course[]
+ *   - 401: unauthorized.
+ *   - 500: internal error.
+ **/
+const coursesDayPeriod = (day: Day, period: number) => {
+  return `${origin}/courses/day-period?day=${day}&period=${period}`;
+};
+
+/**
+ * [v] 実装済み
  * PUT -> create request.
  * - status:
  *   - 201: Created.
@@ -275,6 +326,8 @@ const message = (messageId: MessageID) =>
 export default {
   user,
   me,
+  coursesMine,
+  coursesMineOverlaps,
   userByGUID,
   userExists,
   users,
@@ -287,6 +340,7 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
+  coursesDayPeriod,
   roomOverview,
   dmTo,
   dmWith,

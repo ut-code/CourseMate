@@ -2,6 +2,7 @@ import { Box, Button } from "@mui/material";
 import LogOutButton from "../../components/LogOutButton";
 import { useState } from "react";
 import EditUserDialog from "../../components/EditUserDialog";
+import CoursesTable from "../../components/course/CoursesTable";
 import hooks from "../../api/hooks";
 import UserAvatar from "../../components/avatar/avatar";
 
@@ -33,6 +34,7 @@ export default function Profile() {
               width="300px"
               height="300px"
             />
+            <CoursesTable />
           </Box>
           <LogOutButton />
           <Button color="inherit" onClick={handleDialogOpen}>
