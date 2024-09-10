@@ -197,13 +197,13 @@ router.patch("/messages/id/:id", async (req, res) => {
   if (!user.ok) return res.status(401).send("auth error");
   const id = safeParseInt(req.params.id);
   if (!id.ok) return res.status(400).send("invalid :id");
+  const friend = req.body.friend;
 
   const old = await db.getMessage(id.value as MessageID);
   if (!old.ok) return res.status(404).send("couldn't find message");
   if (old.value.creator !== user.value)
     return res.status(403).send("cannot edit others' message");
-
-  const content: string = req.body.content;
+  const content: string = req.body.newMessage.content;
   try {
     parseContent(content);
   } catch (e) {
@@ -212,6 +212,7 @@ router.patch("/messages/id/:id", async (req, res) => {
 
   const msg = await db.updateMessage(id.value as MessageID, content);
   if (!msg.ok) return res.status(500).send();
+  ws.updateMessage(msg.value, friend);
 
   res.status(200).send(msg.value);
 });
@@ -219,7 +220,13 @@ router.patch("/messages/id/:id", async (req, res) => {
 router.delete("/messages/id/:id", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
-  // DELETE: authorized TODO!
+  const id = safeParseInt(req.params.id);
+  if (!id.ok) return res.status(400).send("bad `id` format");
+  const friend = req.body.friend;
+
+  await db.deleteMessage(id.value as MessageID, user.value);
+  ws.deleteMessage(id.value, friend);
+  return res.status(204).send();
 });
 
 export default router;

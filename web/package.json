@@ -13,7 +13,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fontsource/roboto": "^5.0.13",
-    "@mui/icons-material": "^5.15.20",
+    "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.15.20",
     "@supabase/supabase-js": "^2.44.2",
     "firebase": "^10.12.2",
