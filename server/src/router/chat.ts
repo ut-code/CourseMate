@@ -1,25 +1,16 @@
 import express from "express";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeParseInt } from "../common/lib/result/safeParseInt";
-import type {
-  MessageID,
-  ShareRoomID,
-} from "../common/types";
-import * as db from "../database/chat";
-import { areAllMatched } from "../database/matches";
-import type { UserID, InitRoom } from "../common/types";
-import { getUserByID } from "../database/users";
-import {
-  parseContent,
-  parseInitRoom,
-  parseName,
-  parseSendMessage,
-  parseUserID,
-} from "../common/zod/methods";
-import { Name } from "../common/zod/types";
+import type { UserID } from "../common/types";
+import { parseUserID } from "../common/zod/methods";
 import * as ws from "../lib/socket/socket";
 import * as core from "../functions/chat";
-import { ContentSchema, InitRoomSchema, SendMessageSchema, SharedRoomSchema } from "../common/zod/schemas";
+import {
+  ContentSchema,
+  InitRoomSchema,
+  SendMessageSchema,
+  SharedRoomSchema,
+} from "../common/zod/schemas";
 
 const router = express.Router();
 
@@ -70,8 +61,7 @@ router.post(`/shared`, async (req, res) => {
   if (!user.ok) return res.status(401).send("auth error");
 
   const init = InitRoomSchema.safeParse(req.body);
-  if (!init.success)
-    return res.status(400).send("invalid format");
+  if (!init.success) return res.status(400).send("invalid format");
 
   const result = await core.createRoom(user.value, init.data);
 

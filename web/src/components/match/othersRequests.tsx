@@ -79,11 +79,13 @@ export default function OthersReq() {
             ))}
         </List>
       )}
-      <ProfileModal
-        selectedUser={selectedUser}
-        open={modalOpen}
-        handleClose={handleClose}
-      />
+      {selectedUser && (
+        <ProfileModal
+          selectedUser={selectedUser}
+          open={modalOpen}
+          handleClose={handleClose}
+        />
+      )}
     </Box>
   );
 }

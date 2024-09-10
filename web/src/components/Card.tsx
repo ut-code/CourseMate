@@ -1,17 +1,19 @@
-import { User } from "../common/types";
+import { PublicUser, User } from "../common/types";
 import UserAvatar from "./avatar/avatar";
 import { Button } from "@mui/material";
 import React from "react";
 import { ProfileModal } from "./avatar/profileModal";
 
 interface CardProps {
-  displayedUser: User | null;
+  displayedUser: User | PublicUser;
 }
 
 export const Card = ({ displayedUser }: CardProps) => {
   const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
-  const handleOpen = (selectedUser: User | null) => {
+  const [selectedUser, setSelectedUser] = React.useState<PublicUser | User>(
+    displayedUser,
+  );
+  const handleOpen = (selectedUser: PublicUser | User) => {
     setModalOpen(true);
     setSelectedUser(selectedUser);
   };
@@ -19,8 +21,8 @@ export const Card = ({ displayedUser }: CardProps) => {
 
   return (
     <div>
-      <p>Name: {displayedUser?.name}</p>
-      <p>id: {displayedUser?.id}</p>
+      <p>Name: {displayedUser.name}</p>
+      <p>id: {displayedUser.id}</p>
       <Button onClick={() => handleOpen(displayedUser)}>
         <UserAvatar
           pictureUrl={displayedUser?.pictureUrl}
