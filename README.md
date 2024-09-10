@@ -20,21 +20,7 @@ GNU Make が導入されています。以下は、ユーザーが使うこと�
 3 通りの方法があります。どのやり方でも可能です。
 終わったら、 `server/.env` と `web/.env` をコピーしてきましょう。
 
-1. The Nix Way
-
-- Nix と nix-direnv をインストールします。
-- `direnv allow` を実行します。
-- `make setup` を実行します。
-
-2. The Nix Way (but no direnv)
-
-- Nix をインストールします
-- `nix develop` を実行します。
-  - 仮想依存環境が作成されます。
-  - 開発を終わるときは、 `exit` を実行して Nix shell から出るようにしましょう。
-- `make setup` を実行します。
-
-3. The Original Way
+1. The Original Way
 
 - 以下をインストールします:
 
@@ -43,6 +29,20 @@ GNU Make が導入されています。以下は、ユーザーが使うこと�
   - nvm (optional)
   - GNU Make (optional)
 
+- `make setup` を実行します。
+
+2. The Nix Way
+
+- Nix をインストールします
+- `nix develop` を実行します。
+  - 仮想依存環境が作成されます。
+  - 開発を終わるときは、 `exit` を実行して Nix shell から出るようにしましょう。
+- `make setup` を実行します。
+
+3. Nix + Direnv
+
+- Nix と nix-direnv をインストールします。
+- `direnv allow` を実行します。
 - `make setup` を実行します。
 
 ### 環境変数
