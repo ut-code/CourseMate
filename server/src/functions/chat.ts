@@ -122,3 +122,31 @@ export async function patchRoom(user: UserID, roomId: ShareRoomID, newRoom: Shar
 
   return http.created(room.value);
 }
+
+export async function inviteUserToRoom(requester: UserID, invited: UserID[], roomId: ShareRoomID): Promise<http.Response<Omit<SharedRoom, "messages">>> {
+  
+
+  if (!(await areAllMatched(requester, invited)))
+    return http.forbidden("some of the members are not friends with you");
+
+  const room = await db.inviteUserToSharedRoom(
+    roomId,
+    invited,
+  );
+
+  if (!room.ok) return http.internalError();
+
+  return http.ok(room.value);
+}
+
+export async function updateMessage(requester: UserID, messageId: MessageID, content: string): Promise<http.Response<Message>> {
+  const old = await db.getMessage(messageId as MessageID);
+  if (!old.ok) return http.notFound("couldn't find message");
+  if (old.value.creator !== requester)
+    return http.forbidden("cannot edit others' message");
+
+  const msg = await db.updateMessage(messageId, content);
+  if (!msg.ok) return http.internalError();
+
+  return http.ok(msg.value);
+}

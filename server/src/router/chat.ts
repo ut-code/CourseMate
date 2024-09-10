@@ -2,15 +2,11 @@ import express from "express";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeParseInt } from "../common/lib/result/safeParseInt";
 import type {
-  Message,
   MessageID,
-  SendMessage,
   ShareRoomID,
-  PersonalizedDMRoom,
-  DMRoom,
 } from "../common/types";
 import * as db from "../database/chat";
-import { areAllMatched, areMatched, getRelation } from "../database/matches";
+import { areAllMatched } from "../database/matches";
 import type { UserID, InitRoom } from "../common/types";
 import { getUserByID } from "../database/users";
 import {
@@ -23,7 +19,7 @@ import {
 import { Name } from "../common/zod/types";
 import * as ws from "../lib/socket/socket";
 import * as core from "../functions/chat";
-import { InitRoomSchema, SendMessageSchema, SharedRoomSchema } from "../common/zod/schemas";
+import { ContentSchema, InitRoomSchema, SendMessageSchema, SharedRoomSchema } from "../common/zod/schemas";
 
 const router = express.Router();
 
@@ -119,21 +115,14 @@ router.post("/shared/id/:room/invite", async (req, res) => {
 
   const invited: UserID[] = req.body;
   try {
+    if (!Array.isArray(invited)) throw new TypeError();
     invited.map(parseUserID);
-  } catch (e) {
-    return res.status(400).send("invalid format");
+  } catch (_) {
+    return res.status(400).send("bad formatting");
   }
 
-  if (!(await areAllMatched(user.value, invited)))
-    return res.status(403).send("some of the members are not friends with you");
-
-  const room = await db.inviteUserToSharedRoom(
-    roomId.value as ShareRoomID,
-    invited,
-  );
-  if (!room.ok) return res.status(500).send();
-
-  res.status(200).send(room.value);
+  const result = await core.inviteUserToRoom(user.value, invited, roomId.value);
+  return res.status(result.code).send(result.body);
 });
 
 router.patch("/messages/id/:id", async (req, res) => {
@@ -142,22 +131,11 @@ router.patch("/messages/id/:id", async (req, res) => {
   const id = safeParseInt(req.params.id);
   if (!id.ok) return res.status(400).send("invalid :id");
 
-  const old = await db.getMessage(id.value as MessageID);
-  if (!old.ok) return res.status(404).send("couldn't find message");
-  if (old.value.creator !== user.value)
-    return res.status(403).send("cannot edit others' message");
+  const content = ContentSchema.safeParse(req.body.content);
+  if (!content.success) return res.status(400).send();
 
-  const content: string = req.body.content;
-  try {
-    parseContent(content);
-  } catch (e) {
-    return res.status(400).send("invalid format");
-  }
-
-  const msg = await db.updateMessage(id.value as MessageID, content);
-  if (!msg.ok) return res.status(500).send();
-
-  res.status(200).send(msg.value);
+  const result = await core.updateMessage(user.value, id.value, content.data);
+  res.status(result.code).send(result.body);
 });
 
 router.delete("/messages/id/:id", async (req, res) => {
