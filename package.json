@@ -25,7 +25,7 @@
     "web/**/*.{js,jsx,ts,tsx}": [
       "eslint --report-unused-disable-directives --max-warnings 0 --config web/eslint.config.js"
     ],
-    "server/**/*.{js,jsx,ts,tsx}": [
+    "server/**/*.{js,ts}": [
       "eslint --report-unused-disable-directives --max-warnings 0 --config server/eslint.config.mjs"
     ],
     "*.{js,jsx,ts,tsx}": [
