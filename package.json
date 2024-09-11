@@ -23,7 +23,7 @@
   },
   "lint-staged": {
     "web/**/*.{js,jsx,ts,tsx}": [
-      "eslint --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --config web/.eslintrc.json"
+      "eslint --report-unused-disable-directives --max-warnings 0 --config web/eslint.config.js"
     ],
     "server/**/*.{js,jsx,ts,tsx}": [
       "eslint --report-unused-disable-directives --max-warnings 0 --config server/eslint.config.mjs"
