@@ -23,11 +23,6 @@ docker-watch: copy-common
 precommit: type-check
 	npx lint-staged
 
-precommit-check:
-	npx prettier . --check
-	cd server; npx eslint .
-
-
 # Setup
 
 setup-web:
@@ -49,8 +44,8 @@ setup-root:
 
 ## code style
 lint:
-	cd server; npx eslint .
-	cd web; npx eslint .
+	cd server; npx eslint . --report-unused-disable-directives --max-warnings 0
+	cd web; npx eslint . --report-unused-disable-directives --max-warnings 0
 
 format:
 	npx prettier . --write
