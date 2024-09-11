@@ -50,7 +50,7 @@ setup-root:
 ## code style
 lint:
 	cd server; npx eslint .
-	cd web; npx eslint --ext ts,tsx .
+	cd web; npx eslint .
 
 format:
 	npx prettier . --write
