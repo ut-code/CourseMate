@@ -20,7 +20,8 @@ docker: copy-common
 docker-watch: copy-common
 	docker compose up --build --watch
 
-precommit: type-check lint format-check
+precommit: type-check
+	npx lint-staged
 
 precommit-check:
 	npx prettier . --check
@@ -49,7 +50,7 @@ setup-root:
 ## code style
 lint:
 	cd server; npx eslint .
-	cd web; npm run lint
+	cd web; npx eslint --ext ts,tsx .
 
 format:
 	npx prettier . --write
