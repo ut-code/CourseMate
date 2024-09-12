@@ -27,7 +27,7 @@ export default function Profile() {
       ) : data ? (
         <>
           <Box>
-            <p>Name: {data.name}</p>
+            <p>名前: {data.name}</p>
             <p>ID: {data.id}</p>
             <UserAvatar
               pictureUrl={data.pictureUrl}

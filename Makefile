@@ -10,7 +10,7 @@ setup: setup-server setup-web setup-root copy-common
 start: start-all # build -> serve
 build: build-server build-web
 serve: serve-all # serve only. does not build.
-watch: setup
+watch:
 		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
 
 docker: copy-common

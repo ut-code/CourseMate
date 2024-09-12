@@ -1,31 +1,29 @@
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { type IDToken } from "../../common/types";
+import { User } from "firebase/auth";
 
 export class ErrUnauthorized extends Error {}
 
-async function sleep(for_ms: number): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(resolve, for_ms);
-  });
-}
-
-// sometimes throws.
 export async function getIdToken(): Promise<IDToken> {
-  // retry 10 times before throwing, because React seems to be doing something weird
-  // it seems like someone forgot await, but it's not us so no clue
-  for (let i = 0; i < 10; i++) {
-    console.log(`getIdToken(): ${i + 1}th try getting currentUser`);
-    const currentUser = getAuth().currentUser;
-    if (currentUser == null) {
-      await sleep(100);
-      console.log(`getIdToken: ${i + 1}th try failed`);
-      continue;
-    }
-    const idtoken = await currentUser.getIdToken();
-    console.log(`getIdToken: ${i + 1}th try succeeded`);
-    return idtoken;
+  const auth = getAuth();
+  const user = await new Promise<User>((resolve) => {
+    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
+      if (user != null) {
+        resolve(user);
+        unsubscribe();
+      } else {
+        console.error("getIdToken: user is null");
+      }
+    });
+  });
+
+  if (user == null) {
+    throw new Error(
+      "Client Error: firebase/auth/lib.ts: current user not found",
+    );
   }
-  throw new Error("Client Error: firebase/auth/lib.ts: current user not found");
+
+  return await user.getIdToken(true);
 }
 
 type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
