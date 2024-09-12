@@ -23,12 +23,8 @@ docker-watch: copy-common
 seed:
 	cd server; npx prisma db seed
 
-precommit: type-check lint format-check
-
-precommit-check:
-	npx prettier . --check
-	cd server; npx eslint .
-
+precommit: type-check
+	npx lint-staged
 
 # Setup
 
@@ -51,8 +47,8 @@ setup-root:
 
 ## code style
 lint:
-	cd server; npx eslint .
-	cd web; npm run lint
+	cd server; npx eslint . --report-unused-disable-directives --max-warnings 0
+	cd web; npx eslint . --report-unused-disable-directives --max-warnings 0
 
 format:
 	npx prettier . --write

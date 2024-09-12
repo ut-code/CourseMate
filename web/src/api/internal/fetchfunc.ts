@@ -1,4 +1,4 @@
-import { Result, Ok, Err } from "../../dev/copied/common/lib/result";
+import { Result, Ok, Err } from "../../common/lib/result";
 
 export async function safeFetch(
   path: string,

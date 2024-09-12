@@ -51,9 +51,7 @@ export default function SignUp() {
 //ユーザー情報をデータベースに登録する関数
 async function registerUserInfo(partialUser: Omit<User, "id">) {
   try {
-    const user = await userapi.create(partialUser);
-    // TODO: use user for something or just let it drop
-    user;
+    await userapi.create(partialUser);
   } catch (error) {
     console.error("Error during sign-up:", error);
   }

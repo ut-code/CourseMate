@@ -26,7 +26,9 @@ export default function MessagePopup({
       </Button>
       <Button
         onClick={() => {
-          window.confirm("メッセージを消去しますか？") && handleDelete();
+          if (window.confirm("メッセージを消去しますか？")) {
+            handleDelete();
+          }
         }}
       >
         delete

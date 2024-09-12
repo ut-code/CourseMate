@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { credFetch } from "../firebase/auth/lib";
-import { Result, Ok, Err } from "../dev/copied/common/lib/result";
+import { Result, Ok, Err } from "../common/lib/result";
 
 // TODO: separate this into concrete types and urls s.t. there is no unsafe any
 // also use sth like Typia (or Zod if you really like it)
