@@ -1,6 +1,6 @@
 import { Box, List, Typography } from "@mui/material";
 import { DMOverview, RoomOverview } from "../../common/types";
-import { Room } from "./Room";
+import { HumanListItem } from "../human/humanListItem";
 
 type RoomListProps = {
   roomsData: RoomOverview[] | null;
@@ -25,7 +25,12 @@ export function RoomList(props: RoomListProps) {
                     : "white",
               }}
             >
-              <Room room={room} />
+              <HumanListItem
+                key={room.friendId}
+                id={room.friendId}
+                name={room.name}
+                pictureUrl={room.thumbnail}
+              />
             </Box>
           );
         } else {

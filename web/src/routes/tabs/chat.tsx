@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { useRoomsOverview } from "../../api/chat/hooks";
 import { DMOverview } from "../../common/types";
 import { useState } from "react";
-import { RoomWindow } from "../../components/chat/RoomWindow";
+// import { RoomWindow } from "../../components/chat/RoomWindow";
 import RoomList from "../../components/chat/RoomList";
 
 export default function Chat() {
@@ -14,21 +14,8 @@ export default function Chat() {
   const [activeRoom, setActiveRoom] = useState<DMOverview | null>(null);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "90vh",
-        width: "100vw",
-        overflow: "hidden",
-      }}
-    >
-      <Box
-        sx={{
-          width: "25%",
-          borderRight: "1px solid #ddd",
-          overflowY: "auto",
-        }}
-      >
+    <Box>
+      <Box>
         {roomsLoading ? (
           <Typography>Loading...</Typography>
         ) : roomsError ? (
@@ -41,7 +28,7 @@ export default function Chat() {
           />
         )}
       </Box>
-      <Box
+      {/* <Box
         sx={{
           width: "75%",
           height: "100%",
@@ -66,7 +53,7 @@ export default function Chat() {
             チャットを始めよう！
           </div>
         )}
-      </Box>
+      </Box> */}
     </Box>
   );
 }
