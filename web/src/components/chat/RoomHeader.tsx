@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import UserAvatar from "../avatar/avatar";
+import UserAvatar from "../human/avatar";
 import { DMOverview } from "../../common/types";
 type Props = { room: DMOverview };
 

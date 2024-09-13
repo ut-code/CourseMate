@@ -1,8 +1,8 @@
 import { User } from "../common/types";
-import UserAvatar from "./avatar/avatar";
+import UserAvatar from "./human/avatar";
 import { Button } from "@mui/material";
 import React from "react";
-import { ProfileModal } from "./avatar/profileModal";
+import { ProfileModal } from "./human/profileModal";
 
 interface CardProps {
   displayedUser: User | null;

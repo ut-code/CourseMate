@@ -1,17 +1,10 @@
-import {
-  Box,
-  List,
-  ListItem,
-  Button,
-  Stack,
-  ListItemAvatar,
-} from "@mui/material";
+import { Box, List } from "@mui/material";
 import request from "../../api/request";
 import hooks from "../../api/hooks";
-import UserAvatar from "../avatar/avatar";
 import React from "react";
-import { ProfileModal } from "../avatar/profileModal";
+import { ProfileModal } from "../human/profileModal";
 import { User } from "../../common/types";
+import { HumanListItem } from "../human/humanListItem";
 
 export default function OthersReq() {
   const { data, loading, error, reload } = hooks.usePendingRequestsToMe();
@@ -38,44 +31,19 @@ export default function OthersReq() {
         <List>
           {data !== undefined &&
             data?.map((sendingUser) => (
-              <ListItem
-                key={sendingUser.id.toString()}
-                secondaryAction={
-                  <Stack direction={"row"}>
-                    <Button
-                      onClick={() => {
-                        request.accept(sendingUser.id).then(() => reload());
-                      }}
-                    >
-                      承認
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        if (
-                          !window.confirm(
-                            "本当にこのマッチリクエストを拒否しますか?",
-                          )
-                        )
-                          return;
-                        request.reject(sendingUser.id).then(() => reload());
-                      }}
-                    >
-                      拒否
-                    </Button>
-                  </Stack>
+              <HumanListItem
+                key={sendingUser.id}
+                id={sendingUser.id}
+                name={sendingUser.name}
+                pictureUrl={sendingUser.pictureUrl}
+                onOpen={() => handleOpen(sendingUser)}
+                onAccept={() =>
+                  request.accept(sendingUser.id).then(() => reload)
                 }
-              >
-                <ListItemAvatar>
-                  <Button onClick={() => handleOpen(sendingUser)}>
-                    <UserAvatar
-                      pictureUrl={sendingUser.pictureUrl}
-                      width="50px"
-                      height="50px"
-                    />
-                  </Button>
-                </ListItemAvatar>
-                <p>{sendingUser.name}</p>
-              </ListItem>
+                onReject={() =>
+                  request.reject(sendingUser.id).then(() => reload)
+                }
+              />
             ))}
         </List>
       )}

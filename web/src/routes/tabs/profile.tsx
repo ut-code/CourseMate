@@ -4,7 +4,7 @@ import { useState } from "react";
 import EditUserDialog from "../../components/EditUserDialog";
 import CoursesTable from "../../components/course/CoursesTable";
 import hooks from "../../api/hooks";
-import UserAvatar from "../../components/avatar/avatar";
+import UserAvatar from "../../components/human/avatar";
 
 export default function Profile() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

@@ -1,9 +1,9 @@
 import { Box } from "@mui/material";
 import hooks from "../../api/hooks";
-import UserAvatar from "../avatar/avatar";
+import UserAvatar from "../human/avatar";
 import { List, ListItem, ListItemAvatar } from "@mui/material";
 import React from "react";
-import { ProfileModal } from "../avatar/profileModal";
+import { ProfileModal } from "../human/profileModal";
 import { User } from "../../common/types";
 import { Button } from "@mui/material";
 
