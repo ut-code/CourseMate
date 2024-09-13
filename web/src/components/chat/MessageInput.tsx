@@ -36,7 +36,7 @@ export function MessageInput(props: Props) {
 
           try {
             parseContent(message);
-          } catch (e) {
+          } catch {
             setError("適切なフォーマットではありません。");
             return;
           }

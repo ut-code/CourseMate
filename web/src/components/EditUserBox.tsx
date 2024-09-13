@@ -79,7 +79,7 @@ export function EditUserBox({
           } else {
             errorMessages = error.message;
           }
-        } catch (e) {
+        } catch {
           errorMessages = error.message;
         }
 
