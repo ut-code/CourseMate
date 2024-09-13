@@ -1,15 +1,15 @@
 import { useState } from "react";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Popper } from "@mui/base/Popper";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-import MessagePopup from "./MessagePopup";
+import ActionPopup from "../common/ActionPopup";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 type Props = {
-  handleEdit: () => void;
+  handleInfo: () => void;
   handleDelete: () => void;
 };
 
-export default function MessagePopupDots({ handleEdit, handleDelete }: Props) {
+export default function MatchPopupDots({ handleInfo, handleDelete }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -34,9 +34,30 @@ export default function MessagePopupDots({ handleEdit, handleDelete }: Props) {
             position: "absolute",
           }}
         >
-          <MessagePopup handleEdit={handleEdit} handleDelete={handleDelete} />
+          <MatchPopup handleInfo={handleInfo} handleDelete={handleDelete} />
         </Popper>
       </div>
     </ClickAwayListener>
   );
+}
+
+type PopupProps = {
+  handleInfo: () => void;
+  handleDelete: () => void;
+};
+function MatchPopup(props: PopupProps) {
+  const { handleInfo, handleDelete } = props;
+  const actions = [
+    {
+      label: "詳細",
+      onClick: handleInfo,
+    },
+    {
+      label: "削除",
+      onClick: handleDelete,
+      confirmMessage: "このフレンドを消去しますか？",
+    },
+  ];
+
+  return <ActionPopup actions={actions} />;
 }

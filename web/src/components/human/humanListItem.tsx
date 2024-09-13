@@ -1,6 +1,7 @@
 import { ListItem, ListItemAvatar, Button, Stack, Box } from "@mui/material";
 import UserAvatar from "./avatar";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+
+import MatchPopupDots from "../match/matchPopup";
 
 type HumanListItemProps = {
   id: number;
@@ -14,12 +15,21 @@ type HumanListItemProps = {
 };
 
 export function HumanListItem(props: HumanListItemProps) {
-  const { id, name, pictureUrl, onOpen, onAccept, onReject, hasDots } = props;
-  // const handleDeleteClick = () => {
-  //   if (!window.confirm("本当にこのマッチングを削除しますか?") || !onDelete)
-  //     return;
-  //   onDelete(id);
-  // };
+  const {
+    id,
+    name,
+    pictureUrl,
+    onDelete,
+    onOpen,
+    onAccept,
+    onReject,
+    hasDots,
+  } = props;
+  const handleDeleteClick = () => {
+    if (!window.confirm("本当にこのマッチングを削除しますか?") || !onDelete)
+      return;
+    onDelete(id);
+  };
   const handleOpenClick = () => {
     if (!onOpen) return;
     onOpen({ id, name, pictureUrl });
@@ -32,7 +42,6 @@ export function HumanListItem(props: HumanListItemProps) {
         <Stack direction="row" spacing={1}>
           {onAccept && <Button onClick={() => onAccept(id)}>承認</Button>}
           {onReject && <Button onClick={() => onReject(id)}>拒否</Button>}
-          {/* {onDelete && <Button onClick={handleDeleteClick}>削除</Button>} */}
         </Stack>
       }
     >
@@ -49,7 +58,12 @@ export function HumanListItem(props: HumanListItemProps) {
         }}
       >
         <p style={{ flexGrow: 1 }}>{name}</p>
-        {hasDots && <MoreVertIcon />}
+        {hasDots && (
+          <MatchPopupDots
+            handleInfo={handleOpenClick}
+            handleDelete={handleDeleteClick}
+          />
+        )}
       </Box>
     </ListItem>
   );
