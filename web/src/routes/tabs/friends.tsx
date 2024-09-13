@@ -1,7 +1,7 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import Followers from "../../components/match/followers";
 import Requests from "../../components/match/requests";
+import Matchings from "../../components/match/matching";
 
 export function Friends() {
   const [open, setOpen] = useState(0);
@@ -19,7 +19,7 @@ export function Friends() {
         </Tabs>
       </Box>
       <TabPanel open={open}>
-        {open === 0 ? <Followers /> : open === 1 ? <Requests /> : null}
+        {open === 0 ? <Matchings /> : open === 1 ? <Requests /> : null}
       </TabPanel>
     </>
   );

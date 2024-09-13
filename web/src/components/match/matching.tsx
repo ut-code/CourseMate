@@ -6,7 +6,7 @@ import { User } from "../../common/types";
 import { HumanListItem } from "../human/humanListItem";
 import { deleteMatch } from "../../api/match";
 
-export default function Followers() {
+export default function Matchings() {
   // const currentUserId = useAuthContext()?.id;
 
   const { data, loading, error, reload } = hooks.useMatchedUsers();
@@ -34,6 +34,7 @@ export default function Followers() {
               pictureUrl={matchedUser.pictureUrl}
               onOpen={() => handleOpen(matchedUser)}
               onDelete={() => deleteMatch(matchedUser.id).then(() => reload)}
+              hasDots
             />
           ))}
         </List>
