@@ -11,7 +11,7 @@ export function Friends() {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={open} onChange={handleChange}>
           <Tab label="マッチ中" {...a11yProps(0)} />
@@ -21,7 +21,7 @@ export function Friends() {
       <TabPanel open={open}>
         {open === 0 ? <Followers /> : open === 1 ? <Requests /> : null}
       </TabPanel>
-    </Box>
+    </>
   );
 }
 
@@ -38,7 +38,7 @@ function TabPanel({
       id={`tabpanel-${open}`}
       aria-labelledby={`tab-${open}`}
     >
-      <Box sx={{ p: 3 }}>{children}</Box>
+      <Box>{children}</Box>
     </div>
   );
 }
