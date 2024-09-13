@@ -1,38 +1,22 @@
-import { Box, Button } from "@mui/material";
+import ActionPopup from "../common/ActionPopup";
 
-export default function MessagePopup({
-  handleEdit,
-  handleDelete,
-}: {
+type Props = {
   handleEdit: () => void;
   handleDelete: () => void;
-}) {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        bgcolor: "background.paper",
-        padding: 1,
-        borderRadius: 2,
-      }}
-    >
-      <Button
-        onClick={async () => {
-          handleEdit();
-        }}
-      >
-        update
-      </Button>
-      <Button
-        onClick={() => {
-          if (window.confirm("メッセージを消去しますか？")) {
-            handleDelete();
-          }
-        }}
-      >
-        delete
-      </Button>
-    </Box>
-  );
+};
+export default function MessagePopup(props: Props) {
+  const { handleEdit, handleDelete } = props;
+  const actions = [
+    {
+      label: "編集",
+      onClick: handleEdit,
+    },
+    {
+      label: "削除",
+      onClick: handleDelete,
+      confirmMessage: "メッセージを消去しますか？",
+    },
+  ];
+
+  return <ActionPopup actions={actions} />;
 }
