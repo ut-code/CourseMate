@@ -220,8 +220,18 @@ export function RoomWindow(props: Prop) {
         ) : (
           <Typography>最初のメッセージを送ってみましょう！</Typography>
         )}
-
-        <MessageInput send={sendDMMessage} room={room} />
+        {/* MessageInputをBottomNavigationの上に固定する */}
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: "56px", // BottomNavigationの高さ分だけ上に配置
+            width: "100%",
+            backgroundColor: "#fff", // 背景色を設定して視認性を向上
+            padding: 1,
+          }}
+        >
+          <MessageInput send={sendDMMessage} room={room} />
+        </Box>
       </Box>
     </>
   );
