@@ -30,7 +30,7 @@ export function HumanListItem(props: HumanListItemProps) {
         <Stack direction="row" spacing={1}>
           {onAccept && <Button onClick={() => onAccept(id)}>承認</Button>}
           {onReject && <Button onClick={() => onReject(id)}>拒否</Button>}
-          <Button onClick={onDelete && handleDeleteClick}>削除</Button>
+          {onDelete && <Button onClick={handleDeleteClick}>削除</Button>}
         </Stack>
       }
     >
