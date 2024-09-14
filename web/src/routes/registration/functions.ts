@@ -3,14 +3,14 @@ import { GUID, User } from "../../common/types";
 import { getAuth } from "firebase/auth";
 import { EnqueueSnackbar } from "notistack";
 import { NavigateFunction } from "react-router-dom";
-import { UserData } from "../../components/config/EditUserBox";
+import { UpdateUser } from "../../common/types";
 
 type Dependencies = {
   navigate: NavigateFunction;
   enqueueSnackbar: EnqueueSnackbar;
 }
 
-export async function register(partial: UserData, { navigate, enqueueSnackbar }: Dependencies) {
+export async function register(data: UpdateUser, { navigate, enqueueSnackbar }: Dependencies) {
   const user = getAuth().currentUser;
 
   const guid = user?.uid as GUID | undefined;
@@ -21,7 +21,7 @@ export async function register(partial: UserData, { navigate, enqueueSnackbar }:
     return;
   }
   try {
-    await registerUserInfo({ guid, ...partial });
+    await registerUserInfo({ guid, ...data });
     enqueueSnackbar("サインアップに成功しました", {
       variant: "success",
     });

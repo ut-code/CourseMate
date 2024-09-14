@@ -26,12 +26,10 @@ export function ProfileModal({
           {selectedUser?.id && <p>ID: {selectedUser.id}</p>}
           {selectedUser?.grade && <p>Grade: {selectedUser.grade}</p>}
           {selectedUser?.gender && <p>Gender: {selectedUser.gender}</p>}
-          {selectedUser?.hobby && <p>Hobby: {selectedUser.hobby}</p>}
-          {selectedUser?.intro_short && (
-            <p>Intro Short: {selectedUser.intro_short}</p>
-          )}
-          {selectedUser?.intro_long && (
-            <p>Intro Long: {selectedUser.intro_long}</p>
+          {selectedUser?.faculity && <p>Hobby: {selectedUser.faculity}</p>}
+          {selectedUser?.department && <p>Hobby: {selectedUser.department}</p>}
+          {selectedUser?.intro && (
+            <p>Intro Short: {selectedUser.intro}</p>
           )}
         </div>
       </Box>

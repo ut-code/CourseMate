@@ -1,14 +1,18 @@
 import { Box, Button } from "@mui/material";
 import LogOutButton from "../../components/LogOutButton";
 import { useState } from "react";
-import EditUserDialog from "../../components/config/EditUserDialog";
 import CoursesTable from "../../components/course/CoursesTable";
 import hooks from "../../api/hooks";
 import UserAvatar from "../../components/avatar/avatar";
 
+function drop<T>(_: T) {
+  _;
+}
 export default function Profile() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  drop(isDialogOpen);
   const { data, loading, error, reload } = hooks.useMe();
+  drop(reload);
 
   const handleDialogOpen = () => {
     setIsDialogOpen(true);
@@ -17,6 +21,7 @@ export default function Profile() {
   const handleDialogClose = () => {
     setIsDialogOpen(false);
   };
+  drop(handleDialogClose);
 
   return (
     <Box>
@@ -40,14 +45,7 @@ export default function Profile() {
           <Button color="inherit" onClick={handleDialogOpen}>
             プロフィールを編集
           </Button>
-          <EditUserDialog
-            previous={data}
-            isOpen={isDialogOpen}
-            close={() => {
-              handleDialogClose();
-              reload();
-            }}
-          />
+          <span>todo: make it editable</span>
         </>
       ) : (
         <p>データがありません。</p>
