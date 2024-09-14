@@ -9,6 +9,9 @@
     "build": "tsc",
     "serve": "node target/index.js"
   },
+  "prisma": {
+    "seed": "ts-node src/seeds/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
