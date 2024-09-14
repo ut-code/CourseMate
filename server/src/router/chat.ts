@@ -1,10 +1,11 @@
 import express from "express";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeParseInt } from "../common/lib/result/safeParseInt";
-import type { UserID } from "../common/types";
+import type { UserID, MessageID } from "../common/types";
 import { parseUserID } from "../common/zod/methods";
 import * as ws from "../lib/socket/socket";
 import * as core from "../functions/chat";
+import * as db from "../database/chat";
 import {
   ContentSchema,
   InitRoomSchema,
@@ -121,7 +122,7 @@ router.patch("/messages/id/:id", async (req, res) => {
   const id = safeParseInt(req.params.id);
   if (!id.ok) return res.status(400).send("invalid :id");
   const friend = req.body.friend;
-  
+
   const content = ContentSchema.safeParse(req.body.content);
   if (!content.success) return res.status(400).send();
 
