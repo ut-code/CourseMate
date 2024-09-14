@@ -1,18 +1,18 @@
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 
-import { UpdateUser } from "../common/types";
-import userapi from "../api/user";
-import { photo } from "./data/photo-preview";
+import { UpdateUser } from "../../common/types";
+import userapi from "../../api/user";
+import { photo } from "./../data/photo-preview";
 import { EditUserBox, UserData } from "./EditUserBox";
 
 type EditUserDialogProps = {
   isOpen: boolean;
   close: () => void;
-  defaultValue: UpdateUser;
+  previous: UpdateUser;
 };
 
 function EditUserDialog(props: EditUserDialogProps) {
-  const { isOpen, close, defaultValue } = props;
+  const { isOpen, close, previous } = props;
   const onClose = () => {
     photo.upload = null;
     close();
@@ -30,7 +30,7 @@ function EditUserDialog(props: EditUserDialogProps) {
       <DialogTitle>ユーザー情報を編集</DialogTitle>
       <DialogContent>
         <EditUserBox
-          defaultValue={defaultValue}
+          previous={previous}
           save={save}
           onSave={onSave}
           saveButtonText="保存"

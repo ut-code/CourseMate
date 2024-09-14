@@ -7,12 +7,12 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { Gender, User } from "../common/types";
-import { photo } from "../components/data/photo-preview";
+import { Gender, User } from "../../common/types";
+import { photo } from "../data/photo-preview";
 import { useState } from "react";
 import { PhotoPreview } from "./PhotoPreview";
-import { deleteImage } from "../firebase/store/photo";
-import { parseUpdateUser } from "../common/zod/methods";
+import { deleteImage } from "../../firebase/store/photo";
+import { parseUpdateUser } from "../../common/zod/methods";
 
 type Props = {
   save: (userData: UserData) => Promise<void>;
@@ -20,7 +20,7 @@ type Props = {
   saveButtonText: string;
   allowClose: boolean;
   onClose?: () => void;
-  defaultValue?: UserData;
+  previous?: UserData;
 };
 export type UserData = Omit<Omit<User, "id">, "guid">;
 
@@ -30,16 +30,16 @@ export function EditUserBox({
   saveButtonText,
   allowClose,
   onClose,
-  defaultValue: def,
+  previous: prev,
 }: Props) {
-  const [name, setName] = useState(def?.name || "");
-  const [grade, setGrade] = useState(def?.grade || "");
+  const [name, setName] = useState(prev?.name || "");
+  const [grade, setGrade] = useState(prev?.grade || "");
   const [gender, setGender] = useState<Gender>(
-    (def?.gender as Gender) || "その他",
+    (prev?.gender as Gender) || "その他",
   );
-  const [hobby, setHobby] = useState(def?.hobby || "");
-  const [introS, setIntroS] = useState(def?.intro_short || "");
-  const [introL, setIntroL] = useState(def?.intro_long || "");
+  const [hobby, setHobby] = useState(prev?.hobby || "");
+  const [introS, setIntroS] = useState(prev?.intro_short || "");
+  const [introL, setIntroL] = useState(prev?.intro_long || "");
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSave = async () => {
@@ -49,7 +49,7 @@ export function EditUserBox({
       }
 
       const pictureUrl = photo.upload && (await photo.upload());
-      if (!def?.pictureUrl && !pictureUrl) {
+      if (!prev?.pictureUrl && !pictureUrl) {
         throw new Error("画像は入力必須です。");
       }
 
@@ -66,8 +66,8 @@ export function EditUserBox({
 
       await save(data);
       if (onSave) onSave();
-      if (def?.pictureUrl && pictureUrl) {
-        deleteImage(def.pictureUrl);
+      if (prev?.pictureUrl && pictureUrl) {
+        deleteImage(prev.pictureUrl);
       }
     } catch (error) {
       if (error instanceof Error) {

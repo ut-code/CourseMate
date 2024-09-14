@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, useEffect } from "react";
-import { uploadImage } from "../firebase/store/photo";
-import { photo } from "./data/photo-preview";
-import { ImageCropper } from "./ImageCropper";
+import { uploadImage } from "../../firebase/store/photo";
+import { photo } from "../data/photo-preview";
+import { ImageCropper } from "../ImageCropper";
 import { Button } from "@mui/material";
 
 const MAX_SIZE_IN_BYTES = 5 * 1024 * 1024; // 5MB

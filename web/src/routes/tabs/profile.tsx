@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import LogOutButton from "../../components/LogOutButton";
 import { useState } from "react";
-import EditUserDialog from "../../components/EditUserDialog";
+import EditUserDialog from "../../components/config/EditUserDialog";
 import CoursesTable from "../../components/course/CoursesTable";
 import hooks from "../../api/hooks";
 import UserAvatar from "../../components/avatar/avatar";
@@ -41,7 +41,7 @@ export default function Profile() {
             プロフィールを編集
           </Button>
           <EditUserDialog
-            defaultValue={data}
+            previous={data}
             isOpen={isDialogOpen}
             close={() => {
               handleDialogClose();
