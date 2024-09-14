@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { Course, Day } from "../../common/types";
-import courseApi from "../../api/course";
-import SelectCourseDialog from "./SelectCourseDialog";
-import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "../../common/consts";
+import { Course, Day } from "../../../common/types";
+import courseApi from "../../../api/course";
+import SelectCourseDialog from "../SelectCourseDialog";
+import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "../../../common/consts";
+import styles from "./styles.module.css";
 
 export default function CoursesTable() {
   const [isSelectCourseDialogOpen, setIsSelectCourseDialogOpen] =
@@ -60,12 +61,16 @@ export default function CoursesTable() {
 
   return (
     <>
-      <table>
+      <table className={styles.table}>
         <thead>
           <tr>
-            <td></td>
+            <td className={styles.emptyCell}></td>
             {ACTIVE_DAYS.map((activeDay) => (
-              <th align="center" key={`header-${activeDay}`}>
+              <th
+                align="center"
+                key={`header-${activeDay}`}
+                className={styles.tableHeader}
+              >
                 {DAY_TO_JAPANESE_MAP.get(activeDay as Day)}
               </th>
             ))}
@@ -75,7 +80,10 @@ export default function CoursesTable() {
           {transposedRows &&
             transposedRows.map((row, rowIndex) => (
               <tr key={`period-${rowIndex + 1}`}>
-                <th key={`header-period-${rowIndex + 1}`}>
+                <th
+                  key={`header-period-${rowIndex + 1}`}
+                  className={styles.tableHeader}
+                >
                   {`${rowIndex + 1}限`}
                 </th>
                 {ACTIVE_DAYS.map((activeDay) => (
@@ -88,6 +96,11 @@ export default function CoursesTable() {
                         activeDay as Day,
                         row[activeDay as Day] ?? null,
                       )
+                    }
+                    className={
+                      row[activeDay as Day]?.name
+                        ? styles.enrolledCell
+                        : styles.emptyCell
                     }
                   >
                     {row[activeDay as Day]?.name ?? "-"}

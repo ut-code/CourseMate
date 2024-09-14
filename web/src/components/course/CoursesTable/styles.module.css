@@ -1,0 +1,26 @@
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.tableHeader {
+  border: 1px solid #000;
+  text-align: center;
+  padding: 8px;
+  font-weight: normal;
+}
+
+.emptyCell {
+  border: 1px solid #000;
+  text-align: center;
+  padding: 8px;
+}
+
+.enrolledCell {
+  border: 1px solid #000;
+  text-align: center;
+  padding: 8px;
+  background-color: rgb(255, 208, 42, 0.81);
+  color: white;
+}
