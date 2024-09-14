@@ -20,6 +20,9 @@ docker: copy-common
 docker-watch: copy-common
 	docker compose up --build --watch
 
+seed:
+	cd server; npx prisma db seed
+
 precommit: type-check
 	npx lint-staged
 
