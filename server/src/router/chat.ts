@@ -120,18 +120,28 @@ router.patch("/messages/id/:id", async (req, res) => {
   if (!user.ok) return res.status(401).send("auth error");
   const id = safeParseInt(req.params.id);
   if (!id.ok) return res.status(400).send("invalid :id");
-
+  const friend = req.body.friend;
+  
   const content = ContentSchema.safeParse(req.body.content);
   if (!content.success) return res.status(400).send();
 
   const result = await core.updateMessage(user.value, id.value, content.data);
   res.status(result.code).send(result.body);
+  if (result.ok) {
+    ws.updateMessage(result.body, friend);
+  }
 });
 
 router.delete("/messages/id/:id", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
-  // DELETE: authorized TODO!
+  const id = safeParseInt(req.params.id);
+  if (!id.ok) return res.status(400).send("bad `id` format");
+  const friend = req.body.friend;
+
+  await db.deleteMessage(id.value as MessageID, user.value);
+  ws.deleteMessage(id.value, friend);
+  return res.status(204).send();
 });
 
 export default router;

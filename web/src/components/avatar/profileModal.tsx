@@ -30,6 +30,7 @@ export function ProfileModal({
           {areMatched && <p>Gender: {selectedUser.gender}</p>}
           {areMatched && <p>Hobby: {selectedUser.hobby}</p>}
           <p>Intro Short: {selectedUser.intro_short}</p>
+          {areMatched && <p>Intro Long: {selectedUser.intro_short}</p>}
         </div>
       </Box>
     </Modal>

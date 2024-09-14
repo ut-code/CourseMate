@@ -2,7 +2,7 @@ import { IconButton, Stack, TextField, Typography } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useEffect, useState } from "react";
 import { DMOverview, SendMessage, UserID } from "../../common/types";
-import { parseMessage } from "../../common/zod/methods";
+import { parseContent } from "../../common/zod/methods";
 
 type Props = {
   send: (to: UserID, m: SendMessage) => void;
@@ -35,8 +35,8 @@ export function MessageInput(props: Props) {
           setError(null);
 
           try {
-            parseMessage(message);
-          } catch (e) {
+            parseContent(message);
+          } catch {
             setError("適切なフォーマットではありません。");
             return;
           }

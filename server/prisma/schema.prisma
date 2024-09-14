@@ -8,18 +8,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id          Int    @id @default(autoincrement())
-  guid        String @unique
-  name        String @default("")
-  pictureUrl  String @default("")
-  grade       String @default("")
-  gender      String @default("")
-  hobby       String @default("")
-  intro_short String @default("")
-  intro_long  String @default("")
+enum Day {
+  mon
+  tue
+  wed
+  thu
+  fri
+  sat
+  sun
+}
 
-  enrollments    Enrollement[] // TODO
+model User {
+  id             Int            @id @default(autoincrement())
+  guid           String         @unique
+  name           String         @default("名無し")
+  pictureUrl     String         @default("")
+  grade          String         @default("")
+  gender         String         @default("")
+  hobby          String         @default("")
+  intro_short    String         @default("")
+  intro_long     String         @default("")
+  enrollments    Enrollment[]
   sendingUsers   Relationship[] @relation("sending") // 自分がマッチリクエストを送ったユーザー
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
 }
@@ -31,20 +40,32 @@ model User {
 //   SECRET
 // }
 
-
-
 model Course {
-  id          Int           @id @default(autoincrement())
-  name        String
-  enrollments Enrollement[]
+  id               String            @id
+  name             String
+  enrollments      Enrollment[]
+  slots Slot[]
 }
 
-model Enrollement {
+// コマ。1つの講義に対して複数存在しうる。
+model Slot {
+  id       Int    @id @default(autoincrement())
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+  period   Int
+  day      Day
+
+  @@unique([courseId, period, day])
+}
+
+model Enrollment {
   id       Int    @id @default(autoincrement())
   user     User   @relation(fields: [userId], references: [id])
   userId   Int
   course   Course @relation(fields: [courseId], references: [id])
-  courseId Int
+  courseId String
+
+  @@unique([userId, courseId])
 }
 
 model Relationship {

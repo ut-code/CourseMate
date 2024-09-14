@@ -73,7 +73,7 @@ export async function getByGUID(guid: GUID): Promise<User | null> {
     const data = await res.json();
     // TODO: properly convert this into User instead of assigning any
     return data;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -84,7 +84,7 @@ export async function exists(guid: GUID): Promise<boolean> {
     const res = await credFetch("GET", endpoints.userExists(guid));
     if (res.status === 404) return false;
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

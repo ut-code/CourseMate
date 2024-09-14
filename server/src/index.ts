@@ -13,6 +13,11 @@ import cookieParser from "cookie-parser";
 import { initializeSocket } from "./lib/socket/socket";
 
 const app = express();
+
+// 高度なクエリパーサーを使わないよう設定。これによりクエリパラメータが配列やオブジェクトではなく string になるようにしている。
+// https://expressjs.com/ja/api.html#app.settings.table  の query parser を参照。
+app.set("query parser", "simple");
+
 const port = 3000;
 const allowedOrigins = [
   process.env.SERVER_ORIGIN ?? "http://localhost:3000", // delete this fallback when you think everyone has updated their .env

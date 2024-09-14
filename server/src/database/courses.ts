@@ -1,48 +1,86 @@
-import { PrismaClient } from "@prisma/client";
+import { Day, PrismaClient } from "@prisma/client";
+import { Course, UserID } from "../common/types";
 
 const prisma = new PrismaClient();
 
-// コースの作成
-export async function createCourse(name: string) {
-  return await prisma.course.create({
-    data: {
-      name,
-    },
-  });
-}
-
-// コースの取得
-export async function getCourse(courseId: number) {
+export async function getCourseByCourseId(
+  courseId: string,
+): Promise<Course | null> {
   return await prisma.course.findUnique({
     where: {
       id: courseId,
     },
-  });
-}
-
-// コースの更新
-export async function updateCourse({
-  courseId,
-  name,
-}: {
-  courseId: number;
-  name: string;
-}) {
-  return await prisma.course.update({
-    where: {
-      id: courseId,
-    },
-    data: {
-      name,
+    include: {
+      slots: true,
     },
   });
 }
 
-// コースの削除
-export async function deleteCourse(courseId: number) {
-  return await prisma.course.delete({
+/**
+ * `userId` のユーザが履修している講義を取得
+ */
+export async function getCoursesByUserId(userId: UserID): Promise<Course[]> {
+  return await prisma.course.findMany({
     where: {
-      id: courseId,
+      enrollments: {
+        some: {
+          userId,
+        },
+      },
+    },
+    include: {
+      slots: true,
+    },
+  });
+}
+
+/**
+ * `userId` のユーザが `day` 曜 `period` 限に履修している講義を取得
+ */
+export async function getCourseByDayPeriodAndUserId(
+  day: Day,
+  period: number,
+  userId: UserID,
+): Promise<Course | null> {
+  // TODO: findUnique で取れるような制約を掛ける
+  return await prisma.course.findFirst({
+    where: {
+      enrollments: {
+        some: {
+          userId,
+        },
+      },
+      slots: {
+        some: {
+          day,
+          period,
+        },
+      },
+    },
+    include: {
+      slots: true,
+    },
+  });
+}
+
+/**
+ * `day` 曜 `period` 限に存在するすべての講義を取得
+ */
+export async function getCoursesByDayAndPeriod(
+  day: Day,
+  period: number,
+): Promise<Course[]> {
+  return await prisma.course.findMany({
+    where: {
+      slots: {
+        some: {
+          day,
+          period,
+        },
+      },
+    },
+    include: {
+      slots: true,
     },
   });
 }

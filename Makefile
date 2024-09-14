@@ -10,7 +10,7 @@ setup: setup-server setup-web setup-root copy-common
 start: start-all # build -> serve
 build: build-server build-web
 serve: serve-all # serve only. does not build.
-watch: setup
+watch:
 		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
 
 docker: copy-common
@@ -20,12 +20,11 @@ docker: copy-common
 docker-watch: copy-common
 	docker compose up --build --watch
 
-precommit: type-check lint format-check
+seed:
+	cd server; npx prisma db seed
 
-precommit-check:
-	npx prettier . --check
-	cd server; npx eslint .
-
+precommit: type-check
+	npx lint-staged
 
 # Setup
 
@@ -48,8 +47,8 @@ setup-root:
 
 ## code style
 lint:
-	cd server; npx eslint .
-	cd web; npm run lint
+	cd server; npx eslint . --report-unused-disable-directives --max-warnings 0
+	cd web; npx eslint . --report-unused-disable-directives --max-warnings 0
 
 format:
 	npx prettier . --write

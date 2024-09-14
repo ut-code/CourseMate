@@ -182,11 +182,15 @@ export async function getDMbetween(
     return Err(e);
   }
 }
+
 export async function findDM(relID: RelationshipID): Promise<Result<DMRoom>> {
   try {
     const messages: Message[] = await prisma.message.findMany({
       where: {
         relationId: relID,
+      },
+      orderBy: {
+        createdAt: "asc",
       },
     });
 
@@ -257,5 +261,22 @@ export async function updateMessage(
     return Ok(message);
   } catch (e) {
     return Err(e);
+  }
+}
+
+export async function deleteMessage(
+  id: MessageID,
+  creatorId: UserID | undefined,
+): Promise<Message | null> {
+  try {
+    const message = await prisma.message.delete({
+      where: {
+        id: id,
+        creator: creatorId,
+      },
+    });
+    return message;
+  } catch (e) {
+    return null;
   }
 }
