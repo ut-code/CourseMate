@@ -1,72 +1,29 @@
 import express, { Request, Response } from "express";
-import { PublicUser, UpdateUser, User, GUID } from "../common/types";
+import { PublicUser, UpdateUser, GUID } from "../common/types";
 import {
   createUser,
   deleteUser,
   getUser,
   updateUser,
-  getAllUsers,
   getUserByID,
 } from "../database/users";
 import {
   getPendingRequestsFromUser,
   getPendingRequestsToUser,
-  getMatchedUser,
 } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
-import { getMatchesByUserId } from "../database/matches";
-import { parseInitUser, parseUpdateUser } from "../common/zod/methods";
+import { parseUpdateUser } from "../common/zod/methods";
+import * as core from "../functions/user";
+import { Public } from "../functions/user";
+import { GUIDSchema, InitUserSchema } from "../common/zod/schemas";
 
 const router = express.Router();
 
-export function Public(u: User): PublicUser {
-  return {
-    id: u.id,
-    name: u.name,
-    pictureUrl: u.pictureUrl,
-    intro_short: u.intro_short,
-  };
-}
-
-// 全ユーザーの取得エンドポイント
-router.get("/", async (req: Request, res: Response) => {
-  const users = await getAllUsers();
-  if (!users.ok) {
-    console.error(users.error);
-    return res.status(500).send();
-  }
-  const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error");
-
-  const matches = await getMatchesByUserId(userId.value);
-  if (!matches.ok) return res.status(500).send();
-
-  users.value.forEach((user) => {
-    const isMatched = matches.value.some(
-      (match) =>
-        match.sendingUserId === user.id || match.receivingUserId === user.id,
-    );
-    if (!isMatched) {
-      user.grade = "";
-      user.gender = "";
-      user.hobby = "";
-      user.intro_long = "";
-    }
-  });
-
-  res.status(200).json(users.value);
-});
-
-// 全ユーザーの公開情報の取得エンドポイント
-router.get("/public", async (req: Request, res: Response) => {
-  const users = await getAllUsers();
-  if (!users.ok) {
-    console.error(users.error);
-    return res.status(500).send();
-  }
-  const safeUsers = users.value.map(Public);
-  res.status(200).json(safeUsers);
+// 全ユーザーを取得
+router.get("/", async (_: Request, res: Response) => {
+  const result = await core.getAllUsers();
+  res.status(result.code).send(result.body);
 });
 
 // 自分の情報を確認するエンドポイント。
@@ -74,20 +31,15 @@ router.get("/me", async (req: Request, res: Response) => {
   const guid = await safeGetGUID(req);
   if (!guid.ok) return res.status(401).send("auth error");
 
-  const user = await getUser(guid.value);
-  if (!user.ok) {
-    if (user.error === 404) return res.status(404).send();
-    console.error(user.error);
-    return res.status(500).send();
-  }
-  res.status(200).json(user.value);
+  const result = await core.getUser(guid.value);
+  res.status(result.code).send(result.body);
 });
 
 // ユーザーの存在を確認するためのエンドポイント。だれでもアクセス可能
 router.get("/exists/:guid", async (req: Request, res: Response) => {
   const guid = req.params.guid;
-  const user = await getUser(guid as GUID);
-  res.status(user.ok ? 200 : 404).send();
+  const ok = await core.userExists(guid as GUID);
+  res.status(ok ? 200 : 404).send();
 });
 
 // 特定のユーザーとマッチしたユーザーを取得
@@ -95,10 +47,8 @@ router.get("/matched", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
 
-  const matchedUsers = await getMatchedUser(userId.value);
-  if (!matchedUsers.ok) return res.status(500).send();
-
-  res.status(200).json(matchedUsers.value);
+  const result = await core.getMatched(userId.value);
+  res.status(result.code).json(result.body);
 });
 
 // ユーザーにリクエストを送っているユーザーを取得 状態はPENDING
@@ -129,9 +79,11 @@ router.get("/pending/from-me", async (req: Request, res: Response) => {
   res.status(200).json(safeUsers);
 });
 
-// guidによるユーザーの取得エンドポイント
+// guidで Public にユーザーを取得
 router.get("/guid/:guid", async (req: Request, res: Response) => {
-  const { guid } = req.params;
+  const guid_ = GUIDSchema.safeParse(req.params.guid);
+  if (!guid_.success) return res.status(400).send();
+  const guid = guid_.data;
 
   const user = await getUser(guid as GUID);
   if (!user.ok) {
@@ -141,7 +93,7 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
   res.status(200).json(json);
 });
 
-//idによるユーザーの取得エンドポイント
+// GET Public(*) FROM "User" WHERE id = ?
 router.get("/id/:id", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
@@ -153,16 +105,12 @@ router.get("/id/:id", async (req: Request, res: Response) => {
   res.status(200).json(json);
 });
 
-// ユーザーの作成エンドポイント
+// INSERT INTO "User" VALUES (body...)
 router.post("/", async (req: Request, res: Response) => {
-  const partialUser: Omit<User, "id"> = req.body;
-  try {
-    parseInitUser(partialUser);
-  } catch (e) {
-    return res.status(400).send("invalid format");
-  }
+  const partialUser = InitUserSchema.safeParse(req.body);
+  if (!partialUser.success) return res.status(400).send("invalid format");
 
-  const user = await createUser(partialUser);
+  const user = await createUser(partialUser.data);
   if (!user.ok) return res.status(500).send();
   res.status(201).json(user.value);
 });

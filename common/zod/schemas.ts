@@ -57,7 +57,7 @@ export const PublicUserSchema = z.object({
   id: UserIDSchema,
   name: NameSchema,
   pictureUrl: PictureUrlSchema,
-  intro_short: z
+  intro: z
     .string()
     .min(1, { message: "Short introduction must not be empty." }),
 });

@@ -1,27 +1,29 @@
 import { Button } from "@mui/material";
-import { BackProp, StepProps } from "../common"
+import { BackProp, StepProps } from "../common";
 import { PhotoPreview } from "../../../components/config/PhotoPreview";
 import { photo } from "../../../components/data/photo-preview";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export type Step3Data = {
-  pictureUrl?: string;
+  pictureUrl: string;
 };
 
-export default function Step3({ onSave, back }: StepProps<Step3Data> & BackProp) {
+export default function Step3({
+  onSave,
+  back,
+}: StepProps<Step3Data> & BackProp) {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   async function save() {
     try {
-      let url = undefined;
-      if (photo.upload) {
-        url = await photo.upload();
+      if (!photo.upload) {
+        throw new Error("画像は入力必須です");
       }
+      const url = await photo.upload();
 
-      // TODO: change this to actual enrollments and apply zod
       const data = {
         pictureUrl: url,
-      }
+      };
       onSave(data);
     } catch (error) {
       if (error instanceof Error) {
@@ -44,13 +46,22 @@ export default function Step3({ onSave, back }: StepProps<Step3Data> & BackProp)
         setErrorMessage("入力に誤りがあります。");
       }
     }
-  };
+  }
 
-  return <>
-    <PhotoPreview />
-    {errorMessage && <span>
-      {errorMessage}</span>}
-    <Button onClick={back}>戻る</Button>
-    <Button onClick={save}>次へ</Button>
-  </>;
+  // syntax salt for defer
+  useEffect(
+    () => () => {
+      photo.upload = null;
+    },
+    [],
+  );
+
+  return (
+    <>
+      <PhotoPreview />
+      {errorMessage && <span>{errorMessage}</span>}
+      <Button onClick={back}>戻る</Button>
+      <Button onClick={save}>次へ</Button>
+    </>
+  );
 }

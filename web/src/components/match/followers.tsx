@@ -55,11 +55,13 @@ export default function Followers() {
           ))}
         </List>
       )}
-      <ProfileModal
-        selectedUser={selectedUser}
-        open={modalOpen}
-        handleClose={handleClose}
-      />
+      {selectedUser && (
+        <ProfileModal
+          selectedUser={selectedUser}
+          open={modalOpen}
+          handleClose={handleClose}
+        />
+      )}
     </Box>
   );
 }
