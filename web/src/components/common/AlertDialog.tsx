@@ -6,7 +6,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 
-type Props = {
+type Alert = {
   buttonMessage: string;
   AlertMessage: string;
   subAlertMessage?: string;
@@ -14,7 +14,7 @@ type Props = {
   clickYes?: () => void;
 };
 
-export default function AlertDialog(props: Props) {
+export default function AlertDialog(props: Alert) {
   const { buttonMessage, AlertMessage, subAlertMessage, yesMessage, clickYes } =
     props;
   const [open, setOpen] = useState(false);

@@ -5,11 +5,11 @@ import { useCurrentUserId } from "../../hooks/useCurrentUser";
 import { useState, useEffect, useRef } from "react";
 import * as chat from "../../api/chat/chat";
 import { RoomHeader } from "./RoomHeader";
-import MessagePopupDots from "./MessagePopupDots";
 import { socket } from "../data/socket";
 import { getIdToken } from "../../firebase/auth/lib";
 import { useSnackbar } from "notistack";
 import user from "../../api/user";
+import Dots from "../common/Dots";
 
 type Prop = {
   room: DMOverview;
@@ -207,9 +207,25 @@ export function RoomWindow(props: Prop) {
                       {m.content}
                     </Typography>
                     {m.creator === id.currentUserId && (
-                      <MessagePopupDots
-                        handleEdit={() => handleEdit(m.id, m.content)}
-                        handleDelete={() => handleDelete(m.id, room.friendId)}
+                      <Dots
+                        actions={[
+                          {
+                            label: "編集",
+                            onClick: () => handleEdit(m.id, m.content),
+                            alert: false,
+                          },
+                          {
+                            label: "削除",
+                            onClick: () => handleDelete(m.id, room.friendId),
+                            alert: true,
+                            messages: {
+                              buttonMessage: "削除",
+                              AlertMessage: "本当に削除しますか？",
+                              subAlertMessage: "この操作は取り消せません。",
+                              yesMessage: "削除",
+                            },
+                          },
+                        ]}
                       />
                     )}
                   </Paper>
@@ -220,13 +236,13 @@ export function RoomWindow(props: Prop) {
         ) : (
           <Typography>最初のメッセージを送ってみましょう！</Typography>
         )}
-        {/* MessageInputをBottomNavigationの上に固定する */}
+
         <Box
           sx={{
             position: "fixed",
-            bottom: "56px", // BottomNavigationの高さ分だけ上に配置
+            bottom: "56px",
             width: "100%",
-            backgroundColor: "#fff", // 背景色を設定して視認性を向上
+            backgroundColor: "#fff",
             padding: 1,
           }}
         >

@@ -1,7 +1,7 @@
 import { ListItem, ListItemAvatar, Button, Stack, Box } from "@mui/material";
 import UserAvatar from "./avatar";
 
-import MatchPopupDots from "../match/matchPopup";
+import Dots from "../common/Dots";
 
 type HumanListItemProps = {
   id: number;
@@ -12,6 +12,7 @@ type HumanListItemProps = {
   onAccept?: (id: number) => void;
   onReject?: (id: number) => void;
   hasDots?: boolean;
+  dotsActions?: object;
 };
 
 export function HumanListItem(props: HumanListItemProps) {
@@ -59,9 +60,25 @@ export function HumanListItem(props: HumanListItemProps) {
       >
         <p style={{ flexGrow: 1 }}>{name}</p>
         {hasDots && (
-          <MatchPopupDots
-            handleInfo={handleOpenClick}
-            handleDelete={handleDeleteClick}
+          <Dots
+            actions={[
+              {
+                label: "詳細",
+                onClick: handleOpenClick,
+                alert: false,
+              },
+              {
+                label: "削除",
+                onClick: handleDeleteClick,
+                alert: true,
+                messages: {
+                  buttonMessage: "削除",
+                  AlertMessage: "このフレンドを削除しますか？",
+                  subAlertMessage: "この操作は取り消せません。",
+                  yesMessage: "削除",
+                },
+              },
+            ]}
           />
         )}
       </Box>
