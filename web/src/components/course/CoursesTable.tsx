@@ -1,11 +1,4 @@
 import { useEffect, useState } from "react";
-import {
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-} from "@mui/material";
 
 import { Course, Day } from "../../common/types";
 import courseApi from "../../api/course";
@@ -67,33 +60,26 @@ export default function CoursesTable() {
 
   return (
     <>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell></TableCell>
+      <table>
+        <thead>
+          <tr>
+            <td></td>
             {ACTIVE_DAYS.map((activeDay) => (
-              <TableCell align="center" key={`header-${activeDay}`}>
+              <th align="center" key={`header-${activeDay}`}>
                 {DAY_TO_JAPANESE_MAP.get(activeDay as Day)}
-              </TableCell>
+              </th>
             ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
+          </tr>
+        </thead>
+        <tbody>
           {transposedRows &&
             transposedRows.map((row, rowIndex) => (
-              <TableRow
-                key={`period-${rowIndex + 1}`}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell
-                  component="th"
-                  scope="row"
-                  key={`header-period-${rowIndex + 1}`}
-                >
+              <tr key={`period-${rowIndex + 1}`}>
+                <th key={`header-period-${rowIndex + 1}`}>
                   {`${rowIndex + 1}限`}
-                </TableCell>
+                </th>
                 {ACTIVE_DAYS.map((activeDay) => (
-                  <TableCell
+                  <td
                     key={`cell-${activeDay}-${rowIndex}`}
                     align="center"
                     onClick={() =>
@@ -105,12 +91,12 @@ export default function CoursesTable() {
                     }
                   >
                     {row[activeDay as Day]?.name ?? "-"}
-                  </TableCell>
+                  </td>
                 ))}
-              </TableRow>
+              </tr>
             ))}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
       <SelectCourseDialog
         open={isSelectCourseDialogOpen}
         onClose={() => setIsSelectCourseDialogOpen(false)}
