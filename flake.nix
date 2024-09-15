@@ -18,6 +18,7 @@
             nodePackages.npm
             nodejs-slim_22
             gnumake
+            bun
           ];
           shellHook = with pkgs; ''
             export PRISMA_SCHEMA_ENGINE_BINARY="${prisma-engines}/bin/schema-engine"
