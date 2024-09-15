@@ -4,23 +4,27 @@
   border-collapse: collapse;
 }
 
-.tableHeader {
+.table th,
+.table td {
   border: 1px solid #000;
   text-align: center;
-  padding: 8px;
+  padding: 0.25rem 0.5rem;
   font-weight: normal;
 }
 
-.emptyCell {
-  border: 1px solid #000;
-  text-align: center;
-  padding: 8px;
+.table th {
+  padding: 0px;
 }
 
-.enrolledCell {
-  border: 1px solid #000;
-  text-align: center;
-  padding: 8px;
+.table th:first-child {
+  width: 1.5rem;
+}
+
+.table td {
+  height: 3rem;
+}
+
+.enrolled {
   background-color: rgb(255, 208, 42, 0.81);
   color: white;
 }

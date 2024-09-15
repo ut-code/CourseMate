@@ -5,6 +5,7 @@ import courseApi from "../../../api/course";
 import SelectCourseDialog from "../SelectCourseDialog";
 import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "../../../common/consts";
 import styles from "./styles.module.css";
+import { truncateStr } from "./lib";
 
 export default function CoursesTable() {
   const [isSelectCourseDialogOpen, setIsSelectCourseDialogOpen] =
@@ -64,13 +65,9 @@ export default function CoursesTable() {
       <table className={styles.table}>
         <thead>
           <tr>
-            <td className={styles.emptyCell}></td>
+            <th></th>
             {ACTIVE_DAYS.map((activeDay) => (
-              <th
-                align="center"
-                key={`header-${activeDay}`}
-                className={styles.tableHeader}
-              >
+              <th align="center" key={`header-${activeDay}`}>
                 {DAY_TO_JAPANESE_MAP.get(activeDay as Day)}
               </th>
             ))}
@@ -80,12 +77,7 @@ export default function CoursesTable() {
           {transposedRows &&
             transposedRows.map((row, rowIndex) => (
               <tr key={`period-${rowIndex + 1}`}>
-                <th
-                  key={`header-period-${rowIndex + 1}`}
-                  className={styles.tableHeader}
-                >
-                  {`${rowIndex + 1}限`}
-                </th>
+                <th key={`header-period-${rowIndex + 1}`}>{rowIndex + 1}</th>
                 {ACTIVE_DAYS.map((activeDay) => (
                   <td
                     key={`cell-${activeDay}-${rowIndex}`}
@@ -97,13 +89,11 @@ export default function CoursesTable() {
                         row[activeDay as Day] ?? null,
                       )
                     }
-                    className={
-                      row[activeDay as Day]?.name
-                        ? styles.enrolledCell
-                        : styles.emptyCell
-                    }
+                    className={row[activeDay as Day]?.name && styles.enrolled}
                   >
-                    {row[activeDay as Day]?.name ?? "-"}
+                    {row[activeDay as Day]?.name
+                      ? truncateStr(row[activeDay as Day]?.name ?? "", 6)
+                      : ""}
                   </td>
                 ))}
               </tr>
