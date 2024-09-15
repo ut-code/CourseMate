@@ -31,7 +31,7 @@ precommit: type-check
 # Sync (install/update packages, generate prisma, etc)
 
 sync-web:
-	cd web; if command -v bun; then bun install; else npm ci
+	cd web; if command -v bun; then bun install; else npm ci; fi
 	# copy .env.sample -> .env only if .env is not there
 	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 
