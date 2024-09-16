@@ -7,7 +7,7 @@ import Root from "./routes/root";
 import Home from "./routes/tabs/home";
 import Profile from "./routes/tabs/profile";
 import Login from "./routes/login";
-import SignUp from "./routes/signUp";
+import RegistrationPage from "./routes/registration/index";
 import { getAuth } from "firebase/auth";
 import { SnackbarProvider } from "notistack";
 import Chat from "./routes/tabs/chat";
@@ -57,7 +57,7 @@ export default function App() {
     },
     {
       path: "/signup",
-      element: <SignUp />,
+      element: <RegistrationPage />,
     },
     {
       path: "/chat",
