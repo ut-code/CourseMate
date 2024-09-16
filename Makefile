@@ -1,11 +1,13 @@
 default: start
 
-setup: setup-server setup-web setup-root copy-common
+setup: sync
 	npx husky
 	echo "auto setup is done. now do:"
 	echo "- run make husky"
 	echo "- edit server/.env"
 	echo "- edit web/.env"
+
+sync: sync-server sync-web sync-root copy-common
 
 start: start-all # build -> serve
 build: build-server build-web
@@ -26,21 +28,21 @@ seed:
 precommit: type-check
 	npx lint-staged
 
-# Setup
+# Sync (install/update packages, generate prisma, etc)
 
-setup-web:
-	cd web; npm ci
+sync-web:
+	cd web; if command -v bun; then bun install; else npm ci; fi
 	# copy .env.sample -> .env only if .env is not there
 	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 
-setup-server:
-	cd server; npm ci
+sync-server:
+	cd server; if command -v bun; then bun install; else npm install; fi
 	cd server; npx prisma generate
 	# copy .env.sample -> .env only if .env is not there
 	cd server; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 
-setup-root:
-	npm ci
+sync-root:
+	if command -v bun; then bun install; else npm ci; fi
 
 
 # Static checks

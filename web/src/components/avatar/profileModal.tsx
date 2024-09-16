@@ -3,7 +3,7 @@ import UserAvatar from "./avatar";
 import { User } from "../../common/types";
 
 interface ProfileModalProps {
-  selectedUser: User | null;
+  selectedUser: User;
   open: boolean;
   handleClose: () => void;
 }
@@ -13,6 +13,8 @@ export function ProfileModal({
   open,
   handleClose,
 }: ProfileModalProps) {
+  // FIXME: find a better logic
+  const areMatched = "grade" in selectedUser;
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={modalStyle}>
@@ -22,17 +24,13 @@ export function ProfileModal({
             width="300px"
             height="300px"
           />
-          {selectedUser?.name && <p>Name: {selectedUser.name}</p>}
-          {selectedUser?.id && <p>ID: {selectedUser.id}</p>}
-          {selectedUser?.grade && <p>Grade: {selectedUser.grade}</p>}
-          {selectedUser?.gender && <p>Gender: {selectedUser.gender}</p>}
-          {selectedUser?.hobby && <p>Hobby: {selectedUser.hobby}</p>}
-          {selectedUser?.intro_short && (
-            <p>Intro Short: {selectedUser.intro_short}</p>
-          )}
-          {selectedUser?.intro_long && (
-            <p>Intro Long: {selectedUser.intro_long}</p>
-          )}
+          {<p>Name: {selectedUser.name}</p>}
+          {<p>ID: {selectedUser.id}</p>}
+          {areMatched && <p>Grade: {selectedUser.grade}</p>}
+          {areMatched && <p>Gender: {selectedUser.gender}</p>}
+          {areMatched && <p>学部: {selectedUser.faculity}</p>}
+          {areMatched && <p>学科: {selectedUser.department}</p>}
+          <p>Intro Short: {selectedUser.intro}</p>
         </div>
       </Box>
     </Modal>

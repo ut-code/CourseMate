@@ -90,7 +90,6 @@ export async function deleteMatch(
   receiverId: UserID,
 ): Promise<Result<void>> {
   try {
-    console.log("delete starting...");
     // 最初の条件で削除を試みる
     const recordToDelete = await prisma.relationship.findUnique({
       where: {
@@ -102,9 +101,12 @@ export async function deleteMatch(
     });
 
     if (recordToDelete) {
-      await prisma.relationship.delete({
+      await prisma.relationship.update({
         where: {
           id: recordToDelete.id,
+        },
+        data: {
+          status: "REJECTED",
         },
       });
       return Ok(undefined);
@@ -121,9 +123,12 @@ export async function deleteMatch(
     });
 
     if (altRecordToDelete) {
-      await prisma.relationship.delete({
+      await prisma.relationship.update({
         where: {
           id: altRecordToDelete.id,
+        },
+        data: {
+          status: "REJECTED",
         },
       });
       return Ok(undefined);
