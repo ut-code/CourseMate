@@ -32,6 +32,16 @@
   background-color: transparent;
 }
 
+.table span {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .enrolled {
   background-color: rgb(255, 208, 42, 0.81) !important;
 }

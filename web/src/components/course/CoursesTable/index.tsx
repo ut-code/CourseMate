@@ -9,10 +9,11 @@ import { truncateStr } from "./lib";
 
 type Props = {
   userId: UserID;
+  editable?: boolean;
 };
 
 export default function CoursesTable(props: Props) {
-  const { userId } = props;
+  const { userId, editable } = props;
   const [isSelectCourseDialogOpen, setIsSelectCourseDialogOpen] =
     useState(false);
   const [currentEdit, setCurrentEdit] = useState<{
@@ -85,32 +86,48 @@ export default function CoursesTable(props: Props) {
                 <th key={`header-period-${rowIndex + 1}`}>{rowIndex + 1}</th>
                 {ACTIVE_DAYS.map((activeDay) => (
                   <td key={`cell-${activeDay}-${rowIndex}`} align="center">
-                    <button
-                      className={row[activeDay as Day]?.name && styles.enrolled}
-                      onClick={() =>
-                        handleSelectCourseDialogOpen(
-                          rowIndex,
-                          activeDay as Day,
-                          row[activeDay as Day] ?? null,
-                        )
-                      }
-                    >
-                      {row[activeDay as Day]?.name
-                        ? truncateStr(row[activeDay as Day]?.name ?? "", 6)
-                        : ""}
-                    </button>
+                    {editable ? (
+                      <button
+                        className={
+                          row[activeDay as Day]?.name && styles.enrolled
+                        }
+                        onClick={() =>
+                          handleSelectCourseDialogOpen(
+                            rowIndex,
+                            activeDay as Day,
+                            row[activeDay as Day] ?? null,
+                          )
+                        }
+                      >
+                        {row[activeDay as Day]?.name
+                          ? truncateStr(row[activeDay as Day]?.name ?? "", 6)
+                          : ""}
+                      </button>
+                    ) : (
+                      <span
+                        className={
+                          row[activeDay as Day]?.name && styles.enrolled
+                        }
+                      >
+                        {row[activeDay as Day]?.name
+                          ? truncateStr(row[activeDay as Day]?.name ?? "", 6)
+                          : ""}
+                      </span>
+                    )}
                   </td>
                 ))}
               </tr>
             ))}
         </tbody>
       </table>
-      <SelectCourseDialog
-        open={isSelectCourseDialogOpen}
-        onClose={() => setIsSelectCourseDialogOpen(false)}
-        currentEdit={currentEdit}
-        handleCoursesUpdate={handleCoursesUpdate}
-      />
+      {editable && (
+        <SelectCourseDialog
+          open={isSelectCourseDialogOpen}
+          onClose={() => setIsSelectCourseDialogOpen(false)}
+          currentEdit={currentEdit}
+          handleCoursesUpdate={handleCoursesUpdate}
+        />
+      )}
     </>
   );
 }

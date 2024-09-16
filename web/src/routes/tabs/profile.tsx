@@ -33,13 +33,12 @@ export default function Profile() {
               width="300px"
               height="300px"
             />
-            <CoursesTable userId={data.id} />
+            <CoursesTable editable userId={data.id} />
           </Box>
           <LogOutButton />
           <Button color="inherit" onClick={handleDialogOpen}>
             プロフィールを編集
           </Button>
-          <span>todo: make it editable</span>
         </>
       ) : (
         <p>データがありません。</p>
