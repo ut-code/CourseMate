@@ -8,7 +8,7 @@ export function Public(u: User): PublicUser {
     id: u.id,
     name: u.name,
     pictureUrl: u.pictureUrl,
-    intro_short: u.intro_short,
+    intro: u.intro,
   };
 }
 

@@ -28,9 +28,9 @@ export function ProfileModal({
           {<p>ID: {selectedUser.id}</p>}
           {areMatched && <p>Grade: {selectedUser.grade}</p>}
           {areMatched && <p>Gender: {selectedUser.gender}</p>}
-          {areMatched && <p>Hobby: {selectedUser.hobby}</p>}
-          <p>Intro Short: {selectedUser.intro_short}</p>
-          {areMatched && <p>Intro Long: {selectedUser.intro_short}</p>}
+          {areMatched && <p>学部: {selectedUser.faculity}</p>}
+          {areMatched && <p>学科: {selectedUser.department}</p>}
+          <p>Intro Short: {selectedUser.intro}</p>
         </div>
       </Box>
     </Modal>
