@@ -1,27 +1,21 @@
 import { Box, Button } from "@mui/material";
 import LogOutButton from "../../components/LogOutButton";
-import { useState } from "react";
+// import { useState } from "react";
 import CoursesTable from "../../components/course/CoursesTable";
 import hooks from "../../api/hooks";
 import UserAvatar from "../../components/avatar/avatar";
 
-function drop<T>(_: T) {
-  _;
-}
 export default function Profile() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  drop(isDialogOpen);
-  const { data, loading, error, reload } = hooks.useMe();
-  drop(reload);
+  // const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { data, loading, error } = hooks.useMe();
 
   const handleDialogOpen = () => {
-    setIsDialogOpen(true);
+    // setIsDialogOpen(true);
   };
 
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
-  };
-  drop(handleDialogClose);
+  // const handleDialogClose = () => {
+  // setIsDialogOpen(false);
+  // };
 
   return (
     <Box>
