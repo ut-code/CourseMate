@@ -20,6 +20,11 @@ export default function Matchings() {
 
   return (
     <Box>
+      <p>
+        {data &&
+          data.length === 0 &&
+          "誰ともマッチングしていません。リクエストを送りましょう！"}
+      </p>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -39,7 +44,7 @@ export default function Matchings() {
           ))}
         </List>
       )}
-      <ProfileModal
+      <ProfileModal //TODO: change to Card!
         selectedUser={selectedUser!}
         open={modalOpen}
         handleClose={handleClose}

@@ -13,9 +13,9 @@ export function Friends() {
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={open} onChange={handleChange}>
-          <Tab label="マッチ中" {...a11yProps(0)} />
-          <Tab label="リクエスト" {...a11yProps(1)} />
+        <Tabs value={open} onChange={handleChange} sx={{ width: "100%" }}>
+          <Tab label="マッチ中" {...a11yProps(0)} sx={{ width: "50%" }} />
+          <Tab label="リクエスト" {...a11yProps(1)} sx={{ width: "50%" }} />
         </Tabs>
       </Box>
       <TabPanel open={open}>

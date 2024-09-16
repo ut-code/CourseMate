@@ -14,7 +14,7 @@ export function ProfileModal({
   handleClose,
 }: ProfileModalProps) {
   // FIXME: find a better logic
-  const areMatched = "grade" in selectedUser;
+  //TODO: fix{selectedUser?.name}!!!!
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={modalStyle}>
@@ -24,13 +24,13 @@ export function ProfileModal({
             width="300px"
             height="300px"
           />
-          {<p>Name: {selectedUser.name}</p>}
-          {<p>ID: {selectedUser.id}</p>}
-          {areMatched && <p>Grade: {selectedUser.grade}</p>}
-          {areMatched && <p>Gender: {selectedUser.gender}</p>}
-          {areMatched && <p>学部: {selectedUser.faculity}</p>}
-          {areMatched && <p>学科: {selectedUser.department}</p>}
-          <p>Intro Short: {selectedUser.intro}</p>
+          {<p>Name: {selectedUser?.name}</p>}
+          {<p>ID: {selectedUser?.id}</p>}
+          {<p>Grade: {selectedUser?.grade}</p>}
+          {<p>Gender: {selectedUser?.gender}</p>}
+          {<p>学部: {selectedUser?.faculity}</p>}
+          {<p>学科: {selectedUser?.department}</p>}
+          <p>Intro Short: {selectedUser?.intro}</p>
         </div>
       </Box>
     </Modal>
