@@ -41,11 +41,13 @@ export default function MyReq() {
             ))}
         </List>
       )}
-      <ProfileModal
-        selectedUser={selectedUser}
-        open={modalOpen}
-        handleClose={handleClose}
-      />
+      {selectedUser && (
+        <ProfileModal
+          selectedUser={selectedUser}
+          open={modalOpen}
+          handleClose={handleClose}
+        />
+      )}
     </Box>
   );
 }

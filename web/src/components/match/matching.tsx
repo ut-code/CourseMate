@@ -40,7 +40,7 @@ export default function Matchings() {
         </List>
       )}
       <ProfileModal
-        selectedUser={selectedUser}
+        selectedUser={selectedUser!}
         open={modalOpen}
         handleClose={handleClose}
       />
