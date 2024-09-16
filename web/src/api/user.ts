@@ -51,10 +51,10 @@ export async function remove(): Promise<void> {
 }
 
 //指定した id のユーザ情報を除いた全てのユーザ情報を取得する
-export async function except(id: UserID): Promise<PublicUser[]> {
+export async function except(id: UserID): Promise<User[]> {
   try {
     const data = await all();
-    return data.filter((user: PublicUser) => user.id !== id);
+    return data.filter((user: User) => user.id !== id);
   } catch (err) {
     console.error("Error fetching data:", err);
     throw err;

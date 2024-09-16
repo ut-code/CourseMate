@@ -1,12 +1,12 @@
 import { useState, useCallback } from "react";
 import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
-import { PublicUser } from "../common/types";
 import { Card } from "./Card";
+import { User } from "../common/types";
 
 const SWIPE_THRESHOLD = 200;
 
 interface DraggableCardProps {
-  displayedUser: PublicUser;
+  displayedUser: User;
   onSwipeRight: () => void;
   onSwipeLeft: () => void;
   onDrag?: (X: number) => void;
@@ -22,8 +22,8 @@ export const DraggableCard = ({
   const dragY = useMotionValue(0);
   const [dragging, setDragging] = useState(false);
 
-  useMotionValueEvent(dragX, "change", (latest) => {
-    if (typeof latest === "number" && dragging) {
+  useMotionValueEvent(dragX, "change", (latest: number) => {
+    if (dragging) {
       dragX.set(latest);
       if (onDrag) {
         onDrag(latest);
@@ -36,8 +36,8 @@ export const DraggableCard = ({
     }
   });
 
-  useMotionValueEvent(dragY, "change", (latest) => {
-    if (typeof latest === "number" && dragging) {
+  useMotionValueEvent(dragY, "change", (latest: number) => {
+    if (dragging) {
       dragY.set(latest);
     } else {
       dragY.set(0);

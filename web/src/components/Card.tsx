@@ -1,18 +1,18 @@
-import { PublicUser, User } from "../common/types";
+import { User } from "../common/types";
 import UserAvatar from "./avatar/avatar";
 import { useState } from "react";
 import CoursesTable from "./course/CoursesTable";
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
 
 interface CardProps {
-  displayedUser: User | PublicUser;
+  displayedUser: User;
 }
 
 export const Card = ({ displayedUser }: CardProps) => {
-  const [isRotated, setIsRotated] = useState(false);
+  const [isDisplayingBack, setIsDisplayingBack] = useState(false);
 
   const handleRotate = () => {
-    setIsRotated(!isRotated);
+    setIsDisplayingBack(!isDisplayingBack);
   };
 
   return (
@@ -32,7 +32,7 @@ export const Card = ({ displayedUser }: CardProps) => {
           height: "100%",
           transformStyle: "preserve-3d",
           transition: "transform 1s",
-          transform: isRotated ? "rotateY(180deg)" : "rotateY(0deg)",
+          transform: isDisplayingBack ? "rotateY(180deg)" : "rotateY(0deg)",
         }}
       >
         <div
@@ -92,11 +92,11 @@ const CardFront = ({ displayedUser }: CardProps) => {
         </p>
       </div>
       <div style={{ padding: "10px" }}>
-        <p>学年: 学部num年</p>
-        <p>所属： hoge学部hugahuga学科</p>
-        {displayedUser?.intro_short && (
-          <p>自己紹介: {displayedUser.intro_short}</p>
-        )}
+        {displayedUser?.grade && <p>学年： {displayedUser.grade}</p>}
+        {displayedUser?.faculity && <p>学部： {displayedUser.faculity}</p>}
+        {displayedUser?.department && <p>学科： {displayedUser.department}</p>}
+        {displayedUser?.gender && <p>性別： {displayedUser?.gender}</p>}
+        {displayedUser?.intro && <p>自己紹介: {displayedUser.intro}</p>}
       </div>
       <div style={{ position: "absolute", bottom: "0", right: "0", left: "0" }}>
         <ThreeSixtyIcon

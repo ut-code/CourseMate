@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { PublicUser } from "../../common/types";
+import type { User } from "../../common/types";
 import { Box, Button } from "@mui/material";
 import user from "../../api/user";
 import request from "../../api/request";
@@ -27,9 +27,9 @@ const getBackgroundColor = (x: number) => {
 };
 
 export default function Home() {
-  const [users, setUsers] = useState<PublicUser[] | null>(null);
-  const [skippedUsers, setSkippedUsers] = useState<PublicUser[] | null>(null);
-  const [displayedUser, setDisplayedUser] = useState<PublicUser | null>(null);
+  const [users, setUsers] = useState<User[] | null>(null);
+  const [skippedUsers, setSkippedUsers] = useState<User[] | null>(null);
+  const [displayedUser, setDisplayedUser] = useState<User | null>(null);
   const { currentUserId, loading } = useCurrentUserId();
   const [isAllUsersLiked, setIsAllUsersLiked] = useState(false);
 
@@ -37,9 +37,8 @@ export default function Home() {
     (async () => {
       if (loading || !currentUserId) return;
       const matched = await user.matched();
-      const usersPublic = await user.except(currentUserId);
+      const users = await user.except(currentUserId);
       // TODO: zod
-      const users = usersPublic as PublicUser[];
       const unmatched = users.filter(
         (user) => !matched.some((matchedUser) => matchedUser.id === user.id),
       );
