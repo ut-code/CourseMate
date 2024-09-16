@@ -8,9 +8,12 @@ import { UpdateUser } from "../../common/types";
 type Dependencies = {
   navigate: NavigateFunction;
   enqueueSnackbar: EnqueueSnackbar;
-}
+};
 
-export async function register(data: UpdateUser, { navigate, enqueueSnackbar }: Dependencies) {
+export async function register(
+  data: UpdateUser,
+  { navigate, enqueueSnackbar }: Dependencies,
+) {
   const user = getAuth().currentUser;
 
   const guid = user?.uid as GUID | undefined;
@@ -33,7 +36,7 @@ export async function register(data: UpdateUser, { navigate, enqueueSnackbar }: 
     });
     navigate("/", { replace: true });
   }
-};
+}
 
 //ユーザー情報をデータベースに登録する関数
 async function registerUserInfo(partialUser: Omit<User, "id">) {

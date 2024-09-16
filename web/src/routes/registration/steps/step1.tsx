@@ -1,7 +1,15 @@
 import { useState } from "react";
 
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { StepProps } from "../common"
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import { StepProps } from "../common";
 
 export type Step1Data = {
   name: string;
@@ -32,7 +40,8 @@ export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
         name,
         grade,
         gender,
-        faculity, department,
+        faculity,
+        department,
         intro,
       };
       onSave(data);
@@ -53,11 +62,11 @@ export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
         // エラーメッセージをセット
         setErrorMessage(errorMessages);
       } else {
-        console.log("unknown error:", error)
+        console.log("unknown error:", error);
         setErrorMessage("入力に誤りがあります。");
       }
     }
-  };
+  }
 
   return (
     <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
@@ -122,11 +131,7 @@ export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
           {errorMessage}
         </Box>
       )}
-      <Button
-        variant="outlined"
-        sx={{ textTransform: "none" }}
-        onClick={save}
-      >
+      <Button variant="outlined" sx={{ textTransform: "none" }} onClick={save}>
         次へ
       </Button>
     </Box>
