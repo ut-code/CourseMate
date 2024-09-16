@@ -84,21 +84,21 @@ export default function CoursesTable(props: Props) {
               <tr key={`period-${rowIndex + 1}`}>
                 <th key={`header-period-${rowIndex + 1}`}>{rowIndex + 1}</th>
                 {ACTIVE_DAYS.map((activeDay) => (
-                  <td
-                    key={`cell-${activeDay}-${rowIndex}`}
-                    align="center"
-                    onClick={() =>
-                      handleSelectCourseDialogOpen(
-                        rowIndex,
-                        activeDay as Day,
-                        row[activeDay as Day] ?? null,
-                      )
-                    }
-                    className={row[activeDay as Day]?.name && styles.enrolled}
-                  >
-                    {row[activeDay as Day]?.name
-                      ? truncateStr(row[activeDay as Day]?.name ?? "", 6)
-                      : ""}
+                  <td key={`cell-${activeDay}-${rowIndex}`} align="center">
+                    <button
+                      className={row[activeDay as Day]?.name && styles.enrolled}
+                      onClick={() =>
+                        handleSelectCourseDialogOpen(
+                          rowIndex,
+                          activeDay as Day,
+                          row[activeDay as Day] ?? null,
+                        )
+                      }
+                    >
+                      {row[activeDay as Day]?.name
+                        ? truncateStr(row[activeDay as Day]?.name ?? "", 6)
+                        : ""}
+                    </button>
                   </td>
                 ))}
               </tr>
