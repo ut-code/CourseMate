@@ -33,7 +33,9 @@ export function ImageCropper({ sameOriginURL: url, onImageChange }: Props) {
 
             // not optimal performance-wise: it operates crop on every crop action.
             // better operate crop only once on save, but couldn't find a way to do it easily
-            operateCrop(url, diff, size).then((f) => onImageChange(f));
+            operateCrop(url, diff, size)
+              .then((f) => onImageChange(f))
+              .catch();
           }}
         />
       </div>
@@ -80,7 +82,7 @@ function operateCrop(
     // https://stackoverflow.com/questions/47913980/js-convert-an-image-object-to-a-jpeg-file
     dest.toBlob(
       (blob) => {
-        if (!blob) throw new Error(); // this should not happen
+        if (!blob) return; // this sometimes happen
         const filename = randomString(16) + ".jpg";
         const file = new File([blob], filename, { type: "image/jpeg" });
         resolve(file);

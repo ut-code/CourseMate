@@ -22,6 +22,7 @@ function Registration() {
     case 1:
       return (
         <Step1
+          caller="registration"
           prev={step1Data}
           onSave={(data) => {
             setStep1Data(data);
@@ -32,6 +33,7 @@ function Registration() {
     case 2:
       return (
         <Step2
+          caller="registration"
           prev={step2Data}
           onSave={(data) => {
             setStep2Data(data);
@@ -43,6 +45,7 @@ function Registration() {
     case 3:
       return (
         <Step3
+          caller="registration"
           prev={step3Data}
           onSave={(data) => {
             setStep3Data(data);
@@ -54,6 +57,7 @@ function Registration() {
     case 4:
       return (
         <Confirmation
+          caller="registration"
           onSave={() => {
             if (!step1Data) throw new Error("don't skip the steps");
             if (!step2Data) throw new Error("don't skip the steps");

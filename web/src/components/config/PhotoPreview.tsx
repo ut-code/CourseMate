@@ -8,13 +8,40 @@ const MAX_SIZE_IN_BYTES = 5 * 1024 * 1024; // 5MB
 
 type Props = {
   defaultValueUrl?: string;
+  onCrop?: (f: File) => void;
 };
-function syncUploaderToFileChange(file: File) {
-  if (file) photo.upload = async () => await uploadImage(file);
+type ButtonProps = {
+  text?: string;
+  onSelect: () => void;
+};
+
+export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
+  return (
+    <Button>
+      <label htmlFor="file-upload" className="custom-file-label">
+        {text || "写真を選択"}
+        <input
+          id="file-upload"
+          type="file"
+          onChange={(e) => {
+            onSelect();
+            imageSelectHandler(e);
+          }}
+          accept=".png, .jpeg, .jpg"
+          style={{ display: "none" }}
+        />
+      </label>
+    </Button>
+  );
 }
-export function PhotoPreview({ defaultValueUrl }: Props) {
+
+let imageSelectHandler: (f: ChangeEvent<HTMLInputElement>) => void;
+
+export function PhotoPreview({ defaultValueUrl, onCrop }: Props) {
+  // url of original file
   const [url, setUrl] = useState<string | null>(defaultValueUrl || null);
-  const [file, setFile] = useState<File | null>(null);
+  const [originalFile, setOriginalFile] = useState<File>();
+  const [croppedFile, setCroppedFile] = useState<File | null>(null);
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>): void {
     if (!event.target.files || event.target.files.length <= 0) {
@@ -27,47 +54,38 @@ export function PhotoPreview({ defaultValueUrl }: Props) {
       return;
     }
     if (event.target.files && event.target.files.length > 0) {
-      setFile(event.target.files[0]);
+      setOriginalFile(event.target.files[0]);
     }
   }
+  imageSelectHandler = handleImageChange;
 
   useEffect(() => {
-    if (file) photo.upload = async () => await uploadImage(file);
-  }, [file]);
+    if (!croppedFile) return;
+    photo.upload = async () => await uploadImage(croppedFile);
+    if (onCrop) {
+      onCrop(croppedFile);
+    }
+  }, [croppedFile, onCrop]);
 
   useEffect(() => {
-    if (!file) return;
+    if (!originalFile) return;
+    setCroppedFile(originalFile);
 
     // src: https://stackoverflow.com/questions/38049966/get-image-preview-before-uploading-in-react
     // create the preview
-    const url = URL.createObjectURL(file);
+    const url = URL.createObjectURL(originalFile);
     setUrl(url);
-
     // free memory when ever this component is unmounted
     return () => URL.revokeObjectURL(url);
-  }, [file]);
+  }, [originalFile]);
 
   return (
     <>
-      {/* url.startsWith("blob:") <=> url is a(n) url of local file <=> no SOP restriction*/}
-      {url && url.startsWith("blob:") && (
-        <ImageCropper
-          sameOriginURL={url}
-          onImageChange={syncUploaderToFileChange}
-        />
-      )}
-      <Button>
-        <label htmlFor="file-upload" className="custom-file-label">
-          写真を選択(必須)
-        </label>
-      </Button>
-      <input
-        id="file-upload"
-        type="file"
-        onChange={handleImageChange}
-        accept=".png, .jpeg, .jpg"
-        style={{ display: "none" }}
-      />
+      {url &&
+        /* url.startsWith("blob:") <=> url is a(n) url of local file <=> no SOP restriction*/
+        url.startsWith("blob:") && (
+          <ImageCropper sameOriginURL={url} onImageChange={setCroppedFile} />
+        )}
     </>
   );
 }

@@ -2,14 +2,13 @@ import { useState } from "react";
 
 import {
   Box,
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   TextField,
 } from "@mui/material";
-import { StepProps } from "../common";
+import { StepProps, NextButton } from "../common";
 
 export type Step1Data = {
   name: string;
@@ -20,7 +19,7 @@ export type Step1Data = {
   intro: string;
 };
 
-export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
+export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
   const [name, setName] = useState(prev?.name ?? "");
   const [gender, setGender] = useState(prev?.gender ?? "その他");
   const [grade, setGrade] = useState(prev?.grade ?? "");
@@ -31,10 +30,6 @@ export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
 
   async function save() {
     try {
-      if (!intro) {
-        throw new Error("ひとことコメントは入力必須です。");
-      }
-
       // FIXME: create zod schema!
       const data: Step1Data = {
         name,
@@ -121,8 +116,10 @@ export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
       </FormControl>
       <FormControl fullWidth>
         <TextField
-          value={intro}
+          multiline
           label="自己紹介"
+          minRows={3}
+          placeholder="Rust が好きです。"
           onChange={(e) => setIntro(e.target.value)}
         />
       </FormControl>
@@ -131,9 +128,9 @@ export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
           {errorMessage}
         </Box>
       )}
-      <Button variant="outlined" sx={{ textTransform: "none" }} onClick={save}>
-        次へ
-      </Button>
+      <NextButton caller={caller} onClick={save}>
+        {caller === "registration" ? "次へ" : "保存"}
+      </NextButton>
     </Box>
   );
 }
