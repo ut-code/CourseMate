@@ -48,12 +48,12 @@ export function HumanListItem(props: HumanListItemProps) {
         pr: 2,
       }}
     >
-      <ListItemAvatar>
+      <ListItemAvatar sx={{ marginLeft: "8px" }}>
         <Button onClick={handleOpenClick}>
           <UserAvatar pictureUrl={pictureUrl} width="50px" height="50px" />
         </Button>
       </ListItemAvatar>
-      <p style={{ flexGrow: 1 }}>{name}</p>
+      <p style={{ flexGrow: 1, marginLeft: "28px" }}>{name}</p>
       {hasDots && (
         <Dots
           actions={[
