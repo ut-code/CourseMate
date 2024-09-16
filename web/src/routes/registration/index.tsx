@@ -20,32 +20,54 @@ function Registration() {
 
   switch (step) {
     case 1:
-      return <Step1 onSave={(data) => {
-        setStep1Data(data);
-        setStep(2);
-      }} />
+      return (
+        <Step1
+          prev={step1Data}
+          onSave={(data) => {
+            setStep1Data(data);
+            setStep(2);
+          }}
+        />
+      );
     case 2:
-      return <Step2 onSave={(data) => {
-        setStep2Data(data);
-        setStep(3);
-      }} back={() => setStep(1)} />
+      return (
+        <Step2
+          prev={step2Data}
+          onSave={(data) => {
+            setStep2Data(data);
+            setStep(3);
+          }}
+          back={() => setStep(1)}
+        />
+      );
     case 3:
-      return <Step3 onSave={(data) => {
-        setStep3Data(data);
-        setStep(3);
-      }} back={() => setStep(2)} />
+      return (
+        <Step3
+          prev={step3Data}
+          onSave={(data) => {
+            setStep3Data(data);
+            setStep(4);
+          }}
+          back={() => setStep(2)}
+        />
+      );
     case 4:
-      return <Confirmation onSave={() => {
-        if (!step1Data) throw new Error("don't skip the steps");
-        if (!step2Data) throw new Error("don't skip the steps");
-        if (!step3Data) throw new Error("don't skip the steps");
-        const concat = {
-          ...step1Data,
-          ...step2Data,
-          ...step3Data,
-        };
-        register(concat, { enqueueSnackbar, navigate });
-      }} back={() => setStep(3)}/>
+      return (
+        <Confirmation
+          onSave={() => {
+            if (!step1Data) throw new Error("don't skip the steps");
+            if (!step2Data) throw new Error("don't skip the steps");
+            if (!step3Data) throw new Error("don't skip the steps");
+            const concat = {
+              ...step1Data,
+              ...step2Data,
+              ...step3Data,
+            };
+            register(concat, { enqueueSnackbar, navigate });
+          }}
+          back={() => setStep(3)}
+        />
+      );
   }
 }
 export default function RegistrationPage() {

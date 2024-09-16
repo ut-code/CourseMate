@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { BackProp, StepProps } from "../common";
 import { PhotoPreview } from "../../../components/config/PhotoPreview";
 import { photo } from "../../../components/data/photo-preview";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export type Step3Data = {
   pictureUrl: string;
@@ -47,14 +47,6 @@ export default function Step3({
       }
     }
   }
-
-  // syntax salt for defer
-  useEffect(
-    () => () => {
-      photo.upload = null;
-    },
-    [],
-  );
 
   return (
     <>
