@@ -23,9 +23,13 @@ export default function MyReq() {
 
   return (
     <Box>
-      <p>
+      <p
+        style={{
+          marginLeft: "40px",
+        }}
+      >
         {data && data.length > 0
-          ? "以下のリクエストを送信しました"
+          ? "以下のリクエストを送信しました！"
           : "リクエストを送信しましょう！"}
       </p>
       {loading ? (

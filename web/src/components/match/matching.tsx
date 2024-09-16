@@ -23,10 +23,19 @@ export default function Matchings() {
 
   return (
     <Box>
-      <p>
-        {data &&
-          data.length === 0 &&
-          "誰ともマッチングしていません。リクエストを送りましょう！"}
+      <p
+        style={{
+          marginLeft: "40px",
+          marginRight: "40px",
+        }}
+      >
+        {data && data.length === 0 && (
+          <>
+            誰ともマッチングしていません。
+            <br />
+            リクエストを送りましょう！
+          </>
+        )}
       </p>
       {loading ? (
         <p>Loading...</p>

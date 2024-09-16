@@ -12,10 +12,19 @@ export function RoomList(props: RoomListProps) {
   const { roomsData, activeRoom, setActiveRoom } = props;
   return (
     <List disablePadding>
-      <p>
-        {roomsData &&
-          roomsData.length === 0 &&
-          "誰ともマッチングしていません。リクエストを送りましょう！"}
+      <p
+        style={{
+          marginLeft: "40px",
+          marginRight: "40px",
+        }}
+      >
+        {roomsData && roomsData.length === 0 && (
+          <>
+            誰ともマッチングしていません。
+            <br />
+            リクエストを送りましょう！
+          </>
+        )}
       </p>
       {roomsData?.map((room) => {
         if (room.isDM) {

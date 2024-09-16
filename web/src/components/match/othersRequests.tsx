@@ -23,9 +23,13 @@ export default function OthersReq() {
 
   return (
     <Box>
-      <p>
+      <p
+        style={{
+          marginLeft: "40px",
+        }}
+      >
         {data && data.length > 0
-          ? "以下のリクエストを受け取りました"
+          ? "以下のリクエストを受け取りました！"
           : "リクエストは受け取っていません。"}
       </p>
       {loading ? (
