@@ -123,7 +123,7 @@ router.patch("/messages/id/:id", async (req, res) => {
   if (!id.ok) return res.status(400).send("invalid :id");
   const friend = req.body.friend;
 
-  const content = ContentSchema.safeParse(req.body.content);
+  const content = ContentSchema.safeParse(req.body.newMessage.content);
   if (!content.success) return res.status(400).send();
 
   const result = await core.updateMessage(user.value, id.value, content.data);
