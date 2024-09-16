@@ -1,20 +1,25 @@
 import { Box, List } from "@mui/material";
 import request from "../../api/request";
 import hooks from "../../api/hooks";
-import React from "react";
-import { ProfileModal } from "../human/profileModal";
+import { useState } from "react";
 import { User } from "../../common/types";
 import { HumanListItem } from "../human/humanListItem";
+import { ProfileModal } from "../common/profileModal";
 
 export default function OthersReq() {
   const { data, loading, error, reload } = hooks.usePendingRequestsToMe();
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
-  const handleOpen = (selectedUser: User) => {
-    setModalOpen(true);
-    setSelectedUser(selectedUser);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = (user: User) => {
+    setSelectedUser(user);
+    setOpen(true);
   };
-  const handleClose = () => setModalOpen(false);
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedUser(null);
+  };
 
   return (
     <Box>
@@ -47,13 +52,7 @@ export default function OthersReq() {
             ))}
         </List>
       )}
-      {selectedUser && (
-        <ProfileModal
-          selectedUser={selectedUser}
-          open={modalOpen}
-          handleClose={handleClose}
-        />
-      )}
+      <ProfileModal user={selectedUser} open={open} onClose={handleClose} />
     </Box>
   );
 }
