@@ -72,7 +72,7 @@ export default function Step3({
             style={{ backgroundColor: "white", width: "60%", height: "80%" }}
           >
             <PhotoPreview
-              defaultValueUrl={prev?.pictureUrl}
+              prev={prev?.pictureUrl}
               onCrop={(f) => {
                 setFile(f);
               }}

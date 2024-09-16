@@ -6,15 +6,12 @@ import { Button } from "@mui/material";
 
 const MAX_SIZE_IN_BYTES = 5 * 1024 * 1024; // 5MB
 
-type Props = {
-  defaultValueUrl?: string;
-  onCrop?: (f: File) => void;
-};
 type ButtonProps = {
   text?: string;
   onSelect: () => void;
 };
 
+// DANGER: PhotoPreview component MUST have been rendered before this button is pressed.
 export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
   return (
     <Button>
@@ -24,22 +21,30 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
           id="file-upload"
           type="file"
           onChange={(e) => {
-            onSelect();
             imageSelectHandler(e);
+            onSelect();
           }}
           accept=".png, .jpeg, .jpg"
-          style={{ display: "none" }}
+          style={{ display: "none" }} // ? how does this even work?
         />
       </label>
     </Button>
   );
 }
 
+// NOTE: this implementation is so dumb and unsafe.
+// it's either I'm just being a fool, or the React system itself is wrong
+// please fix this and prove that I am the fool...
 let imageSelectHandler: (f: ChangeEvent<HTMLInputElement>) => void;
 
-export function PhotoPreview({ defaultValueUrl, onCrop }: Props) {
+type Props = {
+  prev?: string;
+  onCrop?: (f: File) => void;
+};
+
+export function PhotoPreview({ prev, onCrop }: Props) {
   // url of original file
-  const [url, setUrl] = useState<string | null>(defaultValueUrl || null);
+  const [url, setUrl] = useState<string | null>(prev || null);
   const [originalFile, setOriginalFile] = useState<File>();
   const [croppedFile, setCroppedFile] = useState<File | null>(null);
 
