@@ -34,7 +34,7 @@ export default function Profile() {
               width="300px"
               height="300px"
             />
-            <CoursesTable />
+            <CoursesTable userId={data.id} />
           </Box>
           <LogOutButton />
           <Button color="inherit" onClick={handleDialogOpen}>

@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 
-import { Course, Day } from "../../../common/types";
+import { Course, Day, UserID } from "../../../common/types";
 import courseApi from "../../../api/course";
 import SelectCourseDialog from "../SelectCourseDialog";
 import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "../../../common/consts";
 import styles from "./styles.module.css";
 import { truncateStr } from "./lib";
 
-export default function CoursesTable() {
+type Props = {
+  userId: UserID;
+};
+
+export default function CoursesTable(props: Props) {
+  const { userId } = props;
   const [isSelectCourseDialogOpen, setIsSelectCourseDialogOpen] =
     useState(false);
   const [currentEdit, setCurrentEdit] = useState<{
@@ -55,10 +60,10 @@ export default function CoursesTable() {
 
   useEffect(() => {
     (async () => {
-      const courses = await courseApi.getMyCourses();
+      const courses = await courseApi.getCoursesByUserId(userId);
       handleCoursesUpdate(courses);
     })();
-  }, []);
+  }, [userId]);
 
   return (
     <>
