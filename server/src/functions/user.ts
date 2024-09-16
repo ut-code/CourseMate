@@ -12,13 +12,13 @@ export function Public(u: User): PublicUser {
   };
 }
 
-export async function getAllUsers(): Promise<http.Response<PublicUser[]>> {
+export async function getAllUsers(): Promise<http.Response<User[]>> {
   const users = await db.getAllUsers();
   if (!users.ok) {
     console.error(users.error);
     return http.internalError();
   }
-  return http.ok(users.value.map(Public));
+  return http.ok(users.value);
 }
 
 export async function getUser(guid: GUID): Promise<http.Response<User>> {
