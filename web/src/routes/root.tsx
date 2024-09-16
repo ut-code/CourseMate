@@ -1,14 +1,19 @@
 import { BottomNavigation, BottomNavigationAction } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PeopleIcon from "@mui/icons-material/People";
 import ChatIcon from "@mui/icons-material/Chat";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 
-const labels = ["Home", "Friends", "Chat", "Profile"];
-const paths = ["/home", "/friends", "/chat", "/profile"];
+const labels = [
+  "ホーム/Home",
+  "フレンド/Friends",
+  "チャット/Chat",
+  "設定/Settings",
+];
+const paths = ["/home", "/friends", "/chat", "/settings"];
 
 export default function Root() {
   const location = useLocation();
@@ -25,7 +30,15 @@ export default function Root() {
 
   return (
     <>
-      <Header title={labels[value]} />
+      <div
+        style={{
+          boxShadow: "2px 2px 4px -2px gray inset",
+          zIndex: 1000,
+          position: "relative",
+        }}
+      >
+        <Header title={labels[value]} />
+      </div>
       <div>
         <Outlet />
       </div>
@@ -35,7 +48,12 @@ export default function Root() {
         onChange={(_event, newValue) => {
           setValue(newValue);
         }}
-        sx={{ width: "100%", position: "fixed", bottom: 0 }}
+        sx={{
+          width: "100%",
+          position: "fixed",
+          bottom: 0,
+          borderTop: "1px solid #039BE5",
+        }}
       >
         <BottomNavigationAction
           component={Link}
@@ -57,9 +75,9 @@ export default function Root() {
         />
         <BottomNavigationAction
           component={Link}
-          to="/profile"
-          label="Profile"
-          icon={<AccountCircleIcon />}
+          to="/settings"
+          label="Settings"
+          icon={<SettingsIcon />}
         />
       </BottomNavigation>
     </>

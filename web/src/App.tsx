@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import Root from "./routes/root";
 import Home from "./routes/tabs/home";
-import Profile from "./routes/tabs/profile";
+import Settings from "./routes/tabs/settings";
 import Login from "./routes/login";
 import SignUp from "./routes/signUp";
 import { getAuth } from "firebase/auth";
@@ -42,8 +42,8 @@ export default function App() {
           element: <Friends />,
         },
         {
-          path: "profile",
-          element: <Profile />,
+          path: "settings",
+          element: <Settings />,
         },
         {
           path: "chat",

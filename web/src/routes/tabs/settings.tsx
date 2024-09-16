@@ -6,7 +6,7 @@ import CoursesTable from "../../components/course/CoursesTable";
 import hooks from "../../api/hooks";
 import UserAvatar from "../../components/avatar/avatar";
 
-export default function Profile() {
+export default function Settings() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { data, loading, error, reload } = hooks.useMe();
 

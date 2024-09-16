@@ -1,5 +1,5 @@
 import { Box, AppBar, Toolbar, IconButton, Typography } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 
 type Props = {
   title: string;
@@ -8,8 +8,8 @@ type Props = {
 export default function Header(props: Props) {
   const { title } = props;
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+    <Box sx={{ flexGrow: 1, boxShadow: " 2px 2px 4px -2px gray inset" }}>
+      <AppBar position="static" style={{ backgroundColor: "#E9F8FF" }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -18,9 +18,13 @@ export default function Header(props: Props) {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <EmojiEmotionsIcon style={{ color: "#000000" }} />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, color: "#000000" }}
+          >
             {title}
           </Typography>
         </Toolbar>
