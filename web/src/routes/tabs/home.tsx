@@ -1,25 +1,28 @@
 import { useEffect, useState } from "react";
 import type { User } from "../../common/types";
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import user from "../../api/user";
 import request from "../../api/request";
 import { useCurrentUserId } from "../../hooks/useCurrentUser";
+import CloseIcon from "@mui/icons-material/Close";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import { DraggableCard } from "../../components/DraggableCard";
+import shadows from "@mui/material/styles/shadows";
 
 const getBackgroundColor = (x: number) => {
-  const maxVal = 255;
+  const maxVal = 300; // 255より大きくして原色や黒にならないようにする
   const normalizedValue = Math.max(-maxVal, Math.min(maxVal, x / 2));
 
   // xが0に近いと白、正の方向に進むと緑、負の方向に進むと赤
   if (normalizedValue === 0) {
     return `rgb(${maxVal}, ${maxVal}, ${maxVal})`; // 白
   } else if (normalizedValue > 0) {
-    const greenValue = Math.floor((normalizedValue / maxVal) * 255);
-    return `rgb(${maxVal - greenValue}, ${maxVal}, ${maxVal - greenValue})`; // 緑
-  } else {
     const redValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
     return `rgb(${maxVal}, ${maxVal - redValue}, ${maxVal - redValue})`; // 赤
+  } else {
+    const grayValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
+    return `rgb(${maxVal - grayValue}, ${maxVal - grayValue}, ${maxVal - grayValue})`; // 灰色
   }
 };
 
@@ -34,8 +37,8 @@ export default function Home() {
     (async () => {
       if (loading || !currentUserId) return;
       const matched = await user.matched();
-      const usersPublic = await user.except(currentUserId);
-      const users = usersPublic as User[];
+      const users = await user.except(currentUserId);
+      // TODO: zod
       const unmatched = users.filter(
         (user) => !matched.some((matchedUser) => matchedUser.id === user.id),
       );
@@ -102,17 +105,59 @@ export default function Home() {
         alignItems="center"
         height={"100vh"}
       >
-        <DraggableCard
-          displayedUser={displayedUser}
-          onSwipeLeft={handleReject}
-          onSwipeRight={handleAccept}
-          onDrag={handleDrag}
-        />
-        <Stack direction={"row"}>
-          <Button onClick={handleReject}>X</Button>
-          <Button onClick={handleAccept}>O</Button>
-        </Stack>
+        {displayedUser && (
+          <DraggableCard
+            displayedUser={displayedUser}
+            onSwipeLeft={handleReject}
+            onSwipeRight={handleAccept}
+            onDrag={handleDrag}
+          />
+        )}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-around",
+            width: "50%",
+          }}
+        >
+          <RoundButton onclick={handleReject} icon={<CloseIconStyled />} />
+          <RoundButton onclick={handleAccept} icon={<FavoriteIconStyled />} />
+        </div>
       </Box>
     </div>
   );
 }
+
+interface RoundButtonProps {
+  onclick: () => void;
+  icon: JSX.Element;
+}
+
+const RoundButton = ({ onclick, icon }: RoundButtonProps) => {
+  return (
+    <div>
+      <Button onClick={onclick} style={ButtonStyle}>
+        {icon}
+      </Button>
+    </div>
+  );
+};
+
+const ButtonStyle = {
+  borderRadius: "50%",
+  width: "7vw",
+  height: "auto",
+  margin: "10px",
+  boxShadow: shadows[10],
+  backgroundColor: "white",
+};
+
+const CloseIconStyled = () => {
+  return <CloseIcon style={{ color: "grey", fontSize: "5vw" }} />;
+};
+
+const FavoriteIconStyled = () => {
+  return <FavoriteIcon style={{ color: "red", fontSize: "5vw" }} />;
+};

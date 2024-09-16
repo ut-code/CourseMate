@@ -12,6 +12,8 @@ const paths = ["/home", "/friends", "/chat", "/profile"];
 
 export default function Root() {
   const location = useLocation();
+  // what the f*ck is value, everything is either a value or a stmt huh?
+  // (at least this variable is not a stmt)
   const [value, setValue] = useState(0);
 
   //TODO 元々はどこでリロードしてもheaderがhomeになっていた。それを解消するために以下のコードを追加した。しかし、微妙だと思うので、より良い方法を求む。

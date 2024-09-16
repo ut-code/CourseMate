@@ -38,8 +38,6 @@ const user = (userId: UserID) => {
  **/
 const users = `${origin}/users`;
 
-const usersPublic = `${origin}/users/public`;
-
 /**
  * [v] 実装済み
  * GET -> get info of me.
@@ -344,7 +342,6 @@ export default {
   userByGUID,
   userExists,
   users,
-  usersPublic,
   matchedUsers,
   pendingRequestsToMe,
   pendingRequestsFromMe,

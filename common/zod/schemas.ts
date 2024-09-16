@@ -36,12 +36,12 @@ export const UserSchema = z.object({
   id: UserIDSchema,
   guid: GUIDSchema,
   name: NameSchema,
-  pictureUrl: z.string(),
-  grade: z.string(),
   gender: GenderSchema,
-  hobby: HobbySchema,
-  intro_short: IntroShortSchema,
-  intro_long: IntroLongSchema,
+  grade: z.string(),
+  faculity: z.string(), // TODO: validate this further
+  department: z.string(), // same
+  intro: z.string(),
+  pictureUrl: z.string(),
 });
 
 export const RelationshipStatusSchema = z.union([
@@ -57,7 +57,7 @@ export const PublicUserSchema = z.object({
   id: UserIDSchema,
   name: NameSchema,
   pictureUrl: PictureUrlSchema,
-  intro_short: z
+  intro: z
     .string()
     .min(1, { message: "Short introduction must not be empty." }),
 });
