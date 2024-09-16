@@ -61,10 +61,10 @@ export const AlertProvider = ({ children }: AlertProviderProps) => {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>キャンセル</Button>
-            <Button onClick={handleYesClick} autoFocus>
+            <Button onClick={handleYesClick} autoFocus sx={{ color: "red" }}>
               {alertProps.yesMessage}
             </Button>
+            <Button onClick={handleClose}>キャンセル</Button>
           </DialogActions>
         </Dialog>
       )}

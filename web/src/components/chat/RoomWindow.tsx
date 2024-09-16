@@ -216,6 +216,7 @@ export function RoomWindow(props: Prop) {
                           },
                           {
                             label: "削除",
+                            color: "red",
                             onClick: () => handleDelete(m.id, room.friendId),
                             alert: true,
                             messages: {

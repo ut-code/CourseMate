@@ -3,6 +3,7 @@ import { useAlert } from "./alert/useAlert";
 
 type Action = {
   label: string;
+  color?: string;
   onClick: () => void;
   alert: boolean;
   messages?: AlertMessage;
@@ -39,12 +40,21 @@ export default function Popup({ actions }: { actions: Action[] }) {
         display: "flex",
         flexDirection: "column",
         bgcolor: "background.paper",
-        padding: 1,
-        borderRadius: 2,
+        width: "132px",
+        height: "100%",
+        boxShadow: 2,
       }}
     >
       {actions.map((action, index) => (
-        <Button key={index} onClick={() => handleActionClick(action)}>
+        <Button
+          key={index}
+          onClick={() => handleActionClick(action)}
+          sx={{
+            color: `${action.color}`,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           {action.label}
         </Button>
       ))}

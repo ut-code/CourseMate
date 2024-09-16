@@ -1,4 +1,4 @@
-import { ListItem, ListItemAvatar, Button, Stack, Box } from "@mui/material";
+import { ListItem, ListItemAvatar, Button, Stack } from "@mui/material";
 import UserAvatar from "./avatar";
 
 import Dots from "../common/Dots";
@@ -44,43 +44,39 @@ export function HumanListItem(props: HumanListItemProps) {
           {onReject && <Button onClick={() => onReject(id)}>拒否</Button>}
         </Stack>
       }
+      sx={{
+        pr: 2,
+      }}
     >
       <ListItemAvatar>
         <Button onClick={handleOpenClick}>
           <UserAvatar pictureUrl={pictureUrl} width="50px" height="50px" />
         </Button>
       </ListItemAvatar>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
-        <p style={{ flexGrow: 1 }}>{name}</p>
-        {hasDots && (
-          <Dots
-            actions={[
-              {
-                label: "詳細",
-                onClick: handleOpenClick,
-                alert: false,
+      <p style={{ flexGrow: 1 }}>{name}</p>
+      {hasDots && (
+        <Dots
+          actions={[
+            {
+              label: "詳細",
+              onClick: handleOpenClick,
+              alert: false,
+            },
+            {
+              label: "削除",
+              color: "red",
+              onClick: handleDeleteClick,
+              alert: true,
+              messages: {
+                buttonMessage: "削除",
+                AlertMessage: "このフレンドを削除しますか？",
+                subAlertMessage: "この操作は取り消せません。",
+                yesMessage: "削除",
               },
-              {
-                label: "削除",
-                onClick: handleDeleteClick,
-                alert: true,
-                messages: {
-                  buttonMessage: "削除",
-                  AlertMessage: "このフレンドを削除しますか？",
-                  subAlertMessage: "この操作は取り消せません。",
-                  yesMessage: "削除",
-                },
-              },
-            ]}
-          />
-        )}
-      </Box>
+            },
+          ]}
+        />
+      )}
     </ListItem>
   );
 }

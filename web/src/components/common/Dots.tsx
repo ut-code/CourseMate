@@ -7,6 +7,7 @@ import Popup from "./Popup";
 type Props = {
   actions: {
     label: string;
+    color?: string;
     onClick: () => void;
     alert: boolean;
     messages?: {
