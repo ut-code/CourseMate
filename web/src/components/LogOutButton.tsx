@@ -2,9 +2,10 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseconfig";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
-import AlertDialog from "./common/AlertDialog";
+import { useAlert } from "./common/alert/useAlert";
 
 export default function LogOutButton() {
+  const { showAlert } = useAlert();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -20,14 +21,19 @@ export default function LogOutButton() {
     }
   }
 
+  const handleClick = () => {
+    showAlert({
+      AlertMessage: "本当にログアウトしますか？",
+      yesMessage: "ログアウト",
+      clickYes: () => {
+        signOutUser();
+      },
+    });
+  };
+
   return (
-    <AlertDialog
-      buttonMessage="ログアウト"
-      AlertMessage="本当にログアウトしますか？"
-      yesMessage="ログアウト"
-      clickYes={async () => {
-        await signOutUser();
-      }}
-    />
+    <>
+      <button onClick={handleClick}>ログアウト</button>
+    </>
   );
 }

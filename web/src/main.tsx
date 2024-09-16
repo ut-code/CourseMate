@@ -8,12 +8,15 @@ import "@fontsource/roboto/700.css";
 import { CssBaseline } from "@mui/material";
 import AuthProvider from "./firebase/auth/AuthProvider";
 import App from "./App";
+import { AlertProvider } from "./components/common/alert/AlertProvider";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AuthProvider>
       <CssBaseline />
-      <App />
+      <AlertProvider>
+        <App />
+      </AlertProvider>
     </AuthProvider>
   </React.StrictMode>,
 );

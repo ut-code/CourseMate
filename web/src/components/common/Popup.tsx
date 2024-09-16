@@ -1,6 +1,5 @@
 import { Box, Button } from "@mui/material";
-import AlertDialog from "./AlertDialog";
-import { useState } from "react";
+import { useAlert } from "./alert/useAlert";
 
 type Action = {
   label: string;
@@ -17,11 +16,18 @@ type AlertMessage = {
 };
 
 export default function Popup({ actions }: { actions: Action[] }) {
-  const [openAlert, setOpenAlert] = useState<AlertMessage | null>(null);
+  const { showAlert } = useAlert();
 
   const handleActionClick = (action: Action) => {
     if (action.alert && action.messages) {
-      setOpenAlert(action.messages);
+      showAlert({
+        AlertMessage: action.messages.AlertMessage,
+        subAlertMessage: action.messages.subAlertMessage,
+        yesMessage: action.messages.yesMessage,
+        clickYes: () => {
+          action.onClick();
+        },
+      });
     } else {
       action.onClick();
     }
@@ -42,18 +48,6 @@ export default function Popup({ actions }: { actions: Action[] }) {
           {action.label}
         </Button>
       ))}
-
-      {openAlert && (
-        <AlertDialog
-          buttonMessage={openAlert.buttonMessage}
-          AlertMessage={openAlert.AlertMessage}
-          subAlertMessage={openAlert.subAlertMessage}
-          yesMessage={openAlert.yesMessage}
-          clickYes={() => {
-            actions.find((a) => a.messages === openAlert)?.onClick();
-          }}
-        />
-      )}
     </Box>
   );
 }

@@ -27,8 +27,7 @@ export function HumanListItem(props: HumanListItemProps) {
     hasDots,
   } = props;
   const handleDeleteClick = () => {
-    if (!window.confirm("本当にこのマッチングを削除しますか?") || !onDelete)
-      return;
+    if (!onDelete) return;
     onDelete(id);
   };
   const handleOpenClick = () => {
