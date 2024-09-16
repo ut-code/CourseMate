@@ -1,12 +1,12 @@
 import { useState, useCallback } from "react";
 import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
-import { User } from "../common/types";
+import { PublicUser } from "../common/types";
 import { Card } from "./Card";
 
 const SWIPE_THRESHOLD = 200;
 
 interface DraggableCardProps {
-  displayedUser: User | null;
+  displayedUser: PublicUser;
   onSwipeRight: () => void;
   onSwipeLeft: () => void;
   onDrag?: (X: number) => void;

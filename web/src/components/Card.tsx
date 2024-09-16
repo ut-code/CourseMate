@@ -1,11 +1,11 @@
-import { User } from "../common/types";
+import { PublicUser, User } from "../common/types";
 import UserAvatar from "./avatar/avatar";
 import { useState } from "react";
 import CoursesTable from "./course/CoursesTable";
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
 
 interface CardProps {
-  displayedUser: User | null;
+  displayedUser: User | PublicUser;
 }
 
 export const Card = ({ displayedUser }: CardProps) => {
@@ -93,7 +93,6 @@ const CardFront = ({ displayedUser }: CardProps) => {
       </div>
       <div style={{ padding: "10px" }}>
         <p>学年: 学部num年</p>
-        {displayedUser?.grade && <p>学年: {displayedUser.grade}</p>}
         <p>所属： hoge学部hugahuga学科</p>
         {displayedUser?.intro_short && (
           <p>自己紹介: {displayedUser.intro_short}</p>
