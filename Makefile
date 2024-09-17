@@ -48,15 +48,18 @@ sync-root:
 # Static checks
 
 ## code style
+style:
+	biome check --write
+style-check:
+	biome check
+
 lint:
-	cd server; npx eslint . --report-unused-disable-directives --max-warnings 0
-	cd web; npx eslint . --report-unused-disable-directives --max-warnings 0
+	biome lint
 
 format:
-	npx prettier . --write
-
+	biome format --write
 format-check:
-	npx prettier . --check
+	biome format
 
 # type checks
 type-check: type-check-server type-check-web
