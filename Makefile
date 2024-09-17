@@ -48,9 +48,9 @@ sync-root:
 
 ## code style
 style:
-	biome check --write
+	if command -v biome; then biome check --write; else npx @biomejs/biome check --write; fi
 style-check:
-	biome check
+	if command -v biome; then biome check; else npx @biomejs/biome check; fi
 
 ## Deprecated commands, there warnings will be deleted in the future
 lint:
