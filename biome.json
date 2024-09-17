@@ -1,6 +1,9 @@
 {
+  "formatter": {
+    "indentStyle": "space"
+  },
   "vcs": {
-    "enabled": "true",
+    "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true
   }
