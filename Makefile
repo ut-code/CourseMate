@@ -54,15 +54,15 @@ style-check:
 
 ## Deprecated commands, there warnings will be deleted in the future
 lint:
-	@echo 'DEPRECATED: `make lint` is deprecated. running `make style` instead.'
+	@echo 'DEPRECATED: `make lint` is deprecated. run `make style` instead.'
 	@exit 1
 
 format:
-	@echo 'DEPRECATED: `make format` is deprecated. running `make style` instead.'
+	@echo 'DEPRECATED: `make format` is deprecated. run `make style` instead.'
 	@exit 1
 
 format-check:
-	@echo 'DEPRECATED: `make format-check` is deprecated. running `make style-check` instead.'
+	@echo 'DEPRECATED: `make format-check` is deprecated. run `make style-check` instead.'
 	@exit 1
 
 # type checks
