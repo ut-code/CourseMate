@@ -32,16 +32,8 @@ export default function Root() {
 
   return (
     <>
-      <div
-        style={{
-          boxShadow: "2px 2px 4px -2px gray inset",
-          zIndex: 1000,
-          position: "relative",
-        }}
-      >
-        <Header title={labels[value]} />
-      </div>
-      <div>
+      <Header title={labels[value]} />
+      <div style={{ marginBottom: "56px" }}>
         <Outlet />
       </div>
       <BottomNavigation
@@ -54,32 +46,49 @@ export default function Root() {
           width: "100%",
           position: "fixed",
           bottom: 0,
-          borderTop: "1px solid #039BE5",
+          borderTop: "1px solid",
+          borderColor: "primary.main",
         }}
       >
         <BottomNavigationAction
           component={Link}
           to="/home"
           label="Home"
-          icon={<HomeIcon />}
+          icon={
+            <HomeIcon
+              sx={{ color: value === 0 ? "primary.main" : "secondary.main" }}
+            />
+          }
         />
         <BottomNavigationAction
           component={Link}
           to="/friends"
           label="Friends"
-          icon={<PeopleIcon />}
+          icon={
+            <PeopleIcon
+              sx={{ color: value === 1 ? "primary.main" : "secondary.main" }}
+            />
+          }
         />
         <BottomNavigationAction
           component={Link}
           to="/chat"
           label="Chat"
-          icon={<ChatIcon />}
+          icon={
+            <ChatIcon
+              sx={{ color: value === 2 ? "primary.main" : "secondary.main" }}
+            />
+          }
         />
         <BottomNavigationAction
           component={Link}
           to="/settings"
           label="Settings"
-          icon={<SettingsIcon />}
+          icon={
+            <SettingsIcon
+              sx={{ color: value === 3 ? "primary.main" : "secondary.main" }}
+            />
+          }
         />
       </BottomNavigation>
     </>
