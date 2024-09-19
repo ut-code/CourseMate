@@ -20,8 +20,19 @@ export default function MessagePopupDots({ handleEdit, handleDelete }: Props) {
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <div
-        style={{ position: "relative", display: "inline" }}
+      <button
+        type="button"
+        style={{
+          background: "none",
+          color: "inherit",
+          border: "none",
+          padding: 0,
+          font: "inherit",
+          cursor: "pointer",
+          outline: "inherit",
+          position: "relative",
+          display: "inline",
+        }}
         onClick={handleClick}
       >
         <MoreHorizIcon
@@ -37,7 +48,7 @@ export default function MessagePopupDots({ handleEdit, handleDelete }: Props) {
         >
           <MessagePopup handleEdit={handleEdit} handleDelete={handleDelete} />
         </Popper>
-      </div>
+      </button>
     </ClickAwayListener>
   );
 }

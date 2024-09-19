@@ -14,6 +14,7 @@ export function AvatarWithFallback({ width, height, url }: Props) {
       height={height}
       url={url}
       fallback={<Avatar />}
+      alt=""
     />
   );
 }

@@ -9,7 +9,12 @@ const methods = [
   "unlink",
 ] as const;
 
-const $ = (id: string) => document.getElementById(id)!;
+const $ = (id: string) => {
+  const e = document.getElementById(id);
+  if (!e) throw new Error();
+  return e;
+};
+
 const _ = (name: string) => {
   const li = document.createElement("li");
   const span = document.createElement("span");
@@ -23,7 +28,7 @@ const _ = (name: string) => {
   return button;
 };
 
-methods.forEach((kind) => {
+for (const kind of methods) {
   const element = _(kind);
   if (!element) {
     throw new Error(`element ${kind} not found`);
@@ -44,7 +49,7 @@ methods.forEach((kind) => {
       element.style.color = "red";
     }
   };
-});
+}
 
 function assert(b: boolean) {
   if (!b) {

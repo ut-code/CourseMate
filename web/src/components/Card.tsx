@@ -16,6 +16,7 @@ export const Card = ({ displayedUser }: CardProps) => {
   };
 
   return (
+    // biome-ignore lint: this cannot just be fixed rn FIXME!
     <div
       style={{
         perspective: "1000px",

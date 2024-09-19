@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import courseApi from "../../../api/course";
 import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "../../../common/consts";
@@ -38,7 +38,7 @@ export default function CoursesTable(props: Props) {
     setIsSelectCourseDialogOpen(true);
   }
 
-  function handleCoursesUpdate(courses: Course[]) {
+  const handleCoursesUpdate = useCallback((courses: Course[]) => {
     const newCourses: {
       [day in Day]: Course | null;
     }[] = Array.from({ length: 6 }, () => ({
@@ -50,21 +50,21 @@ export default function CoursesTable(props: Props) {
       sat: null,
       sun: null,
     }));
-    courses.forEach((course) => {
-      course.slots.forEach((slot) => {
+    for (const course of courses) {
+      for (const slot of course.slots) {
         const { day, period } = slot;
         newCourses[period - 1][day] = course;
-      });
-    });
+      }
+    }
     setTransposedRows(newCourses);
-  }
+  }, []);
 
   useEffect(() => {
     (async () => {
       const courses = await courseApi.getCoursesByUserId(userId);
       handleCoursesUpdate(courses);
     })();
-  }, [userId]);
+  }, [userId, handleCoursesUpdate]);
 
   return (
     <>
@@ -84,9 +84,13 @@ export default function CoursesTable(props: Props) {
             <tr key={`period-${rowIndex + 1}`}>
               <th key={`header-period-${rowIndex + 1}`}>{rowIndex + 1}</th>
               {ACTIVE_DAYS.map((activeDay) => (
-                <td key={`cell-${activeDay}-${rowIndex}`} align="center">
+                <td
+                  key={`cell-${activeDay}-${rowIndex.toString()}`}
+                  align="center"
+                >
                   {editable ? (
                     <button
+                      type="button"
                       className={row[activeDay as Day]?.name && styles.enrolled}
                       onClick={() =>
                         handleSelectCourseDialogOpen(

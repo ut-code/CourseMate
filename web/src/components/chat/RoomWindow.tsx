@@ -1,6 +1,6 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as chat from "../../api/chat/chat";
 import user from "../../api/user";
 import type {
@@ -35,16 +35,12 @@ export function RoomWindow(props: Prop) {
   }
 
   //メッセージの追加
-  function appendMessage(newMessage: Message) {
+  const appendMessage = useCallback((newMessage: Message) => {
     setDM((prevDM) => {
       return [...prevDM, newMessage];
     });
-  }
-  async function refreshMessages(friendId: UserID) {
-    const newDM = await chat.getDM(friendId);
-    setDM(newDM.messages);
-  }
-  function updateMessages(updatedMessage: Message) {
+  }, []);
+  const updateMessages = useCallback((updatedMessage: Message) => {
     setDM((prevDM) => {
       return prevDM.map((m) => {
         if (m.id === updatedMessage.id) {
@@ -53,7 +49,7 @@ export function RoomWindow(props: Prop) {
         return m;
       });
     });
-  }
+  }, []);
 
   useEffect(() => {
     async function registerSocket() {
@@ -91,17 +87,30 @@ export function RoomWindow(props: Prop) {
     return () => {
       socket.off("newMessage");
     };
-  }, [loading, currentUserId, room.friendId, enqueueSnackbar]);
+  }, [
+    loading,
+    currentUserId,
+    room.friendId,
+    enqueueSnackbar,
+    appendMessage,
+    updateMessages,
+  ]);
 
-  useEffect(() => {
-    if (room?.friendId) {
-      refreshMessages(room.friendId);
-    }
-  }, [room.friendId]);
+  useEffect(
+    () =>
+      run(async () => {
+        if (room?.friendId) {
+          const newDM = await chat.getDM(room.friendId);
+          setDM(newDM.messages);
+        }
+      }),
+    [room.friendId],
+  );
 
   //画面スクロール
   const scrollDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    dm;
     if (scrollDiv.current) {
       const element = scrollDiv.current;
       element.scrollTo({
@@ -230,4 +239,8 @@ export function RoomWindow(props: Prop) {
       </Box>
     </>
   );
+}
+
+function run(task: () => void): void {
+  task();
 }

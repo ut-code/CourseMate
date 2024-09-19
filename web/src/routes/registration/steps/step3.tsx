@@ -27,7 +27,7 @@ export default function Step3({
       onSave(data);
     } catch (error) {
       if (error instanceof Error) {
-        let errorMessages;
+        let errorMessages: string;
         try {
           const parsedError = JSON.parse(error.message);
           if (Array.isArray(parsedError)) {
