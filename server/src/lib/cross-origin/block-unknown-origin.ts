@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
-import { validateConfig, Config } from "./share";
+import { type Config, validateConfig } from "./share";
 
 function serverSideBlocking(config: Config) {
   validateConfig(config);
-  return function (req: Request, res: Response, next: () => void) {
+  return (req: Request, res: Response, next: () => void) => {
     const reqOrigin = req.header("Origin");
     if (!reqOrigin) {
       // no origin header == no cors == same origin
@@ -18,7 +18,7 @@ function serverSideBlocking(config: Config) {
       next();
       return;
     }
-    res.status(403).send("unknown origin header: " + reqOrigin);
+    res.status(403).send(`unknown origin header: ${reqOrigin}`);
   };
 }
 

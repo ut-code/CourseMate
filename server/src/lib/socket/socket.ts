@@ -1,6 +1,6 @@
-import { Server, Socket } from "socket.io";
+import { Server, type Socket } from "socket.io";
 import { corsOptions, server } from "../..";
-import { Message, UserID } from "../../common/types";
+import type { Message, UserID } from "../../common/types";
 import { getUserIdfromToken } from "../../firebase/auth/db";
 
 const users = new Map<UserID, Socket>();
