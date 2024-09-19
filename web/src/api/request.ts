@@ -1,5 +1,5 @@
 import { credFetch } from "../firebase/auth/lib";
-import endpoints, { UserID } from "./internal/endpoints";
+import endpoints, { type UserID } from "./internal/endpoints";
 
 //指定したユーザにリクエストを送る
 export async function send(receiverId: UserID) {

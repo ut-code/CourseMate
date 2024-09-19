@@ -1,5 +1,3 @@
-import endpoints from "./internal/endpoints.ts";
-import { credFetch } from "../firebase/auth/lib.ts";
 import type {
   GUID,
   PublicUser,
@@ -7,6 +5,8 @@ import type {
   User,
   UserID,
 } from "../common/types";
+import { credFetch } from "../firebase/auth/lib.ts";
+import endpoints from "./internal/endpoints.ts";
 
 // TODO: migrate to safe functions
 
