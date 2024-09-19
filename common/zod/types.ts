@@ -22,7 +22,6 @@ import type {
   PeriodSchema,
   PersonalizedDMRoomSchema,
   PictureUrlSchema,
-  PublicUserSchema,
   RelationshipIDSchema,
   RelationshipSchema,
   RelationshipStatusSchema,
@@ -48,7 +47,6 @@ export type RelationshipStatus = z.infer<typeof RelationshipStatusSchema>;
 export type User = z.infer<typeof UserSchema>;
 export type InitUser = z.infer<typeof InitUserSchema>;
 export type UpdateUser = z.infer<typeof UpdateUserSchema>;
-export type PublicUser = z.infer<typeof PublicUserSchema>;
 export type RelationshipID = z.infer<typeof RelationshipIDSchema>;
 export type Relationship = z.infer<typeof RelationshipSchema>;
 export type CourseID = z.infer<typeof CourseIDSchema>;

@@ -1,16 +1,7 @@
-import type { GUID, PublicUser, User, UserID } from "../common/types";
+import type { GUID, User, UserID } from "../common/types";
 import { getMatchedUser } from "../database/requests";
 import * as db from "../database/users";
 import * as http from "./share/http";
-
-export function Public(u: User): PublicUser {
-  return {
-    id: u.id,
-    name: u.name,
-    pictureUrl: u.pictureUrl,
-    intro: u.intro,
-  };
-}
 
 export async function getAllUsers(): Promise<http.Response<User[]>> {
   const users = await db.getAllUsers();

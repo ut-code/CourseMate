@@ -16,7 +16,6 @@ import {
   NameSchema,
   PersonalizedDMRoomSchema,
   PictureUrlSchema,
-  PublicUserSchema,
   RelationshipIDSchema,
   RelationshipSchema,
   RelationshipStatusSchema,
@@ -69,10 +68,6 @@ export function parseInitUser(data: unknown) {
 
 export function parseUpdateUser(data: unknown) {
   return UpdateUserSchema.parse(data);
-}
-
-export function parsePublicUser(data: unknown) {
-  return PublicUserSchema.parse(data);
 }
 
 export function parseRelationshipID(data: unknown) {
