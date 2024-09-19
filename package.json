@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky",
-    "check-branch": "if [ $(git branch --show-current) = \"main\" ]; then echo \"Cannot make commit on main! aborting...\"; exit 1; fi"
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +20,8 @@
     "zod": "^3.23.8"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": ["biome check --write"]
+    "*.{js,jsx,ts,tsx}": [
+      "biome check --write"
+    ]
   }
 }
