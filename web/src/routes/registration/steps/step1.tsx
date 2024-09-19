@@ -128,7 +128,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
           {errorMessage}
         </Box>
       )}
-      <NextButton caller={caller} onClick={save}>
+      <NextButton onClick={save}>
         {caller === "registration" ? "次へ" : "保存"}
       </NextButton>
     </Box>

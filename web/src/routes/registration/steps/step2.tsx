@@ -82,11 +82,7 @@ export default function Step2({
       </button>
       {errorMessage && <span>{errorMessage}</span>}
       <Button onClick={back}>戻る</Button>
-      <NextButton
-        weak={enrollments.length === 0}
-        caller={caller}
-        onClick={save}
-      >
+      <NextButton weak={enrollments.length === 0} onClick={save}>
         {caller === "configMenu"
           ? "保存"
           : enrollments.length === 0

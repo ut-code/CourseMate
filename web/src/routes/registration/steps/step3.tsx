@@ -91,16 +91,24 @@ export default function Step3({
       </Modal>
       <div style={{ textAlign: "center" }}>
         <p>
-          {url && <img style={{ width: 300, height: 300 }} src={url}></img>}
+          {url && (
+            <img
+              alt="選択した写真のプレビュー"
+              style={{ width: 300, height: 300 }}
+              src={url}
+            />
+          )}
         </p>
         <PhotoPreviewButton text="写真を選択" onSelect={() => setOpen(true)} />
         {errorMessage && <span>{errorMessage}</span>}
         <Button onClick={back}>戻る</Button>
         {file === null ? (
-          <Button disabled={true}>確定</Button>
+          <Button disabled={true}>
+            {caller === "registration" ? "確定" : "保存"}
+          </Button>
         ) : (
-          <NextButton caller={caller} onClick={next}>
-            確定
+          <NextButton onClick={next}>
+            {caller === "registration" ? "確定" : "保存"}
           </NextButton>
         )}
       </div>

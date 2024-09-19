@@ -12,48 +12,22 @@ export type BackProp = {
 
 export function NextButton({
   onClick,
-  caller,
   weak,
   children,
 }: {
   onClick: () => void;
-  caller: Caller;
   weak?: boolean;
   children: string;
 }) {
-  switch (caller) {
-    case "registration":
-      return (
-        <Button
-          variant={weak ? "text" : "contained"}
-          sx={{
-            alignSelf: "space-between",
-          }}
-          onClick={onClick}
-        >
-          {children}
-        </Button>
-      );
-
-    case "configMenu":
-      return (
-        <Button
-          variant="outlined"
-          sx={{
-            color: "blue",
-            textTransform: "none",
-          }}
-          onClick={onClick}
-        >
-          {children}
-        </Button>
-      );
-
-    default:
-      // make it a compile error
-      neverer = caller;
-      console.log(neverer);
-  }
+  return (
+    <Button
+      variant={weak ? "text" : "contained"}
+      sx={{
+        alignSelf: "space-between",
+      }}
+      onClick={onClick}
+    >
+      {children}
+    </Button>
+  );
 }
-
-let neverer: never;
