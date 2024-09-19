@@ -1,18 +1,18 @@
-import * as http from "./share/http";
-import * as db from "../database/chat";
-import { areAllMatched, areMatched, getRelation } from "../database/matches";
-import type { UserID, InitRoom, SharedRoom } from "../common/types";
-import { getUserByID } from "../database/users";
-import { Result } from "../common/lib/result";
+import type { Result } from "../common/lib/result";
+import type { InitRoom, SharedRoom, UserID } from "../common/types";
 import type {
-  RoomOverview,
+  DMRoom,
   Message,
   MessageID,
+  PersonalizedDMRoom,
+  RoomOverview,
   SendMessage,
   ShareRoomID,
-  PersonalizedDMRoom,
-  DMRoom,
 } from "../common/types";
+import * as db from "../database/chat";
+import { areAllMatched, areMatched, getRelation } from "../database/matches";
+import { getUserByID } from "../database/users";
+import * as http from "./share/http";
 
 export async function getOverview(
   id: number,

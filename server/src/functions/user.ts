@@ -1,6 +1,6 @@
-import { PublicUser, User, GUID, UserID } from "../common/types";
-import * as db from "../database/users";
+import type { GUID, PublicUser, User, UserID } from "../common/types";
 import { getMatchedUser } from "../database/requests";
+import * as db from "../database/users";
 import * as http from "./share/http";
 
 export function Public(u: User): PublicUser {
