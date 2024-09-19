@@ -1,8 +1,8 @@
-import { app } from "../init";
-import * as admin from "firebase-admin/auth";
 import type { Request } from "express";
-import { GUID, IDToken } from "../../common/types";
-import { Result, Ok, Err } from "../../common/lib/result";
+import * as admin from "firebase-admin/auth";
+import { Err, Ok, type Result } from "../../common/lib/result";
+import type { GUID, IDToken } from "../../common/types";
+import { app } from "../init";
 
 const auth = admin.getAuth(app);
 type DecodedIdToken = admin.DecodedIdToken;
