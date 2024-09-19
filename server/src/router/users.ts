@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { PublicUser, UpdateUser, GUID } from "../common/types";
+import { UpdateUser, GUID } from "../common/types";
 import {
   createUser,
   deleteUser,
@@ -15,8 +15,8 @@ import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
 import { parseUpdateUser } from "../common/zod/methods";
 import * as core from "../functions/user";
-import { Public } from "../functions/user";
 import { GUIDSchema, InitUserSchema } from "../common/zod/schemas";
+import { User } from "../common/types";
 
 const router = express.Router();
 
@@ -61,8 +61,7 @@ router.get("/pending/to-me", async (req: Request, res: Response) => {
     console.log(sendingUsers.error);
     return res.status(500).send();
   }
-  const safeUsers = sendingUsers.value.map(Public);
-  res.status(200).json(safeUsers);
+  res.status(200).json(sendingUsers.value);
 });
 
 // ユーザーがリクエストを送っているユーザーを取得 状態はPENDING
@@ -75,11 +74,10 @@ router.get("/pending/from-me", async (req: Request, res: Response) => {
     console.log(receivers.error);
     return res.status(500).send();
   }
-  const safeUsers = receivers.value.map(Public);
-  res.status(200).json(safeUsers);
+  res.status(200).json(receivers.value);
 });
 
-// guidで Public にユーザーを取得
+// guidでユーザーを取得
 router.get("/guid/:guid", async (req: Request, res: Response) => {
   const guid_ = GUIDSchema.safeParse(req.params.guid);
   if (!guid_.success) return res.status(400).send();
@@ -89,11 +87,11 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
   if (!user.ok) {
     return res.status(404).json({ error: "User not found" });
   }
-  const json: PublicUser = Public(user.value);
+  const json: User = user.value;
   res.status(200).json(json);
 });
 
-// GET Public(*) FROM "User" WHERE id = ?
+// idでユーザーを取得
 router.get("/id/:id", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
@@ -101,7 +99,7 @@ router.get("/id/:id", async (req: Request, res: Response) => {
   if (!user.ok) {
     return res.status(404).json({ error: "User not found" });
   }
-  const json: PublicUser = Public(user.value);
+  const json: User = user.value;
   res.status(200).json(json);
 });
 
