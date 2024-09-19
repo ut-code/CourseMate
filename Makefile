@@ -2,8 +2,9 @@ default: start
 
 setup: sync
 	npx husky
+	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
+	cd server; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 	echo "auto setup is done. now do:"
-	echo "- run make husky"
 	echo "- edit server/.env"
 	echo "- edit web/.env"
 
@@ -16,9 +17,9 @@ watch:
 		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
 
 docker: copy-common
-	@# defer `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
+	@# deferring `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
 	trap 'docker compose down' EXIT; docker compose up --build
-	docker compose up --build
+
 docker-watch: copy-common
 	docker compose up --build --watch
 
@@ -33,13 +34,11 @@ precommit: type-check
 sync-web:
 	cd web; if command -v bun; then bun install; else npm ci; fi
 	# copy .env.sample -> .env only if .env is not there
-	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 
 sync-server:
 	cd server; if command -v bun; then bun install; else npm install; fi
 	cd server; npx prisma generate
 	# copy .env.sample -> .env only if .env is not there
-	cd server; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 
 sync-root:
 	if command -v bun; then bun install; else npm ci; fi
@@ -48,15 +47,23 @@ sync-root:
 # Static checks
 
 ## code style
+style:
+	if command -v biome; then biome check --write; else npx @biomejs/biome check --write; fi
+style-check:
+	if command -v biome; then biome check; else npx @biomejs/biome check; fi
+
+## Deprecated commands, there warnings will be deleted in the future
 lint:
-	cd server; npx eslint . --report-unused-disable-directives --max-warnings 0
-	cd web; npx eslint . --report-unused-disable-directives --max-warnings 0
+	@echo 'DEPRECATED: `make lint` is deprecated. run `make style` instead.'
+	@exit 1
 
 format:
-	npx prettier . --write
+	@echo 'DEPRECATED: `make format` is deprecated. run `make style` instead.'
+	@exit 1
 
 format-check:
-	npx prettier . --check
+	@echo 'DEPRECATED: `make format-check` is deprecated. run `make style-check` instead.'
+	@exit 1
 
 # type checks
 type-check: type-check-server type-check-web

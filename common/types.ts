@@ -9,7 +9,6 @@ export type {
   User,
   InitUser,
   UpdateUser,
-  PublicUser,
   RelationshipID,
   Relationship,
   CourseID,

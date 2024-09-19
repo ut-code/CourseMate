@@ -159,6 +159,19 @@ const matches = `${origin}/matches`;
  **/
 
 /**
+ * [x] 実装済み
+ * GET -> get courses the user is enrolled in.
+ * - statuses:
+ *  - 200: ok.
+ *   - body: Course[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ */
+const coursesUserId = (userId: UserID) => {
+  return `${origin}/courses/userId/${userId}`;
+};
+
+/**
  * [v] 実装済み
  * GET -> get my courses.
  * - statuses:
@@ -337,6 +350,7 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
+  coursesUserId,
   coursesDayPeriod,
   roomOverview,
   dmTo,
