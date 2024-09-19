@@ -26,8 +26,9 @@ docker-watch: copy-common
 seed:
 	cd server; npx prisma db seed
 
-precommit: type-check
+precommit:
 	npx lint-staged
+	make type-check
 
 # Sync (install/update packages, generate prisma, etc)
 
