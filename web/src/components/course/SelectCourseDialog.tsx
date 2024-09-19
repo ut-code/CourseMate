@@ -1,24 +1,24 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
+  Box,
+  Button,
   Dialog,
-  DialogTitle,
+  DialogActions,
   DialogContent,
   DialogContentText,
-  DialogActions,
-  Button,
-  Box,
+  DialogTitle,
   List,
-  Typography,
+  ListItem,
   ListItemButton,
   TextField,
-  ListItem,
+  Typography,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import courseApi, { deleteMyCourse } from "../../api/course";
-import { Course, Day } from "../../common/types";
 import { useEffect, useState } from "react";
-import CourseRegisterConfirmDialog from "./CourseRegisterConfirmDialog";
+import courseApi, { deleteMyCourse } from "../../api/course";
 import { DAY_TO_JAPANESE_MAP } from "../../common/consts";
+import type { Course, Day } from "../../common/types";
+import CourseRegisterConfirmDialog from "./CourseRegisterConfirmDialog";
 
 export default function SelectCourseDialog({
   open,
