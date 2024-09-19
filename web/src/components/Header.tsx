@@ -8,8 +8,8 @@ type Props = {
 export default function Header(props: Props) {
   const { title } = props;
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+    <Box sx={{ top: 0, position: "sticky", flexGrow: 1 }}>
+      <AppBar>
         <Toolbar>
           <IconButton
             size="large"
