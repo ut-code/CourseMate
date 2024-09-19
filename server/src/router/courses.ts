@@ -37,6 +37,22 @@ router.get("/day-period", async (req: Request, res: Response) => {
   }
 });
 
+// 特定のユーザが履修している講義を取得
+router.get("/userId/:userId", async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.userId);
+  if (isNaN(userId)) {
+    return res.status(400).json({ error: "Invalid userId" });
+  }
+
+  try {
+    const courses = await getCoursesByUserId(userId);
+    res.status(200).json(courses);
+  } catch (error) {
+    console.error("Error fetching courses by userId:", error);
+    res.status(500).json({ error: "Failed to fetch courses by userId" });
+  }
+});
+
 // 自分が履修している講義を取得
 router.get("/mine", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
