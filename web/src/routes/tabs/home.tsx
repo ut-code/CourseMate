@@ -17,13 +17,13 @@ const getBackgroundColor = (x: number) => {
   // xが0に近いと白、正の方向に進むと緑、負の方向に進むと赤
   if (normalizedValue === 0) {
     return `rgb(${maxVal}, ${maxVal}, ${maxVal})`; // 白
-  } else if (normalizedValue > 0) {
+  }
+  if (normalizedValue > 0) {
     const redValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
     return `rgb(${maxVal}, ${maxVal - redValue}, ${maxVal - redValue})`; // 赤
-  } else {
-    const grayValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
-    return `rgb(${maxVal - grayValue}, ${maxVal - grayValue}, ${maxVal - grayValue})`; // 灰色
   }
+  const grayValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
+  return `rgb(${maxVal - grayValue}, ${maxVal - grayValue}, ${maxVal - grayValue})`; // 灰色
 };
 
 export default function Home() {

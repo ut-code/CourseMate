@@ -17,7 +17,7 @@ app.use(csrf(corsConfig));
 
 app.use(express.static("./static"));
 
-methods.forEach((kind) => {
+for (const kind of methods) {
   const callback = (req: Request, res: Response) => {
     const origin = req.header("Origin");
     if (origin)
@@ -32,7 +32,7 @@ methods.forEach((kind) => {
   };
 
   app[kind](`/${kind}`, callback);
-});
+}
 
 app.listen(3000, () => {
   console.log("CORS test: origin server listening at 3000");

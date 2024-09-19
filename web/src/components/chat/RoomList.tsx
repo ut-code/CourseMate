@@ -28,13 +28,12 @@ export function RoomList(props: RoomListProps) {
               <Room room={room} />
             </Box>
           );
-        } else {
-          return (
-            <Typography key={room.roomId} variant="body2" sx={{ mb: 1 }}>
-              グループチャット: {room.name}
-            </Typography>
-          );
         }
+        return (
+          <Typography key={room.roomId} variant="body2" sx={{ mb: 1 }}>
+            グループチャット: {room.name}
+          </Typography>
+        );
       })}
     </List>
   );
