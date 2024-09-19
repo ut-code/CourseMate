@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { Button } from "@mui/material";
-import { BackProp, StepProps } from "../common";
+import type { BackProp, StepProps } from "../common";
 
 type Enrollment = number; // TODO: fix this
 
@@ -68,7 +68,7 @@ export default function Step2({
       <input
         type="number"
         value={input}
-        onChange={(e) => setInput(parseInt(e.target.value))}
+        onChange={(e) => setInput(Number.parseInt(e.target.value))}
       />
       <button
         onClick={() => {

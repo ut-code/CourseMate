@@ -9,7 +9,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { StepProps } from "../common";
+import type { StepProps } from "../common";
 
 export type Step1Data = {
   name: string;

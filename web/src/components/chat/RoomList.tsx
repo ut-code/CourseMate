@@ -1,5 +1,5 @@
 import { Box, List, Typography } from "@mui/material";
-import { DMOverview, RoomOverview } from "../../common/types";
+import type { DMOverview, RoomOverview } from "../../common/types";
 import { Room } from "./Room";
 
 type RoomListProps = {

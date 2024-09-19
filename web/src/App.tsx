@@ -1,17 +1,17 @@
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
-import Root from "./routes/root";
-import Home from "./routes/tabs/home";
-import Profile from "./routes/tabs/profile";
-import Login from "./routes/login";
-import RegistrationPage from "./routes/registration/index";
 import { getAuth } from "firebase/auth";
 import { SnackbarProvider } from "notistack";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
+import Login from "./routes/login";
+import RegistrationPage from "./routes/registration/index";
+import Root from "./routes/root";
 import Chat from "./routes/tabs/chat";
 import { Friends } from "./routes/tabs/friends";
+import Home from "./routes/tabs/home";
+import Profile from "./routes/tabs/profile";
 
 export default function App() {
   const PrivateRoute = () => {

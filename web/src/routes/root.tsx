@@ -1,9 +1,9 @@
-import { BottomNavigation, BottomNavigationAction } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import PeopleIcon from "@mui/icons-material/People";
 import ChatIcon from "@mui/icons-material/Chat";
-import { useState, useEffect } from "react";
+import HomeIcon from "@mui/icons-material/Home";
+import PeopleIcon from "@mui/icons-material/People";
+import { BottomNavigation, BottomNavigationAction } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 

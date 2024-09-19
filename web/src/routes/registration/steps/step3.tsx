@@ -1,8 +1,8 @@
 import { Button } from "@mui/material";
-import { BackProp, StepProps } from "../common";
+import { useState } from "react";
 import { PhotoPreview } from "../../../components/config/PhotoPreview";
 import { photo } from "../../../components/data/photo-preview";
-import { useState } from "react";
+import type { BackProp, StepProps } from "../common";
 
 export type Step3Data = {
   pictureUrl: string;

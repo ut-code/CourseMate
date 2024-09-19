@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { Popper } from "@mui/base/Popper";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
+import { Popper } from "@mui/base/Popper";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import type React from "react";
+import { useState } from "react";
 import MessagePopup from "./MessagePopup";
 
 type Props = {

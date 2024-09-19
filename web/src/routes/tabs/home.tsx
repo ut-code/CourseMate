@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import type { User } from "../../common/types";
-import { Box, Button } from "@mui/material";
-import user from "../../api/user";
-import request from "../../api/request";
-import { useCurrentUserId } from "../../hooks/useCurrentUser";
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { Box, Button } from "@mui/material";
+import { useEffect, useState } from "react";
+import request from "../../api/request";
+import user from "../../api/user";
+import type { User } from "../../common/types";
+import { useCurrentUserId } from "../../hooks/useCurrentUser";
 
-import { DraggableCard } from "../../components/DraggableCard";
 import shadows from "@mui/material/styles/shadows";
+import { DraggableCard } from "../../components/DraggableCard";
 
 const getBackgroundColor = (x: number) => {
   const maxVal = 300; // 255より大きくして原色や黒にならないようにする

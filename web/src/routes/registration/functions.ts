@@ -1,9 +1,9 @@
-import userapi from "../../api/user";
-import { GUID, User } from "../../common/types";
 import { getAuth } from "firebase/auth";
-import { EnqueueSnackbar } from "notistack";
-import { NavigateFunction } from "react-router-dom";
-import { UpdateUser } from "../../common/types";
+import type { EnqueueSnackbar } from "notistack";
+import type { NavigateFunction } from "react-router-dom";
+import userapi from "../../api/user";
+import type { GUID, User } from "../../common/types";
+import type { UpdateUser } from "../../common/types";
 
 type Dependencies = {
   navigate: NavigateFunction;

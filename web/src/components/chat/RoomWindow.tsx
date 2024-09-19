@@ -1,15 +1,20 @@
-import { Box, Paper, Typography, TextField, Button } from "@mui/material";
-import { DMOverview, Message, SendMessage, UserID } from "../../common/types";
-import { MessageInput } from "./MessageInput";
-import { useCurrentUserId } from "../../hooks/useCurrentUser";
-import { useState, useEffect, useRef } from "react";
-import * as chat from "../../api/chat/chat";
-import { RoomHeader } from "./RoomHeader";
-import MessagePopupDots from "./MessagePopupDots";
-import { socket } from "../data/socket";
-import { getIdToken } from "../../firebase/auth/lib";
+import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
+import { useEffect, useRef, useState } from "react";
+import * as chat from "../../api/chat/chat";
 import user from "../../api/user";
+import type {
+  DMOverview,
+  Message,
+  SendMessage,
+  UserID,
+} from "../../common/types";
+import { getIdToken } from "../../firebase/auth/lib";
+import { useCurrentUserId } from "../../hooks/useCurrentUser";
+import { socket } from "../data/socket";
+import { MessageInput } from "./MessageInput";
+import MessagePopupDots from "./MessagePopupDots";
+import { RoomHeader } from "./RoomHeader";
 
 type Prop = {
   room: DMOverview;
