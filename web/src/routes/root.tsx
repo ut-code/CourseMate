@@ -28,7 +28,7 @@ export default function Root() {
   return (
     <>
       <Header title={labels[value]} />
-      <div style={{ paddingBottom: "56px" }}>
+      <div style={{ marginBottom: "56px" }}>
         <Outlet />
       </div>
       <BottomNavigation
