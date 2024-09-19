@@ -1,20 +1,20 @@
 import { PrismaClient } from "@prisma/client";
-import { UserID } from "../common/types";
+import { Err, Ok, type Result } from "../common/lib/result";
+import type { UserID } from "../common/types";
 import type {
-  RoomOverview,
-  RelationshipID,
+  DMOverview,
   DMRoom,
   InitRoom,
-  SharedRoom,
-  ShareRoomID,
   Message,
   MessageID,
-  DMOverview,
+  RelationshipID,
+  RoomOverview,
+  ShareRoomID,
+  SharedRoom,
   SharedRoomOverview,
 } from "../common/types";
 import { getRelation } from "./matches";
 import { getMatchedUser } from "./requests";
-import { Err, Ok, Result } from "../common/lib/result";
 
 const prisma = new PrismaClient();
 
