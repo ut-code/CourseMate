@@ -1,8 +1,8 @@
 import express from "express";
-import methods from "../methods";
 import type { Request, Response } from "express";
-import cors from "../../../src/lib/cross-origin/multiorigin-cors";
 import csrf from "../../../src/lib/cross-origin/block-unknown-origin";
+import cors from "../../../src/lib/cross-origin/multiorigin-cors";
+import methods from "../methods";
 
 const app = express();
 

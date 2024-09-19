@@ -35,12 +35,12 @@ methods.forEach((kind) => {
         mode: "cors",
       });
       const text = await res.text();
-      console.log(`fetched text: `, text);
+      console.log("fetched text: ", text);
       assert(text === (kind === "head" ? "" : "DATA SENT FROM SERVER")); // HEAD request doesn't return a body
       element.textContent = "OK";
       element.style.color = "green";
     } catch (err) {
-      element.textContent = "FAIL: " + err;
+      element.textContent = `FAIL: ${err}`;
       element.style.color = "red";
     }
   };
