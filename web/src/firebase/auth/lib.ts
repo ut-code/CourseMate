@@ -1,6 +1,6 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { type IDToken } from "../../common/types";
-import { User } from "firebase/auth";
+import type { User } from "firebase/auth";
+import type { IDToken } from "../../common/types";
 
 export class ErrUnauthorized extends Error {}
 
@@ -51,7 +51,7 @@ export async function credFetch(
 
   const res = await fetch(`${path}?token=${idToken}`, init);
 
-  if (res.status == 401) throw new ErrUnauthorized();
+  if (res.status === 401) throw new ErrUnauthorized();
   if (!res.ok) throw new Error("response was not ok");
   return res;
 }
