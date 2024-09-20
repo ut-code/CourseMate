@@ -222,11 +222,11 @@ export function RoomWindow(props: Prop) {
                       padding: 1,
                       borderRadius: 2,
                       backgroundColor:
-                        m.creator === id.currentUserId ? "#DCF8C6" : "#FFF",
+                        m.creator === id.currentUserId ? "secondary.main" : "#FFF",
                       boxShadow: 1,
                       border: 1,
-                      cursor:
-                        m.creator === id.currentUserId ? "pointer" : "default",
+                      // cursor:
+                      //   m.creator === id.currentUserId ? "pointer" : "default",
                     }}
                   >
                     <Typography sx={{ wordBreak: "break-word" }}>
