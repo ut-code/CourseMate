@@ -103,7 +103,6 @@ export default function Home() {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        height={"100vh"}
       >
         {displayedUser && (
           <DraggableCard
