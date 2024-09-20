@@ -142,7 +142,7 @@ export function RoomWindow(props: Prop) {
           width: "100%",
           zIndex: 500,
           backgroundColor: "white",
-          top: "56px"
+          top: "56px",
         }}
       >
         <RoomHeader room={room} setActiveRoom={setActiveRoom} />
@@ -152,8 +152,8 @@ export function RoomWindow(props: Prop) {
           display: "flex",
           flexDirection: "column",
           position: "absolute",
-          top: "56px", 
-          bottom: "56px", 
+          top: "56px",
+          bottom: "56px",
           left: 0,
           right: 0,
           overflowY: "auto",
@@ -190,12 +190,27 @@ export function RoomWindow(props: Prop) {
                       multiline
                       rows={3}
                     />
-                    <Box sx={{ display: "flex", gap: 1, marginTop: 1 }}>
-                      <Button variant="contained" onClick={handleSaveEdit}>
-                        Save
+                    <Box
+                      sx={{
+                        display: "flex",
+                        gap: 1,
+                        marginTop: 1,
+                        justifyContent: "space-evenly"
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        onClick={handleSaveEdit}
+                        sx={{ minWidth: 100}} 
+                      >
+                        保存
                       </Button>
-                      <Button variant="outlined" onClick={handleCancelEdit}>
-                        Cancel
+                      <Button
+                        variant="outlined"
+                        onClick={handleCancelEdit}
+                        sx={{ minWidth: 100 }} 
+                      >
+                        キャンセル
                       </Button>
                     </Box>
                   </Box>

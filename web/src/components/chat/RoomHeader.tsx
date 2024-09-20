@@ -14,7 +14,7 @@ export function RoomHeader(props: Props) {
       sx={{
         display: "flex",
         alignItems: "center",
-        padding: "0.5rem",
+        padding: "1rem",
       }}
     >
       <ArrowBackIcon
