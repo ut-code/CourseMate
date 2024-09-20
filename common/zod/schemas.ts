@@ -53,15 +53,6 @@ export const RelationshipStatusSchema = z.union([
 export const InitUserSchema = UserSchema.omit({ id: true });
 export const UpdateUserSchema = InitUserSchema.omit({ guid: true });
 
-export const PublicUserSchema = z.object({
-  id: UserIDSchema,
-  name: NameSchema,
-  pictureUrl: PictureUrlSchema,
-  intro: z
-    .string()
-    .min(1, { message: "Short introduction must not be empty." }),
-});
-
 export const RelationshipIDSchema = z.number();
 
 export const RelationshipSchema = z.object({

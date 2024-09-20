@@ -123,7 +123,7 @@ const CardBack = ({ displayedUser }: CardProps) => {
           {displayedUser?.name}
         </p>
       </div>
-      <CoursesTable />
+      <CoursesTable userId={displayedUser.id} />
       <div style={{ position: "absolute", bottom: "0", right: "0", left: "0" }}>
         <ThreeSixtyIcon
           style={{ fontSize: "7vw", display: "block", margin: "auto" }}
