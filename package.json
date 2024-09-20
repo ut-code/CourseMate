@@ -12,24 +12,17 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^9.10.0",
+    "@biomejs/biome": "^1.9.1",
     "husky": "^9.1.4",
     "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3",
     "typescript": "^5.6.2"
   },
   "dependencies": {
     "zod": "^3.23.8"
   },
   "lint-staged": {
-    "web/**/*.{js,jsx,ts,tsx}": [
-      "eslint --report-unused-disable-directives --max-warnings 0 --config web/eslint.config.js"
-    ],
-    "server/**/*.{js,ts}": [
-      "eslint --report-unused-disable-directives --max-warnings 0 --config server/eslint.config.mjs"
-    ],
     "*.{js,jsx,ts,tsx}": [
-      "prettier --write"
+      "biome check --write"
     ]
   }
 }
