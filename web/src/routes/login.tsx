@@ -34,7 +34,18 @@ export default function Login() {
   return (
     <Box>
       <Header title="Login" />
-      <Box mt={2} mx={2} display="flex" gap={1}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "56px",
+          left: 0,
+          right: 0,
+          overflowY: "auto",
+        }}
+        mt={2}
+        mx={2}
+        gap={1}
+      >
         <Button
           variant="outlined"
           sx={{ textTransform: "none" }}
@@ -45,12 +56,12 @@ export default function Login() {
                 throw new Error("ログインに失敗しました");
               }
               const userData = await user.getByGUID(
-                auth.currentUser.uid as GUID,
+                auth.currentUser.uid as GUID
               );
               if (userData === null) {
                 enqueueSnackbar(
                   "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
-                  { variant: "info" },
+                  { variant: "info" }
                 );
                 navigate("/signup");
               } else {
@@ -83,7 +94,7 @@ export default function Login() {
               if (userExists) {
                 enqueueSnackbar(
                   "この Google アカウントはすでに登録されています",
-                  { variant: "error" },
+                  { variant: "error" }
                 );
                 navigate("/login");
               } else {
