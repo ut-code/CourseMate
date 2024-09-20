@@ -1,7 +1,7 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import UserAvatar from "../human/avatar";
 import { DMOverview } from "../../common/types";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 type Props = {
   room: DMOverview;
   setActiveRoom: (room: DMOverview | null) => void;
@@ -15,16 +15,19 @@ export function RoomHeader(props: Props) {
         display: "flex",
         alignItems: "center",
         padding: "0.5rem",
-        borderBottom: "1px solid #ddd",
       }}
     >
-      <Button
-        onClick={() => {setActiveRoom(null)}}
-      >
-        <ArrowBackIcon />
-      </Button>
-      <UserAvatar pictureUrl={room.thumbnail} width="50px" height="50px" />
-      <Typography variant="h6">{room.name}</Typography>
+      <ArrowBackIcon
+        onClick={() => {
+          setActiveRoom(null);
+        }}
+      />
+      <Box sx={{ marginLeft: "16px", alignItems: "center", display: "flex" }}>
+        <UserAvatar pictureUrl={room.thumbnail} width="30px" height="30px" />
+      </Box>
+      <Box sx={{ marginLeft: "16px" }}>
+        <Typography variant="h6">{room.name}</Typography>
+      </Box>
     </Box>
   );
 }
