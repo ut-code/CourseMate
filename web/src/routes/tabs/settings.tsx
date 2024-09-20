@@ -5,7 +5,7 @@ import UserAvatar from "../../components/avatar/avatar";
 // import { useState } from "react";
 import CoursesTable from "../../components/course/CoursesTable";
 
-export default function Profile() {
+export default function Settings() {
   // const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { data, loading, error } = hooks.useMe();
 

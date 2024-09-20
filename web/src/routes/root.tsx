@@ -1,14 +1,19 @@
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ChatIcon from "@mui/icons-material/Chat";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { BottomNavigation, BottomNavigationAction } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 
-const labels = ["Home", "Friends", "Chat", "Profile"];
-const paths = ["/home", "/friends", "/chat", "/profile"];
+const labels = [
+  "ホーム/Home",
+  "フレンド/Friends",
+  "チャット/Chat",
+  "設定/Settings",
+];
+const paths = ["/home", "/friends", "/chat", "/settings"];
 
 export default function Root() {
   const location = useLocation();
@@ -37,31 +42,53 @@ export default function Root() {
         onChange={(_event, newValue) => {
           setValue(newValue);
         }}
-        sx={{ width: "100%", position: "fixed", bottom: 0 }}
+        sx={{
+          width: "100%",
+          position: "fixed",
+          bottom: 0,
+          borderTop: "1px solid",
+          borderColor: "primary.main",
+        }}
       >
         <BottomNavigationAction
           component={Link}
           to="/home"
           label="Home"
-          icon={<HomeIcon />}
+          icon={
+            <HomeIcon
+              sx={{ color: value === 0 ? "primary.main" : "secondary.main" }}
+            />
+          }
         />
         <BottomNavigationAction
           component={Link}
           to="/friends"
           label="Friends"
-          icon={<PeopleIcon />}
+          icon={
+            <PeopleIcon
+              sx={{ color: value === 1 ? "primary.main" : "secondary.main" }}
+            />
+          }
         />
         <BottomNavigationAction
           component={Link}
           to="/chat"
           label="Chat"
-          icon={<ChatIcon />}
+          icon={
+            <ChatIcon
+              sx={{ color: value === 2 ? "primary.main" : "secondary.main" }}
+            />
+          }
         />
         <BottomNavigationAction
           component={Link}
-          to="/profile"
-          label="Profile"
-          icon={<AccountCircleIcon />}
+          to="/settings"
+          label="Settings"
+          icon={
+            <SettingsIcon
+              sx={{ color: value === 3 ? "primary.main" : "secondary.main" }}
+            />
+          }
         />
       </BottomNavigation>
     </>
