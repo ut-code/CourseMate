@@ -15,24 +15,10 @@ export default function Chat() {
 
   return (
     <Box
-      sx={{
-        width: "100%",
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
     >
       {activeRoom ? (
         // activeRoomがtrueの場合、画面全体にRoomWindowを表示
         <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: "white",
-            display: "flex",
-            flexDirection: "column",
-            overflow: "auto",
-          }}
         >
           <RoomWindow room={activeRoom} setActiveRoom={setActiveRoom}/>
         </Box>

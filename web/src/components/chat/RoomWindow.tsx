@@ -136,13 +136,27 @@ export function RoomWindow(props: Prop) {
 
   return (
     <>
-      <RoomHeader room={room} setActiveRoom={setActiveRoom} />
+      <Box
+        sx={{
+          position: "fixed",
+          width: "100%",
+          zIndex: 500,
+          backgroundColor: "white",
+          top: "56px"
+        }}
+      >
+        <RoomHeader room={room} setActiveRoom={setActiveRoom} />
+      </Box>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          height: "90%",
-          padding: 2,
+          position: "absolute",
+          top: "56px", 
+          bottom: "56px", 
+          left: 0,
+          right: 0,
+          overflowY: "auto",
         }}
       >
         {dm ? (
@@ -161,7 +175,6 @@ export function RoomWindow(props: Prop) {
                 }}
               >
                 {editingMessageId === m.id ? (
-                  // 編集モード
                   <Box
                     sx={{
                       display: "flex",
@@ -187,7 +200,6 @@ export function RoomWindow(props: Prop) {
                     </Box>
                   </Box>
                 ) : (
-                  // 通常のメッセージ表示
                   <Paper
                     sx={{
                       display: "flex",
@@ -236,18 +248,17 @@ export function RoomWindow(props: Prop) {
         ) : (
           <Typography>最初のメッセージを送ってみましょう！</Typography>
         )}
-
-        <Box
-          sx={{
-            position: "fixed",
-            bottom: "56px",
-            width: "100%",
-            backgroundColor: "#fff",
-            padding: 1,
-          }}
-        >
-          <MessageInput send={sendDMMessage} room={room} />
-        </Box>
+      </Box>
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: "52px",
+          width: "100%",
+          backgroundColor: "#fff",
+          padding: "0px",
+        }}
+      >
+        <MessageInput send={sendDMMessage} room={room} />
       </Box>
     </>
   );
