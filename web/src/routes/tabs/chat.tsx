@@ -34,7 +34,7 @@ export default function Chat() {
             overflow: "auto",
           }}
         >
-          <RoomWindow room={activeRoom} />
+          <RoomWindow room={activeRoom} setActiveRoom={setActiveRoom}/>
         </Box>
       ) : (
         // activeRoomがfalseの場合、通常のRoomListを表示

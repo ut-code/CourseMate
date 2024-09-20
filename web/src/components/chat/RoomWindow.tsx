@@ -13,10 +13,11 @@ import Dots from "../common/Dots";
 
 type Prop = {
   room: DMOverview;
+  setActiveRoom: (room: DMOverview | null) => void;
 };
 
 export function RoomWindow(props: Prop) {
-  const { room } = props;
+  const { room, setActiveRoom } = props;
   const { currentUserId, loading } = useCurrentUserId();
   const [dm, setDM] = useState<Message[]>([]);
   const { enqueueSnackbar } = useSnackbar();
@@ -28,8 +29,6 @@ export function RoomWindow(props: Prop) {
     const message = await chat.sendDM(to, msg);
     appendMessage(message);
   }
-
-  //メッセージの追加
   function appendMessage(newMessage: Message) {
     setDM((prevDM) => {
       return [...prevDM, newMessage];
@@ -64,7 +63,7 @@ export function RoomWindow(props: Prop) {
             `${creator.name}さんからのメッセージ : ${msg.content}`,
             {
               variant: "info",
-            },
+            }
           );
         }
       });
@@ -116,7 +115,7 @@ export function RoomWindow(props: Prop) {
     const editedMessage = await chat.updateMessage(
       editingMessageId,
       { content: editedContent },
-      room.friendId,
+      room.friendId
     );
     setEditingMessageId(null);
     setEditedContent("");
@@ -137,7 +136,7 @@ export function RoomWindow(props: Prop) {
 
   return (
     <>
-      <RoomHeader room={room} />
+      <RoomHeader room={room} setActiveRoom={setActiveRoom} />
       <Box
         sx={{
           display: "flex",

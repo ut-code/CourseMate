@@ -1,10 +1,14 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import UserAvatar from "../human/avatar";
 import { DMOverview } from "../../common/types";
-type Props = { room: DMOverview };
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+type Props = {
+  room: DMOverview;
+  setActiveRoom: (room: DMOverview | null) => void;
+};
 
 export function RoomHeader(props: Props) {
-  const { room } = props;
+  const { room, setActiveRoom } = props;
   return (
     <Box
       sx={{
@@ -14,6 +18,11 @@ export function RoomHeader(props: Props) {
         borderBottom: "1px solid #ddd",
       }}
     >
+      <Button
+        onClick={() => {setActiveRoom(null)}}
+      >
+        <ArrowBackIcon />
+      </Button>
       <UserAvatar pictureUrl={room.thumbnail} width="50px" height="50px" />
       <Typography variant="h6">{room.name}</Typography>
     </Box>
