@@ -1,4 +1,5 @@
 import type { GUID, UpdateUser, User, UserID } from "../common/types";
+import { parseUser } from "../common/zod/methods.ts";
 import { credFetch } from "../firebase/auth/lib.ts";
 import endpoints from "./internal/endpoints.ts";
 
@@ -67,7 +68,8 @@ export async function getByGUID(
     }
 
     const data = await res.json();
-    return { status: res.status, data };
+    const safeData = parseUser(data);
+    return { status: res.status, data: safeData };
   } catch (error) {
     throw new Error("ネットワークエラーまたは型エラーが発生しました");
   }
