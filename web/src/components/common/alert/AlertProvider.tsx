@@ -6,8 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { type ReactNode, useState } from "react";
-import { AlertContext } from "./alertContext";
+import { type ReactNode, createContext, useContext, useState } from "react";
 
 export type Alert = {
   AlertMessage: string;
@@ -23,6 +22,8 @@ export type AlertContextType = {
 type AlertProviderProps = {
   children: ReactNode;
 };
+
+const AlertContext = createContext<AlertContextType | undefined>(undefined);
 
 export const AlertProvider = ({ children }: AlertProviderProps) => {
   const [alertProps, setAlertProps] = useState<Alert | null>(null);
@@ -71,3 +72,11 @@ export const AlertProvider = ({ children }: AlertProviderProps) => {
     </AlertContext.Provider>
   );
 };
+
+export function useAlert() {
+  const context = useContext(AlertContext);
+  if (!context) {
+    throw new Error("useAlert must be used within an AlertProvider");
+  }
+  return context;
+}

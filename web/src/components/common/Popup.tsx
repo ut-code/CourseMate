@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import { useAlert } from "./alert/useAlert";
+import { useAlert } from "./alert/AlertProvider";
 
 type Action = {
   label: string;
