@@ -1,7 +1,7 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import Requests from "../../components/match/requests";
 import Matchings from "../../components/match/matching";
+import Requests from "../../components/match/requests";
 
 export function Friends() {
   const [open, setOpen] = useState(0);
@@ -36,7 +36,7 @@ export function Friends() {
           overflowY: "auto",
         }}
       >
-        <TabPanel open={open} >
+        <TabPanel open={open}>
           {open === 0 ? <Matchings /> : open === 1 ? <Requests /> : null}
         </TabPanel>
       </Box>
@@ -53,7 +53,7 @@ function TabPanel({
 }) {
   return (
     <div
-      role="tabpanel"
+      // role="tabpanel" // FIXME: biome says it should not be a div, but I couldn't find a proper html elem
       id={`tabpanel-${open}`}
       aria-labelledby={`tab-${open}`}
     >

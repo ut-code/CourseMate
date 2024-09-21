@@ -1,10 +1,10 @@
 import { Box, List } from "@mui/material";
-import hooks from "../../api/hooks";
 import { useState } from "react";
-import { User } from "../../common/types";
-import { HumanListItem } from "../human/humanListItem";
+import hooks from "../../api/hooks";
 import { deleteMatch } from "../../api/match";
+import type { User } from "../../common/types";
 import { ProfileModal } from "../common/profileModal";
+import { HumanListItem } from "../human/humanListItem";
 
 export default function Matchings() {
   const { data, loading, error, reload } = hooks.useMatchedUsers();

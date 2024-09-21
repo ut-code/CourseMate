@@ -6,7 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { useState, ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { AlertContext } from "./alertContext";
 
 export type Alert = {

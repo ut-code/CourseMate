@@ -5,10 +5,11 @@ type Props = {
   fallback: React.ReactElement;
   width: string;
   height: string;
+  alt: string;
 };
 
 // https://medium.com/@abhishekmicosoft/handling-img-fallback-307653b2f30
-export function ImageFallback({ width, height, url, fallback }: Props) {
+export function ImageFallback({ width, height, url, fallback, alt }: Props) {
   const [ok, setOK] = useState<boolean>(true);
 
   return ok ? (
@@ -22,6 +23,7 @@ export function ImageFallback({ width, height, url, fallback }: Props) {
         pointerEvents: "none",
       }}
       onError={() => setOK(false)}
+      alt={alt}
     />
   ) : (
     <>{fallback}</>

@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import type { User } from "../../common/types";
-import { Box, Button } from "@mui/material";
-import user from "../../api/user";
-import request from "../../api/request";
-import { useCurrentUserId } from "../../hooks/useCurrentUser";
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { Box, Button } from "@mui/material";
+import { useEffect, useState } from "react";
+import request from "../../api/request";
+import user from "../../api/user";
+import type { User } from "../../common/types";
+import { useCurrentUserId } from "../../hooks/useCurrentUser";
 
-import { DraggableCard } from "../../components/DraggableCard";
 import shadows from "@mui/material/styles/shadows";
+import { DraggableCard } from "../../components/DraggableCard";
 
 const getBackgroundColor = (x: number) => {
   const maxVal = 300; // 255より大きくして原色や黒にならないようにする
@@ -17,13 +17,13 @@ const getBackgroundColor = (x: number) => {
   // xが0に近いと白、正の方向に進むと緑、負の方向に進むと赤
   if (normalizedValue === 0) {
     return `rgb(${maxVal}, ${maxVal}, ${maxVal})`; // 白
-  } else if (normalizedValue > 0) {
+  }
+  if (normalizedValue > 0) {
     const redValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
     return `rgb(${maxVal}, ${maxVal - redValue}, ${maxVal - redValue})`; // 赤
-  } else {
-    const grayValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
-    return `rgb(${maxVal - grayValue}, ${maxVal - grayValue}, ${maxVal - grayValue})`; // 灰色
   }
+  const grayValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
+  return `rgb(${maxVal - grayValue}, ${maxVal - grayValue}, ${maxVal - grayValue})`; // 灰色
 };
 
 export default function Home() {
@@ -99,11 +99,7 @@ export default function Home() {
 
   return (
     <div style={{ backgroundColor: getBackgroundColor(dragValue) }}>
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-      >
+      <Box display="flex" flexDirection="column" alignItems="center">
         {displayedUser && (
           <DraggableCard
             displayedUser={displayedUser}

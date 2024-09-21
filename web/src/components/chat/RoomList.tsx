@@ -1,5 +1,5 @@
 import { Box, List, Typography } from "@mui/material";
-import { DMOverview, RoomOverview } from "../../common/types";
+import type { DMOverview, RoomOverview } from "../../common/types";
 import { HumanListItem } from "../human/humanListItem";
 
 type RoomListProps = {
@@ -47,13 +47,12 @@ export function RoomList(props: RoomListProps) {
               />
             </Box>
           );
-        } else {
-          return (
-            <Typography key={room.roomId} variant="body2" sx={{ mb: 1 }}>
-              グループチャット: {room.name}
-            </Typography>
-          );
         }
+        return (
+          <Typography key={room.roomId} variant="body2" sx={{ mb: 1 }}>
+            グループチャット: {room.name}
+          </Typography>
+        );
       })}
     </List>
   );

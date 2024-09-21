@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { UserID, Relationship } from "../common/types";
+import { Err, Ok, type Result } from "../common/lib/result";
+import type { Relationship, UserID } from "../common/types";
 import asyncMap from "../lib/async/map";
-import { Err, Ok, Result } from "../common/lib/result";
 
 const prisma = new PrismaClient();
 

@@ -19,7 +19,7 @@ type AlertMessage = {
 export default function Popup({ actions }: { actions: Action[] }) {
   const { showAlert } = useAlert();
 
-  const handleActionClick = (action: Action) => {
+  function handleActionClick(action: Action) {
     if (action.alert && action.messages) {
       showAlert({
         AlertMessage: action.messages.AlertMessage,
@@ -32,7 +32,7 @@ export default function Popup({ actions }: { actions: Action[] }) {
     } else {
       action.onClick();
     }
-  };
+  }
 
   return (
     <Box
@@ -45,9 +45,9 @@ export default function Popup({ actions }: { actions: Action[] }) {
         boxShadow: 2,
       }}
     >
-      {actions.map((action, index) => (
+      {actions.map((action) => (
         <Button
-          key={index}
+          key={action.label}
           onClick={() => handleActionClick(action)}
           sx={{
             color: `${action.color}`,

@@ -1,8 +1,8 @@
 import { Button } from "@mui/material";
-import { BackProp, StepProps } from "../common";
+import { useState } from "react";
 import { PhotoPreview } from "../../../components/config/PhotoPreview";
 import { photo } from "../../../components/data/photo-preview";
-import { useState } from "react";
+import type { BackProp, StepProps } from "../common";
 
 export type Step3Data = {
   pictureUrl: string;
@@ -27,7 +27,7 @@ export default function Step3({
       onSave(data);
     } catch (error) {
       if (error instanceof Error) {
-        let errorMessages;
+        let errorMessages: string;
         try {
           const parsedError = JSON.parse(error.message);
           if (Array.isArray(parsedError)) {

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Popper } from "@mui/base/Popper";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
+import { Popper } from "@mui/base/Popper";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useState } from "react";
 import Popup from "./Popup";
 
 type Props = {
@@ -31,8 +31,19 @@ export default function Dots(props: Props) {
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <div
-        style={{ position: "relative", display: "inline" }}
+      <button
+        type="button"
+        style={{
+          background: "none",
+          color: "inherit",
+          border: "none",
+          padding: 0,
+          font: "inherit",
+          cursor: "pointer",
+          outline: "inherit",
+          position: "relative",
+          display: "inline",
+        }}
         onClick={handleClick}
       >
         <MoreVertIcon
@@ -49,7 +60,7 @@ export default function Dots(props: Props) {
         >
           <Popup actions={actions} />
         </Popper>
-      </div>
+      </button>
     </ClickAwayListener>
   );
 }

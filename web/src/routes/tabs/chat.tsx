@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
-import { useRoomsOverview } from "../../api/chat/hooks";
-import { DMOverview } from "../../common/types";
 import { useState } from "react";
-import { RoomWindow } from "../../components/chat/RoomWindow";
+import { useRoomsOverview } from "../../api/chat/hooks";
+import type { DMOverview } from "../../common/types";
 import RoomList from "../../components/chat/RoomList";
+import { RoomWindow } from "../../components/chat/RoomWindow";
 
 export default function Chat() {
   const {
@@ -14,13 +14,11 @@ export default function Chat() {
   const [activeRoom, setActiveRoom] = useState<DMOverview | null>(null);
 
   return (
-    <Box
-    >
+    <Box>
       {activeRoom ? (
         // activeRoomがtrueの場合、画面全体にRoomWindowを表示
-        <Box
-        >
-          <RoomWindow room={activeRoom} setActiveRoom={setActiveRoom}/>
+        <Box>
+          <RoomWindow room={activeRoom} setActiveRoom={setActiveRoom} />
         </Box>
       ) : (
         // activeRoomがfalseの場合、通常のRoomListを表示

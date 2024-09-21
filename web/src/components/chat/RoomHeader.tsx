@@ -1,7 +1,7 @@
-import { Box, Typography } from "@mui/material";
-import UserAvatar from "../human/avatar";
-import { DMOverview } from "../../common/types";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Box, Typography } from "@mui/material";
+import type { DMOverview } from "../../common/types";
+import UserAvatar from "../human/avatar";
 type Props = {
   room: DMOverview;
   setActiveRoom: (room: DMOverview | null) => void;

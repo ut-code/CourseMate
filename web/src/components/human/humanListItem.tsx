@@ -1,4 +1,4 @@
-import { ListItem, ListItemAvatar, Button, Stack } from "@mui/material";
+import { Button, ListItem, ListItemAvatar, Stack } from "@mui/material";
 import UserAvatar from "./avatar";
 
 import Dots from "../common/Dots";

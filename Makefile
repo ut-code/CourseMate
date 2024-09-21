@@ -26,8 +26,13 @@ docker-watch: copy-common
 seed:
 	cd server; npx prisma db seed
 
-precommit: type-check
+precommit: check-branch lint-staged
+	make type-check
+
+lint-staged:
 	npx lint-staged
+check-branch:
+	@ if [ "$(git branch --show-current)" == "main" ]; then echo "Cannot make commit on main! aborting..."; exit 1; fi
 
 # Sync (install/update packages, generate prisma, etc)
 
@@ -66,12 +71,14 @@ format-check:
 	@exit 1
 
 # type checks
-type-check: type-check-server type-check-web
+type-check: copy-common
+	make type-check-server
+	make type-check-web
 
-type-check-server: copy-common-to-server
+type-check-server:
 	cd server; npx tsc --noEmit
 
-type-check-web: copy-common-to-web
+type-check-web:
 	cd web; npx tsc --noEmit
 
 
@@ -99,8 +106,9 @@ watch-server: copy-common-to-server
 
 copy-common: copy-common-to-server copy-common-to-web
 copy-common-to-server:
-	if [ -d server/src/common ]; then rm -r server/src/common; fi
-	cp -r common server/src/common
+	@ if [ -d server/src/common ]; then rm -r server/src/common; fi
+	@ cp -r common server/src/common
 copy-common-to-web:
-	if [ -d web/src/common ]; then rm -r web/src/common; fi
-	cp -r common web/src/common
+	@ if [ -d web/src/common ]; then rm -r web/src/common; fi
+	@ cp -r common web/src/common
+

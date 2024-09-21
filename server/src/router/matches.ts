@@ -1,8 +1,8 @@
-import express, { Request, Response } from "express";
-import { deleteMatch, getMatchesByUserId } from "../database/matches";
-import type { UserID } from "../common/types";
-import { safeGetUserId } from "../firebase/auth/db";
+import express, { type Request, type Response } from "express";
 import { safeParseInt } from "../common/lib/result/safeParseInt";
+import type { UserID } from "../common/types";
+import { deleteMatch, getMatchesByUserId } from "../database/matches";
+import { safeGetUserId } from "../firebase/auth/db";
 
 const router = express.Router();
 

@@ -1,17 +1,17 @@
 import express from "express";
-import { safeGetUserId } from "../firebase/auth/db";
 import { safeParseInt } from "../common/lib/result/safeParseInt";
-import type { UserID, MessageID } from "../common/types";
+import type { MessageID, UserID } from "../common/types";
 import { parseUserID } from "../common/zod/methods";
-import * as ws from "../lib/socket/socket";
-import * as core from "../functions/chat";
-import * as db from "../database/chat";
 import {
   ContentSchema,
   InitRoomSchema,
   SendMessageSchema,
   SharedRoomSchema,
 } from "../common/zod/schemas";
+import * as db from "../database/chat";
+import { safeGetUserId } from "../firebase/auth/db";
+import * as core from "../functions/chat";
+import * as ws from "../lib/socket/socket";
 
 const router = express.Router();
 
@@ -57,7 +57,7 @@ router.get("/dm/with/:userid", async (req, res) => {
 });
 
 // create a shared chat room.
-router.post(`/shared`, async (req, res) => {
+router.post("/shared", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
 

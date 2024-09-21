@@ -1,6 +1,6 @@
-import { User, GUID, UserID } from "../common/types";
-import * as db from "../database/users";
+import type { GUID, User, UserID } from "../common/types";
 import { getMatchedUser } from "../database/requests";
+import * as db from "../database/users";
 import * as http from "./share/http";
 
 export async function getAllUsers(): Promise<http.Response<User[]>> {

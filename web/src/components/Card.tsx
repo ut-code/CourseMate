@@ -1,7 +1,7 @@
-import { User } from "../common/types";
-import { useState } from "react";
-import CoursesTable from "./course/CoursesTable";
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
+import { useState } from "react";
+import type { User } from "../common/types";
+import CoursesTable from "./course/CoursesTable";
 import UserAvatar from "./human/avatar";
 
 interface CardProps {
@@ -16,6 +16,7 @@ export function Card({ displayedUser }: CardProps) {
   };
 
   return (
+    // biome-ignore lint: this cannot just be fixed rn FIXME!
     <div
       style={{
         perspective: "1000px",

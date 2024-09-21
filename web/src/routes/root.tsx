@@ -1,9 +1,9 @@
-import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
+import ChatIcon from "@mui/icons-material/Chat";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
-import ChatIcon from "@mui/icons-material/Chat";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { useState, useEffect } from "react";
+import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 
@@ -36,8 +36,8 @@ export default function Root() {
       <Box
         sx={{
           position: "absolute",
-          top: "56px", 
-          bottom: "56px", 
+          top: "56px",
+          bottom: "56px",
           left: 0,
           right: 0,
           overflowY: "auto",

@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
 import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
+import { useCallback, useState } from "react";
+import type { User } from "../common/types";
 import { Card } from "./Card";
-import { User } from "../common/types";
 
 const SWIPE_THRESHOLD = 200;
 

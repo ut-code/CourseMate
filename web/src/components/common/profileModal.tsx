@@ -1,7 +1,7 @@
 import { Box, ClickAwayListener } from "@mui/material";
 import { styled } from "@mui/system";
+import type { User } from "../../common/types";
 import { Card } from "../Card";
-import { User } from "../../common/types";
 
 const Overlay = styled(Box)({
   position: "fixed",

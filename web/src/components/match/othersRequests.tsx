@@ -1,10 +1,10 @@
 import { Box, List } from "@mui/material";
-import request from "../../api/request";
-import hooks from "../../api/hooks";
 import { useState } from "react";
-import { User } from "../../common/types";
-import { HumanListItem } from "../human/humanListItem";
+import hooks from "../../api/hooks";
+import request from "../../api/request";
+import type { User } from "../../common/types";
 import { ProfileModal } from "../common/profileModal";
+import { HumanListItem } from "../human/humanListItem";
 
 export default function OthersReq() {
   const { data, loading, error, reload } = hooks.usePendingRequestsToMe();
@@ -38,22 +38,17 @@ export default function OthersReq() {
         <p>Error: {error.message}</p>
       ) : (
         <List>
-          {data !== undefined &&
-            data?.map((sendingUser) => (
-              <HumanListItem
-                key={sendingUser.id}
-                id={sendingUser.id}
-                name={sendingUser.name}
-                pictureUrl={sendingUser.pictureUrl}
-                onOpen={() => handleOpen(sendingUser)}
-                onAccept={() =>
-                  request.accept(sendingUser.id).then(() => reload)
-                }
-                onReject={() =>
-                  request.reject(sendingUser.id).then(() => reload)
-                }
-              />
-            ))}
+          {data?.map((sendingUser) => (
+            <HumanListItem
+              key={sendingUser.id}
+              id={sendingUser.id}
+              name={sendingUser.name}
+              pictureUrl={sendingUser.pictureUrl}
+              onOpen={() => handleOpen(sendingUser)}
+              onAccept={() => request.accept(sendingUser.id).then(() => reload)}
+              onReject={() => request.reject(sendingUser.id).then(() => reload)}
+            />
+          ))}
         </List>
       )}
       <ProfileModal user={selectedUser} open={open} onClose={handleClose} />

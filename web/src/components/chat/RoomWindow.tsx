@@ -1,15 +1,20 @@
-import { Box, Paper, Typography, TextField, Button } from "@mui/material";
-import { DMOverview, Message, SendMessage, UserID } from "../../common/types";
-import { MessageInput } from "./MessageInput";
-import { useCurrentUserId } from "../../hooks/useCurrentUser";
-import { useState, useEffect, useRef } from "react";
-import * as chat from "../../api/chat/chat";
-import { RoomHeader } from "./RoomHeader";
-import { socket } from "../data/socket";
-import { getIdToken } from "../../firebase/auth/lib";
+import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
+import { useCallback, useEffect, useRef, useState } from "react";
+import * as chat from "../../api/chat/chat";
 import user from "../../api/user";
+import type {
+  DMOverview,
+  Message,
+  SendMessage,
+  UserID,
+} from "../../common/types";
+import { getIdToken } from "../../firebase/auth/lib";
+import { useCurrentUserId } from "../../hooks/useCurrentUser";
 import Dots from "../common/Dots";
+import { socket } from "../data/socket";
+import { MessageInput } from "./MessageInput";
+import { RoomHeader } from "./RoomHeader";
 
 type Prop = {
   room: DMOverview;
@@ -29,16 +34,14 @@ export function RoomWindow(props: Prop) {
     const message = await chat.sendDM(to, msg);
     appendMessage(message);
   }
-  function appendMessage(newMessage: Message) {
+
+  //メッセージの追加
+  const appendMessage = useCallback((newMessage: Message) => {
     setDM((prevDM) => {
       return [...prevDM, newMessage];
     });
-  }
-  async function refreshMessages(friendId: UserID) {
-    const newDM = await chat.getDM(friendId);
-    setDM(newDM.messages);
-  }
-  function updateMessages(updatedMessage: Message) {
+  }, []);
+  const updateMessages = useCallback((updatedMessage: Message) => {
     setDM((prevDM) => {
       return prevDM.map((m) => {
         if (m.id === updatedMessage.id) {
@@ -47,7 +50,7 @@ export function RoomWindow(props: Prop) {
         return m;
       });
     });
-  }
+  }, []);
 
   useEffect(() => {
     async function registerSocket() {
@@ -63,7 +66,7 @@ export function RoomWindow(props: Prop) {
             `${creator.name}さんからのメッセージ : ${msg.content}`,
             {
               variant: "info",
-            }
+            },
           );
         }
       });
@@ -85,17 +88,30 @@ export function RoomWindow(props: Prop) {
     return () => {
       socket.off("newMessage");
     };
-  }, [loading, currentUserId, room.friendId, enqueueSnackbar]);
+  }, [
+    loading,
+    currentUserId,
+    room.friendId,
+    enqueueSnackbar,
+    appendMessage,
+    updateMessages,
+  ]);
 
-  useEffect(() => {
-    if (room?.friendId) {
-      refreshMessages(room.friendId);
-    }
-  }, [room.friendId]);
+  useEffect(
+    () =>
+      run(async () => {
+        if (room?.friendId) {
+          const newDM = await chat.getDM(room.friendId);
+          setDM(newDM.messages);
+        }
+      }),
+    [room.friendId],
+  );
 
   //画面スクロール
   const scrollDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    dm;
     if (scrollDiv.current) {
       const element = scrollDiv.current;
       element.scrollTo({
@@ -115,7 +131,7 @@ export function RoomWindow(props: Prop) {
     const editedMessage = await chat.updateMessage(
       editingMessageId,
       { content: editedContent },
-      room.friendId
+      room.friendId,
     );
     setEditingMessageId(null);
     setEditedContent("");
@@ -195,20 +211,20 @@ export function RoomWindow(props: Prop) {
                         display: "flex",
                         gap: 1,
                         marginTop: 1,
-                        justifyContent: "space-evenly"
+                        justifyContent: "space-evenly",
                       }}
                     >
                       <Button
                         variant="contained"
                         onClick={handleSaveEdit}
-                        sx={{ minWidth: 100}} 
+                        sx={{ minWidth: 100 }}
                       >
                         保存
                       </Button>
                       <Button
                         variant="outlined"
                         onClick={handleCancelEdit}
-                        sx={{ minWidth: 100 }} 
+                        sx={{ minWidth: 100 }}
                       >
                         キャンセル
                       </Button>
@@ -222,7 +238,9 @@ export function RoomWindow(props: Prop) {
                       padding: 1,
                       borderRadius: 2,
                       backgroundColor:
-                        m.creator === id.currentUserId ? "secondary.main" : "#FFF",
+                        m.creator === id.currentUserId
+                          ? "secondary.main"
+                          : "#FFF",
                       boxShadow: 1,
                       border: 1,
                       // cursor:
@@ -277,4 +295,8 @@ export function RoomWindow(props: Prop) {
       </Box>
     </>
   );
+}
+
+function run(task: () => void): void {
+  task();
 }

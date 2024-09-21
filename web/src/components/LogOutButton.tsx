@@ -1,7 +1,7 @@
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase/firebaseconfig";
-import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase/firebaseconfig";
 import { useAlert } from "./common/alert/useAlert";
 
 export default function LogOutButton() {
@@ -33,7 +33,9 @@ export default function LogOutButton() {
 
   return (
     <>
-      <button onClick={handleClick}>ログアウト</button>
+      <button onClick={handleClick} type="button">
+        ログアウト
+      </button>
     </>
   );
 }

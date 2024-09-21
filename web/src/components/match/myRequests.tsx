@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
-import hooks from "../../api/hooks";
 import { List } from "@mui/material";
 import { useState } from "react";
-import { User } from "../../common/types";
-import { HumanListItem } from "../human/humanListItem";
+import hooks from "../../api/hooks";
+import type { User } from "../../common/types";
 import { ProfileModal } from "../common/profileModal";
+import { HumanListItem } from "../human/humanListItem";
 
 export default function MyReq() {
   const { data, loading, error } = hooks.usePendingRequestsFromMe();
@@ -38,16 +38,15 @@ export default function MyReq() {
         <p>Error: {error.message}</p>
       ) : (
         <List>
-          {data !== undefined &&
-            data?.map((receivingUser) => (
-              <HumanListItem
-                key={receivingUser.id}
-                id={receivingUser.id}
-                name={receivingUser.name}
-                pictureUrl={receivingUser.pictureUrl}
-                onOpen={() => handleOpen(receivingUser)}
-              />
-            ))}
+          {data?.map((receivingUser) => (
+            <HumanListItem
+              key={receivingUser.id}
+              id={receivingUser.id}
+              name={receivingUser.name}
+              pictureUrl={receivingUser.pictureUrl}
+              onOpen={() => handleOpen(receivingUser)}
+            />
+          ))}
         </List>
       )}
       {selectedUser && open && (

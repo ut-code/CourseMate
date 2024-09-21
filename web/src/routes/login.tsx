@@ -1,11 +1,11 @@
 import { Box, Button } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/firebaseconfig";
 import { useSnackbar } from "notistack";
-import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
 import user from "../api/user";
 import type { GUID } from "../common/types";
+import Header from "../components/Header";
+import { auth } from "../firebase/firebaseconfig";
 
 const provider = new GoogleAuthProvider();
 
@@ -56,12 +56,12 @@ export default function Login() {
                 throw new Error("ログインに失敗しました");
               }
               const userData = await user.getByGUID(
-                auth.currentUser.uid as GUID
+                auth.currentUser.uid as GUID,
               );
               if (userData === null) {
                 enqueueSnackbar(
                   "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
-                  { variant: "info" }
+                  { variant: "info" },
                 );
                 navigate("/signup");
               } else {
@@ -94,7 +94,7 @@ export default function Login() {
               if (userExists) {
                 enqueueSnackbar(
                   "この Google アカウントはすでに登録されています",
-                  { variant: "error" }
+                  { variant: "error" },
                 );
                 navigate("/login");
               } else {

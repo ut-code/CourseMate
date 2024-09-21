@@ -1,5 +1,5 @@
-import { Day, PrismaClient } from "@prisma/client";
-import { Course, UserID } from "../common/types";
+import { type Day, PrismaClient } from "@prisma/client";
+import type { Course, UserID } from "../common/types";
 
 const prisma = new PrismaClient();
 
