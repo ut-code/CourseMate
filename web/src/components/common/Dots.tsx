@@ -1,6 +1,5 @@
-import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-import { Popper } from "@mui/base/Popper";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { ClickAwayListener, Popper } from "@mui/material";
 import { useState } from "react";
 import Popup from "./Popup";
 
