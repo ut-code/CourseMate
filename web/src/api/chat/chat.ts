@@ -1,6 +1,4 @@
-import { ErrUnauthorized, credFetch } from "../../firebase/auth/lib";
-import endpoints from "../internal/endpoints";
-import {
+import type {
   DMRoom,
   InitRoom,
   Message,
@@ -12,6 +10,8 @@ import {
   UpdateRoom,
   UserID,
 } from "../../common/types";
+import { ErrUnauthorized, credFetch } from "../../firebase/auth/lib";
+import endpoints from "../internal/endpoints";
 
 /* TODO
 import { UserID } from "../common/types";

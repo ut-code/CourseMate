@@ -9,7 +9,12 @@ const methods = [
   "unlink",
 ] as const;
 
-const $ = (id: string) => document.getElementById(id)!;
+const $ = (id: string) => {
+  const e = document.getElementById(id);
+  if (!e) throw new Error();
+  return e;
+};
+
 const _ = (name: string) => {
   const li = document.createElement("li");
   const span = document.createElement("span");
@@ -23,7 +28,7 @@ const _ = (name: string) => {
   return button;
 };
 
-methods.forEach((kind) => {
+for (const kind of methods) {
   const element = _(kind);
   if (!element) {
     throw new Error(`element ${kind} not found`);
@@ -35,16 +40,16 @@ methods.forEach((kind) => {
         mode: "cors",
       });
       const text = await res.text();
-      console.log(`fetched text: `, text);
+      console.log("fetched text: ", text);
       assert(text === (kind === "head" ? "" : "DATA SENT FROM SERVER")); // HEAD request doesn't return a body
       element.textContent = "OK";
       element.style.color = "green";
     } catch (err) {
-      element.textContent = "FAIL: " + err;
+      element.textContent = `FAIL: ${err}`;
       element.style.color = "red";
     }
   };
-});
+}
 
 function assert(b: boolean) {
   if (!b) {

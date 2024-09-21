@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
-import hooks from "../../api/hooks";
-import UserAvatar from "../avatar/avatar";
 import { List, ListItem, ListItemAvatar } from "@mui/material";
-import React from "react";
-import { ProfileModal } from "../avatar/profileModal";
-import { User } from "../../common/types";
 import { Button } from "@mui/material";
+import React from "react";
+import hooks from "../../api/hooks";
+import type { User } from "../../common/types";
+import UserAvatar from "../avatar/avatar";
+import { ProfileModal } from "../avatar/profileModal";
 
 export default function MyReq() {
   const { data, loading, error } = hooks.usePendingRequestsFromMe();
@@ -30,21 +30,20 @@ export default function MyReq() {
         <p>Error: {error.message}</p>
       ) : (
         <List>
-          {data !== undefined &&
-            data?.map((receivingUser) => (
-              <ListItem key={receivingUser.id.toString()}>
-                <ListItemAvatar>
-                  <Button onClick={() => handleOpen(receivingUser)}>
-                    <UserAvatar
-                      pictureUrl={receivingUser.pictureUrl}
-                      width="50px"
-                      height="50px"
-                    />
-                  </Button>
-                </ListItemAvatar>
-                <p>{receivingUser.name}</p>
-              </ListItem>
-            ))}
+          {data?.map((receivingUser) => (
+            <ListItem key={receivingUser.id.toString()}>
+              <ListItemAvatar>
+                <Button onClick={() => handleOpen(receivingUser)}>
+                  <UserAvatar
+                    pictureUrl={receivingUser.pictureUrl}
+                    width="50px"
+                    height="50px"
+                  />
+                </Button>
+              </ListItemAvatar>
+              <p>{receivingUser.name}</p>
+            </ListItem>
+          ))}
         </List>
       )}
       {selectedUser && (

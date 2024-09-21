@@ -1,4 +1,4 @@
-import { Day } from "./types";
+import type { Day } from "./types";
 
 export const DAY_TO_JAPANESE_MAP = new Map<Day, string>([
   ["mon", "月"],

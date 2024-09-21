@@ -1,7 +1,7 @@
-import { IconButton, Stack, TextField, Typography } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import { IconButton, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { DMOverview, SendMessage, UserID } from "../../common/types";
+import type { DMOverview, SendMessage, UserID } from "../../common/types";
 import { parseContent } from "../../common/zod/methods";
 
 type Props = {

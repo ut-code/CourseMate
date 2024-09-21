@@ -1,6 +1,6 @@
 import { Box, Modal } from "@mui/material";
+import type { User } from "../../common/types";
 import UserAvatar from "./avatar";
-import { User } from "../../common/types";
 
 interface ProfileModalProps {
   selectedUser: User;

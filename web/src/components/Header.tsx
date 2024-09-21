@@ -1,5 +1,5 @@
-import { AppBar, Toolbar, IconButton, Typography } from "@mui/material";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 
 type Props = {
   title: string;

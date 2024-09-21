@@ -34,7 +34,7 @@ function TabPanel({
 }) {
   return (
     <div
-      role="tabpanel"
+      // role="tabpanel" // FIXME: biome says it should not be a div, but I couldn't find a proper html elem
       id={`tabpanel-${open}`}
       aria-labelledby={`tab-${open}`}
     >

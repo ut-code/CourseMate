@@ -9,7 +9,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { StepProps } from "../common";
+import type { StepProps } from "../common";
 
 export type Step1Data = {
   name: string;
@@ -47,7 +47,7 @@ export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
       onSave(data);
     } catch (error) {
       if (error instanceof Error) {
-        let errorMessages;
+        let errorMessages: string;
         try {
           const parsedError = JSON.parse(error.message);
           if (Array.isArray(parsedError)) {

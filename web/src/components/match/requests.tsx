@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import OthersReq from "./othersRequests";
 import MyReq from "./myRequests";
+import OthersReq from "./othersRequests";
 
 export default function Requests() {
   return (

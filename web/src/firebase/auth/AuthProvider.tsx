@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { redirect } from "react-router-dom";
 import userapi from "../../api/user";
+import type { GUID, User } from "../../common/types";
 import { AuthContext } from "./AuthContext";
-import type { User, GUID } from "../../common/types";
 
 export default function AuthProvider({
   children,

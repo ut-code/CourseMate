@@ -1,11 +1,11 @@
 import { Box, Button } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/firebaseconfig";
 import { useSnackbar } from "notistack";
-import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
 import user from "../api/user";
 import type { GUID } from "../common/types";
+import Header from "../components/Header";
+import { auth } from "../firebase/firebaseconfig";
 
 const provider = new GoogleAuthProvider();
 
