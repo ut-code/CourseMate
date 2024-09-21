@@ -82,10 +82,10 @@ export default function Login() {
 
               if (userExists) {
                 enqueueSnackbar(
-                  "この Google アカウントはすでに登録されています",
-                  { variant: "error" },
+                  "この Google アカウントはすでに登録されています。Home画面にリダイレクトしました。",
+                  { variant: "info" },
                 );
-                navigate("/login");
+                navigate("/home");
               } else {
                 enqueueSnackbar("新規登録を開始します", { variant: "info" });
                 navigate("/signup");
