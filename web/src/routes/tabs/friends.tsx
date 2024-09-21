@@ -22,7 +22,7 @@ export function Friends() {
           zIndex: 500,
         }}
       >
-        <Tabs value={open} onChange={handleChange}>
+        <Tabs value={open} onChange={handleChange} variant="fullWidth">
           <Tab label="マッチ中" {...a11yProps(0)} sx={{ width: "50%" }} />
           <Tab label="リクエスト" {...a11yProps(1)} sx={{ width: "50%" }} />
         </Tabs>
