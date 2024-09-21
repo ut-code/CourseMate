@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   List,
   ListItem,
   ListItemAvatar,
@@ -31,7 +32,7 @@ export default function OthersReq() {
           : "リクエストは受け取っていません。"}
       </p>
       {loading ? (
-        <p>Loading...</p>
+        <CircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (

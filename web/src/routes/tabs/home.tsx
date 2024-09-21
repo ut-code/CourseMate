@@ -1,6 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import request from "../../api/request";
 import user from "../../api/user";
@@ -23,7 +23,9 @@ const getBackgroundColor = (x: number) => {
     return `rgb(${maxVal}, ${maxVal - redValue}, ${maxVal - redValue})`; // 赤
   }
   const grayValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
-  return `rgb(${maxVal - grayValue}, ${maxVal - grayValue}, ${maxVal - grayValue})`; // 灰色
+  return `rgb(${maxVal - grayValue}, ${maxVal - grayValue}, ${
+    maxVal - grayValue
+  })`; // 灰色
 };
 
 export default function Home() {
@@ -38,7 +40,6 @@ export default function Home() {
       if (loading || !currentUserId) return;
       const matched = await user.matched();
       const users = await user.except(currentUserId);
-      // TODO: zod
       const unmatched = users.filter(
         (user) => !matched.some((matchedUser) => matchedUser.id === user.id),
       );
@@ -55,7 +56,6 @@ export default function Home() {
 
   const handleReject = (): void => {
     if (!users || !displayedUser) return;
-    alert("skipped!");
     const newUsers = users.filter((user) => user.id !== displayedUser.id);
     const newSkippedUsers = skippedUsers
       ? [...skippedUsers, displayedUser]
@@ -73,7 +73,6 @@ export default function Home() {
     request.send(displayedUser.id).catch((err: unknown) => {
       console.error("Error liking user:", err);
     });
-    alert("liked!");
     if (!users) return;
     const newUsers = users.filter((user) => user.id !== displayedUser.id);
     setUsers(newUsers);
@@ -105,26 +104,33 @@ export default function Home() {
         alignItems="center"
         height={"100vh"}
       >
-        {displayedUser && (
-          <DraggableCard
-            displayedUser={displayedUser}
-            onSwipeLeft={handleReject}
-            onSwipeRight={handleAccept}
-            onDrag={handleDrag}
-          />
+        {!displayedUser ? (
+          <CircularProgress />
+        ) : (
+          <>
+            <DraggableCard
+              displayedUser={displayedUser}
+              onSwipeLeft={handleReject}
+              onSwipeRight={handleAccept}
+              onDrag={handleDrag}
+            />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-around",
+                width: "50%",
+              }}
+            >
+              <RoundButton onclick={handleReject} icon={<CloseIconStyled />} />
+              <RoundButton
+                onclick={handleAccept}
+                icon={<FavoriteIconStyled />}
+              />
+            </div>
+          </>
         )}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-around",
-            width: "50%",
-          }}
-        >
-          <RoundButton onclick={handleReject} icon={<CloseIconStyled />} />
-          <RoundButton onclick={handleAccept} icon={<FavoriteIconStyled />} />
-        </div>
       </Box>
     </div>
   );

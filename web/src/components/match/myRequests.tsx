@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { List, ListItem, ListItemAvatar } from "@mui/material";
 import { Button } from "@mui/material";
 import React from "react";
@@ -25,7 +25,7 @@ export default function MyReq() {
           : "リクエストを送信しましょう！"}
       </p>
       {loading ? (
-        <p>Loading...</p>
+        <CircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (

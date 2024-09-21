@@ -1,4 +1,11 @@
-import { Box, Button, List, ListItem, ListItemAvatar } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemAvatar,
+} from "@mui/material";
 import React from "react";
 import hooks from "../../api/hooks";
 import { deleteMatch } from "../../api/match";
@@ -21,7 +28,7 @@ export default function Followers() {
   return (
     <Box>
       {loading ? (
-        <p>Loading...</p>
+        <CircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (
