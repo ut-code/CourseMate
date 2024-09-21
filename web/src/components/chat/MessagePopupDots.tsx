@@ -1,6 +1,5 @@
-import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-import { Popper } from "@mui/base/Popper";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { ClickAwayListener, Popper } from "@mui/material";
 import type React from "react";
 import { useState } from "react";
 import MessagePopup from "./MessagePopup";

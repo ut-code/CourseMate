@@ -51,19 +51,25 @@ export async function except(id: UserID): Promise<User[]> {
 }
 
 /**
- * Google アカウントの uid を用いて CourseMate ユーザの情報を取得する。
+ * Google アカウントの uid を用いて CourseMate ユーザの情報とステータスコードを取得する。
  * @param guid Google アカウントの uid
- * @returns ユーザの情報
+ * @returns ユーザの情報とそのステータスコード
  * @throws network error and type error
  */
-export async function getByGUID(guid: GUID): Promise<User | null> {
+export async function getByGUID(
+  guid: GUID,
+): Promise<{ status: number; data: User | null }> {
   try {
     const res = await credFetch("GET", endpoints.userByGUID(guid));
+
+    if (!res.ok) {
+      return { status: res.status, data: null };
+    }
+
     const data = await res.json();
-    // TODO: properly convert this into User instead of assigning any
-    return data;
-  } catch {
-    return null;
+    return { status: res.status, data };
+  } catch (error) {
+    throw new Error("ネットワークエラーまたは型エラーが発生しました");
   }
 }
 

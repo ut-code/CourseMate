@@ -20,7 +20,7 @@ export default function AuthProvider({
         if (firebaseUser) {
           userapi
             .getByGUID(firebaseUser.uid as GUID)
-            .then((user) => setUser(user));
+            .then((user) => setUser(user.data));
         } else {
           setUser(null);
           console.log("ログイン画面に移動します");
