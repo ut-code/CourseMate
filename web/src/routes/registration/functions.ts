@@ -20,6 +20,10 @@ export async function register(
   if (!guid) {
     enqueueSnackbar("ユーザ情報が取得できませんでした", {
       variant: "error",
+      anchorOrigin: {
+        vertical: "top",
+        horizontal: "right",
+      },
     });
     return;
   }
@@ -27,12 +31,20 @@ export async function register(
     await registerUserInfo({ guid, ...data });
     enqueueSnackbar("サインアップに成功しました", {
       variant: "success",
+      anchorOrigin: {
+        vertical: "top",
+        horizontal: "right",
+      },
     });
     navigate("/home");
   } catch (error) {
     console.error("Sign-up failed:", error);
     enqueueSnackbar("サインアップに失敗しました", {
       variant: "error",
+      anchorOrigin: {
+        vertical: "top",
+        horizontal: "right",
+      },
     });
     navigate("/", { replace: true });
   }

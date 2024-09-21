@@ -50,18 +50,32 @@ export default function Login() {
               if (userData === null) {
                 enqueueSnackbar(
                   "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
-                  { variant: "info" },
+                  {
+                    variant: "info",
+                    anchorOrigin: {
+                      vertical: "top",
+                      horizontal: "right",
+                    },
+                  },
                 );
                 navigate("/signup");
               } else {
                 enqueueSnackbar(`こんにちは、${userData.name} さん！`, {
                   variant: "success",
+                  anchorOrigin: {
+                    vertical: "top",
+                    horizontal: "right",
+                  },
                 });
                 navigate("/home");
               }
             } catch {
               enqueueSnackbar("Google アカウントでのログインに失敗しました", {
                 variant: "error",
+                anchorOrigin: {
+                  vertical: "top",
+                  horizontal: "right",
+                },
               });
             }
           }}
@@ -83,11 +97,23 @@ export default function Login() {
               if (userExists) {
                 enqueueSnackbar(
                   "この Google アカウントはすでに登録されています。Home画面にリダイレクトしました。",
-                  { variant: "info" },
+                  {
+                    variant: "info",
+                    anchorOrigin: {
+                      vertical: "top",
+                      horizontal: "right",
+                    },
+                  },
                 );
                 navigate("/home");
               } else {
-                enqueueSnackbar("新規登録を開始します", { variant: "info" });
+                enqueueSnackbar("新規登録を開始します", {
+                  variant: "info",
+                  anchorOrigin: {
+                    vertical: "top",
+                    horizontal: "right",
+                  },
+                });
                 navigate("/signup");
               }
             } catch (e) {

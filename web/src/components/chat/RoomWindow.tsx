@@ -65,6 +65,10 @@ export function RoomWindow(props: Prop) {
             `${creator.name}さんからのメッセージ : ${msg.content}`,
             {
               variant: "info",
+              anchorOrigin: {
+                vertical: "top",
+                horizontal: "right",
+              },
             },
           );
         }

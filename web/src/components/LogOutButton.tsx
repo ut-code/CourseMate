@@ -20,9 +20,21 @@ export default function LogOutButton() {
       onClick={async () => {
         try {
           await signOutUser();
-          enqueueSnackbar("ログアウトしました", { variant: "success" });
+          enqueueSnackbar("ログアウトしました", {
+            variant: "success",
+            anchorOrigin: {
+              vertical: "top",
+              horizontal: "right",
+            },
+          });
         } catch {
-          enqueueSnackbar("ログアウトに失敗しました", { variant: "error" });
+          enqueueSnackbar("ログアウトに失敗しました", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "top",
+              horizontal: "right",
+            },
+          });
         } finally {
           navigate("/login");
         }
