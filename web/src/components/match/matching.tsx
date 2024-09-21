@@ -1,25 +1,12 @@
 import { Box, List } from "@mui/material";
-import { useState } from "react";
 import hooks from "../../api/hooks";
 import { deleteMatch } from "../../api/match";
-import type { User } from "../../common/types";
-import { ProfileModal } from "../common/profileModal";
+import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
 
 export default function Matchings() {
   const { data, loading, error, reload } = hooks.useMatchedUsers();
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = (user: User) => {
-    setSelectedUser(user);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedUser(null);
-  };
+  const { openModal } = useModal();
 
   return (
     <Box>
@@ -49,14 +36,13 @@ export default function Matchings() {
               id={matchedUser.id}
               name={matchedUser.name}
               pictureUrl={matchedUser.pictureUrl}
-              onOpen={() => handleOpen(matchedUser)}
+              onOpen={() => openModal(matchedUser)}
               onDelete={() => deleteMatch(matchedUser.id).then(() => reload())}
               hasDots
             />
           ))}
         </List>
       )}
-      <ProfileModal user={selectedUser} open={open} onClose={handleClose} />
     </Box>
   );
 }
