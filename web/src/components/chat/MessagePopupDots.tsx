@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { Popper } from "@mui/base/Popper";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
+import { Popper } from "@mui/base/Popper";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import type React from "react";
+import { useState } from "react";
 import MessagePopup from "./MessagePopup";
 
 type Props = {
@@ -19,8 +20,19 @@ export default function MessagePopupDots({ handleEdit, handleDelete }: Props) {
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <div
-        style={{ position: "relative", display: "inline" }}
+      <button
+        type="button"
+        style={{
+          background: "none",
+          color: "inherit",
+          border: "none",
+          padding: 0,
+          font: "inherit",
+          cursor: "pointer",
+          outline: "inherit",
+          position: "relative",
+          display: "inline",
+        }}
         onClick={handleClick}
       >
         <MoreHorizIcon
@@ -36,7 +48,7 @@ export default function MessagePopupDots({ handleEdit, handleDelete }: Props) {
         >
           <MessagePopup handleEdit={handleEdit} handleDelete={handleDelete} />
         </Popper>
-      </div>
+      </button>
     </ClickAwayListener>
   );
 }

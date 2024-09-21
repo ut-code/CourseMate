@@ -1,8 +1,8 @@
-import { useState, ChangeEvent, useEffect } from "react";
-import { uploadImage } from "../../firebase/store/photo";
-import { photo } from "../data/photo-preview";
-import { ImageCropper } from "../ImageCropper";
 import { Button } from "@mui/material";
+import { type ChangeEvent, useEffect, useState } from "react";
+import { uploadImage } from "../../firebase/store/photo";
+import { ImageCropper } from "../ImageCropper";
+import { photo } from "../data/photo-preview";
 
 const MAX_SIZE_IN_BYTES = 5 * 1024 * 1024; // 5MB
 
@@ -50,7 +50,7 @@ export function PhotoPreview({ defaultValueUrl }: Props) {
   return (
     <>
       {/* url.startsWith("blob:") <=> url is a(n) url of local file <=> no SOP restriction*/}
-      {url && url.startsWith("blob:") && (
+      {url?.startsWith("blob:") && (
         <ImageCropper
           sameOriginURL={url}
           onImageChange={syncUploaderToFileChange}

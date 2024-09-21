@@ -1,13 +1,13 @@
-import express, { Request, Response } from "express";
+import express, { type Request, type Response } from "express";
 import type { UserID } from "../common/types";
 
+import { safeParseInt } from "../common/lib/result/safeParseInt";
 import {
   approveRequest,
   rejectRequest,
   sendRequest,
 } from "../database/requests";
 import { safeGetUserId } from "../firebase/auth/db";
-import { safeParseInt } from "../common/lib/result/safeParseInt";
 // import { Relationship } from "@prisma/client"; // ... not used?
 
 const router = express.Router();

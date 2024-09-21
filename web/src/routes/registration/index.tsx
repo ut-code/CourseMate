@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
 import { useSnackbar } from "notistack";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { register } from "./functions";
-import { useState } from "react";
-import Step1, { Step1Data } from "./steps/step1";
-import Step2, { Step2Data } from "./steps/step2";
-import Step3, { Step3Data } from "./steps/step3";
+import Step1, { type Step1Data } from "./steps/step1";
+import Step2, { type Step2Data } from "./steps/step2";
+import Step3, { type Step3Data } from "./steps/step3";
 import Confirmation from "./steps/step4";
 
 function Registration() {

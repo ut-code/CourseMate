@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { User, UserID, Relationship } from "../common/types";
-import { Err, Ok, Result } from "../common/lib/result";
+import { Err, Ok, type Result } from "../common/lib/result";
+import type { Relationship, User, UserID } from "../common/types";
 
 const prisma = new PrismaClient();
 

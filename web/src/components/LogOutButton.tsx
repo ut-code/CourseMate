@@ -1,8 +1,8 @@
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase/firebaseconfig";
 import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
 import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase/firebaseconfig";
 
 async function signOutUser() {
   try {

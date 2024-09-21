@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
+import type { DMOverview } from "../../common/types";
 import UserAvatar from "../avatar/avatar";
-import { DMOverview } from "../../common/types";
 type Props = { room: DMOverview };
 
 export function RoomHeader(props: Props) {
