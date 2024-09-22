@@ -1,7 +1,7 @@
 default: start
 
 setup: 
-	if command -v bun; then :; else npx @biomejs/biome init; fi
+	if command -v bun; then :; else npx @biomejs/biome init || true; fi
 	make sync
 	npx husky
 	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
