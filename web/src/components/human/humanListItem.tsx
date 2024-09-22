@@ -1,4 +1,11 @@
-import { Button, ListItem, ListItemAvatar, Stack } from "@mui/material";
+import {
+  Box,
+  Button,
+  ListItem,
+  ListItemAvatar,
+  Stack,
+  Typography,
+} from "@mui/material";
 import UserAvatar from "./avatar";
 
 import Dots from "../common/Dots";
@@ -7,6 +14,7 @@ type HumanListItemProps = {
   id: number;
   name: string;
   pictureUrl: string;
+  lastMessage?: string;
   onDelete?: (id: number) => void;
   onOpen?: (user: { id: number; name: string; pictureUrl: string }) => void;
   onAccept?: (id: number) => void;
@@ -20,6 +28,7 @@ export function HumanListItem(props: HumanListItemProps) {
     id,
     name,
     pictureUrl,
+    lastMessage,
     onDelete,
     onOpen,
     onAccept,
@@ -53,29 +62,52 @@ export function HumanListItem(props: HumanListItemProps) {
           <UserAvatar pictureUrl={pictureUrl} width="50px" height="50px" />
         </Button>
       </ListItemAvatar>
-      <p style={{ flexGrow: 1, marginLeft: "28px" }}>{name}</p>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          marginLeft: "20px",
+        }}
+      >
+        <Typography variant="body1" noWrap>
+          {name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" noWrap>
+          {lastMessage || ""}
+        </Typography>
+      </Box>
       {hasDots && (
-        <Dots
-          actions={[
-            {
-              label: "詳細",
-              onClick: handleOpenClick,
-              alert: false,
-            },
-            {
-              label: "削除",
-              color: "red",
-              onClick: handleDeleteClick,
-              alert: true,
-              messages: {
-                buttonMessage: "削除",
-                AlertMessage: "このフレンドを削除しますか？",
-                subAlertMessage: "この操作は取り消せません。",
-                yesMessage: "削除",
+        <Box
+          sx={{
+            position: "absolute",
+            right: "16px",
+            top: "50%",
+            transform: "translateY(-50%)", // コンポーネントの自身の高さの半分だけ上にずらす
+          }}
+        >
+          <Dots
+            actions={[
+              {
+                label: "詳細",
+                onClick: handleOpenClick,
+                alert: false,
               },
-            },
-          ]}
-        />
+              {
+                label: "削除",
+                color: "red",
+                onClick: handleDeleteClick,
+                alert: true,
+                messages: {
+                  buttonMessage: "削除",
+                  AlertMessage: "このフレンドを削除しますか？",
+                  subAlertMessage: "この操作は取り消せません。",
+                  yesMessage: "削除",
+                },
+              },
+            ]}
+          />
+        </Box>
       )}
     </ListItem>
   );

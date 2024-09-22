@@ -44,6 +44,7 @@ export function RoomList(props: RoomListProps) {
                 id={room.friendId}
                 name={room.name}
                 pictureUrl={room.thumbnail}
+                lastMessage={room.lastmsg?.content}
               />
             </Box>
           );
