@@ -99,12 +99,7 @@ export default function Home() {
 
   return (
     <div style={{ backgroundColor: getBackgroundColor(dragValue) }}>
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        height={"100vh"}
-      >
+      <Box display="flex" flexDirection="column" alignItems="center">
         {displayedUser && (
           <DraggableCard
             displayedUser={displayedUser}

@@ -1,14 +1,14 @@
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
 import { useState } from "react";
 import type { User } from "../common/types";
-import UserAvatar from "./avatar/avatar";
 import CoursesTable from "./course/CoursesTable";
+import UserAvatar from "./human/avatar";
 
 interface CardProps {
   displayedUser: User;
 }
 
-export const Card = ({ displayedUser }: CardProps) => {
+export function Card({ displayedUser }: CardProps) {
   const [isDisplayingBack, setIsDisplayingBack] = useState(false);
 
   const handleRotate = () => {
@@ -32,7 +32,7 @@ export const Card = ({ displayedUser }: CardProps) => {
           width: "100%",
           height: "100%",
           transformStyle: "preserve-3d",
-          transition: "transform 1s",
+          transition: "transform 600ms",
           transform: isDisplayingBack ? "rotateY(180deg)" : "rotateY(0deg)",
         }}
       >
@@ -60,7 +60,7 @@ export const Card = ({ displayedUser }: CardProps) => {
       </div>
     </div>
   );
-};
+}
 
 const CardFront = ({ displayedUser }: CardProps) => {
   return (
