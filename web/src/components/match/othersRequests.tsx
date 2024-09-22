@@ -1,33 +1,22 @@
-import {
-  Box,
-  Button,
-  List,
-  ListItem,
-  ListItemAvatar,
-  Stack,
-} from "@mui/material";
-import React from "react";
+import { Box, List } from "@mui/material";
 import hooks from "../../api/hooks";
 import request from "../../api/request";
-import type { User } from "../../common/types";
-import UserAvatar from "../avatar/avatar";
-import { ProfileModal } from "../avatar/profileModal";
+import { useModal } from "../common/modal/ModalProvider";
+import { HumanListItem } from "../human/humanListItem";
 
 export default function OthersReq() {
   const { data, loading, error, reload } = hooks.usePendingRequestsToMe();
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
-  const handleOpen = (selectedUser: User) => {
-    setModalOpen(true);
-    setSelectedUser(selectedUser);
-  };
-  const handleClose = () => setModalOpen(false);
+  const { openModal } = useModal();
 
   return (
     <Box>
-      <p>
+      <p
+        style={{
+          marginLeft: "40px",
+        }}
+      >
         {data && data.length > 0
-          ? "以下のリクエストを受け取りました"
+          ? "以下のリクエストを受け取りました！"
           : "リクエストは受け取っていません。"}
       </p>
       {loading ? (
@@ -37,53 +26,17 @@ export default function OthersReq() {
       ) : (
         <List>
           {data?.map((sendingUser) => (
-            <ListItem
-              key={sendingUser.id.toString()}
-              secondaryAction={
-                <Stack direction={"row"}>
-                  <Button
-                    onClick={() => {
-                      request.accept(sendingUser.id).then(() => reload());
-                    }}
-                  >
-                    承認
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      if (
-                        !window.confirm(
-                          "本当にこのマッチリクエストを拒否しますか?",
-                        )
-                      )
-                        return;
-                      request.reject(sendingUser.id).then(() => reload());
-                    }}
-                  >
-                    拒否
-                  </Button>
-                </Stack>
-              }
-            >
-              <ListItemAvatar>
-                <Button onClick={() => handleOpen(sendingUser)}>
-                  <UserAvatar
-                    pictureUrl={sendingUser.pictureUrl}
-                    width="50px"
-                    height="50px"
-                  />
-                </Button>
-              </ListItemAvatar>
-              <p>{sendingUser.name}</p>
-            </ListItem>
+            <HumanListItem
+              key={sendingUser.id}
+              id={sendingUser.id}
+              name={sendingUser.name}
+              pictureUrl={sendingUser.pictureUrl}
+              onOpen={() => openModal(sendingUser)}
+              onAccept={() => request.accept(sendingUser.id).then(() => reload)}
+              onReject={() => request.reject(sendingUser.id).then(() => reload)}
+            />
           ))}
         </List>
-      )}
-      {selectedUser && (
-        <ProfileModal
-          selectedUser={selectedUser}
-          open={modalOpen}
-          handleClose={handleClose}
-        />
       )}
     </Box>
   );

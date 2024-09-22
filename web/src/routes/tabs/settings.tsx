@@ -1,9 +1,9 @@
 import { Box, Button } from "@mui/material";
 import hooks from "../../api/hooks";
 import LogOutButton from "../../components/LogOutButton";
-import UserAvatar from "../../components/avatar/avatar";
 // import { useState } from "react";
 import CoursesTable from "../../components/course/CoursesTable";
+import UserAvatar from "../../components/human/avatar";
 
 export default function Settings() {
   // const [isDialogOpen, setIsDialogOpen] = useState(false);

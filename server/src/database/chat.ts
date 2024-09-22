@@ -25,15 +25,23 @@ export async function getOverview(
   try {
     const matched = await getMatchedUser(user);
     if (!matched.ok) return Err(matched.error);
-    const dmov = matched.value.map((user) => {
-      const ov: DMOverview = {
-        isDM: true,
-        friendId: user.id,
-        name: user.name,
-        thumbnail: user.pictureUrl,
-      };
-      return ov;
-    });
+
+    const dmov = await Promise.all(
+      matched.value.map(async (friend) => {
+        const lastMessageResult = await getLastMessage(user, friend.id);
+        const lastMessage = lastMessageResult.ok
+          ? lastMessageResult.value
+          : undefined;
+        const ov: DMOverview = {
+          isDM: true,
+          friendId: friend.id,
+          name: friend.name,
+          thumbnail: friend.pictureUrl,
+          lastmsg: lastMessage,
+        };
+        return ov;
+      }),
+    );
 
     const shared: {
       id: number;
@@ -278,5 +286,21 @@ export async function deleteMessage(
     return message;
   } catch (e) {
     return null;
+  }
+}
+
+export async function getLastMessage(
+  userId: UserID,
+  friendId: UserID,
+): Promise<Result<Message>> {
+  try {
+    const dm = await getDMbetween(userId, friendId);
+    if (!dm.ok) return Err("direct messages not found");
+    const messages = dm.value.messages;
+    const lastMessage = messages.slice(-1)[0];
+    if (!lastMessage) return Err("last message not found");
+    return Ok(lastMessage);
+  } catch (e) {
+    return Err(e);
   }
 }

@@ -1,27 +1,22 @@
 import { Box } from "@mui/material";
-import { List, ListItem, ListItemAvatar } from "@mui/material";
-import { Button } from "@mui/material";
-import React from "react";
+import { List } from "@mui/material";
 import hooks from "../../api/hooks";
-import type { User } from "../../common/types";
-import UserAvatar from "../avatar/avatar";
-import { ProfileModal } from "../avatar/profileModal";
+import { useModal } from "../common/modal/ModalProvider";
+import { HumanListItem } from "../human/humanListItem";
 
 export default function MyReq() {
   const { data, loading, error } = hooks.usePendingRequestsFromMe();
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
-  const handleOpen = (selectedUser: User) => {
-    setModalOpen(true);
-    setSelectedUser(selectedUser);
-  };
-  const handleClose = () => setModalOpen(false);
+  const { openModal } = useModal();
 
   return (
     <Box>
-      <p>
+      <p
+        style={{
+          marginLeft: "40px",
+        }}
+      >
         {data && data.length > 0
-          ? "以下のリクエストを送信しました"
+          ? "以下のリクエストを送信しました！"
           : "リクエストを送信しましょう！"}
       </p>
       {loading ? (
@@ -31,27 +26,15 @@ export default function MyReq() {
       ) : (
         <List>
           {data?.map((receivingUser) => (
-            <ListItem key={receivingUser.id.toString()}>
-              <ListItemAvatar>
-                <Button onClick={() => handleOpen(receivingUser)}>
-                  <UserAvatar
-                    pictureUrl={receivingUser.pictureUrl}
-                    width="50px"
-                    height="50px"
-                  />
-                </Button>
-              </ListItemAvatar>
-              <p>{receivingUser.name}</p>
-            </ListItem>
+            <HumanListItem
+              key={receivingUser.id}
+              id={receivingUser.id}
+              name={receivingUser.name}
+              pictureUrl={receivingUser.pictureUrl}
+              onOpen={() => openModal(receivingUser)}
+            />
           ))}
         </List>
-      )}
-      {selectedUser && (
-        <ProfileModal
-          selectedUser={selectedUser}
-          open={modalOpen}
-          handleClose={handleClose}
-        />
       )}
     </Box>
   );
