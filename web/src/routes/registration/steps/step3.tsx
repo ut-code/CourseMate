@@ -65,9 +65,22 @@ export default function Step3({
       <Modal
         id="MODAL"
         open={true}
-        sx={{ visibility: open ? "visible" : "hidden" }}
+        sx={{
+          visibility: open ? "visible" : "hidden",
+          Margin: "auto",
+          alignItems: "center",
+          justifyContent: "center",
+          display: "flex",
+        }}
       >
-        <Box style={{ backgroundColor: "white", width: "60%", height: "80%" }}>
+        <Box
+          style={{
+            backgroundColor: "white",
+            width: "90%",
+            height: "auto",
+            padding: "20px",
+          }}
+        >
           <PhotoPreview
             prev={prev?.pictureUrl}
             onCrop={(f) => {
