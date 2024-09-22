@@ -2,7 +2,7 @@ import { Box, Button } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-import user from "../api/user";
+import user, { getByGUID } from "../api/user";
 import type { GUID } from "../common/types";
 import Header from "../components/Header";
 import { auth } from "../firebase/firebaseconfig";
@@ -24,13 +24,72 @@ async function signInWithGoogle() {
     }
   } catch (error) {
     console.error(error);
-    throw error;
   }
 }
 
 export default function Login() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
+  async function logInByGoogle() {
+    try {
+      await signInWithGoogle();
+      if (auth.currentUser === null) {
+        throw new Error("ログインに失敗しました");
+      }
+
+      const response = await getByGUID(auth.currentUser.uid as GUID);
+
+      if (response.status === 404) {
+        enqueueSnackbar(
+          "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
+          { variant: "info" },
+        );
+        navigate("/signup");
+      } else if (response.status >= 500) {
+        enqueueSnackbar(
+          "サーバーエラーが発生しました。しばらくしてから再度お試しください。",
+          { variant: "error" },
+        );
+      } else if (response.data) {
+        enqueueSnackbar(`こんにちは、${response.data.name} さん！`, {
+          variant: "success",
+        });
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar("Google アカウントでのログインに失敗しました", {
+        variant: "error",
+      });
+    }
+  }
+
+  async function singUpByGoogle() {
+    try {
+      const guid = await signInWithGoogle();
+      if (!guid) {
+        throw new Error("no guid");
+      }
+
+      const userExists = await user.exists(guid as GUID);
+
+      if (userExists) {
+        enqueueSnackbar("この Google アカウントはすでに登録されています", {
+          variant: "error",
+        });
+        navigate("/login");
+      } else {
+        enqueueSnackbar("新規登録を開始します", { variant: "info" });
+        navigate("/signup");
+      }
+    } catch (e) {
+      console.error(e);
+      enqueueSnackbar("Google アカウントでのサインアップに失敗しました", {
+        variant: "error",
+      });
+    }
+  }
   return (
     <Box>
       <Header title="Login" />
@@ -49,62 +108,14 @@ export default function Login() {
         <Button
           variant="outlined"
           sx={{ textTransform: "none" }}
-          onClick={async () => {
-            try {
-              await signInWithGoogle();
-              if (auth.currentUser === null) {
-                throw new Error("ログインに失敗しました");
-              }
-              const userData = await user.getByGUID(
-                auth.currentUser.uid as GUID,
-              );
-              if (userData === null) {
-                enqueueSnackbar(
-                  "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
-                  { variant: "info" },
-                );
-                navigate("/signup");
-              } else {
-                enqueueSnackbar(`こんにちは、${userData.name} さん！`, {
-                  variant: "success",
-                });
-                navigate("/home");
-              }
-            } catch {
-              enqueueSnackbar("Google アカウントでのログインに失敗しました", {
-                variant: "error",
-              });
-            }
-          }}
+          onClick={logInByGoogle}
         >
           Login
         </Button>
         <Button
           variant="outlined"
           sx={{ textTransform: "none" }}
-          onClick={async () => {
-            try {
-              const guid = await signInWithGoogle();
-              if (!guid) {
-                throw new Error("no guid");
-              }
-
-              const userExists = await user.exists(guid as GUID);
-
-              if (userExists) {
-                enqueueSnackbar(
-                  "この Google アカウントはすでに登録されています",
-                  { variant: "error" },
-                );
-                navigate("/login");
-              } else {
-                enqueueSnackbar("新規登録を開始します", { variant: "info" });
-                navigate("/signup");
-              }
-            } catch (e) {
-              console.error(e);
-            }
-          }}
+          onClick={singUpByGoogle}
         >
           Sign Up
         </Button>
