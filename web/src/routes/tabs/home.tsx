@@ -98,40 +98,30 @@ export default function Home() {
 
   return (
     <div style={{ backgroundColor: getBackgroundColor(dragValue) }}>
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        height={"100vh"}
-      >
-        {!displayedUser ? (
-          <CircularProgress />
-        ) : (
-          <>
-            <DraggableCard
-              displayedUser={displayedUser}
-              onSwipeLeft={handleReject}
-              onSwipeRight={handleAccept}
-              onDrag={handleDrag}
-            />
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-around",
-                width: "50%",
-              }}
-            >
-              <RoundButton onclick={handleReject} icon={<CloseIconStyled />} />
-              <RoundButton
-                onclick={handleAccept}
-                icon={<FavoriteIconStyled />}
-              />
-            </div>
-          </>
-        )}
-      </Box>
+      {displayedUser ? (
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <DraggableCard
+            displayedUser={displayedUser}
+            onSwipeLeft={handleReject}
+            onSwipeRight={handleAccept}
+            onDrag={handleDrag}
+          />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-around",
+              width: "50%",
+            }}
+          >
+            <RoundButton onclick={handleReject} icon={<CloseIconStyled />} />
+            <RoundButton onclick={handleAccept} icon={<FavoriteIconStyled />} />
+          </div>
+        </Box>
+      ) : (
+        <CircularProgress />
+      )}
     </div>
   );
 }
