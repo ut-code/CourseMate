@@ -126,7 +126,7 @@ export function RoomWindow(props: Prop) {
     setEditedContent(currentContent);
   };
 
-  const handleSaveEdit = async () => {
+  async function handleSaveEdit() {
     if (!editingMessageId || editedContent === "") return;
     const editedMessage = await chat.updateMessage(
       editingMessageId,
@@ -136,7 +136,7 @@ export function RoomWindow(props: Prop) {
     setEditingMessageId(null);
     setEditedContent("");
     updateMessages(editedMessage);
-  };
+  }
 
   const handleCancelEdit = () => {
     setEditingMessageId(null);
