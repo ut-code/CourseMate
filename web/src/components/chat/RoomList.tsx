@@ -1,6 +1,6 @@
 import { Box, List, Typography } from "@mui/material";
 import type { DMOverview, RoomOverview } from "../../common/types";
-import { Room } from "./Room";
+import { HumanListItem } from "../human/humanListItem";
 
 type RoomListProps = {
   roomsData: RoomOverview[] | null;
@@ -12,6 +12,20 @@ export function RoomList(props: RoomListProps) {
   const { roomsData, activeRoom, setActiveRoom } = props;
   return (
     <List disablePadding>
+      <p
+        style={{
+          marginLeft: "40px",
+          marginRight: "40px",
+        }}
+      >
+        {roomsData && roomsData.length === 0 && (
+          <>
+            誰ともマッチングしていません。
+            <br />
+            リクエストを送りましょう！
+          </>
+        )}
+      </p>
       {roomsData?.map((room) => {
         if (room.isDM) {
           return (
@@ -25,7 +39,13 @@ export function RoomList(props: RoomListProps) {
                     : "white",
               }}
             >
-              <Room room={room} />
+              <HumanListItem
+                key={room.friendId}
+                id={room.friendId}
+                name={room.name}
+                pictureUrl={room.thumbnail}
+                lastMessage={room.lastmsg?.content}
+              />
             </Box>
           );
         }

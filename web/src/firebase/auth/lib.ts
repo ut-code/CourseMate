@@ -51,7 +51,7 @@ export async function credFetch(
 
   const res = await fetch(`${path}?token=${idToken}`, init);
 
-  if (res.status === 401) throw new ErrUnauthorized();
-  if (!res.ok) throw new Error("response was not ok");
+  // if (res.status === 401) throw new ErrUnauthorized();
+  // if (!res.ok) throw new Error("response was not ok");
   return res;
 }
