@@ -72,7 +72,16 @@ function Registration() {
 }
 export default function RegistrationPage() {
   return (
-    <Box>
+    <Box
+      sx={{
+        position: "absolute",
+        top: "56px",
+        bottom: "56px",
+        left: 0,
+        right: 0,
+        overflowY: "auto",
+      }}
+    >
       <Header title="Sign Up" />
       <Registration />
     </Box>

@@ -1,10 +1,11 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { redirect } from "react-router-dom";
 import userapi from "../../api/user";
 import type { GUID, User } from "../../common/types";
-import { AuthContext } from "./AuthContext";
+
+const AuthContext = createContext<User | null | undefined>(undefined);
 
 export default function AuthProvider({
   children,
@@ -36,4 +37,8 @@ export default function AuthProvider({
   }, []);
 
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+}
+
+export function useAuthContext() {
+  useContext(AuthContext);
 }

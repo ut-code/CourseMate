@@ -34,7 +34,18 @@ export default function Login() {
   return (
     <Box>
       <Header title="Login" />
-      <Box mt={2} mx={2} display="flex" gap={1}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "56px",
+          left: 0,
+          right: 0,
+          overflowY: "auto",
+        }}
+        mt={2}
+        mx={2}
+        gap={1}
+      >
         <Button
           variant="outlined"
           sx={{ textTransform: "none" }}
