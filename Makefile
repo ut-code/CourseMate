@@ -4,6 +4,7 @@ setup: sync
 	npx husky
 	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 	cd server; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
+	if command -v bun; then :; else npx @biomejs/biome init; fi
 	echo "auto setup is done. now do:"
 	echo "- edit server/.env"
 	echo "- edit web/.env"
