@@ -1,10 +1,11 @@
 default: start
 
-setup: sync
+setup: 
+	if command -v bun; then :; else npx @biomejs/biome init; fi
+	make sync
 	npx husky
 	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 	cd server; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
-	if command -v bun; then :; else npx @biomejs/biome init; fi
 	echo "auto setup is done. now do:"
 	echo "- edit server/.env"
 	echo "- edit web/.env"
@@ -43,7 +44,7 @@ sync-web:
 
 sync-server:
 	cd server; if command -v bun; then bun install; else npm install; fi
-	cd server; npx prisma generate
+	# cd server; npx prisma generate
 	# copy .env.sample -> .env only if .env is not there
 
 sync-root:
