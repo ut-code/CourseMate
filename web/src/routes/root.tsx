@@ -1,14 +1,19 @@
-import { BottomNavigation, BottomNavigationAction } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import PeopleIcon from "@mui/icons-material/People";
 import ChatIcon from "@mui/icons-material/Chat";
-import { useState, useEffect } from "react";
+import HomeIcon from "@mui/icons-material/Home";
+import PeopleIcon from "@mui/icons-material/People";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 
-const labels = ["Home", "Friends", "Chat", "Profile"];
-const paths = ["/home", "/friends", "/chat", "/profile"];
+const labels = [
+  "ホーム/Home",
+  "フレンド/Friends",
+  "チャット/Chat",
+  "設定/Settings",
+];
+const paths = ["/home", "/friends", "/chat", "/settings"];
 
 export default function Root() {
   const location = useLocation();
@@ -28,42 +33,74 @@ export default function Root() {
   return (
     <>
       <Header title={labels[value]} />
-      <div>
-        <Outlet />
-      </div>
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={(_event, newValue) => {
-          setValue(newValue);
+      <Box
+        sx={{
+          position: "absolute",
+          top: "56px",
+          bottom: "56px",
+          left: 0,
+          right: 0,
+          overflowY: "auto",
         }}
-        sx={{ width: "100%", position: "fixed", bottom: 0 }}
       >
-        <BottomNavigationAction
-          component={Link}
-          to="/home"
-          label="Home"
-          icon={<HomeIcon />}
-        />
-        <BottomNavigationAction
-          component={Link}
-          to="/friends"
-          label="Friends"
-          icon={<PeopleIcon />}
-        />
-        <BottomNavigationAction
-          component={Link}
-          to="/chat"
-          label="Chat"
-          icon={<ChatIcon />}
-        />
-        <BottomNavigationAction
-          component={Link}
-          to="/profile"
-          label="Profile"
-          icon={<AccountCircleIcon />}
-        />
-      </BottomNavigation>
+        <Outlet />
+      </Box>
+      <Box sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
+        <BottomNavigation
+          showLabels
+          value={value}
+          onChange={(_event, newValue) => {
+            setValue(newValue);
+          }}
+          sx={{
+            width: "100%",
+            bottom: 0,
+            borderTop: "1px solid",
+            borderColor: "primary.main",
+          }}
+        >
+          <BottomNavigationAction
+            component={Link}
+            to="/home"
+            label="Home"
+            icon={
+              <HomeIcon
+                sx={{ color: value === 0 ? "primary.main" : "secondary.main" }}
+              />
+            }
+          />
+          <BottomNavigationAction
+            component={Link}
+            to="/friends"
+            label="Friends"
+            icon={
+              <PeopleIcon
+                sx={{ color: value === 1 ? "primary.main" : "secondary.main" }}
+              />
+            }
+          />
+          <BottomNavigationAction
+            component={Link}
+            to="/chat"
+            label="Chat"
+            icon={
+              <ChatIcon
+                sx={{ color: value === 2 ? "primary.main" : "secondary.main" }}
+              />
+            }
+          />
+          <BottomNavigationAction
+            component={Link}
+            to="/settings"
+            label="Settings"
+            icon={
+              <SettingsIcon
+                sx={{ color: value === 3 ? "primary.main" : "secondary.main" }}
+              />
+            }
+          />
+        </BottomNavigation>
+      </Box>
     </>
   );
 }

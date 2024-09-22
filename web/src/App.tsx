@@ -1,17 +1,19 @@
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
-import Root from "./routes/root";
-import Home from "./routes/tabs/home";
-import Profile from "./routes/tabs/profile";
-import Login from "./routes/login";
-import RegistrationPage from "./routes/registration/index";
+import { CssBaseline, createTheme } from "@mui/material";
+import { ThemeProvider } from "@mui/system";
 import { getAuth } from "firebase/auth";
 import { SnackbarProvider } from "notistack";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
+import Login from "./routes/login";
+import RegistrationPage from "./routes/registration/index";
+import Root from "./routes/root";
 import Chat from "./routes/tabs/chat";
 import { Friends } from "./routes/tabs/friends";
+import Home from "./routes/tabs/home";
+import Settings from "./routes/tabs/settings";
 
 export default function App() {
   const PrivateRoute = () => {
@@ -42,8 +44,8 @@ export default function App() {
           element: <Friends />,
         },
         {
-          path: "profile",
-          element: <Profile />,
+          path: "settings",
+          element: <Settings />,
         },
         {
           path: "chat",
@@ -67,9 +69,23 @@ export default function App() {
 
   return (
     <>
-      <SnackbarProvider>
-        <RouterProvider router={router} />
-      </SnackbarProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <SnackbarProvider>
+          <RouterProvider router={router} />
+        </SnackbarProvider>
+      </ThemeProvider>
     </>
   );
 }
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#039BE5",
+    },
+    secondary: {
+      main: "#E9F8FF",
+    },
+  },
+});

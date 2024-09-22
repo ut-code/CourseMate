@@ -1,10 +1,10 @@
-import type { Request } from "express";
-import { Result, Ok, Err } from "../../common/lib/result";
-import { getGUID, getGUIDFromToken } from "./lib";
 import { PrismaClient } from "@prisma/client";
-import { IDToken, UserID } from "../../common/types";
+import type { Request } from "express";
+import { Err, Ok, type Result } from "../../common/lib/result";
+import type { IDToken, UserID } from "../../common/types";
+import { getGUID, getGUIDFromToken } from "./lib";
 
-const prisma = new PrismaClient();
+import { prisma } from "../../database/client";
 /**
  * REQUIRE: cookieParser middleware before this
  * THROWS: if idToken is not present in request cookie, or when the token is not valid.

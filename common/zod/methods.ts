@@ -1,34 +1,33 @@
 import {
-  UserIDSchema,
-  GUIDSchema,
-  IDTokenSchema,
-  GenderSchema,
-  RelationshipStatusSchema,
-  UserSchema,
-  InitUserSchema,
-  UpdateUserSchema,
-  PublicUserSchema,
-  RelationshipIDSchema,
-  RelationshipSchema,
-  MessageIDSchema,
-  ShareRoomIDSchema,
-  MessageSchema,
-  SendMessageSchema,
+  ContentSchema,
   DMOverviewSchema,
-  SharedRoomOverviewSchema,
-  RoomOverviewSchema,
   DMRoomSchema,
-  PersonalizedDMRoomSchema,
-  SharedRoomSchema,
+  GUIDSchema,
+  GenderSchema,
+  HobbySchema,
+  IDTokenSchema,
   InitRoomSchema,
   InitSharedRoomSchema,
-  UpdateRoomSchema,
-  NameSchema,
-  PictureUrlSchema,
-  ContentSchema,
-  HobbySchema,
-  IntroShortSchema,
+  InitUserSchema,
   IntroLongSchema,
+  IntroShortSchema,
+  MessageIDSchema,
+  MessageSchema,
+  NameSchema,
+  PersonalizedDMRoomSchema,
+  PictureUrlSchema,
+  RelationshipIDSchema,
+  RelationshipSchema,
+  RelationshipStatusSchema,
+  RoomOverviewSchema,
+  SendMessageSchema,
+  ShareRoomIDSchema,
+  SharedRoomOverviewSchema,
+  SharedRoomSchema,
+  UpdateRoomSchema,
+  UpdateUserSchema,
+  UserIDSchema,
+  UserSchema,
 } from "./schemas";
 
 export function parseUserID(data: unknown) {
@@ -69,10 +68,6 @@ export function parseInitUser(data: unknown) {
 
 export function parseUpdateUser(data: unknown) {
   return UpdateUserSchema.parse(data);
-}
-
-export function parsePublicUser(data: unknown) {
-  return PublicUserSchema.parse(data);
 }
 
 export function parseRelationshipID(data: unknown) {

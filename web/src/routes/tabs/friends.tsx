@@ -1,6 +1,6 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import Followers from "../../components/match/followers";
+import Matchings from "../../components/match/matching";
 import Requests from "../../components/match/requests";
 
 export function Friends() {
@@ -11,17 +11,36 @@ export function Friends() {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={open} onChange={handleChange}>
-          <Tab label="マッチ中" {...a11yProps(0)} />
-          <Tab label="リクエスト" {...a11yProps(1)} />
+    <>
+      <Box
+        sx={{
+          width: "100%",
+          borderBottom: 1,
+          borderColor: "divider",
+          position: "fixed",
+          backgroundColor: "white",
+          zIndex: 500,
+        }}
+      >
+        <Tabs value={open} onChange={handleChange} variant="fullWidth">
+          <Tab label="マッチ中" {...a11yProps(0)} sx={{ width: "50%" }} />
+          <Tab label="リクエスト" {...a11yProps(1)} sx={{ width: "50%" }} />
         </Tabs>
       </Box>
-      <TabPanel open={open}>
-        {open === 0 ? <Followers /> : open === 1 ? <Requests /> : null}
-      </TabPanel>
-    </Box>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "36px",
+          left: 0,
+          right: 0,
+          overflowY: "auto",
+        }}
+      >
+        <TabPanel open={open}>
+          {open === 0 ? <Matchings /> : open === 1 ? <Requests /> : null}
+        </TabPanel>
+      </Box>
+    </>
   );
 }
 
@@ -34,11 +53,11 @@ function TabPanel({
 }) {
   return (
     <div
-      role="tabpanel"
+      // role="tabpanel" // FIXME: biome says it should not be a div, but I couldn't find a proper html elem
       id={`tabpanel-${open}`}
       aria-labelledby={`tab-${open}`}
     >
-      <Box sx={{ p: 3 }}>{children}</Box>
+      <Box>{children}</Box>
     </div>
   );
 }

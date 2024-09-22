@@ -1,3 +1,4 @@
+import { getAuth } from "firebase/auth";
 import {
   deleteObject,
   getDownloadURL,
@@ -6,7 +7,6 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { app } from "../firebaseconfig";
-import { getAuth } from "firebase/auth";
 
 //画像をfirebase strageにアップロードする関数
 export async function uploadImage(pictureFile: File): Promise<string> {

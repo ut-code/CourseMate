@@ -1,41 +1,40 @@
-import { z } from "zod";
-import {
-  UserIDSchema,
-  GUIDSchema,
-  IDTokenSchema,
-  GenderSchema,
-  RelationshipStatusSchema,
-  UserSchema,
-  InitUserSchema,
-  UpdateUserSchema,
-  PublicUserSchema,
-  RelationshipIDSchema,
-  RelationshipSchema,
-  MessageIDSchema,
-  ShareRoomIDSchema,
-  MessageSchema,
-  SendMessageSchema,
+import type { z } from "zod";
+import type {
+  ContentSchema,
+  CourseIDSchema,
+  CourseSchema,
   DMOverviewSchema,
-  SharedRoomOverviewSchema,
-  RoomOverviewSchema,
   DMRoomSchema,
-  PersonalizedDMRoomSchema,
-  SharedRoomSchema,
-  UpdateRoomSchema,
+  DaySchema,
+  EnrollmentSchema,
+  GUIDSchema,
+  GenderSchema,
+  HobbySchema,
+  IDTokenSchema,
   InitRoomSchema,
   InitSharedRoomSchema,
-  NameSchema,
-  PictureUrlSchema,
-  ContentSchema,
-  HobbySchema,
-  IntroShortSchema,
+  InitUserSchema,
   IntroLongSchema,
-  CourseIDSchema,
-  SlotSchema,
-  CourseSchema,
-  EnrollmentSchema,
-  DaySchema,
+  IntroShortSchema,
+  MessageIDSchema,
+  MessageSchema,
+  NameSchema,
   PeriodSchema,
+  PersonalizedDMRoomSchema,
+  PictureUrlSchema,
+  RelationshipIDSchema,
+  RelationshipSchema,
+  RelationshipStatusSchema,
+  RoomOverviewSchema,
+  SendMessageSchema,
+  ShareRoomIDSchema,
+  SharedRoomOverviewSchema,
+  SharedRoomSchema,
+  SlotSchema,
+  UpdateRoomSchema,
+  UpdateUserSchema,
+  UserIDSchema,
+  UserSchema,
 } from "./schemas";
 
 export type UserID = z.infer<typeof UserIDSchema>;
@@ -48,7 +47,6 @@ export type RelationshipStatus = z.infer<typeof RelationshipStatusSchema>;
 export type User = z.infer<typeof UserSchema>;
 export type InitUser = z.infer<typeof InitUserSchema>;
 export type UpdateUser = z.infer<typeof UpdateUserSchema>;
-export type PublicUser = z.infer<typeof PublicUserSchema>;
 export type RelationshipID = z.infer<typeof RelationshipIDSchema>;
 export type Relationship = z.infer<typeof RelationshipSchema>;
 export type CourseID = z.infer<typeof CourseIDSchema>;

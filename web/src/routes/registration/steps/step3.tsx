@@ -1,11 +1,11 @@
 import { Box, Button, Modal } from "@mui/material";
-import { BackProp, NextButton, StepProps } from "../common";
+import { useEffect, useState } from "react";
 import {
   PhotoPreview,
   PhotoPreviewButton,
 } from "../../../components/config/PhotoPreview";
-import { useEffect, useState } from "react";
 import { uploadImage } from "../../../firebase/store/photo";
+import { type BackProp, NextButton, type StepProps } from "../common";
 
 export type Step3Data = {
   pictureUrl: string;
@@ -35,7 +35,7 @@ export default function Step3({
       setURL(url);
     } catch (error) {
       if (error instanceof Error) {
-        let errorMessages;
+        let errorMessages: string;
         try {
           const parsedError = JSON.parse(error.message);
           if (Array.isArray(parsedError)) {
@@ -67,27 +67,23 @@ export default function Step3({
         open={true}
         sx={{ visibility: open ? "visible" : "hidden" }}
       >
-        <>
-          <Box
-            style={{ backgroundColor: "white", width: "60%", height: "80%" }}
+        <Box style={{ backgroundColor: "white", width: "60%", height: "80%" }}>
+          <PhotoPreview
+            prev={prev?.pictureUrl}
+            onCrop={(f) => {
+              setFile(f);
+            }}
+          />
+          <Button
+            sx={{ float: "right", marginRight: "30px" }}
+            onClick={() => {
+              select();
+              setOpen(false);
+            }}
           >
-            <PhotoPreview
-              prev={prev?.pictureUrl}
-              onCrop={(f) => {
-                setFile(f);
-              }}
-            />
-            <Button
-              sx={{ float: "right", marginRight: "30px" }}
-              onClick={() => {
-                select();
-                setOpen(false);
-              }}
-            >
-              切り取り
-            </Button>
-          </Box>
-        </>
+            切り取り
+          </Button>
+        </Box>
       </Modal>
       <div style={{ textAlign: "center" }}>
         <p>

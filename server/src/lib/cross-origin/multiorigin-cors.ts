@@ -1,5 +1,5 @@
-import { validateConfig, type Config } from "./share";
 import cors from "cors";
+import { type Config, validateConfig } from "./share";
 
 /* expected usecase:
 

@@ -1,8 +1,16 @@
-import { Day, Course, CourseID } from "../common/types";
+import type { Course, CourseID, Day } from "../common/types";
 import { credFetch } from "../firebase/auth/lib";
 import endpoints from "./internal/endpoints";
 
 // TODO: migrate to safe functions
+
+/**
+ * 指定したユーザーが履修している講義をすべて取得する
+ */
+export async function getCoursesByUserId(userId: number): Promise<Course[]> {
+  const res = await credFetch("GET", endpoints.coursesUserId(userId));
+  return res.json();
+}
 
 /**
  * 自身の講義（自身が履修している講義）をすべて取得する
@@ -58,6 +66,7 @@ export async function deleteMyCourse(courseId: CourseID): Promise<Course[]> {
 }
 
 export default {
+  getCoursesByUserId,
   getMyCourses,
   getCoursesByDayAndPeriod,
   addMyCourse,

@@ -1,5 +1,5 @@
-import { CourseID, Day, GUID } from "../../common/types";
-import { MessageID, ShareRoomID } from "../../common/types";
+import type { CourseID, Day, GUID } from "../../common/types";
+import type { MessageID, ShareRoomID } from "../../common/types";
 
 const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
 if (!origin) throw new Error("import.meta.env.VITE_API_ENDPOINT not found!");
@@ -159,6 +159,19 @@ const matches = `${origin}/matches`;
  **/
 
 /**
+ * [x] 実装済み
+ * GET -> get courses the user is enrolled in.
+ * - statuses:
+ *  - 200: ok.
+ *   - body: Course[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ */
+const coursesUserId = (userId: UserID) => {
+  return `${origin}/courses/userId/${userId}`;
+};
+
+/**
  * [v] 実装済み
  * GET -> get my courses.
  * - statuses:
@@ -268,7 +281,7 @@ const roomOverview = `${origin}/chat/overview`;
  *   - 403: Forbidden
  *   - 500: internal error
  **/
-const dmTo = (userId: UserID) => `${origin}/chat/dm/to/` + userId;
+const dmTo = (userId: UserID) => `${origin}/chat/dm/to/${userId}`;
 
 /**
  * PUT -> start dm with userId. created one if none was found. authorized.
@@ -282,7 +295,7 @@ const dmTo = (userId: UserID) => `${origin}/chat/dm/to/` + userId;
  *   - 403: forbidden. you and the user are not matched yet.
  *   - 500: internal error.
  **/
-const dmWith = (userId: UserID) => `${origin}/chat/dm/with/` + userId;
+const dmWith = (userId: UserID) => `${origin}/chat/dm/with/${userId}`;
 
 /**
  * POST -> Create a room. authenticated
@@ -301,7 +314,7 @@ const sharedRooms = `${origin}/chat/shared`;
  * PATCH -> update room info. (excluding the message log).
  * - body: UpdateRoom
  **/
-const sharedRoom = (roomId: ShareRoomID) => `${origin}/chat/shared/` + roomId;
+const sharedRoom = (roomId: ShareRoomID) => `${origin}/chat/shared/${roomId}`;
 
 /** POST: invite. authorized
  * - body: UserID[]
@@ -319,7 +332,7 @@ const roomInvite = (roomId: ShareRoomID) =>
  * DELETE: authorized
  **/
 const message = (messageId: MessageID) =>
-  `${origin}/chat/messages/id/` + messageId;
+  `${origin}/chat/messages/id/${messageId}`;
 
 export default {
   user,
@@ -337,6 +350,7 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
+  coursesUserId,
   coursesDayPeriod,
   roomOverview,
   dmTo,

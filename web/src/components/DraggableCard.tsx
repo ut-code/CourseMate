@@ -1,12 +1,12 @@
-import { useState, useCallback } from "react";
 import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
-import { PublicUser } from "../common/types";
+import { useCallback, useState } from "react";
+import type { User } from "../common/types";
 import { Card } from "./Card";
 
 const SWIPE_THRESHOLD = 200;
 
 interface DraggableCardProps {
-  displayedUser: PublicUser;
+  displayedUser: User;
   onSwipeRight: () => void;
   onSwipeLeft: () => void;
   onDrag?: (X: number) => void;
@@ -18,38 +18,48 @@ export const DraggableCard = ({
   onSwipeLeft,
   onDrag,
 }: DraggableCardProps) => {
-  const dragProgress = useMotionValue(0);
+  const dragX = useMotionValue(0);
+  const dragY = useMotionValue(0);
   const [dragging, setDragging] = useState(false);
 
-  useMotionValueEvent(dragProgress, "change", (latest) => {
-    if (typeof latest === "number" && dragging) {
-      dragProgress.set(latest);
+  useMotionValueEvent(dragX, "change", (latest: number) => {
+    if (dragging) {
+      dragX.set(latest);
       if (onDrag) {
         onDrag(latest);
       }
     } else {
-      dragProgress.set(0);
+      dragX.set(0);
       if (onDrag) {
         onDrag(0);
       }
     }
   });
 
+  useMotionValueEvent(dragY, "change", (latest: number) => {
+    if (dragging) {
+      dragY.set(latest);
+    } else {
+      dragY.set(0);
+    }
+  });
+
   const handleDragEnd = useCallback(() => {
-    const x = dragProgress.get();
+    const x = dragX.get();
     if (x > SWIPE_THRESHOLD) {
       onSwipeRight();
     }
     if (x < -SWIPE_THRESHOLD) {
       onSwipeLeft();
     }
-    dragProgress.set(0);
-  }, [dragProgress, onSwipeRight, onSwipeLeft]);
+    dragX.set(0);
+    dragY.set(0);
+  }, [dragX, dragY, onSwipeRight, onSwipeLeft]);
 
   return (
     <section style={{ pointerEvents: dragging ? "none" : undefined }}>
       <motion.div
-        drag="x"
+        drag
         dragElastic={0.9}
         dragListener={true}
         dragConstraints={{ left: 0, right: 0 }}
@@ -58,8 +68,7 @@ export const DraggableCard = ({
           setDragging(false);
           handleDragEnd();
         }}
-        transition={{ duration: 0.5 }}
-        style={{ x: dragProgress }}
+        style={{ x: dragX, y: dragY, padding: "10px" }}
       >
         <Card displayedUser={displayedUser} />
       </motion.div>

@@ -1,14 +1,14 @@
-import express, { Request, Response } from "express";
+import { Day } from "@prisma/client";
+import express, { type Request, type Response } from "express";
+import { DaySchema, PeriodSchema } from "../common/zod/schemas";
 import {
   getCourseByCourseId,
   getCourseByDayPeriodAndUserId,
   getCoursesByDayAndPeriod,
   getCoursesByUserId,
 } from "../database/courses";
-import { Day } from "@prisma/client";
-import { safeGetUserId } from "../firebase/auth/db";
 import { createEnrollment, deleteEnrollment } from "../database/enrollments";
-import { DaySchema, PeriodSchema } from "../common/zod/schemas";
+import { safeGetUserId } from "../firebase/auth/db";
 
 const router = express.Router();
 
@@ -20,7 +20,9 @@ function isDay(value: string): value is Day {
 router.get("/day-period", async (req: Request, res: Response) => {
   const day = DaySchema.safeParse(req.query.day);
   // TODO: as の使用をやめ、Request 型を適切に拡張する https://stackoverflow.com/questions/63538665/how-to-type-request-query-in-express-using-typescript
-  const period = PeriodSchema.safeParse(parseInt(req.query.period as string));
+  const period = PeriodSchema.safeParse(
+    Number.parseInt(req.query.period as string),
+  );
 
   if (!day.success || !period.success || !isDay(day.data)) {
     return res.status(400).json({ error: "Invalid day" });
@@ -34,6 +36,22 @@ router.get("/day-period", async (req: Request, res: Response) => {
     res
       .status(500)
       .json({ error: "Failed to fetch courses by day and period" });
+  }
+});
+
+// 特定のユーザが履修している講義を取得
+router.get("/userId/:userId", async (req: Request, res: Response) => {
+  const userId = Number.parseInt(req.params.userId);
+  if (Number.isNaN(userId)) {
+    return res.status(400).json({ error: "Invalid userId" });
+  }
+
+  try {
+    const courses = await getCoursesByUserId(userId);
+    res.status(200).json(courses);
+  } catch (error) {
+    console.error("Error fetching courses by userId:", error);
+    res.status(500).json({ error: "Failed to fetch courses by userId" });
   }
 });
 

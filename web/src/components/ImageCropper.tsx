@@ -82,8 +82,8 @@ function operateCrop(
     // https://stackoverflow.com/questions/47913980/js-convert-an-image-object-to-a-jpeg-file
     dest.toBlob(
       (blob) => {
-        if (!blob) return; // this sometimes happen
-        const filename = randomString(16) + ".jpg";
+        if (!blob) throw new Error(); // this should not happen
+        const filename = `${randomString(16)}.jpg`;
         const file = new File([blob], filename, { type: "image/jpeg" });
         resolve(file);
       },

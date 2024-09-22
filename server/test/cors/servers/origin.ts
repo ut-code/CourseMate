@@ -1,8 +1,8 @@
 import express from "express";
-import methods from "../methods";
 import type { Request, Response } from "express";
-import cors from "../../../src/lib/cross-origin/multiorigin-cors";
 import csrf from "../../../src/lib/cross-origin/block-unknown-origin";
+import cors from "../../../src/lib/cross-origin/multiorigin-cors";
+import methods from "../methods";
 
 const app = express();
 
@@ -17,7 +17,7 @@ app.use(csrf(corsConfig));
 
 app.use(express.static("./static"));
 
-methods.forEach((kind) => {
+for (const kind of methods) {
   const callback = (req: Request, res: Response) => {
     const origin = req.header("Origin");
     if (origin)
@@ -32,7 +32,7 @@ methods.forEach((kind) => {
   };
 
   app[kind](`/${kind}`, callback);
-});
+}
 
 app.listen(3000, () => {
   console.log("CORS test: origin server listening at 3000");

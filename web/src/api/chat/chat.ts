@@ -1,6 +1,4 @@
-import { ErrUnauthorized, credFetch } from "../../firebase/auth/lib";
-import endpoints from "../internal/endpoints";
-import {
+import type {
   DMRoom,
   InitRoom,
   Message,
@@ -12,6 +10,8 @@ import {
   UpdateRoom,
   UserID,
 } from "../../common/types";
+import { ErrUnauthorized, credFetch } from "../../firebase/auth/lib";
+import endpoints from "../internal/endpoints";
 
 /* TODO
 import { UserID } from "../common/types";
@@ -77,9 +77,9 @@ export async function sendDM(
 export async function getDM(friendId: UserID): Promise<DMRoom> {
   const res = await credFetch("GET", endpoints.dmWith(friendId));
   if (res.status === 401) throw new ErrUnauthorized();
-  if (res.status !== 201)
+  if (res.status !== 200)
     throw new Error(
-      `createDM() failed: expected status code 201, got ${res.status}`,
+      `getDM() failed: expected status code 200, got ${res.status}`,
     );
   return res.json();
 }
