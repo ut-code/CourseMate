@@ -99,12 +99,13 @@ serve-all:
 serve-web:
 	cd web; bun run preview # todo: make serve function
 serve-server:
-	cd server; bun run serve
+	@# Read server/README.md for this use of npm.
+	cd server; bun run serve 
 
 watch-web: copy-common-to-web
 	cd web; bun run dev
 watch-server: copy-common-to-server
-	cd server; bun run dev
+	cd server; npm run dev
 
 copy-common: copy-common-to-server copy-common-to-web
 copy-common-to-server:
