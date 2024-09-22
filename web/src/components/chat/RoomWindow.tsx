@@ -11,17 +11,18 @@ import type {
 } from "../../common/types";
 import { getIdToken } from "../../firebase/auth/lib";
 import { useCurrentUserId } from "../../hooks/useCurrentUser";
+import Dots from "../common/Dots";
 import { socket } from "../data/socket";
 import { MessageInput } from "./MessageInput";
-import MessagePopupDots from "./MessagePopupDots";
 import { RoomHeader } from "./RoomHeader";
 
 type Prop = {
   room: DMOverview;
+  setActiveRoom: (room: DMOverview | null) => void;
 };
 
 export function RoomWindow(props: Prop) {
-  const { room } = props;
+  const { room, setActiveRoom } = props;
   const { currentUserId, loading } = useCurrentUserId();
   const [dm, setDM] = useState<Message[]>([]);
   const { enqueueSnackbar } = useSnackbar();
@@ -151,13 +152,27 @@ export function RoomWindow(props: Prop) {
 
   return (
     <>
-      <RoomHeader room={room} />
+      <Box
+        sx={{
+          position: "fixed",
+          width: "100%",
+          zIndex: 500,
+          backgroundColor: "white",
+          top: "56px",
+        }}
+      >
+        <RoomHeader room={room} setActiveRoom={setActiveRoom} />
+      </Box>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          height: "90%",
-          padding: 2,
+          position: "absolute",
+          top: "56px",
+          bottom: "56px",
+          left: 0,
+          right: 0,
+          overflowY: "auto",
         }}
       >
         {dm ? (
@@ -176,7 +191,6 @@ export function RoomWindow(props: Prop) {
                 }}
               >
                 {editingMessageId === m.id ? (
-                  // 編集モード
                   <Box
                     sx={{
                       display: "flex",
@@ -192,17 +206,31 @@ export function RoomWindow(props: Prop) {
                       multiline
                       rows={3}
                     />
-                    <Box sx={{ display: "flex", gap: 1, marginTop: 1 }}>
-                      <Button variant="contained" onClick={handleSaveEdit}>
-                        Save
+                    <Box
+                      sx={{
+                        display: "flex",
+                        gap: 1,
+                        marginTop: 1,
+                        justifyContent: "space-evenly",
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        onClick={handleSaveEdit}
+                        sx={{ minWidth: 100 }}
+                      >
+                        保存
                       </Button>
-                      <Button variant="outlined" onClick={handleCancelEdit}>
-                        Cancel
+                      <Button
+                        variant="outlined"
+                        onClick={handleCancelEdit}
+                        sx={{ minWidth: 100 }}
+                      >
+                        キャンセル
                       </Button>
                     </Box>
                   </Box>
                 ) : (
-                  // 通常のメッセージ表示
                   <Paper
                     sx={{
                       display: "flex",
@@ -210,20 +238,39 @@ export function RoomWindow(props: Prop) {
                       padding: 1,
                       borderRadius: 2,
                       backgroundColor:
-                        m.creator === id.currentUserId ? "#DCF8C6" : "#FFF",
+                        m.creator === id.currentUserId
+                          ? "secondary.main"
+                          : "#FFF",
                       boxShadow: 1,
                       border: 1,
-                      cursor:
-                        m.creator === id.currentUserId ? "pointer" : "default",
+                      // cursor:
+                      //   m.creator === id.currentUserId ? "pointer" : "default",
                     }}
                   >
                     <Typography sx={{ wordBreak: "break-word" }}>
                       {m.content}
                     </Typography>
                     {m.creator === id.currentUserId && (
-                      <MessagePopupDots
-                        handleEdit={() => handleEdit(m.id, m.content)}
-                        handleDelete={() => handleDelete(m.id, room.friendId)}
+                      <Dots
+                        actions={[
+                          {
+                            label: "編集",
+                            onClick: () => handleEdit(m.id, m.content),
+                            alert: false,
+                          },
+                          {
+                            label: "削除",
+                            color: "red",
+                            onClick: () => handleDelete(m.id, room.friendId),
+                            alert: true,
+                            messages: {
+                              buttonMessage: "削除",
+                              AlertMessage: "本当に削除しますか？",
+                              subAlertMessage: "この操作は取り消せません。",
+                              yesMessage: "削除",
+                            },
+                          },
+                        ]}
                       />
                     )}
                   </Paper>
@@ -234,7 +281,16 @@ export function RoomWindow(props: Prop) {
         ) : (
           <Typography>最初のメッセージを送ってみましょう！</Typography>
         )}
-
+      </Box>
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: "52px",
+          width: "100%",
+          backgroundColor: "#fff",
+          padding: "0px",
+        }}
+      >
         <MessageInput send={sendDMMessage} room={room} />
       </Box>
     </>

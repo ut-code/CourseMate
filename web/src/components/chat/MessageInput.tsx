@@ -1,5 +1,5 @@
 import SendIcon from "@mui/icons-material/Send";
-import { IconButton, Stack, TextField, Typography } from "@mui/material";
+import { Box, IconButton, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import type { DMOverview, SendMessage, UserID } from "../../common/types";
 import { parseContent } from "../../common/zod/methods";
@@ -28,7 +28,7 @@ export function MessageInput(props: Props) {
   }, [room.friendId]);
 
   return (
-    <>
+    <Box sx={{ padding: "0px" }}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -37,7 +37,6 @@ export function MessageInput(props: Props) {
           try {
             parseContent(message);
           } catch {
-            setError("適切なフォーマットではありません。");
             return;
           }
 
@@ -70,6 +69,6 @@ export function MessageInput(props: Props) {
           </Typography>
         )}
       </form>
-    </>
+    </Box>
   );
 }

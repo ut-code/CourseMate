@@ -14,59 +14,28 @@ export default function Chat() {
   const [activeRoom, setActiveRoom] = useState<DMOverview | null>(null);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "90vh",
-        width: "100vw",
-        overflow: "hidden",
-      }}
-    >
-      <Box
-        sx={{
-          width: "25%",
-          borderRight: "1px solid #ddd",
-          overflowY: "auto",
-        }}
-      >
-        {roomsLoading ? (
-          <Typography>Loading...</Typography>
-        ) : roomsError ? (
-          <Typography color="error">Error: {roomsError.message}</Typography>
-        ) : (
-          <RoomList
-            roomsData={roomsData}
-            activeRoom={activeRoom}
-            setActiveRoom={setActiveRoom}
-          />
-        )}
-      </Box>
-      <Box
-        sx={{
-          width: "75%",
-          height: "100%",
-          backgroundColor: "white",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "auto",
-        }}
-      >
-        {activeRoom ? (
-          <RoomWindow room={activeRoom} />
-        ) : (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100vh",
-              textAlign: "center",
-            }}
-          >
-            チャットを始めよう！
-          </div>
-        )}
-      </Box>
+    <Box>
+      {activeRoom ? (
+        // activeRoomがtrueの場合、画面全体にRoomWindowを表示
+        <Box>
+          <RoomWindow room={activeRoom} setActiveRoom={setActiveRoom} />
+        </Box>
+      ) : (
+        // activeRoomがfalseの場合、通常のRoomListを表示
+        <Box>
+          {roomsLoading ? (
+            <Typography>Loading...</Typography>
+          ) : roomsError ? (
+            <Typography color="error">Error: {roomsError.message}</Typography>
+          ) : (
+            <RoomList
+              roomsData={roomsData}
+              activeRoom={activeRoom}
+              setActiveRoom={setActiveRoom}
+            />
+          )}
+        </Box>
+      )}
     </Box>
   );
 }
