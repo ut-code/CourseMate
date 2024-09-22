@@ -74,7 +74,9 @@ export function HumanListItem(props: HumanListItemProps) {
           {name}
         </Typography>
         <Typography variant="body2" color="text.secondary" noWrap>
-          {lastMessage || ""}
+          {lastMessage && lastMessage.length > 15
+            ? `${lastMessage.slice(0, 15)}...`
+            : lastMessage || ""}
         </Typography>
       </Box>
       {hasDots && (
