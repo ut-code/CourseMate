@@ -1,22 +1,25 @@
-import express, { Request, Response } from "express";
-import { UpdateUser, GUID } from "../common/types";
+import express, { type Request, type Response } from "express";
+import type { GUID, UpdateUser } from "../common/types";
+import type { User } from "../common/types";
 import {
-  createUser,
-  deleteUser,
-  getUser,
-  updateUser,
-  getUserByID,
-} from "../database/users";
+  GUIDSchema,
+  InitUserSchema,
+  UpdateUserSchema,
+} from "../common/zod/schemas";
 import {
   getPendingRequestsFromUser,
   getPendingRequestsToUser,
 } from "../database/requests";
+import {
+  createUser,
+  deleteUser,
+  getUser,
+  getUserByID,
+  updateUser,
+} from "../database/users";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
-import { parseUpdateUser } from "../common/zod/methods";
 import * as core from "../functions/user";
-import { GUIDSchema, InitUserSchema } from "../common/zod/schemas";
-import { User } from "../common/types";
 
 const router = express.Router();
 
@@ -45,7 +48,7 @@ router.get("/exists/:guid", async (req: Request, res: Response) => {
 // 特定のユーザーとマッチしたユーザーを取得
 router.get("/matched", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
+  if (!userId.ok) return res.status(401).send(`auth error: ${userId.error}`);
 
   const result = await core.getMatched(userId.value);
   res.status(result.code).json(result.body);
@@ -54,7 +57,7 @@ router.get("/matched", async (req: Request, res: Response) => {
 // ユーザーにリクエストを送っているユーザーを取得 状態はPENDING
 router.get("/pending/to-me", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
+  if (!userId.ok) return res.status(401).send(`auth error: ${userId.error}`);
 
   const sendingUsers = await getPendingRequestsToUser(userId.value);
   if (!sendingUsers.ok) {
@@ -67,7 +70,7 @@ router.get("/pending/to-me", async (req: Request, res: Response) => {
 // ユーザーがリクエストを送っているユーザーを取得 状態はPENDING
 router.get("/pending/from-me", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
+  if (!userId.ok) return res.status(401).send(`auth error: ${userId.error}`);
 
   const receivers = await getPendingRequestsFromUser(userId.value);
   if (!receivers.ok) {
@@ -94,7 +97,7 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
 // idでユーザーを取得
 router.get("/id/:id", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error: " + userId.error);
+  if (!userId.ok) return res.status(401).send(`auth error: ${userId.error}`);
   const user = await getUserByID(userId.value);
   if (!user.ok) {
     return res.status(404).json({ error: "User not found" });
@@ -118,13 +121,10 @@ router.put("/me", async (req: Request, res: Response) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
 
-  const user: UpdateUser = req.body;
-  try {
-    parseUpdateUser(user);
-  } catch (e) {
-    return res.status(400).send("invalid format");
-  }
-  const updated = await updateUser(id.value, user);
+  const user = UpdateUserSchema.safeParse(req.body);
+  if (!user.success) return res.status(400).send("invalid format");
+
+  const updated = await updateUser(id.value, user.data);
   if (!updated.ok) return res.status(500).send();
   res.status(200).json(updated.value);
 });

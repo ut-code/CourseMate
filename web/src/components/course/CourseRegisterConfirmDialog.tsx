@@ -8,9 +8,9 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { Course } from "../../common/types";
-import { getMyCoursesOverlapWith, addMyCourse } from "../../api/course";
 import { useEffect, useState } from "react";
+import { addMyCourse, getMyCoursesOverlapWith } from "../../api/course";
+import type { Course } from "../../common/types";
 
 export default function CourseRegisterConfirmDialog({
   open,

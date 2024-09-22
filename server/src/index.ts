@@ -1,16 +1,16 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import express from "express";
-import cors from "./lib/cross-origin/multiorigin-cors";
-import nocsrf from "./lib/cross-origin/block-unknown-origin";
-import usersRoutes from "./router/users";
-import coursesRoutes from "./router/courses";
-import requestsRoutes from "./router/requests";
-import matchesRoutes from "./router/matches";
-import chatRoutes from "./router/chat";
 import cookieParser from "cookie-parser";
+import express from "express";
+import nocsrf from "./lib/cross-origin/block-unknown-origin";
+import cors from "./lib/cross-origin/multiorigin-cors";
 import { initializeSocket } from "./lib/socket/socket";
+import chatRoutes from "./router/chat";
+import coursesRoutes from "./router/courses";
+import matchesRoutes from "./router/matches";
+import requestsRoutes from "./router/requests";
+import usersRoutes from "./router/users";
 
 const app = express();
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { Button } from "@mui/material";
-import { BackProp, NextButton, StepProps } from "../common";
+import { type BackProp, NextButton, type StepProps } from "../common";
 
 type Enrollment = number; // TODO: fix this
 
@@ -29,7 +29,7 @@ export default function Step2({
       onSave(data);
     } catch (error) {
       if (error instanceof Error) {
-        let errorMessages;
+        let errorMessages: string;
         try {
           const parsedError = JSON.parse(error.message);
           if (Array.isArray(parsedError)) {
@@ -56,9 +56,10 @@ export default function Step2({
     <>
       <ul>
         {enrollments.map((num, idx) => (
-          <li key={idx}>
+          <li key={num}>
             <span>{num}</span>
             <button
+              type="button"
               onClick={() => setEnrollments(enrollments.splice(idx + 1, 1))}
             >
               Delete
@@ -69,9 +70,10 @@ export default function Step2({
       <input
         type="number"
         value={input}
-        onChange={(e) => setInput(parseInt(e.target.value))}
+        onChange={(e) => setInput(Number.parseInt(e.target.value))}
       />
       <button
+        type="button"
         onClick={() => {
           if (input == null) return;
           setEnrollments([...enrollments, input]);

@@ -42,9 +42,9 @@ function validateConfig(config: Config) {
 function assertValidConfig(config: Config) {
   if (config.origins.length === 0) {
     throw new Error(
-      "Empty allowedOrigins in CORS config: " + JSON.stringify(config),
+      `Empty allowedOrigins in CORS config: ${JSON.stringify(config)}`,
     );
   }
 }
 
-export { validateConfig, Config };
+export { validateConfig, type Config };

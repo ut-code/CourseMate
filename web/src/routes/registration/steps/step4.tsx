@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import type { StepProps, BackProp } from "../common";
+import type { BackProp, StepProps } from "../common";
 export default function Confirmation({
   onSave,
   back,

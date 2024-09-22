@@ -1,5 +1,5 @@
-import { ImageFallback } from "../ImageFallback";
 import { Avatar } from "@mui/material";
+import { ImageFallback } from "../ImageFallback";
 
 type Props = {
   width: string;
@@ -13,7 +13,8 @@ export function AvatarWithFallback({ width, height, url }: Props) {
       width={width}
       height={height}
       url={url}
-      fallback={<Avatar />}
+      fallback={<Avatar sx={{ width: `${width}`, height: `${height}` }} />}
+      alt=""
     />
   );
 }

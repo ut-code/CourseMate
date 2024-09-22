@@ -1,34 +1,41 @@
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase/firebaseconfig";
-import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
-
-async function signOutUser() {
-  try {
-    await signOut(auth);
-  } catch (error) {
-    console.error(error);
-  }
-}
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase/firebaseconfig";
+import { useAlert } from "./common/alert/AlertProvider";
 
 export default function LogOutButton() {
+  const { showAlert } = useAlert();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
+  async function signOutUser() {
+    try {
+      await signOut(auth);
+      enqueueSnackbar("ログアウトしました", { variant: "success" });
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar("ログアウトに失敗しました", { variant: "error" });
+    } finally {
+      navigate("/login");
+    }
+  }
+
+  const handleClick = () => {
+    showAlert({
+      AlertMessage: "本当にログアウトしますか？",
+      yesMessage: "ログアウト",
+      clickYes: () => {
+        signOutUser();
+      },
+    });
+  };
+
   return (
-    <Button
-      onClick={async () => {
-        try {
-          await signOutUser();
-          enqueueSnackbar("ログアウトしました", { variant: "success" });
-        } catch {
-          enqueueSnackbar("ログアウトに失敗しました", { variant: "error" });
-        } finally {
-          navigate("/login");
-        }
-      }}
-    >
-      Log Out
-    </Button>
+    <>
+      <button onClick={handleClick} type="button">
+        ログアウト
+      </button>
+    </>
   );
 }

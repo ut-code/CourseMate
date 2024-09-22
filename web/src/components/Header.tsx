@@ -1,5 +1,5 @@
-import { AppBar, Toolbar, IconButton, Typography } from "@mui/material";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 
 type Props = {
   title: string;
@@ -10,7 +10,7 @@ export default function Header(props: Props) {
   return (
     <>
       <AppBar
-        position="sticky"
+        position="fixed"
         sx={{
           backgroundColor: "secondary.main",
           boxShadow: "2px 2px 4px -2px gray",

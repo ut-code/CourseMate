@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import { GUID, UpdateUser, User, UserID } from "../common/types";
-import { Err, Ok, Result } from "../common/lib/result";
-
-const prisma = new PrismaClient();
+import { Err, Ok, type Result } from "../common/lib/result";
+import type { GUID, UpdateUser, User, UserID } from "../common/types";
+import { prisma } from "./client";
 
 // ユーザーの作成
 export async function createUser(

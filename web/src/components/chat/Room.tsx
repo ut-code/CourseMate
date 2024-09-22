@@ -1,6 +1,6 @@
-import { Typography, ListItem, Stack } from "@mui/material";
-import { DMOverview } from "../../common/types";
-import UserAvatar from "../avatar/avatar";
+import { ListItem, Stack, Typography } from "@mui/material";
+import type { DMOverview } from "../../common/types";
+import UserAvatar from "../human/avatar";
 
 type Props = {
   room: DMOverview;
@@ -28,6 +28,7 @@ export function Room(props: Props) {
         >
           <UserAvatar pictureUrl={room.thumbnail} width="50px" height="50px" />
           <Typography variant="body2">{room.name}</Typography>
+          <Typography variant="subtitle1">{room.lastmsg?.content}</Typography>
         </Stack>
       </ListItem>
     </>

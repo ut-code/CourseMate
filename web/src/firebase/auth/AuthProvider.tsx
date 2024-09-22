@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import type React from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { redirect } from "react-router-dom";
 import userapi from "../../api/user";
-import { AuthContext } from "./AuthContext";
-import type { User, GUID } from "../../common/types";
+import type { GUID, User } from "../../common/types";
+
+const AuthContext = createContext<User | null | undefined>(undefined);
 
 export default function AuthProvider({
   children,
@@ -19,7 +21,7 @@ export default function AuthProvider({
         if (firebaseUser) {
           userapi
             .getByGUID(firebaseUser.uid as GUID)
-            .then((user) => setUser(user));
+            .then((user) => setUser(user.data));
         } else {
           setUser(null);
           console.log("ログイン画面に移動します");
@@ -35,4 +37,8 @@ export default function AuthProvider({
   }, []);
 
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+}
+
+export function useAuthContext() {
+  useContext(AuthContext);
 }

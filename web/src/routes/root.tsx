@@ -1,9 +1,9 @@
-import { BottomNavigation, BottomNavigationAction } from "@mui/material";
+import ChatIcon from "@mui/icons-material/Chat";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
-import ChatIcon from "@mui/icons-material/Chat";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { useState, useEffect } from "react";
+import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 
@@ -33,64 +33,74 @@ export default function Root() {
   return (
     <>
       <Header title={labels[value]} />
-      <div style={{ marginBottom: "56px" }}>
-        <Outlet />
-      </div>
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={(_event, newValue) => {
-          setValue(newValue);
-        }}
+      <Box
         sx={{
-          width: "100%",
-          position: "fixed",
-          bottom: 0,
-          borderTop: "1px solid",
-          borderColor: "primary.main",
+          position: "absolute",
+          top: "56px",
+          bottom: "56px",
+          left: 0,
+          right: 0,
+          overflowY: "auto",
         }}
       >
-        <BottomNavigationAction
-          component={Link}
-          to="/home"
-          label="Home"
-          icon={
-            <HomeIcon
-              sx={{ color: value === 0 ? "primary.main" : "secondary.main" }}
-            />
-          }
-        />
-        <BottomNavigationAction
-          component={Link}
-          to="/friends"
-          label="Friends"
-          icon={
-            <PeopleIcon
-              sx={{ color: value === 1 ? "primary.main" : "secondary.main" }}
-            />
-          }
-        />
-        <BottomNavigationAction
-          component={Link}
-          to="/chat"
-          label="Chat"
-          icon={
-            <ChatIcon
-              sx={{ color: value === 2 ? "primary.main" : "secondary.main" }}
-            />
-          }
-        />
-        <BottomNavigationAction
-          component={Link}
-          to="/settings"
-          label="Settings"
-          icon={
-            <SettingsIcon
-              sx={{ color: value === 3 ? "primary.main" : "secondary.main" }}
-            />
-          }
-        />
-      </BottomNavigation>
+        <Outlet />
+      </Box>
+      <Box sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
+        <BottomNavigation
+          showLabels
+          value={value}
+          onChange={(_event, newValue) => {
+            setValue(newValue);
+          }}
+          sx={{
+            width: "100%",
+            bottom: 0,
+            borderTop: "1px solid",
+            borderColor: "primary.main",
+          }}
+        >
+          <BottomNavigationAction
+            component={Link}
+            to="/home"
+            label="Home"
+            icon={
+              <HomeIcon
+                sx={{ color: value === 0 ? "primary.main" : "secondary.main" }}
+              />
+            }
+          />
+          <BottomNavigationAction
+            component={Link}
+            to="/friends"
+            label="Friends"
+            icon={
+              <PeopleIcon
+                sx={{ color: value === 1 ? "primary.main" : "secondary.main" }}
+              />
+            }
+          />
+          <BottomNavigationAction
+            component={Link}
+            to="/chat"
+            label="Chat"
+            icon={
+              <ChatIcon
+                sx={{ color: value === 2 ? "primary.main" : "secondary.main" }}
+              />
+            }
+          />
+          <BottomNavigationAction
+            component={Link}
+            to="/settings"
+            label="Settings"
+            icon={
+              <SettingsIcon
+                sx={{ color: value === 3 ? "primary.main" : "secondary.main" }}
+              />
+            }
+          />
+        </BottomNavigation>
+      </Box>
     </>
   );
 }
