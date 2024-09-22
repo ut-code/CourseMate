@@ -1,7 +1,6 @@
-import { type Day, PrismaClient } from "@prisma/client";
+import type { Day } from "@prisma/client";
 import type { Course, UserID } from "../common/types";
-
-const prisma = new PrismaClient();
+import { prisma } from "./client";
 
 export async function getCourseByCourseId(
   courseId: string,

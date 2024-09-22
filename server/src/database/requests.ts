@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { Err, Ok, type Result } from "../common/lib/result";
 import type { Relationship, User, UserID } from "../common/types";
-
-const prisma = new PrismaClient();
+import { prisma } from "./client";
 
 // マッチリクエストの送信
 export async function sendRequest({

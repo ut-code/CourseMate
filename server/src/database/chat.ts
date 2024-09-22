@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import { Err, Ok, type Result } from "../common/lib/result";
 import type { UserID } from "../common/types";
 import type {
@@ -13,10 +12,9 @@ import type {
   SharedRoom,
   SharedRoomOverview,
 } from "../common/types";
+import { prisma } from "./client";
 import { getRelation } from "./matches";
 import { getMatchedUser } from "./requests";
-
-const prisma = new PrismaClient();
 
 // ユーザーの参加しているすべての Room の概要 (Overview) の取得
 export async function getOverview(
