@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { useState } from "react";
 import { useRoomsOverview } from "../../api/chat/hooks";
 import type { DMOverview } from "../../common/types";
@@ -24,7 +24,7 @@ export default function Chat() {
         // activeRoomがfalseの場合、通常のRoomListを表示
         <Box>
           {roomsLoading ? (
-            <Typography>Loading...</Typography>
+            <CircularProgress />
           ) : roomsError ? (
             <Typography color="error">Error: {roomsError.message}</Typography>
           ) : (

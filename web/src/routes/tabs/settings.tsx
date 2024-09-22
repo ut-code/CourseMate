@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import hooks from "../../api/hooks";
 import LogOutButton from "../../components/LogOutButton";
 // import { useState } from "react";
@@ -20,7 +20,7 @@ export default function Settings() {
   return (
     <Box>
       {loading ? (
-        <p>Loading...</p>
+        <CircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : data ? (
