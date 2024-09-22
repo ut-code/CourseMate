@@ -15,6 +15,8 @@
           nativeBuildInputs = with pkgs; [ bashInteractive ];
           buildInputs = with pkgs; [
             nodePackages.prisma
+            nodePackages.npm
+            nodejs_22
             gnumake
             bun
             biome
