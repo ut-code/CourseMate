@@ -1,4 +1,4 @@
-import { $, afterAll, beforeAll, expect, test } from "bun:test";
+import { afterAll, beforeAll, expect, test } from "bun:test";
 import type { Server } from "node:http";
 import { main } from "../server/src/index";
 
