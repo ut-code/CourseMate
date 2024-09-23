@@ -6,8 +6,8 @@ import Header from "../../components/Header";
 import { register } from "./functions";
 import Step1, { type Step1Data } from "./steps/step1";
 import Step2, { type Step2Data } from "./steps/step2";
-import Step3, { type Step3Data } from "./steps/step3";
-import Confirmation from "./steps/step4";
+import Confirmation from "./steps/step3";
+import Step4 from "./steps/step4";
 
 function Registration() {
   const { enqueueSnackbar } = useSnackbar();
@@ -16,7 +16,6 @@ function Registration() {
 
   const [step1Data, setStep1Data] = useState<Step1Data>();
   const [step2Data, setStep2Data] = useState<Step2Data>();
-  const [step3Data, setStep3Data] = useState<Step3Data>();
 
   switch (step) {
     case 1:
@@ -44,34 +43,31 @@ function Registration() {
       );
     case 3:
       return (
-        <Step3
-          caller="registration"
-          prev={step3Data}
-          onSave={(data) => {
-            setStep3Data(data);
-            setStep(4);
-          }}
-          back={() => setStep(2)}
-        />
-      );
-    case 4:
-      return (
         <Confirmation
           caller="registration"
-          onSave={() => {
+          onSave={async () => {
             if (!step1Data) throw new Error("don't skip the steps");
             if (!step2Data) throw new Error("don't skip the steps");
-            if (!step3Data) throw new Error("don't skip the steps");
             const concat = {
               ...step1Data,
               ...step2Data,
-              ...step3Data,
             };
-            register(concat, { enqueueSnackbar, navigate });
+            try {
+              await register(concat, { enqueueSnackbar, navigate });
+              setStep(4);
+            } catch (error) {
+              enqueueSnackbar("サインアップに失敗しました", {
+                variant: "error",
+              });
+            }
           }}
-          back={() => setStep(3)}
+          back={() => setStep(2)}
+          Step1Data={step1Data}
+          Step2Data={step2Data}
         />
       );
+    case 4:
+      return <Step4 />;
   }
 }
 export default function RegistrationPage() {

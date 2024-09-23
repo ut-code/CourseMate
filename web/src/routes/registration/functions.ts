@@ -28,7 +28,6 @@ export async function register(
     enqueueSnackbar("サインアップに成功しました", {
       variant: "success",
     });
-    navigate("/home");
   } catch (error) {
     console.error("Sign-up failed:", error);
     enqueueSnackbar("サインアップに失敗しました", {

@@ -1,12 +1,14 @@
-import { useState } from "react";
-
-import { Button } from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
+import { useEffect, useState } from "react";
+import {
+  PhotoPreview,
+  PhotoPreviewButton,
+} from "../../../components/config/PhotoPreview";
+import { uploadImage } from "../../../firebase/store/photo";
 import { type BackProp, NextButton, type StepProps } from "../common";
 
-type Enrollment = number; // TODO: fix this
-
 export type Step2Data = {
-  enrollments: Enrollment[];
+  pictureUrl: string;
 };
 
 export default function Step2({
@@ -15,18 +17,22 @@ export default function Step2({
   back,
   caller,
 }: StepProps<Step2Data> & BackProp) {
-  const [enrollments, setEnrollments] = useState<Enrollment[]>(
-    prev?.enrollments || [],
-  );
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [file, setFile] = useState<File>();
+  const [url, setURL] = useState<string>();
 
-  async function save() {
+  async function next() {
+    if (!url) throw new Error("画像は入力必須");
+    const data = {
+      pictureUrl: url,
+    };
+    onSave(data);
+  }
+  async function select() {
     try {
-      // TODO: change this to actual enrollments and apply zod
-      const data: Step2Data = {
-        enrollments: enrollments,
-      };
-      onSave(data);
+      if (!file) throw new Error("画像は入力必須です");
+      const url = await uploadImage(file);
+      setURL(url);
     } catch (error) {
       if (error instanceof Error) {
         let errorMessages: string;
@@ -50,47 +56,71 @@ export default function Step2({
     }
   }
 
-  const [input, setInput] = useState<number>();
-  // FIXME: fix the renderer
+  const [open, setOpen] = useState<boolean>(false);
+  useEffect(() => {
+    console.log("open: ", open);
+  }, [open]);
   return (
     <>
-      <ul>
-        {enrollments.map((num, idx) => (
-          <li key={num}>
-            <span>{num}</span>
-            <button
-              type="button"
-              onClick={() => setEnrollments(enrollments.splice(idx + 1, 1))}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
-      <input
-        type="number"
-        value={input}
-        onChange={(e) => setInput(Number.parseInt(e.target.value))}
-      />
-      <button
-        type="button"
-        onClick={() => {
-          if (input == null) return;
-          setEnrollments([...enrollments, input]);
-          setInput(undefined);
+      <Modal
+        id="MODAL"
+        open={true}
+        sx={{
+          visibility: open ? "visible" : "hidden",
+          Margin: "auto",
+          alignItems: "center",
+          justifyContent: "center",
+          display: "flex",
         }}
       >
-        Add
-      </button>
-      {errorMessage && <span>{errorMessage}</span>}
-      <Button onClick={back}>戻る</Button>
-      <NextButton weak={enrollments.length === 0} onClick={save}>
-        {caller === "configMenu"
-          ? "保存"
-          : enrollments.length === 0
-            ? "スキップ"
-            : "次へ"}
-      </NextButton>
+        <Box
+          style={{
+            backgroundColor: "white",
+            width: "90%",
+            height: "auto",
+            padding: "20px",
+          }}
+        >
+          <PhotoPreview
+            prev={prev?.pictureUrl}
+            onCrop={(f) => {
+              setFile(f);
+            }}
+          />
+          <Button
+            sx={{ float: "right", marginRight: "30px" }}
+            onClick={() => {
+              select();
+              setOpen(false);
+            }}
+          >
+            切り取り
+          </Button>
+        </Box>
+      </Modal>
+      <div style={{ textAlign: "center" }}>
+        <p>
+          {url && (
+            <img
+              alt="選択した写真のプレビュー"
+              style={{ width: 300, height: 300 }}
+              src={url}
+            />
+          )}
+        </p>
+        <PhotoPreviewButton text="写真を選択" onSelect={() => setOpen(true)} />
+        {errorMessage && <span>{errorMessage}</span>}
+        <Button onClick={back}>戻る</Button>
+        {file === null ? (
+          <Button disabled={true}>
+            {caller === "registration" ? "確定" : "保存"}
+          </Button>
+        ) : (
+          <NextButton onClick={next}>
+            {caller === "registration" ? "確定" : "保存"}
+          </NextButton>
+        )}
+      </div>
     </>
   );
 }

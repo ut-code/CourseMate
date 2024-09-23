@@ -1,126 +1,97 @@
-import { Box, Button, Modal } from "@mui/material";
-import { useEffect, useState } from "react";
-import {
-  PhotoPreview,
-  PhotoPreviewButton,
-} from "../../../components/config/PhotoPreview";
-import { uploadImage } from "../../../firebase/store/photo";
-import { type BackProp, NextButton, type StepProps } from "../common";
+import { Button } from "@mui/material";
+import UserAvatar from "../../../components/human/avatar";
+import type { BackProp, StepProps } from "../common";
+import type { Step1Data } from "./step1";
+import type { Step2Data } from "./step2";
 
-export type Step3Data = {
+interface UserInfoProp {
+  name: string;
+  gender: string;
+  grade: string;
+  faculity: string;
+  department: string;
+  intro: string;
   pictureUrl: string;
-};
+}
 
-export default function Step3({
+interface inputDataProps {
+  Step1Data: Step1Data | undefined;
+  Step2Data: Step2Data | undefined;
+}
+
+export default function Confirmation({
   onSave,
-  prev,
   back,
-  caller,
-}: StepProps<Step3Data> & BackProp) {
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [file, setFile] = useState<File>();
-  const [url, setURL] = useState<string>();
-
-  async function next() {
-    if (!url) throw new Error("画像は入力必須");
-    const data = {
-      pictureUrl: url,
-    };
-    onSave(data);
+  Step1Data,
+  Step2Data,
+}: StepProps<void> & BackProp & inputDataProps) {
+  if (!Step1Data || !Step2Data) {
+    throw new Error("don't skip the steps");
   }
-  async function select() {
-    try {
-      if (!file) throw new Error("画像は入力必須です");
-      const url = await uploadImage(file);
-      setURL(url);
-    } catch (error) {
-      if (error instanceof Error) {
-        let errorMessages: string;
-        try {
-          const parsedError = JSON.parse(error.message);
-          if (Array.isArray(parsedError)) {
-            errorMessages = parsedError.map((err) => err.message).join(", ");
-          } else {
-            errorMessages = error.message;
-          }
-        } catch {
-          errorMessages = error.message;
-        }
-
-        // エラーメッセージをセット
-        setErrorMessage(errorMessages);
-      } else {
-        console.log("unknown error:", error);
-        setErrorMessage("入力に誤りがあります。");
-      }
-    }
-  }
-
-  const [open, setOpen] = useState<boolean>(false);
-  useEffect(() => {
-    console.log("open: ", open);
-  }, [open]);
   return (
-    <>
-      <Modal
-        id="MODAL"
-        open={true}
-        sx={{
-          visibility: open ? "visible" : "hidden",
-          Margin: "auto",
-          alignItems: "center",
-          justifyContent: "center",
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        margin: "20px",
+      }}
+    >
+      <CardFront UserInfo={{ ...Step1Data, ...Step2Data }} />
+      <div
+        style={{
           display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <Box
-          style={{
-            backgroundColor: "white",
-            width: "90%",
-            height: "auto",
-            padding: "20px",
-          }}
-        >
-          <PhotoPreview
-            prev={prev?.pictureUrl}
-            onCrop={(f) => {
-              setFile(f);
-            }}
-          />
-          <Button
-            sx={{ float: "right", marginRight: "30px" }}
-            onClick={() => {
-              select();
-              setOpen(false);
-            }}
-          >
-            切り取り
-          </Button>
-        </Box>
-      </Modal>
-      <div style={{ textAlign: "center" }}>
-        <p>
-          {url && (
-            <img
-              alt="選択した写真のプレビュー"
-              style={{ width: 300, height: 300 }}
-              src={url}
-            />
-          )}
-        </p>
-        <PhotoPreviewButton text="写真を選択" onSelect={() => setOpen(true)} />
-        {errorMessage && <span>{errorMessage}</span>}
-        <Button onClick={back}>戻る</Button>
-        {file === null ? (
-          <Button disabled={true}>
-            {caller === "registration" ? "確定" : "保存"}
-          </Button>
-        ) : (
-          <NextButton onClick={next}>
-            {caller === "registration" ? "確定" : "保存"}
-          </NextButton>
-        )}
+        <p>この内容で登録しますか？</p>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Button onClick={back}>戻る</Button>
+          <Button onClick={() => onSave()}>OK</Button>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
+
+const CardFront = ({ UserInfo }: { UserInfo: UserInfoProp }) => {
+  console.log(UserInfo.department);
+  return (
+    <div
+      style={{
+        width: "70vw",
+        height: "70vh",
+        position: "relative",
+        backgroundColor: "#F7FCFF",
+        border: "2px solid #3596C6",
+        padding: "10px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-around",
+        }}
+      >
+        <div style={{ width: "50%", maxWidth: "300px", maxHeight: "300px" }}>
+          <UserAvatar
+            pictureUrl={UserInfo?.pictureUrl}
+            width="80%"
+            height="auto"
+          />
+        </div>
+        <p style={{ fontSize: "4vw", fontWeight: "bold" }}>{UserInfo?.name}</p>
+      </div>
+      <div style={{ padding: "10px" }}>
+        {UserInfo?.grade && <p>学年： {UserInfo.grade}</p>}
+        {UserInfo?.faculity && <p>学部： {UserInfo.faculity}</p>}
+        {UserInfo?.department && <p>学科： {UserInfo.department}</p>}
+        {UserInfo?.gender && <p>性別： {UserInfo?.gender}</p>}
+        {UserInfo?.intro && <p>自己紹介: {UserInfo.intro}</p>}
+      </div>
+    </div>
+  );
+};
