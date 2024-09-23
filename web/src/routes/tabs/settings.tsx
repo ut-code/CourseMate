@@ -12,9 +12,9 @@ export default function Settings() {
   const { data, loading, error } = hooks.useMe();
 
   // プロフィール編集画面に遷移
-  const handleProfileEdit = () => {
+  function handleProfileEdit() {
     navigate("/edit/profile");
-  };
+  }
 
   return (
     <Box sx={{ padding: "20px" }}>

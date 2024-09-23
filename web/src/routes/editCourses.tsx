@@ -7,13 +7,13 @@ export default function EditCourses() {
   const navigate = useNavigate();
   const { data, loading, error } = hooks.useMe();
 
-  const handleSave = () => {
+  function handleSave() {
     navigate("/settings"); // router.pushからnavigateに変更
-  };
+  }
 
-  const handleBack = () => {
+  function handleBack() {
     navigate("/edit/profile"); // router.pushからnavigateに変更
-  };
+  }
 
   return (
     <Box sx={{ padding: "20px", maxWidth: "350px", margin: "0 auto" }}>
