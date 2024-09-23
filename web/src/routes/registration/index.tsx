@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { register } from "./functions";
-import Step1, { type Step1Data } from "./steps/step1";
-import Step2, { type Step2Data } from "./steps/step2";
-import Confirmation from "./steps/step3";
-import Step4 from "./steps/step4";
+import Step1, { type Step1Data } from "./steps/step1_profile";
+import Step2, { type Step2Data } from "./steps/step2_img";
+import Confirmation from "./steps/step3_confirmation";
+import Step4 from "./steps/step4_course";
 
 function Registration() {
   const { enqueueSnackbar } = useSnackbar();

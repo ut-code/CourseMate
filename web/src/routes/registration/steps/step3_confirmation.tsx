@@ -1,8 +1,8 @@
 import { Button } from "@mui/material";
 import UserAvatar from "../../../components/human/avatar";
 import type { BackProp, StepProps } from "../common";
-import type { Step1Data } from "./step1";
-import type { Step2Data } from "./step2";
+import type { Step1Data } from "./step1_profile";
+import type { Step2Data } from "./step2_img";
 
 interface UserInfoProp {
   name: string;
