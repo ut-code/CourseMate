@@ -1,9 +1,10 @@
-import { Box, Button, Modal } from "@mui/material";
+import { Box, Button, Modal, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
   PhotoPreview,
   PhotoPreviewButton,
 } from "../../../components/config/PhotoPreview";
+import UserAvatar from "../../../components/human/avatar";
 import { uploadImage } from "../../../firebase/store/photo";
 import { type BackProp, NextButton, type StepProps } from "../common";
 
@@ -19,7 +20,7 @@ export default function Step2({
 }: StepProps<Step2Data> & BackProp) {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [file, setFile] = useState<File>();
-  const [url, setURL] = useState<string>();
+  const [url, setURL] = useState<string>("");
 
   async function next() {
     if (!url) throw new Error("画像は入力必須");
@@ -61,7 +62,8 @@ export default function Step2({
     console.log("open: ", open);
   }, [open]);
   return (
-    <>
+    <div style={{ textAlign: "center", marginTop: "20px" }}>
+      <Typography>アイコン設定</Typography>
       <Modal
         id="MODAL"
         open={true}
@@ -98,29 +100,30 @@ export default function Step2({
           </Button>
         </Box>
       </Modal>
-      <div style={{ textAlign: "center" }}>
-        <p>
-          {url && (
-            <img
-              alt="選択した写真のプレビュー"
-              style={{ width: 300, height: 300 }}
-              src={url}
-            />
-          )}
-        </p>
+      <div
+        style={{
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <UserAvatar width="300px" height="300px" pictureUrl={url} />
         <PhotoPreviewButton text="写真を選択" onSelect={() => setOpen(true)} />
         {errorMessage && <span>{errorMessage}</span>}
-        <Button onClick={back}>戻る</Button>
-        {file === null ? (
-          <Button disabled={true}>
-            {caller === "registration" ? "確定" : "保存"}
-          </Button>
-        ) : (
-          <NextButton onClick={next}>
-            {caller === "registration" ? "確定" : "保存"}
-          </NextButton>
-        )}
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Button onClick={back}>戻る</Button>
+          {file === null ? (
+            <Button disabled={true}>
+              {caller === "registration" ? "確定" : "保存"}
+            </Button>
+          ) : (
+            <NextButton onClick={next}>
+              {caller === "registration" ? "確定" : "保存"}
+            </NextButton>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 }

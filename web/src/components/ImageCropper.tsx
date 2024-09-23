@@ -83,11 +83,11 @@ function operateCrop(
     dest.toBlob(
       (blob) => {
         if (!blob) throw new Error(); // this should not happen
-        const filename = `${randomString(16)}.jpg`;
-        const file = new File([blob], filename, { type: "image/jpeg" });
+        const filename = `${randomString(16)}.png`;
+        const file = new File([blob], filename, { type: "image/png" });
         resolve(file);
       },
-      "image/jpeg",
+      "image/png",
       1.0,
     );
 

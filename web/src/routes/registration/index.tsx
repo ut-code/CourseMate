@@ -76,7 +76,7 @@ export default function RegistrationPage() {
       sx={{
         position: "absolute",
         top: "56px",
-        bottom: "56px",
+        bottom: 0,
         left: 0,
         right: 0,
         overflowY: "auto",
