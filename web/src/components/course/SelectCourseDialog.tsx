@@ -15,9 +15,10 @@ import {
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { useEffect, useState } from "react";
-import courseApi, { deleteMyCourse } from "../../api/course";
+import courseApi from "../../api/course";
 import { DAY_TO_JAPANESE_MAP } from "../../common/consts";
 import type { Course, Day } from "../../common/types";
+import CourseDeleteConfirmDialog from "./CourseDeleteConfirmDialog";
 import CourseRegisterConfirmDialog from "./CourseRegisterConfirmDialog";
 
 export default function SelectCourseDialog({
@@ -41,6 +42,8 @@ export default function SelectCourseDialog({
   >([]); // 登録可能な全ての講義のうち、検索条件に合う講義
   const [newCourse, setNewCourse] = useState<Course | null>(null);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
+    useState(false);
 
   useEffect(() => {
     (async () => {
@@ -72,9 +75,9 @@ export default function SelectCourseDialog({
               aria-label="delete"
               onClick={async () => {
                 if (!currentEdit?.course?.id) return;
-                const newCourses = await deleteMyCourse(currentEdit.course.id);
-                handleCoursesUpdate(newCourses);
-                onClose();
+
+                setNewCourse(currentEdit.course);
+                setIsDeleteConfirmDialogOpen(true);
               }}
             >
               <DeleteIcon />
@@ -114,10 +117,20 @@ export default function SelectCourseDialog({
             </Box>
           )}
         </>
+
         {newCourse && (
           <CourseRegisterConfirmDialog
             open={isConfirmDialogOpen}
             onClose={() => setIsConfirmDialogOpen(false)}
+            course={newCourse}
+            handleSelectDialogClose={onClose}
+            handleCoursesUpdate={handleCoursesUpdate}
+          />
+        )}
+        {newCourse && (
+          <CourseDeleteConfirmDialog
+            open={isDeleteConfirmDialogOpen}
+            onClose={() => setIsDeleteConfirmDialogOpen(false)}
             course={newCourse}
             handleSelectDialogClose={onClose}
             handleCoursesUpdate={handleCoursesUpdate}
