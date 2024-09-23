@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Typography,
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
 import { NextButton, type StepProps } from "../common";
@@ -75,6 +76,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
 
   return (
     <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
+      <Typography>アカウント設定</Typography>
       <FormControl fullWidth>
         <TextField
           value={name}

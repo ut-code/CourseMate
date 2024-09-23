@@ -101,9 +101,7 @@ export default function Step3({
         </Box>
       </Modal>
       <div style={{ textAlign: "center" }}>
-        <p>
-          <UserAvatar width="300px" height="300px" pictureUrl={url} />
-        </p>
+        <UserAvatar width="300px" height="300px" pictureUrl={url} />
         <PhotoPreviewButton text="写真を選択" onSelect={() => setOpen(true)} />
         {errorMessage && <span>{errorMessage}</span>}
         <Button onClick={back}>戻る</Button>
