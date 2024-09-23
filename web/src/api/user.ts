@@ -8,8 +8,9 @@ import endpoints from "./internal/endpoints.ts";
 //全てのユーザ情報を取得する
 export async function all(): Promise<User[]> {
   const res = await credFetch("GET", endpoints.users);
-  // TODO: typia
-  return res.json();
+  const users = await res.json();
+  const safeUsers: User[] = users.map((user: User) => parseUser(user));
+  return safeUsers;
 }
 
 export async function matched(): Promise<User[]> {
