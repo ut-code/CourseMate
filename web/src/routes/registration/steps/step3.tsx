@@ -1,9 +1,10 @@
-import { Box, Button, Modal } from "@mui/material";
+import { Box, Button, Modal, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
   PhotoPreview,
   PhotoPreviewButton,
 } from "../../../components/config/PhotoPreview";
+import UserAvatar from "../../../components/human/avatar";
 import { uploadImage } from "../../../firebase/store/photo";
 import { type BackProp, NextButton, type StepProps } from "../common";
 
@@ -19,7 +20,7 @@ export default function Step3({
 }: StepProps<Step3Data> & BackProp) {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [file, setFile] = useState<File>();
-  const [url, setURL] = useState<string>();
+  const [url, setURL] = useState<string>("");
 
   async function next() {
     if (!url) throw new Error("画像は入力必須");
@@ -62,6 +63,7 @@ export default function Step3({
   }, [open]);
   return (
     <>
+      <Typography>アイコン設定</Typography>
       <Modal
         id="MODAL"
         open={true}
@@ -99,15 +101,7 @@ export default function Step3({
         </Box>
       </Modal>
       <div style={{ textAlign: "center" }}>
-        <p>
-          {url && (
-            <img
-              alt="選択した写真のプレビュー"
-              style={{ width: 300, height: 300 }}
-              src={url}
-            />
-          )}
-        </p>
+        <UserAvatar width="300px" height="300px" pictureUrl={url} />
         <PhotoPreviewButton text="写真を選択" onSelect={() => setOpen(true)} />
         {errorMessage && <span>{errorMessage}</span>}
         <Button onClick={back}>戻る</Button>
