@@ -16,6 +16,10 @@ serve: serve-all # serve only. does not build.
 watch:
 		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
 
+test:
+	./run-psql.sh &
+	DATABASE_URL=postgres://user:database@localhost:5432/database bun test
+	
 docker: copy-common
 	@# deferring `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
 	trap 'docker compose down' EXIT; docker compose up --build
@@ -112,3 +116,4 @@ copy-common-to-web:
 	@ if [ -d web/src/common ]; then rm -r web/src/common; fi
 	@ cp -r common web/src/common
 
+.PHONY: test

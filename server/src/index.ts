@@ -49,8 +49,15 @@ app.use("/requests", requestsRoutes);
 app.use("/matches", matchesRoutes);
 app.use("/chat", chatRoutes);
 
-// サーバーの起動
-export const server = app.listen(port, () => {
-  console.log("running");
-});
-initializeSocket();
+export function main() {
+  // サーバーの起動
+  const server = app.listen(port, () => {
+    console.log("running");
+  });
+  initializeSocket(server, corsOptions);
+  return server;
+}
+
+if (__filename === require.main?.filename) {
+  main();
+}
