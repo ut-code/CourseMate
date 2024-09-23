@@ -7,6 +7,8 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
+import EditCourses from "./routes/editCourses";
+import EditProfile from "./routes/editProfile";
 import Login from "./routes/login";
 import RegistrationPage from "./routes/registration/index";
 import Root from "./routes/root";
@@ -50,6 +52,14 @@ export default function App() {
         {
           path: "chat",
           element: <Chat />,
+        },
+        {
+          path: "edit/profile",
+          element: <EditProfile />,
+        },
+        {
+          path: "edit/courses",
+          element: <EditCourses />,
         },
       ],
     },
