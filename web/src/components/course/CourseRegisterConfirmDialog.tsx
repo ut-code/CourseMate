@@ -21,13 +21,14 @@ export default function CourseRegisterConfirmDialog({
 }: {
   open: boolean;
   onClose: () => void;
-  course: Course;
+  course: Course | null;
   handleSelectDialogClose: () => void;
   handleCoursesUpdate: (courses: Course[]) => void;
 }) {
   const [overlapCourses, setOverlapCourses] = useState<Course[]>([]);
 
   useEffect(() => {
+    if (!course) return;
     (async () => {
       const courses = await getMyCoursesOverlapWith(course.id);
       setOverlapCourses(courses);
@@ -42,9 +43,11 @@ export default function CourseRegisterConfirmDialog({
           次のように変更します。よろしいですか？
         </DialogContentText>
         <Box mt={2}>
-          <Alert color="success" icon={false} severity="info">
-            追加: {course.name}
-          </Alert>
+          {course && (
+            <Alert color="success" icon={false} severity="info">
+              追加: {course.name}
+            </Alert>
+          )}
           <Alert color="error" icon={false} severity="info" sx={{ mt: 1 }}>
             削除:{" "}
             {overlapCourses
@@ -55,16 +58,18 @@ export default function CourseRegisterConfirmDialog({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>キャンセル</Button>
-        <Button
-          onClick={async () => {
-            const newCourses = await addMyCourse(course.id);
-            handleCoursesUpdate(newCourses);
-            onClose();
-            handleSelectDialogClose();
-          }}
-        >
-          登録
-        </Button>
+        {course && (
+          <Button
+            onClick={async () => {
+              const newCourses = await addMyCourse(course.id);
+              handleCoursesUpdate(newCourses);
+              onClose();
+              handleSelectDialogClose();
+            }}
+          >
+            確定
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );
