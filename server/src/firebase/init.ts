@@ -1,12 +1,12 @@
-import * as firebase from "firebase-admin";
+import { initializeApp } from "firebase-admin/app";
 
-const options: firebase.AppOptions = {
+const options = {
   projectId: process.env.FIREBASE_PROJECT_ID,
 };
 
 if (!options.projectId)
   throw new Error("FIREBASE_PROJECT_ID required in server/.env");
 
-const app = firebase.initializeApp(options);
+const app = initializeApp(options);
 
 export { app };
