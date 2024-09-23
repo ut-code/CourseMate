@@ -1,7 +1,9 @@
 default: start
 
-setup: sync
-	npx husky
+setup: 
+	if [ ! `command -v bun` ]; then echo 'ERR: Bun is required!'; exit 1; fi
+	make sync
+	bunx husky
 	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 	cd server; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 	echo "auto setup is done. now do:"
@@ -28,38 +30,38 @@ docker-watch: copy-common
 	docker compose up --build --watch
 
 seed:
-	cd server; npx prisma db seed
+	cd server; bunx prisma db seed
 
 precommit: check-branch lint-staged
 	make type-check
 
 lint-staged:
-	npx lint-staged
+	bunx lint-staged
 check-branch:
 	@ if [ "$(git branch --show-current)" == "main" ]; then echo "Cannot make commit on main! aborting..."; exit 1; fi
 
 # Sync (install/update packages, generate prisma, etc)
 
 sync-web:
-	cd web; if command -v bun; then bun install; else npm ci; fi
+	cd web; bun install
 	# copy .env.sample -> .env only if .env is not there
 
 sync-server:
-	cd server; if command -v bun; then bun install; else npm install; fi
-	cd server; npx prisma generate
+	cd server; bun install
+	cd server; bunx prisma generate
 	# copy .env.sample -> .env only if .env is not there
 
 sync-root:
-	if command -v bun; then bun install; else npm ci; fi
+	bun install
 
 
 # Static checks
 
 ## code style
 style:
-	if command -v biome; then biome check --write; else npx @biomejs/biome check --write; fi
+	if command -v biome; then biome check --write; else bunx @biomejs/biome check --write; fi
 style-check:
-	if command -v biome; then biome check; else npx @biomejs/biome check; fi
+	if command -v biome; then biome check; else bunx @biomejs/biome check; fi
 
 ## Deprecated commands, there warnings will be deleted in the future
 lint:
@@ -80,10 +82,10 @@ type-check: copy-common
 	make type-check-web
 
 type-check-server:
-	cd server; npx tsc --noEmit
+	cd server; bunx tsc --noEmit
 
 type-check-web:
-	cd web; npx tsc --noEmit
+	cd web; bunx tsc --noEmit
 
 
 # Runner
@@ -92,21 +94,21 @@ start-all: build-web build-server
 	make serve-all
 
 build-web: copy-common-to-web
-	cd web; npm run build
+	cd web; bun run build
 build-server: copy-common-to-server
-	cd server; npm run build
+	cd server; bun run build
 
 serve-all:
 	(trap 'kill 0' EXIT; make serve-web & make serve-server & wait)
 serve-web:
-	cd web; npm run preview # todo: make serve function
+	cd web; bun run preview # todo: make serve function
 serve-server:
-	cd server; npm run serve
+	cd server; bun run serve 
 
 watch-web: copy-common-to-web
-	cd web; npm run dev
+	cd web; bun run dev
 watch-server: copy-common-to-server
-	cd server; npm run dev
+	cd server; bun run dev
 
 copy-common: copy-common-to-server copy-common-to-web
 copy-common-to-server:

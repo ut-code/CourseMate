@@ -21,7 +21,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-easy-crop": "^5.0.8",
-    "react-router-dom": "^6.23.1",
+    "react-router-dom": "^6.26.2",
     "socket.io-client": "^4.7.5",
     "zod": "^3.23.8"
   },

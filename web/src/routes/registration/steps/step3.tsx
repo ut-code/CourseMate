@@ -1,8 +1,12 @@
-import { Button } from "@mui/material";
-import { useState } from "react";
-import { PhotoPreview } from "../../../components/config/PhotoPreview";
-import { photo } from "../../../components/data/photo-preview";
-import type { BackProp, StepProps } from "../common";
+import { Box, Button, Modal, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import {
+  PhotoPreview,
+  PhotoPreviewButton,
+} from "../../../components/config/PhotoPreview";
+import UserAvatar from "../../../components/human/avatar";
+import { uploadImage } from "../../../firebase/store/photo";
+import { type BackProp, NextButton, type StepProps } from "../common";
 
 export type Step3Data = {
   pictureUrl: string;
@@ -10,21 +14,26 @@ export type Step3Data = {
 
 export default function Step3({
   onSave,
+  prev,
   back,
+  caller,
 }: StepProps<Step3Data> & BackProp) {
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [file, setFile] = useState<File>();
+  const [url, setURL] = useState<string>("");
 
-  async function save() {
+  async function next() {
+    if (!url) throw new Error("画像は入力必須");
+    const data = {
+      pictureUrl: url,
+    };
+    onSave(data);
+  }
+  async function select() {
     try {
-      if (!photo.upload) {
-        throw new Error("画像は入力必須です");
-      }
-      const url = await photo.upload();
-
-      const data = {
-        pictureUrl: url,
-      };
-      onSave(data);
+      if (!file) throw new Error("画像は入力必須です");
+      const url = await uploadImage(file);
+      setURL(url);
     } catch (error) {
       if (error instanceof Error) {
         let errorMessages: string;
@@ -48,12 +57,64 @@ export default function Step3({
     }
   }
 
+  const [open, setOpen] = useState<boolean>(false);
+  useEffect(() => {
+    console.log("open: ", open);
+  }, [open]);
   return (
     <>
-      <PhotoPreview />
-      {errorMessage && <span>{errorMessage}</span>}
-      <Button onClick={back}>戻る</Button>
-      <Button onClick={save}>次へ</Button>
+      <Typography>アイコン設定</Typography>
+      <Modal
+        id="MODAL"
+        open={true}
+        sx={{
+          visibility: open ? "visible" : "hidden",
+          Margin: "auto",
+          alignItems: "center",
+          justifyContent: "center",
+          display: "flex",
+        }}
+      >
+        <Box
+          style={{
+            backgroundColor: "white",
+            width: "90%",
+            height: "auto",
+            padding: "20px",
+          }}
+        >
+          <PhotoPreview
+            prev={prev?.pictureUrl}
+            onCrop={(f) => {
+              setFile(f);
+            }}
+          />
+          <Button
+            sx={{ float: "right", marginRight: "30px" }}
+            onClick={() => {
+              select();
+              setOpen(false);
+            }}
+          >
+            切り取り
+          </Button>
+        </Box>
+      </Modal>
+      <div style={{ textAlign: "center" }}>
+        <UserAvatar width="300px" height="300px" pictureUrl={url} />
+        <PhotoPreviewButton text="写真を選択" onSelect={() => setOpen(true)} />
+        {errorMessage && <span>{errorMessage}</span>}
+        <Button onClick={back}>戻る</Button>
+        {file === null ? (
+          <Button disabled={true}>
+            {caller === "registration" ? "確定" : "保存"}
+          </Button>
+        ) : (
+          <NextButton onClick={next}>
+            {caller === "registration" ? "確定" : "保存"}
+          </NextButton>
+        )}
+      </div>
     </>
   );
 }
