@@ -67,17 +67,14 @@ export default function EditProfile() {
           <FormControl fullWidth sx={{ marginBottom: "20px" }}>
             <TextField
               label="名前"
-              defaultValue={name}
+              value={name}
               onChange={(e) => setName(e.target.value)}
               fullWidth
             />
           </FormControl>
           <FormControl fullWidth sx={{ marginBottom: "20px" }}>
             <InputLabel>性別</InputLabel>
-            <Select
-              defaultValue={gender}
-              onChange={(e) => setGender(e.target.value)}
-            >
+            <Select value={gender} onChange={(e) => setGender(e.target.value)}>
               <MenuItem value="男性">男性</MenuItem>
               <MenuItem value="女性">女性</MenuItem>
               <MenuItem value="その他">その他</MenuItem>
@@ -85,10 +82,7 @@ export default function EditProfile() {
           </FormControl>
           <FormControl fullWidth sx={{ marginBottom: "20px" }}>
             <InputLabel>学年</InputLabel>
-            <Select
-              defaultValue={grade}
-              onChange={(e) => setGrade(e.target.value)}
-            >
+            <Select value={grade} onChange={(e) => setGrade(e.target.value)}>
               <MenuItem value="B1">学部一年(B1)</MenuItem>
               <MenuItem value="B2">学部二年(B2)</MenuItem>
               <MenuItem value="B3">学部三年(B3)</MenuItem>
@@ -98,7 +92,7 @@ export default function EditProfile() {
           <FormControl fullWidth sx={{ marginBottom: "20px" }}>
             <InputLabel>学部</InputLabel>
             <Select
-              defaultValue={faculity}
+              value={faculity}
               onChange={(e) => setFaculity(e.target.value)}
             >
               <MenuItem value="工学部">工学部</MenuItem>
@@ -109,7 +103,7 @@ export default function EditProfile() {
           <FormControl fullWidth sx={{ marginBottom: "20px" }}>
             <TextField
               label="自己紹介"
-              defaultValue={intro}
+              value={intro}
               onChange={(e) => setIntro(e.target.value)}
               multiline
               rows={4}
