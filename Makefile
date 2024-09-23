@@ -1,7 +1,7 @@
 default: start
 
 setup: 
-	if [ ! `command -v bun` ]; then echo 'INFO: Bun is required!'; exit 1; fi
+	if [ ! `command -v bun` ]; then echo 'ERR: Bun is required!'; exit 1; fi
 	make sync
 	bunx husky
 	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
