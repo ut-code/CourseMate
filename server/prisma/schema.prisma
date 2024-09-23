@@ -48,6 +48,7 @@ model User {
 model Course {
   id          String       @id
   name        String
+  teacher     String
   enrollments Enrollment[]
   slots       Slot[]
 }
