@@ -1,4 +1,5 @@
-import { Box, Button } from "@mui/material";
+import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
@@ -91,35 +92,47 @@ export default function Login() {
     }
   }
   return (
-    <Box>
-      <Header title="Login" />
+    <>
+      <Header title="CourseMate" />
       <Box
         sx={{
           position: "absolute",
           top: "56px",
+          bottom: 0,
           left: 0,
           right: 0,
           overflowY: "auto",
         }}
-        mt={2}
-        mx={2}
-        gap={1}
       >
-        <Button
-          variant="outlined"
-          sx={{ textTransform: "none" }}
-          onClick={logInByGoogle}
-        >
-          Login
-        </Button>
-        <Button
-          variant="outlined"
-          sx={{ textTransform: "none" }}
-          onClick={singUpByGoogle}
-        >
-          Sign Up
-        </Button>
+        <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+          >
+            <EmojiEmotionsIcon
+              style={{ color: "#000000", width: "200px", height: "200px" }}
+            />
+          </IconButton>
+          <Typography>CourseMateを使って同じ授業の人と友達になろう</Typography>
+          <Button
+            variant="outlined"
+            sx={{ textTransform: "none" }}
+            onClick={logInByGoogle}
+          >
+            Login
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{ textTransform: "none" }}
+            onClick={singUpByGoogle}
+          >
+            Sign Up
+          </Button>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }
