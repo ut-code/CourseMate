@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec ts-node src/index.ts",
+    "dev": "bun --watch src/index.ts",
     "build": "tsc",
-    "serve": "node target/index.js"
+    "serve": "bun target/index.js"
   },
   "prisma": {
-    "seed": "ts-node src/seeds/seed.ts"
+    "seed": "bun src/seeds/seed.ts"
   },
   "keywords": [],
   "author": "",

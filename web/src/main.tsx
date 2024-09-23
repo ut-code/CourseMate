@@ -7,6 +7,8 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { CssBaseline } from "@mui/material";
 import App from "./App";
+import { AlertProvider } from "./components/common/alert/AlertProvider";
+import { ModalProvider } from "./components/common/modal/ModalProvider";
 import AuthProvider from "./firebase/auth/AuthProvider";
 
 const root = document.getElementById("root");
@@ -15,7 +17,11 @@ ReactDOM.createRoot(root).render(
   <React.StrictMode>
     <AuthProvider>
       <CssBaseline />
-      <App />
+      <AlertProvider>
+        <ModalProvider>
+          <App />
+        </ModalProvider>
+      </AlertProvider>
     </AuthProvider>
   </React.StrictMode>,
 );

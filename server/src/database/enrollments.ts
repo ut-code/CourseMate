@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import type { Course, CourseID, UserID } from "../common/types";
+import { prisma } from "./client";
 import { getCoursesByUserId } from "./courses";
-
-const prisma = new PrismaClient();
 
 export async function deleteEnrollment(
   userId: UserID,

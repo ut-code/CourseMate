@@ -60,25 +60,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: latest
-          cache: npm
+          bun-version: latest
 
       - name: setup
         run: make setup
-        working-directory: .
 
-      - name: build server
-        run: npm run build
-        working-directory: server
-        shell: bash
-
-      - name: build web
-        run: npm run build
-        working-directory: web
-        shell: bash
+      - name: Build
+        run: make build
 
   # Biome
   style-check:
@@ -88,7 +79,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Install Bun
+      - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
@@ -110,11 +101,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: latest
-          cache: npm
+          bun-version: latest
 
       - name: setup
         run: make setup
@@ -122,11 +112,11 @@ jobs:
         shell: bash
 
       - name: Type Check web
-        run: npx tsc --noEmit
+        run: bunx tsc --noEmit
         working-directory: web
         shell: bash
 
       - name: Type Check server
-        run: npx tsc --noEmit
-        working-directory: web
+        run: bunx tsc --noEmit
+        working-directory: server
         shell: bash
