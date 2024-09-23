@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { Button } from "@mui/material";
-import type { BackProp, StepProps } from "../common";
+import { type BackProp, NextButton, type StepProps } from "../common";
 
 type Enrollment = number; // TODO: fix this
 
@@ -13,6 +13,7 @@ export default function Step2({
   onSave,
   prev,
   back,
+  caller,
 }: StepProps<Step2Data> & BackProp) {
   const [enrollments, setEnrollments] = useState<Enrollment[]>(
     prev?.enrollments || [],
@@ -83,11 +84,13 @@ export default function Step2({
       </button>
       {errorMessage && <span>{errorMessage}</span>}
       <Button onClick={back}>戻る</Button>
-      {enrollments.length === 0 ? (
-        <Button onClick={save}>スキップ</Button>
-      ) : (
-        <Button onClick={save}>次へ</Button>
-      )}
+      <NextButton weak={enrollments.length === 0} onClick={save}>
+        {caller === "configMenu"
+          ? "保存"
+          : enrollments.length === 0
+            ? "スキップ"
+            : "次へ"}
+      </NextButton>
     </>
   );
 }

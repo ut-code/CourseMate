@@ -2,14 +2,16 @@ import { useState } from "react";
 
 import {
   Box,
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   TextField,
+  Typography,
 } from "@mui/material";
-import type { StepProps } from "../common";
+import type { SelectChangeEvent } from "@mui/material";
+import { NextButton, type StepProps } from "../common";
+import { facultiesAndDepartments } from "../data";
 
 export type Step1Data = {
   name: string;
@@ -20,21 +22,17 @@ export type Step1Data = {
   intro: string;
 };
 
-export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
+export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
   const [name, setName] = useState(prev?.name ?? "");
   const [gender, setGender] = useState(prev?.gender ?? "その他");
   const [grade, setGrade] = useState(prev?.grade ?? "");
-  const [faculity, setFaculity] = useState(prev?.faculity ?? "");
+  const [faculity, setFaculty] = useState(prev?.faculity ?? "");
   const [department, setDepartment] = useState(prev?.department ?? "");
   const [intro, setIntro] = useState(prev?.intro ?? "");
   const [errorMessage, setErrorMessage] = useState("");
 
   async function save() {
     try {
-      if (!intro) {
-        throw new Error("ひとことコメントは入力必須です。");
-      }
-
       // FIXME: create zod schema!
       const data: Step1Data = {
         name,
@@ -68,8 +66,17 @@ export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
     }
   }
 
+  const handleFacultyChange = (event: SelectChangeEvent<string>) => {
+    setFaculty(event.target.value);
+  };
+
+  const handleDepartmentChange = (event: SelectChangeEvent<string>) => {
+    setDepartment(event.target.value);
+  };
+
   return (
     <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
+      <Typography>アカウント設定</Typography>
       <FormControl fullWidth>
         <TextField
           value={name}
@@ -81,7 +88,7 @@ export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
         <InputLabel>性別</InputLabel>
         <Select
           value={gender}
-          label="Gender"
+          label="性別"
           onChange={(e) => setGender(e.target.value)}
         >
           <MenuItem value={"男性"}>男性</MenuItem>
@@ -94,7 +101,7 @@ export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
         <InputLabel>学年</InputLabel>
         <Select
           value={grade}
-          label="Grade"
+          label="学年"
           onChange={(e) => setGrade(e.target.value)}
         >
           <MenuItem value={"B1"}>1年生 (B1)</MenuItem>
@@ -106,23 +113,37 @@ export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
         </Select>
       </FormControl>
       <FormControl fullWidth>
-        <TextField
-          value={faculity}
-          label="学部"
-          onChange={(e) => setFaculity(e.target.value)}
-        />
+        <InputLabel>学部</InputLabel>
+        <Select value={faculity} label="学部" onChange={handleFacultyChange}>
+          {Object.keys(facultiesAndDepartments).map((fac) => (
+            <MenuItem key={fac} value={fac}>
+              {fac}
+            </MenuItem>
+          ))}
+        </Select>
       </FormControl>
       <FormControl fullWidth>
-        <TextField
+        <InputLabel>学科(先に学部を選択して下さい)</InputLabel>
+        <Select
           value={department}
-          label="学科"
-          onChange={(e) => setDepartment(e.target.value)}
-        />
+          onChange={handleDepartmentChange}
+          disabled={!faculity}
+          label="学科(先に学部を選択して下さい)"
+        >
+          {faculity &&
+            facultiesAndDepartments[faculity].map((dep) => (
+              <MenuItem key={dep} value={dep}>
+                {dep}
+              </MenuItem>
+            ))}
+        </Select>
       </FormControl>
       <FormControl fullWidth>
         <TextField
-          value={intro}
+          multiline
           label="自己紹介"
+          minRows={3}
+          placeholder="こんにちは！仲良くして下さい！"
           onChange={(e) => setIntro(e.target.value)}
         />
       </FormControl>
@@ -131,9 +152,9 @@ export default function Step1({ onSave, prev }: StepProps<Step1Data>) {
           {errorMessage}
         </Box>
       )}
-      <Button variant="outlined" sx={{ textTransform: "none" }} onClick={save}>
-        次へ
-      </Button>
+      <NextButton onClick={save}>
+        {caller === "registration" ? "次へ" : "保存"}
+      </NextButton>
     </Box>
   );
 }
