@@ -92,6 +92,7 @@ export default function Login() {
       });
     }
   }
+
   return (
     <>
       <Header title="CourseMate" />
@@ -103,21 +104,26 @@ export default function Login() {
           left: 0,
           right: 0,
           overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
+        <Box textAlign="center" mb={4}>
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
           >
             <EmojiEmotionsIcon
               style={{ color: "#000000", width: "200px", height: "200px" }}
             />
           </IconButton>
           <Typography>CourseMateを使って同じ授業の人と友達になろう</Typography>
+        </Box>
+
+        <Box>
           <button
             className="gsi-material-button"
             onClick={logInByGoogle}
@@ -160,10 +166,10 @@ export default function Login() {
               <span style={{ display: "none" }}>Sign in with Google</span>
             </div>
           </button>
-          <Link component={Button} onClick={singUpByGoogle}>
-            初めての方はこちら
-          </Link>
         </Box>
+        <Link component={Button} onClick={singUpByGoogle} mt={2}>
+          初めての方はこちら
+        </Link>
       </Box>
     </>
   );
