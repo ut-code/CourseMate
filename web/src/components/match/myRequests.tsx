@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { List } from "@mui/material";
 import hooks from "../../api/hooks";
 import { useModal } from "../common/modal/ModalProvider";
@@ -20,7 +20,7 @@ export default function MyReq() {
           : "リクエストを送信しましょう！"}
       </p>
       {loading ? (
-        <p>Loading...</p>
+        <CircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (
