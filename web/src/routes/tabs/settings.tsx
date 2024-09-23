@@ -1,44 +1,37 @@
-import { Box, Button } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import { Box, IconButton } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // react-router-dom の useNavigate を使用
 import hooks from "../../api/hooks";
+import { Card } from "../../components/Card";
 import LogOutButton from "../../components/LogOutButton";
-import UserAvatar from "../../components/avatar/avatar";
-// import { useState } from "react";
-import CoursesTable from "../../components/course/CoursesTable";
 
 export default function Settings() {
-  // const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const navigate = useNavigate(); // useNavigate を定義
   const { data, loading, error } = hooks.useMe();
 
-  const handleDialogOpen = () => {
-    // setIsDialogOpen(true);
+  // プロフィール編集画面に遷移
+  const handleProfileEdit = () => {
+    navigate("/edit/profile");
   };
 
-  // const handleDialogClose = () => {
-  // setIsDialogOpen(false);
+  // // 時間割編集画面に遷移
+  // const handleCoursesEdit = () => {
+  //   navigate("/edit/courses");
   // };
 
   return (
-    <Box>
+    <Box sx={{ padding: "20px" }}>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : data ? (
         <>
-          <Box>
-            <p>名前: {data.name}</p>
-            <p>ID: {data.id}</p>
-            <UserAvatar
-              pictureUrl={data.pictureUrl}
-              width="300px"
-              height="300px"
-            />
-            <CoursesTable editable userId={data.id} />
-          </Box>
+          <IconButton onClick={handleProfileEdit}>
+            <EditIcon />
+          </IconButton>
+          <Card displayedUser={data} />
           <LogOutButton />
-          <Button color="inherit" onClick={handleDialogOpen}>
-            プロフィールを編集
-          </Button>
         </>
       ) : (
         <p>データがありません。</p>
