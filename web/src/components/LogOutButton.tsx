@@ -1,7 +1,7 @@
 import { signOut } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/firebaseconfig";
+import { auth } from "../firebase/config";
 import { useAlert } from "./common/alert/AlertProvider";
 
 export default function LogOutButton() {

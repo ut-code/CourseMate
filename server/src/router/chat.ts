@@ -30,12 +30,12 @@ router.post("/dm/to/:userid", async (req, res) => {
   const friend = safeParseInt(req.params.userid);
   if (!friend.ok) return res.status(400).send("bad param encoding: `userid`");
 
-  const smsg = SendMessageSchema.safeParse(req.body);
-  if (!smsg.success) {
+  const send = SendMessageSchema.safeParse(req.body);
+  if (!send.success) {
     return res.status(400).send("invalid format");
   }
 
-  const result = await core.sendDM(user.value, friend.value, smsg.data);
+  const result = await core.sendDM(user.value, friend.value, send.data);
   if (result.ok) {
     ws.sendMessage(result?.body, friend.value);
   }
@@ -49,7 +49,7 @@ router.get("/dm/with/:userid", async (req, res) => {
 
   const friend = safeParseInt(req.params.userid);
   if (!friend.ok)
-    return res.status(400).send("invalid param `userid` fomatting");
+    return res.status(400).send("invalid param `userid` formatting");
 
   const result = await core.getDM(user.value, friend.value);
 

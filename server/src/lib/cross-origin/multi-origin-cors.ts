@@ -1,14 +1,13 @@
 import cors from "cors";
 import { type Config, validateConfig } from "./share";
 
-/* expected usecase:
+/* expected use case:
 
 const origins = [ "localhost:3000", "localhost:5173" ];
 const corsConfig = { origins };
 const app = express();
 
-app.use(cors.cliendSide(corsConfig));
-app.use(cors.serverSide(corsConfig));
+app.use(csrf(corsConfig));
 
 */
 

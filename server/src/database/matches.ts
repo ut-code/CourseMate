@@ -27,12 +27,12 @@ export async function getRelations(
   user: UserID,
 ): Promise<Result<Relationship[]>> {
   try {
-    const rels: Relationship[] = await prisma.relationship.findMany({
+    const relations: Relationship[] = await prisma.relationship.findMany({
       where: {
         OR: [{ sendingUserId: user }, { receivingUserId: user }],
       },
     });
-    return Ok(rels);
+    return Ok(relations);
   } catch (e) {
     return Err(e);
   }

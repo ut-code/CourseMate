@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import user, { getByGUID } from "../api/user";
 import type { GUID } from "../common/types";
 import Header from "../components/Header";
-import { auth } from "../firebase/firebaseconfig";
+import { auth } from "../firebase/config";
 
 const provider = new GoogleAuthProvider();
 

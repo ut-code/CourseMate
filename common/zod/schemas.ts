@@ -118,7 +118,7 @@ export const DMOverviewSchema = z.object({
   friendId: UserIDSchema,
   name: NameSchema,
   thumbnail: z.string(),
-  lastmsg: MessageSchema.optional(),
+  lastMsg: MessageSchema.optional(),
 });
 
 export const SharedRoomOverviewSchema = z.object({
@@ -126,7 +126,7 @@ export const SharedRoomOverviewSchema = z.object({
   roomId: ShareRoomIDSchema,
   name: NameSchema,
   thumbnail: z.string(),
-  lastmsg: MessageSchema.optional(),
+  lastMsg: MessageSchema.optional(),
 });
 
 export const RoomOverviewSchema = z.union([

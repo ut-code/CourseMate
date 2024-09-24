@@ -3,7 +3,7 @@ import { Err, Ok, type Result } from "../common/lib/result";
 import { credFetch } from "../firebase/auth/lib";
 
 // TODO: separate this into concrete types and urls s.t. there is no unsafe any
-// also use sth like Typia (or Zod if you really like it)
+// also use sth like something like Zod
 export default function useData<T>(url: string) {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -38,7 +38,7 @@ async function safeReadData<T>(url: string): Promise<Result<T>> {
   try {
     const res = await credFetch("GET", url);
     const result = await res.json();
-    // TODO: typia
+    // TODO: zod
     return Ok(result);
   } catch (e) {
     return Err(e);

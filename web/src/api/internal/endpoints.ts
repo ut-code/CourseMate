@@ -43,7 +43,7 @@ const users = `${origin}/users`;
  * GET -> get info of me.
  * - status:
  *   - 200: ok.
- *   - 401: unauthorized (you are not aunthenticated).
+ *   - 401: unauthorized (you are not authenticated).
  *   - 500: internal error.
  *
  * [v] 実装済み

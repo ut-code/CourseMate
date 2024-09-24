@@ -2,17 +2,13 @@
   "version": "0.2",
   "language": "en",
   "words": [
-    /* TODO: fix this */
     "faculity",
-    /* common words */
     "supabase",
     "direnv",
     "bunx",
     "qiita",
-    /* our project */
     "coursemate",
     "safify",
-    /* they call it so */
     "notistack",
     "autoincrement",
     "datasource",
