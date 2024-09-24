@@ -25,12 +25,12 @@ export async function register(
   }
   try {
     await registerUserInfo({ guid, ...data });
-    enqueueSnackbar("サインアップに成功しました", {
+    enqueueSnackbar("アカウントが作成されました！", {
       variant: "success",
     });
   } catch (error) {
     console.error("Sign-up failed:", error);
-    enqueueSnackbar("サインアップに失敗しました", {
+    enqueueSnackbar("アカウント作成に失敗しました", {
       variant: "error",
     });
     navigate("/", { replace: true });

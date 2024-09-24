@@ -55,8 +55,7 @@ export default function Confirmation({
   );
 }
 
-const CardFront = ({ UserInfo }: { UserInfo: UserInfoProp }) => {
-  console.log(UserInfo.department);
+function CardFront({ UserInfo }: { UserInfo: UserInfoProp }) {
   return (
     <div
       style={{
@@ -94,4 +93,4 @@ const CardFront = ({ UserInfo }: { UserInfo: UserInfoProp }) => {
       </div>
     </div>
   );
-};
+}

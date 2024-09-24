@@ -8,7 +8,6 @@ import { NextButton } from "../common";
 export default function Step4() {
   const navigate = useNavigate();
   const { data, loading, error } = hooks.useMe();
-  console.log(data);
   return (
     <Box>
       {loading ? (
@@ -16,9 +15,17 @@ export default function Step4() {
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : data ? (
-        <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
+        <Box
+          mt={2}
+          mx={2}
+          display="flex"
+          flexDirection="column"
+          gap={2}
+          alignItems="center"
+        >
+          <p>授業情報を登録しましょう</p>
           <CoursesTable userId={data.id} editable={true} />
-          <NextButton onClick={() => navigate("/home")}>Go to Home</NextButton>
+          <NextButton onClick={() => navigate("/home")}>完了</NextButton>
         </Box>
       ) : (
         <p>データがありません。</p>
