@@ -8,7 +8,7 @@ interface UserInfoProp {
   name: string;
   gender: string;
   grade: string;
-  faculity: string;
+  faculty: string;
   department: string;
   intro: string;
   pictureUrl: string;
@@ -86,7 +86,7 @@ function CardFront({ UserInfo }: { UserInfo: UserInfoProp }) {
       </div>
       <div style={{ padding: "10px" }}>
         {UserInfo?.grade && <p>学年： {UserInfo.grade}</p>}
-        {UserInfo?.faculity && <p>学部： {UserInfo.faculity}</p>}
+        {UserInfo?.faculty && <p>学部： {UserInfo.faculty}</p>}
         {UserInfo?.department && <p>学科： {UserInfo.department}</p>}
         {UserInfo?.gender && <p>性別： {UserInfo?.gender}</p>}
         {UserInfo?.intro && <p>自己紹介: {UserInfo.intro}</p>}
