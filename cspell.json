@@ -1,0 +1,30 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "fix-below:",
+    "faculity",
+    "supabase"
+  ],
+  "dictionaries": [
+    "softwareTerms",
+    "misc",
+    "companies",
+    "typescript",
+    "node",
+    "html",
+    "css",
+    "fonts",
+    "filetypes",
+    "npm"
+  ],
+  "ignorePaths": [
+    "**/.git/**",
+    "**/node_modules/**",
+    "server/target/**",
+    "web/dist/**",
+    "**/package.json",
+    "**/bun.lockb",
+    "**/*.svg"
+  ]
+}
