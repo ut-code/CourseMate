@@ -17,7 +17,7 @@ export type Step1Data = {
   name: string;
   gender: string;
   grade: string; // todo: make it enum
-  faculity: string; // 学部
+  faculty: string; // 学部
   department: string; // 学科
   intro: string;
 };
@@ -26,7 +26,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
   const [name, setName] = useState(prev?.name ?? "");
   const [gender, setGender] = useState(prev?.gender ?? "その他");
   const [grade, setGrade] = useState(prev?.grade ?? "");
-  const [faculity, setFaculty] = useState(prev?.faculity ?? "");
+  const [faculty, setFaculty] = useState(prev?.faculty ?? "");
   const [department, setDepartment] = useState(prev?.department ?? "");
   const [intro, setIntro] = useState(prev?.intro ?? "");
   const [errorMessage, setErrorMessage] = useState("");
@@ -38,7 +38,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
         name,
         grade,
         gender,
-        faculity,
+        faculty,
         department,
         intro,
       };
@@ -114,7 +114,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
       </FormControl>
       <FormControl fullWidth>
         <InputLabel>学部</InputLabel>
-        <Select value={faculity} label="学部" onChange={handleFacultyChange}>
+        <Select value={faculty} label="学部" onChange={handleFacultyChange}>
           {Object.keys(facultiesAndDepartments).map((fac) => (
             <MenuItem key={fac} value={fac}>
               {fac}
@@ -127,11 +127,11 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
         <Select
           value={department}
           onChange={handleDepartmentChange}
-          disabled={!faculity}
+          disabled={!faculty}
           label="学科(先に学部を選択して下さい)"
         >
-          {faculity &&
-            facultiesAndDepartments[faculity].map((dep) => (
+          {faculty &&
+            facultiesAndDepartments[faculty].map((dep) => (
               <MenuItem key={dep} value={dep}>
                 {dep}
               </MenuItem>

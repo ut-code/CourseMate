@@ -6,9 +6,9 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
-import { app } from "../firebaseconfig";
+import { app } from "../config";
 
-//画像をfirebase strageにアップロードする関数
+//画像をfirebase storageにアップロードする関数
 export async function uploadImage(pictureFile: File): Promise<string> {
   const guid = getAuth().currentUser?.uid;
   if (!guid) throw new Error("Failed to get user");
@@ -27,7 +27,7 @@ export async function uploadImage(pictureFile: File): Promise<string> {
   }
 }
 
-//画像をfirebase strageにアップロードする関数
+//画像をfirebase storageにアップロードする関数
 export async function deleteImage(desertFileUrl: string) {
   const storage = getStorage(app);
   const desertRef = ref(storage, desertFileUrl);

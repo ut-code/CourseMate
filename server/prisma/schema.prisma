@@ -28,7 +28,7 @@ model User {
   name       String @default("名無し")
   gender     String @default("")
   grade      String @default("")
-  faculity   String @default("")
+  faculty String @default("")
   department String @default("")
   intro      String @default("")
   pictureUrl String @default("")

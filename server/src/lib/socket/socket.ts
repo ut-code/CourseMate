@@ -1,7 +1,7 @@
 import { Server, type Socket } from "socket.io";
 import { corsOptions, server } from "../..";
 import type { Message, UserID } from "../../common/types";
-import { getUserIdfromToken } from "../../firebase/auth/db";
+import { getUserIdFromToken } from "../../firebase/auth/db";
 
 const users = new Map<UserID, Socket>();
 
@@ -13,7 +13,7 @@ export function initializeSocket() {
 
   io.on("connection", (socket) => {
     socket.on("register", async (token) => {
-      const userId = await getUserIdfromToken(token);
+      const userId = await getUserIdFromToken(token);
       if (userId) {
         users.set(userId, socket);
       } else {

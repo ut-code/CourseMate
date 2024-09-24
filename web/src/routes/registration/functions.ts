@@ -1,7 +1,7 @@
 import { getAuth } from "firebase/auth";
 import type { EnqueueSnackbar } from "notistack";
 import type { NavigateFunction } from "react-router-dom";
-import userapi from "../../api/user";
+import userAPI from "../../api/user";
 import type { GUID, User } from "../../common/types";
 import type { UpdateUser } from "../../common/types";
 
@@ -40,7 +40,7 @@ export async function register(
 //ユーザー情報をデータベースに登録する関数
 async function registerUserInfo(partialUser: Omit<User, "id">) {
   try {
-    await userapi.create(partialUser);
+    await userAPI.create(partialUser);
   } catch (error) {
     console.error("Error during sign-up:", error);
   }

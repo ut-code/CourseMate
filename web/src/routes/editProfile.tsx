@@ -19,7 +19,7 @@ export default function EditProfile() {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [grade, setGrade] = useState("");
-  const [faculity, setFaculity] = useState("");
+  const [faculty, setFaculty] = useState("");
   const [department, setDepartment] = useState("");
   const [intro, setIntro] = useState("");
   const [pictureUrl, setPictureUrl] = useState("");
@@ -29,7 +29,7 @@ export default function EditProfile() {
       setName(data.name);
       setGender(data.gender);
       setGrade(data.grade);
-      setFaculity(data.faculity);
+      setFaculty(data.faculty);
       setDepartment(data.department);
       setIntro(data.intro);
       setPictureUrl(data.pictureUrl);
@@ -43,7 +43,7 @@ export default function EditProfile() {
       name: name,
       gender: gender,
       grade: grade,
-      faculity: faculity,
+      faculty: faculty,
       department: department,
       intro: intro,
       pictureUrl: pictureUrl,
@@ -92,8 +92,8 @@ export default function EditProfile() {
           <FormControl fullWidth sx={{ marginBottom: "20px" }}>
             <InputLabel>学部</InputLabel>
             <Select
-              value={faculity}
-              onChange={(e) => setFaculity(e.target.value)}
+              value={faculty}
+              onChange={(e) => setFaculty(e.target.value)}
             >
               <MenuItem value="工学部">工学部</MenuItem>
               <MenuItem value="文学部">文学部</MenuItem>

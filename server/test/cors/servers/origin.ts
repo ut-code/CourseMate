@@ -1,7 +1,7 @@
 import express from "express";
 import type { Request, Response } from "express";
 import csrf from "../../../src/lib/cross-origin/block-unknown-origin";
-import cors from "../../../src/lib/cross-origin/multiorigin-cors";
+import cors from "../../../src/lib/cross-origin/multi-origin-cors";
 import methods from "../methods";
 
 const app = express();
