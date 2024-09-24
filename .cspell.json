@@ -11,7 +11,8 @@
     "notistack",
     "autoincrement",
     "datasource",
-    "lockb"
+    "lockb",
+    "psql"
   ],
   "dictionaries": [
     "softwareTerms",
