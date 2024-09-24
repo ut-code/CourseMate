@@ -73,3 +73,26 @@ jobs:
         run: bunx tsc --noEmit
         working-directory: server
         shell: bash
+
+  spell-check:
+    name: Spell Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: make setup
+      - run: make spell-check
+
+  test:
+    name: Bun Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: make setup
+      - run: make test

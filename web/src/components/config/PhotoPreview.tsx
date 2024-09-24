@@ -14,8 +14,22 @@ type ButtonProps = {
 // DANGER: PhotoPreview component MUST have been rendered before this button is pressed.
 export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
   return (
-    <Button>
-      <label htmlFor="file-upload" className="custom-file-label">
+    <Button
+      variant="contained"
+      style={{
+        backgroundColor: "#039BE5",
+        color: "white",
+        width: "70vw",
+        maxWidth: "500px",
+        height: "50px",
+        borderRadius: "25px", // 楕円にするための設定
+      }}
+    >
+      <label
+        htmlFor="file-upload"
+        className="custom-file-label"
+        style={{ fontSize: "18px" }} // 文字サイズを調整
+      >
         {text || "写真を選択"}
         <input
           id="file-upload"
@@ -25,7 +39,7 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
             onSelect();
           }}
           accept=".png, .jpeg, .jpg"
-          style={{ display: "none" }} // ? how does this even work?
+          style={{ display: "none" }}
         />
       </label>
     </Button>

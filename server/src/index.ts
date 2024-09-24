@@ -1,10 +1,7 @@
-import * as dotenv from "dotenv";
-dotenv.config();
-
 import cookieParser from "cookie-parser";
 import express from "express";
-import nocsrf from "./lib/cross-origin/block-unknown-origin";
-import cors from "./lib/cross-origin/multiorigin-cors";
+import csrf from "./lib/cross-origin/block-unknown-origin";
+import cors from "./lib/cross-origin/multi-origin-cors";
 import { initializeSocket } from "./lib/socket/socket";
 import chatRoutes from "./router/chat";
 import coursesRoutes from "./router/courses";
@@ -32,7 +29,7 @@ export const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(nocsrf(corsOptions));
+app.use(csrf(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -49,8 +46,15 @@ app.use("/requests", requestsRoutes);
 app.use("/matches", matchesRoutes);
 app.use("/chat", chatRoutes);
 
-// サーバーの起動
-export const server = app.listen(port, () => {
-  console.log("running");
-});
-initializeSocket();
+export function main() {
+  // サーバーの起動
+  const server = app.listen(port, () => {
+    console.log("running");
+  });
+  initializeSocket(server, corsOptions);
+  return server;
+}
+
+if (__filename === require.main?.filename) {
+  main();
+}

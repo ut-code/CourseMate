@@ -29,7 +29,7 @@ export async function getUserId(req: Request): Promise<UserID> {
   return user.id;
 }
 
-export async function getUserIdfromToken(token: IDToken): Promise<UserID> {
+export async function getUserIdFromToken(token: IDToken): Promise<UserID> {
   const guid = await getGUIDFromToken(token);
   const user = await prisma.user.findUnique({
     where: {
@@ -63,8 +63,8 @@ export async function safeGetUserId(req: Request): Promise<Result<UserID>> {
  * never throws.
  Expected use case:
  ```js
- const paramid = req.params.userid;
- if (!isRequester(req, paramid))
+ const param_id = req.params.userid;
+ if (!isRequester(req, param_id))
    return res.status(401).send("auth error");
  ```
  **/

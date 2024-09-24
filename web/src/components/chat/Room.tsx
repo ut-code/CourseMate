@@ -28,7 +28,7 @@ export function Room(props: Props) {
         >
           <UserAvatar pictureUrl={room.thumbnail} width="50px" height="50px" />
           <Typography variant="body2">{room.name}</Typography>
-          <Typography variant="subtitle1">{room.lastmsg?.content}</Typography>
+          <Typography variant="subtitle1">{room.lastMsg?.content}</Typography>
         </Stack>
       </ListItem>
     </>
