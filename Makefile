@@ -43,7 +43,7 @@ dev-db:
 		sleep 1; \
 	done
 	@echo "PostgreSQL is ready. Running seed..."
-	@cd server; npx prisma generate; npx prisma db push; cd ..
+	@cd server; bunx prisma generate; bunx prisma db push; cd ..
 	@make seed
 	@echo "Seeding completed."
 
