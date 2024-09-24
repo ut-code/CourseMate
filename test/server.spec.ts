@@ -29,14 +29,16 @@ test("server up", async () => {
 });
 
 test("/users/exists", async () => {
-  const res = await GET("/users/exists/abc101");
+  let res = await GET("/users/exists/abc101");
   expect(res.status).toBe(200);
-  const res2 = await GET("/users/exists/not-there");
-  expect(res2.status).toBe(404);
+  res = await GET("/users/exists/not-there");
+  expect(res.status).toBe(404);
 });
 
 test("basic auth", async () => {
-  const res = await GET(`/users/me?token=${MOCK_TOKEN}`);
+  let res = await GET("/users/me");
+  expect(res.status).toBe(401);
+  res = await GET(`/users/me?token=${MOCK_TOKEN}`);
   expect(res.status).toBe(200);
   const json = await res.json();
   expect(json.name).toBe("田中太郎");
@@ -50,11 +52,15 @@ test("send request", async () => {
   res = await PUT("/requests/send/102");
   expect(res.status).toBe(401);
 
+  res = await GET(`/users/pending/from-me?token=${MOCK_TOKEN}`);
+  expect(await res.json()).toSatisfy((s) => s.length === 0);
   // starting actual request
 
   res = await PUT(`/requests/send/102?token=${MOCK_TOKEN}`);
   expect(res.status).toBe(201);
 
   res = await GET(`/users/pending/from-me?token=${MOCK_TOKEN}`);
-  expect(await res.json()).toSatisfy((s) => s[0].name === "山田花子");
+  expect(await res.json()).toSatisfy(
+    (s) => s.length === 1 && s[0].name === "山田花子",
+  );
 });
