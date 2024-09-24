@@ -1,12 +1,13 @@
-import { Server, type Socket } from "socket.io";
-import { corsOptions, server } from "../..";
+import type { Server } from "node:http";
+import type { CorsOptions } from "cors";
+import { type Socket, Server as SocketIOServer } from "socket.io";
 import type { Message, UserID } from "../../common/types";
 import { getUserIdFromToken } from "../../firebase/auth/db";
 
 const users = new Map<UserID, Socket>();
 
-export function initializeSocket() {
-  const io = new Server(server, {
+export function initializeSocket(server: Server, corsOptions: CorsOptions) {
+  const io = new SocketIOServer(server, {
     cors: corsOptions,
     connectionStateRecovery: {},
   });

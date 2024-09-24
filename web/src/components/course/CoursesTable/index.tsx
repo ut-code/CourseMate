@@ -107,10 +107,9 @@ export default function CoursesTable(props: Props) {
                           : ""}
                       </span>
                       <span className={styles.spaceAround}>
-                        {
-                          /* TODO: teacher を実装したら書く */
-                          row[activeDay as Day]?.name ? "teacher" : ""
-                        }
+                        {row[activeDay as Day]?.teacher
+                          ? truncateStr(row[activeDay as Day]?.teacher ?? "", 6)
+                          : ""}
                       </span>
                     </button>
                   ) : (
@@ -123,10 +122,9 @@ export default function CoursesTable(props: Props) {
                           : ""}
                       </span>
                       <span>
-                        {
-                          /* TODO: teacher を実装したら書く */
-                          row[activeDay as Day]?.name ? "teacher" : ""
-                        }
+                        {row[activeDay as Day]?.teacher
+                          ? truncateStr(row[activeDay as Day]?.teacher ?? "", 6)
+                          : ""}
                       </span>
                     </span>
                   )}

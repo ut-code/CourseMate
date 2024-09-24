@@ -7,17 +7,17 @@ export default function EditCourses() {
   const navigate = useNavigate();
   const { data, loading, error } = hooks.useMe();
 
-  function handleSave() {
-    navigate("/settings"); // router.pushからnavigateに変更
+  function handleBack() {
+    navigate("/settings");
   }
 
-  function handleBack() {
-    navigate("/edit/profile"); // router.pushからnavigateに変更
+  function handleGoToProfile() {
+    navigate("/edit/profile");
   }
 
   return (
     <Box sx={{ padding: "20px", maxWidth: "350px", margin: "0 auto" }}>
-      <h1>授業選択</h1>
+      <h1>授業編集</h1>
       {loading ? (
         <CircularProgress />
       ) : error ? (
@@ -38,10 +38,10 @@ export default function EditCourses() {
         }}
       >
         <Button variant="contained" onClick={handleBack}>
-          戻る
+          設定画面に戻る
         </Button>
-        <Button variant="contained" onClick={handleSave}>
-          完了
+        <Button variant="contained" onClick={handleGoToProfile}>
+          プロフィール編集へ
         </Button>
       </Box>
     </Box>

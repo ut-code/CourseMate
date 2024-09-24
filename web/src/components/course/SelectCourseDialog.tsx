@@ -109,7 +109,7 @@ export default function SelectCourseDialog({
                         setIsConfirmDialogOpen(true);
                       }}
                     >
-                      {course.name}
+                      {`${course.name}(${course.teacher})`}
                     </ListItemButton>
                   </ListItem>
                 ))}
