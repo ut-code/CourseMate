@@ -2,6 +2,7 @@
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
+  flex: 1;
 }
 
 .table th,
@@ -30,6 +31,7 @@
   box-sizing: border-box;
   display: block;
   background-color: transparent;
+  font-size: 0.5rem;
 }
 
 .table span {
@@ -40,6 +42,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.5rem;
 }
 
 .enrolled {
