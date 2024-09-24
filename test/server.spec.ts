@@ -29,5 +29,5 @@ test("/user/exists", async () => {
   const res = await fetch("localhost:3000/user/exists/abc101");
   expect(res.status).toBe(200);
   const res2 = await fetch("localhost:3000/user/exists/not-there");
-  expect(res2.status).toBe(200);
+  expect(res2.status).toBe(404);
 });
