@@ -70,7 +70,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
         border: "2px solid #3596C6",
         padding: "10px",
         height: "100%",
-        overflow: "hidden",
+        overflow: "scroll",
       }}
     >
       <div
@@ -116,7 +116,7 @@ const CardBack = ({ displayedUser }: CardProps) => {
         border: "2px solid #3596C6",
         padding: "10px",
         height: "100%",
-        overflow: "hidden",
+        overflow: "scroll",
       }}
     >
       <div style={{ display: "flex", justifyContent: "center" }}>
