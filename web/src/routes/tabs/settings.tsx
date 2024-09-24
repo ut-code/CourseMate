@@ -21,7 +21,6 @@ export default function Settings() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "flex-start",
-        minHeight: "100vh",
       }}
     >
       {loading ? (
