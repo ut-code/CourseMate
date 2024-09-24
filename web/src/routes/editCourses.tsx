@@ -38,10 +38,10 @@ export default function EditCourses() {
         }}
       >
         <Button variant="contained" onClick={handleBack}>
-          戻る
+          戻る(プロフィール編集)
         </Button>
         <Button variant="contained" onClick={handleSave}>
-          登録
+          完了
         </Button>
       </Box>
     </Box>
