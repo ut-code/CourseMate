@@ -14,14 +14,9 @@ const provider = new GoogleAuthProvider();
 async function signInWithGoogle() {
   try {
     const result = await signInWithPopup(auth, provider);
-    // This gives you a Google Access Token. You can use it to access the Google API.
     const credential = GoogleAuthProvider.credentialFromResult(result);
     if (credential) {
-      // const token = credential.accessToken;
-      // The signed-in user info.
       const user = result.user;
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
       return user.uid;
     }
   } catch (error) {
@@ -41,7 +36,6 @@ export default function Login() {
       }
 
       const response = await getByGUID(auth.currentUser.uid as GUID);
-
       if (response.status === 404) {
         enqueueSnackbar(
           "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
@@ -75,7 +69,6 @@ export default function Login() {
       }
 
       const userExists = await user.exists(guid as GUID);
-
       if (userExists) {
         enqueueSnackbar("この Google アカウントはすでに登録されています", {
           variant: "error",
@@ -107,9 +100,10 @@ export default function Login() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          justifyContent: "space-around",
         }}
       >
-        <Box textAlign="center" mb={4}>
+        <Box textAlign="center">
           <IconButton
             size="large"
             edge="start"
@@ -120,24 +114,53 @@ export default function Login() {
               style={{ color: "#000000", width: "200px", height: "200px" }}
             />
           </IconButton>
-          <Typography>CourseMateを使って同じ授業の人と友達になろう</Typography>
+        </Box>
+        <Box textAlign="left">
+          <Typography variant="h4">
+            CourseMateを使って
+            <br />
+            同じ授業の人と
+            <br />
+            友達になろう
+          </Typography>
         </Box>
 
-        <Box>
+        <Box sx={{ width: "80%" }} textAlign="center">
           <button
             className="gsi-material-button"
             onClick={logInByGoogle}
             type="button"
+            style={{
+              width: "100%",
+              padding: "30px",
+              fontSize: "25px",
+            }}
           >
             <div className="gsi-material-button-state" />
-            <div className="gsi-material-button-content-wrapper">
-              <div className="gsi-material-button-icon">
+            <div
+              className="gsi-material-button-content-wrapper"
+              style={{ display: "flex", alignItems: "center", lineHeight: "1" }}
+            >
+              <div
+                className="gsi-material-button-icon"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginRight: "8px",
+                }}
+              >
                 <svg
                   version="1.1"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 48 48"
                   xmlnsXlink="http://www.w3.org/1999/xlink"
-                  style={{ display: "block" }}
+                  style={{
+                    display: "block",
+                    width: "50px",
+                    height: "50px",
+                    margin: "0 auto",
+                  }}
                   role="img"
                   aria-label="Sign in with Google"
                 >
@@ -166,10 +189,18 @@ export default function Login() {
               <span style={{ display: "none" }}>Sign in with Google</span>
             </div>
           </button>
+          <br />
+          <Link
+            component={Button}
+            onClick={singUpByGoogle}
+            mt={2}
+            underline="none"
+          >
+            {" "}
+            {/* underlineをnoneに設定 */}
+            初めての方はこちら
+          </Link>
         </Box>
-        <Link component={Button} onClick={singUpByGoogle} mt={2}>
-          初めての方はこちら
-        </Link>
       </Box>
     </>
   );
