@@ -1,5 +1,5 @@
 import { beforeAll, expect, test } from "bun:test";
-import { getAllUsers } from "./user";
+import { getAllUsers, getUser, getUserByID, userExists } from "./user";
 
 beforeAll(() => {
   const DATABASE_URL = process.env.DATABASE_URL;
@@ -18,4 +18,26 @@ test("get all users", async () => {
   expect(result.body).toSatisfy(
     (s) => typeof s !== "string" && s[0].name === "田中太郎",
   );
+});
+
+test("get user", async () => {
+  const result = await getUser("abc101");
+  expect(result.code).toBe(200);
+  expect(result.body).toSatisfy(
+    (person) => typeof person !== "string" && person.name === "田中太郎",
+  );
+});
+
+test("get user by id", async () => {
+  const result = await getUserByID(101);
+  expect(result.code).toBe(200);
+  expect(result.ok).toBe(true);
+  expect(result.body).toSatisfy(
+    (person) => typeof person !== "string" && person.name === "田中太郎",
+  );
+});
+
+test("user exists", async () => {
+  const result = await userExists("abc101");
+  expect(result.code).toBe(200);
 });
