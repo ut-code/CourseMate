@@ -1,5 +1,4 @@
-import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
-import { Box, Button, IconButton, Link, Typography } from "@mui/material";
+import { Box, Button, Link, Typography } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +7,7 @@ import type { GUID } from "../common/types";
 import Header from "../components/Header";
 import { auth } from "../firebase/config";
 import "../styles/login.css";
+import { CourseMateIcon } from "../components/common/CourseMateIcon";
 
 const provider = new GoogleAuthProvider();
 
@@ -104,16 +104,7 @@ export default function Login() {
         }}
       >
         <Box textAlign="center">
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-          >
-            <EmojiEmotionsIcon
-              style={{ color: "#000000", width: "200px", height: "200px" }}
-            />
-          </IconButton>
+          <CourseMateIcon width="200px" height="200px" />
         </Box>
         <Box textAlign="left">
           <Typography variant="h4">
