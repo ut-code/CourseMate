@@ -9,10 +9,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "src/seeds"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["src/seeds"]
 }
