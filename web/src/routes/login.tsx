@@ -7,6 +7,7 @@ import type { GUID } from "../common/types";
 import Header from "../components/Header";
 import { auth } from "../firebase/config";
 import "../styles/login.css";
+import { CourseMateIcon } from "../components/common/CourseMateIcon";
 
 const provider = new GoogleAuthProvider();
 
@@ -103,17 +104,7 @@ export default function Login() {
         }}
       >
         <Box textAlign="center">
-          <img
-            src="/course_mate_icon.svg"
-            alt="アイコン"
-            style={{
-              width: "200px",
-              height: "200px",
-              objectFit: "cover",
-              borderRadius: "50%",
-              pointerEvents: "none",
-            }}
-          />
+          <CourseMateIcon width="200px" height="200px" />
         </Box>
         <Box textAlign="left">
           <Typography variant="h4">

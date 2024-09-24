@@ -1,4 +1,5 @@
 import { AppBar, Toolbar, Typography } from "@mui/material";
+import { CourseMateIcon } from "./common/CourseMateIcon";
 
 type Props = {
   title: string;
@@ -16,18 +17,7 @@ export default function Header(props: Props) {
         }}
       >
         <Toolbar>
-          <img
-            src="/course_mate_icon.svg"
-            alt="アイコン"
-            style={{
-              width: "28px",
-              height: "28px",
-              objectFit: "cover",
-              borderRadius: "50%",
-              pointerEvents: "none",
-              marginRight: "8px",
-            }}
-          />
+          <CourseMateIcon width="28px" height="28px" />
           <Typography
             variant="h6"
             component="div"
