@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun --watch src/index.ts",
+    "dev": "bun --watch src/main.ts",
     "build": "tsc",
-    "serve": "bun target/index.js"
+    "serve": "bun target/main.js"
   },
   "prisma": {
     "seed": "bun src/seeds/seed.ts"

@@ -54,7 +54,3 @@ export function main() {
   initializeSocket(server, corsOptions);
   return server;
 }
-
-if (__filename === require.main?.filename) {
-  main();
-}
