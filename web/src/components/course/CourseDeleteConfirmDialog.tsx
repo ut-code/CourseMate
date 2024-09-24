@@ -47,7 +47,10 @@ export default function CourseDeleteRegisterConfirmDialog({
           <Alert color="error" icon={false} severity="info" sx={{ mt: 1 }}>
             削除:{" "}
             {overlapCourses
-              .map((overlapCourse) => overlapCourse.name)
+              .map(
+                (overlapCourse) =>
+                  `${overlapCourse.name}(${overlapCourse.teacher})`,
+              )
               .join("・") || "なし"}
           </Alert>
         </Box>
