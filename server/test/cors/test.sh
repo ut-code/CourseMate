@@ -5,10 +5,9 @@ echo "Compiling static/script.ts..."
 ./compile.sh
 
 (
-  trap 'kill 0' SIGINT;
-  npx ts-node ./servers/qualified.ts &
-  npx ts-node ./servers/unqualified.ts &
-  npx ts-node ./servers/origin.ts & # or,
-  # npx ts-node ./servers/cors-package.ts
+  trap 'kill 0' EXIT;
+  bun ./servers/qualified.ts &
+  bun ./servers/unqualified.ts &
+  bun ./servers/origin.ts & # or,
   wait
 )

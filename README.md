@@ -26,8 +26,6 @@ GNU Make が導入されています。以下は、ユーザーが使うこと�
 
   - Bun (js)
   - GNU Make
-  - Node.js v22 (optional)
-  - Node Package Manager / npm (optional)
   - nvm (optional)
 
 - `make setup` を実行します。
