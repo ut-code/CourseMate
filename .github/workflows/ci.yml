@@ -134,3 +134,12 @@ jobs:
 
       - run: make setup
       - run: make spell-check
+
+  test:
+    name: Bun Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: oven-/setup-bun@v2
+      - run: make setup
+      - run: make test
