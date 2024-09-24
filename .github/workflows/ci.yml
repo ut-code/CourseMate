@@ -6,53 +6,6 @@ on:
   pull_request:
 
 jobs:
-  # mobile はもういないじゃない。
-  # build-frontend:
-  #   name: Build Frontend
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v3
-
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: latest
-  #         cache: npm
-
-  #     - name: Install Node Packages
-  #       run: npm ci
-  #       working-directory: mobile
-  #       shell: bash
-
-  #     - name: Build
-  #       run: npm run build
-  #       working-directory: mobile
-  #       shell: bash
-
-  # mobile:
-  #   name: mobile code style checks
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v3
-
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: latest
-  #         cache: npm
-
-  #     - name: Install Node Packages
-  #       run: npm ci
-  #       working-directory: mobile
-  #       shell: bash
-
-  #     - name: Run ESLint
-  #       run: npm run lint
-  #       working-directory: mobile
-  #       shell: bash
-
   build:
     name: Build
     runs-on: ubuntu-latest
