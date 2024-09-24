@@ -12,8 +12,17 @@ const labels = [
   "フレンド/Friends",
   "チャット/Chat",
   "設定/Settings",
+  "編集/Edit",
+  "編集/Edit",
 ];
-const paths = ["/home", "/friends", "/chat", "/settings"];
+const paths = [
+  "/home",
+  "/friends",
+  "/chat",
+  "/settings",
+  "/edit/profile",
+  "/edit/courses",
+];
 
 export default function Root() {
   const location = useLocation();
