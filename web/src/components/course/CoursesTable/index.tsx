@@ -49,6 +49,7 @@ export default function CoursesTable(props: Props) {
       fri: null,
       sat: null,
       sun: null,
+      other: null,
     }));
     for (const course of courses) {
       for (const slot of course.slots) {

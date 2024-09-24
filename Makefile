@@ -5,9 +5,9 @@ setup:
 	make sync
 	bunx husky
 	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
-	cd server; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
+	cd server; if [ ! -f .env.dev ]; then cp ./.env.sample ./.env.dev ; fi
 	echo "auto setup is done. now do:"
-	echo "- edit server/.env"
+	echo "- edit server/.env.dev"
 	echo "- edit web/.env"
 
 sync: sync-server sync-web sync-root copy-common
@@ -18,6 +18,13 @@ serve: serve-all # serve only. does not build.
 watch:
 		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
 
+LOCAL_DB := postgres://user:password@localhost:5432/database
+
+test: export DATABASE_URL=$(LOCAL_DB)
+test: dev-db
+	ENV_FILE=server/.env.dev bun test
+	docker stop postgres
+	
 docker: copy-common
 	@# deferring `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
 	trap 'docker compose down' EXIT; docker compose up --build
@@ -28,13 +35,37 @@ docker-watch: copy-common
 seed:
 	cd server; bunx prisma db seed
 
-precommit: check-branch lint-staged
-	make type-check
+## server/.envをDATABASE_URL=postgres://user:password@localhost:5432/databaseにしてから行う
+dev-db: export DATABASE_URL=$(LOCAL_DB)
+dev-db: export NEVER_LOAD_DOTENV=1
+dev-db:
+	docker stop postgres || true
+	@docker run --rm --name postgres -d \
+	  -p 5432:5432 \
+	  -e POSTGRES_PASSWORD=password \
+	  -e POSTGRES_USER=user \
+	  -e POSTGRES_DB=database \
+	  postgres:alpine
+	@echo "Waiting for PostgreSQL to be ready..."
+	@sleep 5 # PostgreSQLが起動するまでの待機（必要に応じて調整）
+	@until docker exec postgres pg_isready -U user -d database; do \
+		echo "Waiting for PostgreSQL to be ready..."; \
+		sleep 1; \
+	done
+	@echo "PostgreSQL is ready. Running seed..."
+	@cd server; bunx prisma generate; bunx prisma db push; cd ..
+	@make seed;
+	@echo "Seeding completed."
+
+
+precommit: check-branch lint-staged spell-check
 
 lint-staged:
 	bunx lint-staged
 check-branch:
 	@ if [ "$(git branch --show-current)" == "main" ]; then echo "Cannot make commit on main! aborting..."; exit 1; fi
+spell-check:
+	bunx cspell --quiet .
 
 # Sync (install/update packages, generate prisma, etc)
 
@@ -114,3 +145,4 @@ copy-common-to-web:
 	@ if [ -d web/src/common ]; then rm -r web/src/common; fi
 	@ cp -r common web/src/common
 
+.PHONY: test

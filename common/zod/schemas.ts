@@ -38,7 +38,7 @@ export const UserSchema = z.object({
   name: NameSchema,
   gender: GenderSchema,
   grade: z.string(),
-  faculity: z.string(), // TODO: validate this further
+  faculty: z.string(), // TODO: validate this further
   department: z.string(), // same
   intro: z.string(),
   pictureUrl: z.string(),
@@ -72,9 +72,10 @@ export const DaySchema = z.enum([
   "fri",
   "sat",
   "sun",
+  "other",
 ]);
 
-export const PeriodSchema = z.number().min(1).max(6);
+export const PeriodSchema = z.number().min(0).max(6);
 
 export const SlotSchema = z.object({
   day: DaySchema,
@@ -119,7 +120,7 @@ export const DMOverviewSchema = z.object({
   friendId: UserIDSchema,
   name: NameSchema,
   thumbnail: z.string(),
-  lastmsg: MessageSchema.optional(),
+  lastMsg: MessageSchema.optional(),
 });
 
 export const SharedRoomOverviewSchema = z.object({
@@ -127,7 +128,7 @@ export const SharedRoomOverviewSchema = z.object({
   roomId: ShareRoomIDSchema,
   name: NameSchema,
   thumbnail: z.string(),
-  lastmsg: MessageSchema.optional(),
+  lastMsg: MessageSchema.optional(),
 });
 
 export const RoomOverviewSchema = z.union([

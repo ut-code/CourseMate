@@ -1,5 +1,5 @@
-import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
-import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { CourseMateIcon } from "./common/CourseMateIcon";
 
 type Props = {
   title: string;
@@ -17,15 +17,9 @@ export default function Header(props: Props) {
         }}
       >
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <EmojiEmotionsIcon style={{ color: "#000000" }} />
-          </IconButton>
+          <Box sx={{ marginRight: "8px" }}>
+            <CourseMateIcon width="28px" height="28px" />
+          </Box>
           <Typography
             variant="h6"
             component="div"

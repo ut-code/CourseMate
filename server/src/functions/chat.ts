@@ -39,7 +39,7 @@ export async function getOverview(
 export async function sendDM(
   from: UserID,
   to: UserID,
-  smsg: SendMessage,
+  send: SendMessage,
 ): Promise<http.Response<Message>> {
   const rel = await getRelation(from, to);
   if (!rel.ok || rel.value.status !== "MATCHED")
@@ -50,7 +50,7 @@ export async function sendDM(
     creator: from,
     createdAt: new Date(),
     edited: false,
-    ...smsg,
+    ...send,
   };
 
   const result = await db.sendDM(rel.value.id, msg);

@@ -10,7 +10,7 @@ async function main() {
       name: "田中太郎",
       gender: "男",
       grade: "D2",
-      faculity: "工学部",
+      faculty: "工学部",
       department: "電気電子工学科",
       intro: "田中太郎です。",
       pictureUrl:
@@ -27,7 +27,7 @@ async function main() {
       name: "山田花子",
       gender: "女",
       grade: "B2",
-      faculity: "経済学部",
+      faculty: "経済学部",
       department: "経営学科",
       intro: "山田花子です。",
       pictureUrl:
@@ -254,7 +254,7 @@ async function main() {
   });
 }
 
-main()
+await main()
   .then(async () => {
     await prisma.$disconnect();
   })
