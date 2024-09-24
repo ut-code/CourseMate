@@ -1,5 +1,9 @@
 node_modules
+
+# WARNING: DELETE THIS IF YOU FIND THIS
 .env
+
+.env.dev
 # deprecated, delete /dist if you have one
 /dist
 /target

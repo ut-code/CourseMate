@@ -5,9 +5,9 @@ setup:
 	make sync
 	bunx husky
 	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
-	cd server; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
+	cd server; if [ ! -f .env.dev ]; then cp ./.env.sample ./.env.dev ; fi
 	echo "auto setup is done. now do:"
-	echo "- edit server/.env"
+	echo "- edit server/.env.dev"
 	echo "- edit web/.env"
 
 sync: sync-server sync-web sync-root copy-common
