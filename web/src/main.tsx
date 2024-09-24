@@ -7,6 +7,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { CssBaseline } from "@mui/material";
 import App from "./App";
+import BanLandscape from "./components/BanLandscape";
 import { AlertProvider } from "./components/common/alert/AlertProvider";
 import { ModalProvider } from "./components/common/modal/ModalProvider";
 import AuthProvider from "./firebase/auth/AuthProvider";
@@ -19,6 +20,7 @@ ReactDOM.createRoot(root).render(
       <CssBaseline />
       <AlertProvider>
         <ModalProvider>
+          <BanLandscape />
           <App />
         </ModalProvider>
       </AlertProvider>
