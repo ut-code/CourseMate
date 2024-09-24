@@ -42,7 +42,7 @@ router.get("/me", async (req: Request, res: Response) => {
 router.get("/exists/:guid", async (req: Request, res: Response) => {
   const guid = req.params.guid;
   const ok = await core.userExists(guid as GUID);
-  res.status(ok ? 200 : 404).send();
+  res.status(ok.code).send();
 });
 
 // 特定のユーザーとマッチしたユーザーを取得
