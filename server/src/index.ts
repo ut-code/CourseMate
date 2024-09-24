@@ -1,6 +1,3 @@
-import * as dotenv from "dotenv";
-dotenv.config();
-
 import cookieParser from "cookie-parser";
 import express from "express";
 import csrf from "./lib/cross-origin/block-unknown-origin";
