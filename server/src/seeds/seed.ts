@@ -43,7 +43,7 @@ async function main() {
     where: { id: "10001" },
     update: {},
     create: {
-      id: "10006",
+      id: "10001",
       name: "国語八列",
       teacher: "足助太郎",
     },
