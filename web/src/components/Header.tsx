@@ -1,5 +1,4 @@
-import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
-import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Toolbar, Typography } from "@mui/material";
 
 type Props = {
   title: string;
@@ -17,15 +16,18 @@ export default function Header(props: Props) {
         }}
       >
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <EmojiEmotionsIcon style={{ color: "#000000" }} />
-          </IconButton>
+          <img
+            src="/course_mate_icon.svg"
+            alt="アイコン"
+            style={{
+              width: "28px",
+              height: "28px",
+              objectFit: "cover",
+              borderRadius: "50%",
+              pointerEvents: "none",
+              marginRight: "8px",
+            }}
+          />
           <Typography
             variant="h6"
             component="div"

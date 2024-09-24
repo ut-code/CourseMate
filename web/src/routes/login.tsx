@@ -1,5 +1,4 @@
-import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
-import { Box, Button, IconButton, Link, Typography } from "@mui/material";
+import { Box, Button, Link, Typography } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
@@ -104,16 +103,17 @@ export default function Login() {
         }}
       >
         <Box textAlign="center">
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-          >
-            <EmojiEmotionsIcon
-              style={{ color: "#000000", width: "200px", height: "200px" }}
-            />
-          </IconButton>
+          <img
+            src="/course_mate_icon.svg"
+            alt="アイコン"
+            style={{
+              width: "200px",
+              height: "200px",
+              objectFit: "cover",
+              borderRadius: "50%",
+              pointerEvents: "none",
+            }}
+          />
         </Box>
         <Box textAlign="left">
           <Typography variant="h4">
