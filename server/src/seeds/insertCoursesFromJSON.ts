@@ -3,6 +3,7 @@ import * as path from "node:path";
 
 import { prisma } from "../database/client";
 
+// シ楽バス形式のデータを読み込む。
 const FILE_PATH = path.join(__dirname, "data.json");
 
 async function main() {
