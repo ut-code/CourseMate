@@ -28,6 +28,28 @@ docker-watch: copy-common
 seed:
 	cd server; bunx prisma db seed
 
+## server/.envをDATABASE_URL=postgres://user:password@localhost:5432/databaseにしてから行う
+dev-db:
+	docker run --rm --name postgres -d \
+	  -p 5432:5432 \
+	  -e POSTGRES_PASSWORD=password \
+	  -e POSTGRES_USER=user \
+	  -e POSTGRES_DB=database \
+	  postgres:alpine
+	@echo "Waiting for PostgreSQL to be ready..."
+	@sleep 5 # PostgreSQLが起動するまでの待機（必要に応じて調整）
+	@until docker exec postgres pg_isready -U user -d database; do \
+		echo "Waiting for PostgreSQL to be ready..."; \
+		sleep 1; \
+	done
+	@echo "PostgreSQL is ready. Running seed..."
+	@cd server; bunx prisma generate; bunx prisma db push; cd ..
+	@make seed
+	@echo "Seeding completed."
+
+
+
+
 precommit: check-branch lint-staged spell-check
 
 lint-staged:
