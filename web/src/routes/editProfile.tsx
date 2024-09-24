@@ -1,4 +1,3 @@
-import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
@@ -158,16 +157,18 @@ export default function EditProfile() {
         <p>Error: {error.message}</p>
       ) : data ? (
         <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
-          <Typography>アカウント設定</Typography>
-          <FormControl fullWidth>
+          <Typography>プロフィール編集</Typography>
+          <FormControl>
             <Box display="flex" alignItems="center">
-              <TextField
-                value={tmpName}
-                onChange={(e) => setTmpName(e.target.value)}
-                label="名前"
-                disabled={!isEditingName}
-                fullWidth
-              />
+              <Box width={"80%"}>
+                <TextField
+                  value={tmpName}
+                  onChange={(e) => setTmpName(e.target.value)}
+                  label="名前"
+                  disabled={!isEditingName}
+                  fullWidth
+                />
+              </Box>
               <IconButton
                 onClick={() => {
                   if (isEditingName) {
@@ -179,26 +180,32 @@ export default function EditProfile() {
                   }
                 }}
               >
-                {isEditingName ? <CheckIcon /> : <EditIcon />}
+                {isEditingName ? (
+                  <Typography color={"primary"}>保存</Typography>
+                ) : (
+                  <EditIcon />
+                )}
               </IconButton>
             </Box>
           </FormControl>
 
-          <FormControl fullWidth>
+          <FormControl>
             <Box display="flex" alignItems="center">
               <InputLabel>性別</InputLabel>
-              <Select
-                value={tmpGender}
-                label="性別"
-                onChange={(e) => setTmpGender(e.target.value)}
-                disabled={!isEditingGender}
-                fullWidth
-              >
-                <MenuItem value={"男性"}>男性</MenuItem>
-                <MenuItem value={"女性"}>女性</MenuItem>
-                <MenuItem value={"その他"}>その他</MenuItem>
-                <MenuItem value={"秘密"}>秘密</MenuItem>
-              </Select>
+              <Box width={"80%"}>
+                <Select
+                  value={tmpGender}
+                  label="性別"
+                  onChange={(e) => setTmpGender(e.target.value)}
+                  disabled={!isEditingGender}
+                  fullWidth
+                >
+                  <MenuItem value={"男性"}>男性</MenuItem>
+                  <MenuItem value={"女性"}>女性</MenuItem>
+                  <MenuItem value={"その他"}>その他</MenuItem>
+                  <MenuItem value={"秘密"}>秘密</MenuItem>
+                </Select>
+              </Box>
               <IconButton
                 onClick={() => {
                   if (isEditingGender) {
@@ -210,28 +217,34 @@ export default function EditProfile() {
                   }
                 }}
               >
-                {isEditingGender ? <CheckIcon /> : <EditIcon />}
+                {isEditingGender ? (
+                  <Typography color={"primary"}>保存</Typography>
+                ) : (
+                  <EditIcon />
+                )}
               </IconButton>
             </Box>
           </FormControl>
 
-          <FormControl fullWidth>
+          <FormControl>
             <Box display="flex" alignItems="center">
-              <InputLabel>学年</InputLabel>
-              <Select
-                value={tmpGrade}
-                label="学年"
-                onChange={(e) => setTmpGrade(e.target.value)}
-                disabled={!isEditingGrade}
-                fullWidth
-              >
-                <MenuItem value={"B1"}>1年生 (B1)</MenuItem>
-                <MenuItem value={"B2"}>2年生 (B2)</MenuItem>
-                <MenuItem value={"B3"}>3年生 (B3)</MenuItem>
-                <MenuItem value={"B4"}>4年生 (B4)</MenuItem>
-                <MenuItem value={"M1"}>修士1年 (M1)</MenuItem>
-                <MenuItem value={"M2"}>修士2年 (M2)</MenuItem>
-              </Select>
+              <Box width={"80%"}>
+                <InputLabel>学年</InputLabel>
+                <Select
+                  value={tmpGrade}
+                  label="学年"
+                  onChange={(e) => setTmpGrade(e.target.value)}
+                  disabled={!isEditingGrade}
+                  fullWidth
+                >
+                  <MenuItem value={"B1"}>1年生 (B1)</MenuItem>
+                  <MenuItem value={"B2"}>2年生 (B2)</MenuItem>
+                  <MenuItem value={"B3"}>3年生 (B3)</MenuItem>
+                  <MenuItem value={"B4"}>4年生 (B4)</MenuItem>
+                  <MenuItem value={"M1"}>修士1年 (M1)</MenuItem>
+                  <MenuItem value={"M2"}>修士2年 (M2)</MenuItem>
+                </Select>
+              </Box>
               <IconButton
                 onClick={() => {
                   if (isEditingGrade) {
@@ -243,27 +256,33 @@ export default function EditProfile() {
                   }
                 }}
               >
-                {isEditingGrade ? <CheckIcon /> : <EditIcon />}
+                {isEditingGrade ? (
+                  <Typography color={"primary"}>保存</Typography>
+                ) : (
+                  <EditIcon />
+                )}
               </IconButton>
             </Box>
           </FormControl>
 
-          <FormControl fullWidth>
+          <FormControl>
             <Box display="flex" alignItems="center">
-              <InputLabel>学部</InputLabel>
-              <Select
-                value={tmpFaculty}
-                label="学部"
-                onChange={handleFacultyChange}
-                disabled={!isEditingFaculty}
-                fullWidth
-              >
-                {Object.keys(facultiesAndDepartments).map((fac) => (
-                  <MenuItem key={fac} value={fac}>
-                    {fac}
-                  </MenuItem>
-                ))}
-              </Select>
+              <Box width={"80%"}>
+                <InputLabel>学部</InputLabel>
+                <Select
+                  value={tmpFaculty}
+                  label="学部"
+                  onChange={handleFacultyChange}
+                  disabled={!isEditingFaculty}
+                  fullWidth
+                >
+                  {Object.keys(facultiesAndDepartments).map((fac) => (
+                    <MenuItem key={fac} value={fac}>
+                      {fac}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
               <IconButton
                 onClick={() => {
                   if (isEditingFaculty) {
@@ -276,28 +295,34 @@ export default function EditProfile() {
                   }
                 }}
               >
-                {isEditingFaculty ? <CheckIcon /> : <EditIcon />}
+                {isEditingFaculty ? (
+                  <Typography color={"primary"}>保存</Typography>
+                ) : (
+                  <EditIcon />
+                )}
               </IconButton>
             </Box>
           </FormControl>
 
-          <FormControl fullWidth>
+          <FormControl>
             <Box display="flex" alignItems="center">
-              <InputLabel>学科</InputLabel>
-              <Select
-                value={tmpDepartment}
-                onChange={handleDepartmentChange}
-                disabled={!isEditingDepartment || !faculty}
-                label="学科"
-                fullWidth
-              >
-                {faculty &&
-                  facultiesAndDepartments[faculty].map((dep) => (
-                    <MenuItem key={dep} value={dep}>
-                      {dep}
-                    </MenuItem>
-                  ))}
-              </Select>
+              <Box width={"80%"}>
+                <InputLabel>学科</InputLabel>
+                <Select
+                  value={tmpDepartment}
+                  onChange={handleDepartmentChange}
+                  disabled={!isEditingDepartment || !faculty}
+                  label="学科"
+                  fullWidth
+                >
+                  {faculty &&
+                    facultiesAndDepartments[faculty].map((dep) => (
+                      <MenuItem key={dep} value={dep}>
+                        {dep}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </Box>
               <IconButton
                 onClick={() => {
                   if (isEditingDepartment) {
@@ -309,22 +334,28 @@ export default function EditProfile() {
                   }
                 }}
               >
-                {isEditingDepartment ? <CheckIcon /> : <EditIcon />}
+                {isEditingDepartment ? (
+                  <Typography color={"primary"}>保存</Typography>
+                ) : (
+                  <EditIcon />
+                )}
               </IconButton>
             </Box>
           </FormControl>
 
-          <FormControl fullWidth>
-            <Box display="flex" alignItems="center">
-              <TextField
-                multiline
-                minRows={3}
-                value={tmpIntro}
-                onChange={(e) => setTmpIntro(e.target.value)}
-                label="自己紹介"
-                disabled={!isEditingIntro}
-                fullWidth
-              />
+          <FormControl>
+            <Box display="flex" alignItems="center" justifyContent={"space-"}>
+              <Box width={"80%"}>
+                <TextField
+                  multiline
+                  minRows={3}
+                  value={tmpIntro}
+                  onChange={(e) => setTmpIntro(e.target.value)}
+                  label="自己紹介"
+                  disabled={!isEditingIntro}
+                  fullWidth
+                />
+              </Box>
               <IconButton
                 onClick={() => {
                   if (isEditingIntro) {
@@ -336,7 +367,11 @@ export default function EditProfile() {
                   }
                 }}
               >
-                {isEditingIntro ? <CheckIcon /> : <EditIcon />}
+                {isEditingIntro ? (
+                  <Typography color={"primary"}>保存</Typography>
+                ) : (
+                  <EditIcon />
+                )}
               </IconButton>
             </Box>
           </FormControl>
@@ -404,10 +439,10 @@ export default function EditProfile() {
 
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Button variant="contained" onClick={handleBack}>
-              ホームに戻る
+              設定画面に戻る
             </Button>
             <Button variant="contained" onClick={handleGoToCourses}>
-              授業選択へ
+              授業編集へ
             </Button>
           </Box>
         </Box>
