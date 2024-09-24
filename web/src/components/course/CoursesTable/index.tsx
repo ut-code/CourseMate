@@ -101,17 +101,33 @@ export default function CoursesTable(props: Props) {
                         )
                       }
                     >
-                      {row[activeDay as Day]?.name
-                        ? truncateStr(row[activeDay as Day]?.name ?? "", 16)
-                        : ""}
+                      <span className={styles.spaceAround}>
+                        {row[activeDay as Day]?.name
+                          ? truncateStr(row[activeDay as Day]?.name ?? "", 16)
+                          : ""}
+                      </span>
+                      <span className={styles.spaceAround}>
+                        {
+                          /* TODO: teacher を実装したら書く */
+                          row[activeDay as Day]?.name ? "teacher" : ""
+                        }
+                      </span>
                     </button>
                   ) : (
                     <span
                       className={row[activeDay as Day]?.name && styles.enrolled}
                     >
-                      {row[activeDay as Day]?.name
-                        ? truncateStr(row[activeDay as Day]?.name ?? "", 16)
-                        : ""}
+                      <span>
+                        {row[activeDay as Day]?.name
+                          ? truncateStr(row[activeDay as Day]?.name ?? "", 16)
+                          : ""}
+                      </span>
+                      <span>
+                        {
+                          /* TODO: teacher を実装したら書く */
+                          row[activeDay as Day]?.name ? "teacher" : ""
+                        }
+                      </span>
                     </span>
                   )}
                 </td>
