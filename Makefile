@@ -19,9 +19,9 @@ watch:
 		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
 
 test:
-	./run-psql.sh &
-	DATABASE_URL=postgres://user:database@localhost:5432/database make seed
-	DATABASE_URL=postgres://user:database@localhost:5432/database bun test
+	DATABASE_URL=postgres://user:password@localhost:5432/database make seed
+	DATABASE_URL=postgres://user:password@localhost:5432/database bun test
+	docker stop postgres
 	
 docker: copy-common
 	@# deferring `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
