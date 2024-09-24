@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import hooks from "../api/hooks";
 import CoursesTable from "../components/course/CoursesTable";
@@ -19,7 +19,7 @@ export default function EditCourses() {
     <Box sx={{ padding: "20px", maxWidth: "350px", margin: "0 auto" }}>
       <h1>授業選択</h1>
       {loading ? (
-        <p>Loading...</p>
+        <CircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : data ? (
@@ -38,7 +38,7 @@ export default function EditCourses() {
         }}
       >
         <Button variant="contained" onClick={handleBack}>
-          戻る(プロフィール編集)
+          戻る
         </Button>
         <Button variant="contained" onClick={handleSave}>
           完了
