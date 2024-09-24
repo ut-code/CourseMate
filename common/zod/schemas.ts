@@ -52,6 +52,7 @@ export const RelationshipStatusSchema = z.union([
 
 export const InitUserSchema = UserSchema.omit({ id: true });
 export const UpdateUserSchema = InitUserSchema.omit({ guid: true });
+export const Step1UserSchema = UpdateUserSchema.omit({ pictureUrl: true });
 
 export const RelationshipIDSchema = z.number();
 

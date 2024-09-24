@@ -22,7 +22,7 @@ export default function Header(props: Props) {
           </Box>
           <Typography
             variant="h6"
-            component="div"
+            component="h2"
             sx={{ flexGrow: 1, color: "#000000" }}
           >
             {title}

@@ -6,7 +6,7 @@ import {
 } from "../../../components/config/PhotoPreview";
 import UserAvatar from "../../../components/human/avatar";
 import { uploadImage } from "../../../firebase/store/photo";
-import { type BackProp, NextButton, type StepProps } from "../common";
+import { type BackProp, NavigationButton, type StepProps } from "../common";
 
 export type Step2Data = {
   pictureUrl: string;
@@ -118,9 +118,9 @@ export default function Step2({
               {caller === "registration" ? "確定" : "保存"}
             </Button>
           ) : (
-            <NextButton onClick={next}>
+            <NavigationButton onClick={next}>
               {caller === "registration" ? "確定" : "保存"}
-            </NextButton>
+            </NavigationButton>
           )}
         </div>
       </div>

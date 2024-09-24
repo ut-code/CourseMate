@@ -2,9 +2,10 @@ import { Box } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import type { Step1User } from "../../common/zod/types";
 import Header from "../../components/Header";
 import { register } from "./functions";
-import Step1, { type Step1Data } from "./steps/step1_profile";
+import Step1 from "./steps/step1_profile";
 import Step2, { type Step2Data } from "./steps/step2_img";
 import Confirmation from "./steps/step3_confirmation";
 import Step4 from "./steps/step4_course";
@@ -14,7 +15,7 @@ function Registration() {
   const navigate = useNavigate();
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
-  const [step1Data, setStep1Data] = useState<Step1Data>();
+  const [step1Data, setStep1Data] = useState<Step1User>();
   const [step2Data, setStep2Data] = useState<Step2Data>();
 
   switch (step) {
@@ -82,7 +83,7 @@ export default function RegistrationPage() {
         overflowY: "auto",
       }}
     >
-      <Header title="Sign Up" />
+      <Header title="登録/Register" />
       <Registration />
     </Box>
   );

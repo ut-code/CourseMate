@@ -31,6 +31,7 @@ import type {
   SharedRoomOverviewSchema,
   SharedRoomSchema,
   SlotSchema,
+  Step1UserSchema,
   UpdateRoomSchema,
   UpdateUserSchema,
   UserIDSchema,
@@ -47,6 +48,7 @@ export type RelationshipStatus = z.infer<typeof RelationshipStatusSchema>;
 export type User = z.infer<typeof UserSchema>;
 export type InitUser = z.infer<typeof InitUserSchema>;
 export type UpdateUser = z.infer<typeof UpdateUserSchema>;
+export type Step1User = z.infer<typeof Step1UserSchema>;
 export type RelationshipID = z.infer<typeof RelationshipIDSchema>;
 export type Relationship = z.infer<typeof RelationshipSchema>;
 export type CourseID = z.infer<typeof CourseIDSchema>;

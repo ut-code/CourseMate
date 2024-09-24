@@ -10,7 +10,7 @@ export type BackProp = {
   back: () => void;
 };
 
-export function NextButton({
+export function NavigationButton({
   onClick,
   weak,
   children,
@@ -24,6 +24,7 @@ export function NextButton({
       variant={weak ? "text" : "contained"}
       sx={{
         alignSelf: "space-between",
+        width: "40px",
       }}
       onClick={onClick}
     >
