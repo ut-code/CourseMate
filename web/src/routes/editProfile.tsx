@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -58,12 +59,11 @@ export default function EditProfile() {
       <h1>アカウント編集</h1>
 
       {loading ? (
-        <p>Loading...</p>
+        <CircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : data ? (
         <>
-          <p>名前</p>
           <FormControl fullWidth sx={{ marginBottom: "20px" }}>
             <TextField
               label="名前"
