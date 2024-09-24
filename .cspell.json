@@ -2,9 +2,21 @@
   "version": "0.2",
   "language": "en",
   "words": [
-    "fix-below:",
+    /* TODO: fix this */
     "faculity",
-    "supabase"
+    /* common words */
+    "supabase",
+    "direnv",
+    "bunx",
+    "qiita",
+    /* our project */
+    "coursemate",
+    "safify",
+    /* they call it so */
+    "notistack",
+    "autoincrement",
+    "datasource",
+    "lockb"
   ],
   "dictionaries": [
     "softwareTerms",
@@ -19,12 +31,14 @@
     "npm"
   ],
   "ignorePaths": [
+    "flake.*",
     "**/.git/**",
     "**/node_modules/**",
     "server/target/**",
     "web/dist/**",
     "**/package.json",
     "**/bun.lockb",
-    "**/*.svg"
+    "**/*.svg",
+    "**/migration.sql"
   ]
 }
