@@ -140,6 +140,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: oven-/setup-bun@v2
+      - uses: oven-sh/setup-bun@v2
       - run: make setup
       - run: make test
