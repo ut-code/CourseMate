@@ -21,6 +21,7 @@ watch:
 LOCAL_DB := postgres://user:password@localhost:5432/database
 
 test: export DATABASE_URL=$(LOCAL_DB)
+test: export UNSAFE_SKIP_AUTH=1
 test: dev-db
 	ENV_FILE=server/.env.dev bun test
 	docker stop postgres
