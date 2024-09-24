@@ -133,7 +133,7 @@ export default function Login() {
             style={{
               width: "100%",
               padding: "30px",
-              fontSize: "25px",
+              lineHeight: "normal",
             }}
           >
             <div className="gsi-material-button-state" />
@@ -183,10 +183,12 @@ export default function Login() {
                   <path fill="none" d="M0 0h48v48H0z" />
                 </svg>
               </div>
-              <span className="gsi-material-button-contents">
+              <span
+                className="gsi-material-button-contents"
+                style={{ height: "30px", fontSize: "25px" }}
+              >
                 Sign in with Google
               </span>
-              <span style={{ display: "none" }}>Sign in with Google</span>
             </div>
           </button>
           <br />
@@ -196,8 +198,6 @@ export default function Login() {
             mt={2}
             underline="none"
           >
-            {" "}
-            {/* underlineをnoneに設定 */}
             初めての方はこちら
           </Link>
         </Box>
