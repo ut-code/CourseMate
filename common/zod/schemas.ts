@@ -38,7 +38,7 @@ export const UserSchema = z.object({
   name: NameSchema,
   gender: GenderSchema,
   grade: z.string(),
-  faculity: z.string(), // TODO: validate this further
+  faculty: z.string(), // TODO: validate this further
   department: z.string(), // same
   intro: z.string(),
   pictureUrl: z.string(),

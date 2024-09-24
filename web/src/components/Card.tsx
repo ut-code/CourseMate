@@ -94,7 +94,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
       </div>
       <div style={{ padding: "10px" }}>
         {displayedUser?.grade && <p>学年： {displayedUser.grade}</p>}
-        {displayedUser?.faculity && <p>学部： {displayedUser.faculity}</p>}
+        {displayedUser?.faculty && <p>学部： {displayedUser.faculty}</p>}
         {displayedUser?.department && <p>学科： {displayedUser.department}</p>}
         {displayedUser?.gender && <p>性別： {displayedUser?.gender}</p>}
         {displayedUser?.intro && <p>自己紹介: {displayedUser.intro}</p>}
