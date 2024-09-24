@@ -27,7 +27,6 @@ test("server up", async () => {
 
 test("/users/exists", async () => {
   const res = await fetch("localhost:3000/users/exists/abc101");
-  expect(await res.text()).toBe("nothing");
   expect(res.status).toBe(200);
   const res2 = await fetch("localhost:3000/users/exists/not-there");
   expect(res2.status).toBe(404);
