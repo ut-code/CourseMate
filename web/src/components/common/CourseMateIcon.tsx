@@ -15,7 +15,6 @@ export function CourseMateIcon(props: Props) {
         objectFit: "cover",
         borderRadius: "50%",
         pointerEvents: "none",
-        marginRight: "8px",
       }}
     />
   );

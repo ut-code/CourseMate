@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import { CourseMateIcon } from "./common/CourseMateIcon";
 
 type Props = {
@@ -17,7 +17,9 @@ export default function Header(props: Props) {
         }}
       >
         <Toolbar>
-          <CourseMateIcon width="28px" height="28px" />
+          <Box sx={{ marginRight: "8px" }}>
+            <CourseMateIcon width="28px" height="28px" />
+          </Box>
           <Typography
             variant="h6"
             component="div"
