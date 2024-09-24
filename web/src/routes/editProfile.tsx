@@ -101,6 +101,9 @@ export default function EditProfile() {
   }
 
   const [open, setOpen] = useState<boolean>(false);
+  useEffect(() => {
+    console.log("open: ", open);
+  }, [open]);
 
   const handleGoToCourses = () => {
     navigate("/edit/courses");
@@ -136,6 +139,7 @@ export default function EditProfile() {
 
   const handleBack = () => {
     navigate("/settings");
+    handleSave();
   };
 
   const handleFacultyChange = (event: SelectChangeEvent<string>) => {
