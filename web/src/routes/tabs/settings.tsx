@@ -1,5 +1,5 @@
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, CircularProgress, IconButton } from "@mui/material";
+import { Box, CircularProgress, IconButton, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom"; // react-router-dom の useNavigate を使用
 import hooks from "../../api/hooks";
 import { Card } from "../../components/Card";
@@ -17,16 +17,39 @@ export default function Settings() {
   }
 
   return (
-    <Box sx={{ padding: "20px" }}>
+    <Box
+      sx={{
+        padding: "20px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        minHeight: "100vh",
+      }}
+    >
       {loading ? (
         <CircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : data ? (
         <>
-          <IconButton onClick={handleProfileEdit}>
-            <EditIcon />
-          </IconButton>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center", // アイコンとテキストを縦に揃える
+              justifyContent: "space-between", // テキストとアイコンを左右に配置
+              width: "75%",
+              maxWidth: "500px", // カード幅に合わせて調整
+            }}
+          >
+            <Typography variant="h6" sx={{ marginRight: 1 }}>
+              あなたのカード
+            </Typography>
+            <IconButton onClick={handleProfileEdit}>
+              <EditIcon sx={{ color: "#039BE5" }} fontSize="large" />{" "}
+              {/* アイコン色変更 */}
+            </IconButton>
+          </Box>
           <Card displayedUser={data} />
           <LogOutButton />
         </>
