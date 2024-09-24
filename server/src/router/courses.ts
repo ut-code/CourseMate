@@ -1,5 +1,5 @@
-import { Day } from "@prisma/client";
 import express, { type Request, type Response } from "express";
+import type { Day } from "../common/types";
 import { DaySchema, PeriodSchema } from "../common/zod/schemas";
 import {
   getCourseByCourseId,
@@ -13,7 +13,7 @@ import { safeGetUserId } from "../firebase/auth/db";
 const router = express.Router();
 
 function isDay(value: string): value is Day {
-  return value in Day;
+  return DaySchema.safeParse(value).success;
 }
 
 // ある曜限に存在する全ての講義を取得

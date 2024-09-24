@@ -70,7 +70,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
         border: "2px solid #3596C6",
         padding: "10px",
         height: "100%",
-        overflow: "hidden",
+        overflow: "scroll",
       }}
     >
       <div
@@ -94,7 +94,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
       </div>
       <div style={{ padding: "10px" }}>
         {displayedUser?.grade && <p>学年： {displayedUser.grade}</p>}
-        {displayedUser?.faculity && <p>学部： {displayedUser.faculity}</p>}
+        {displayedUser?.faculty && <p>学部： {displayedUser.faculty}</p>}
         {displayedUser?.department && <p>学科： {displayedUser.department}</p>}
         {displayedUser?.gender && <p>性別： {displayedUser?.gender}</p>}
         {displayedUser?.intro && <p>自己紹介: {displayedUser.intro}</p>}
@@ -116,7 +116,7 @@ const CardBack = ({ displayedUser }: CardProps) => {
         border: "2px solid #3596C6",
         padding: "10px",
         height: "100%",
-        overflow: "hidden",
+        overflow: "scroll",
       }}
     >
       <div style={{ display: "flex", justifyContent: "center" }}>

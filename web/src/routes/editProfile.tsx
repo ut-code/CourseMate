@@ -1,9 +1,9 @@
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
-import { CircularProgress } from "@mui/material";
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   IconButton,
   InputLabel,
@@ -33,14 +33,14 @@ export default function EditProfile() {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [grade, setGrade] = useState("");
-  const [faculity, setFaculity] = useState("");
+  const [faculty, setFaculty] = useState("");
   const [department, setDepartment] = useState("");
   const [intro, setIntro] = useState("");
   const [pictureUrl, setPictureUrl] = useState("");
   const [tmpName, setTmpName] = useState("");
   const [tmpGender, setTmpGender] = useState("");
   const [tmpGrade, setTmpGrade] = useState("");
-  const [tmpFaculity, setTmpFaculity] = useState("");
+  const [tmpFaculty, setTmpFaculty] = useState("");
   const [tmpDepartment, setTmpDepartment] = useState("");
   const [tmpIntro, setTmpIntro] = useState("");
 
@@ -59,14 +59,14 @@ export default function EditProfile() {
       setName(data.name);
       setGender(data.gender);
       setGrade(data.grade);
-      setFaculity(data.faculity);
+      setFaculty(data.faculty);
       setDepartment(data.department);
       setIntro(data.intro);
       setPictureUrl(data.pictureUrl);
       setTmpName(data.name);
       setTmpGender(data.gender);
       setTmpGrade(data.grade);
-      setTmpFaculity(data.faculity);
+      setTmpFaculty(data.faculty);
       setTmpDepartment(data.department);
       setTmpIntro(data.intro);
     }
@@ -111,7 +111,7 @@ export default function EditProfile() {
       name: name,
       gender: gender,
       grade: grade,
-      faculity: faculity,
+      faculty: faculty,
       department: department,
       intro: intro,
       pictureUrl: pictureUrl,
@@ -122,7 +122,7 @@ export default function EditProfile() {
     setTmpName(name);
     setTmpGender(gender);
     setTmpGrade(grade);
-    setTmpFaculity(faculity);
+    setTmpFaculty(faculty);
     setTmpDepartment(department);
     setTmpIntro(intro);
     setIsEditingName(false);
@@ -139,7 +139,7 @@ export default function EditProfile() {
   };
 
   const handleFacultyChange = (event: SelectChangeEvent<string>) => {
-    setTmpFaculity(event.target.value);
+    setTmpFaculty(event.target.value);
   };
 
   const handleDepartmentChange = (event: SelectChangeEvent<string>) => {
@@ -248,7 +248,7 @@ export default function EditProfile() {
             <Box display="flex" alignItems="center">
               <InputLabel>学部</InputLabel>
               <Select
-                value={tmpFaculity}
+                value={tmpFaculty}
                 label="学部"
                 onChange={handleFacultyChange}
                 disabled={!isEditingFaculty}
@@ -264,7 +264,7 @@ export default function EditProfile() {
                 onClick={() => {
                   if (isEditingFaculty) {
                     setDepartment("");
-                    setFaculity(tmpFaculity);
+                    setFaculty(tmpFaculty);
                     handleSave();
                     setIsEditingFaculty(false);
                   } else {
@@ -283,12 +283,12 @@ export default function EditProfile() {
               <Select
                 value={tmpDepartment}
                 onChange={handleDepartmentChange}
-                disabled={!isEditingDepartment || !faculity}
+                disabled={!isEditingDepartment || !faculty}
                 label="学科"
                 fullWidth
               >
-                {faculity &&
-                  facultiesAndDepartments[faculity].map((dep) => (
+                {faculty &&
+                  facultiesAndDepartments[faculty].map((dep) => (
                     <MenuItem key={dep} value={dep}>
                       {dep}
                     </MenuItem>

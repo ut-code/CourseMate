@@ -16,6 +16,7 @@ enum Day {
   fri
   sat
   sun
+  other
 }
 
 model User {
@@ -27,7 +28,7 @@ model User {
   name       String @default("名無し")
   gender     String @default("")
   grade      String @default("")
-  faculity   String @default("")
+  faculty String @default("")
   department String @default("")
   intro      String @default("")
   pictureUrl String @default("")
@@ -57,8 +58,8 @@ model Slot {
   id       Int    @id @default(autoincrement())
   course   Course @relation(fields: [courseId], references: [id])
   courseId String
-  period   Int
-  day      Day
+  period   Int // 1-6. 0 の場合はなし (集中など)
+  day      Day // 曜日。other の場合は集中など
 
   @@unique([courseId, period, day])
 }

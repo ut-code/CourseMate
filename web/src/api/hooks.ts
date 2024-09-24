@@ -3,7 +3,7 @@ import { useAuthorizedData } from "../hooks/useData";
 import endpoints from "./internal/endpoints";
 import type { Hook } from "./share/types";
 
-// TODO: install typia or zod.
+// TODO: install zod.
 
 export function useMatchedUsers(): Hook<User[]> {
   const url = endpoints.matchedUsers;

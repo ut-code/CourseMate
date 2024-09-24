@@ -3,8 +3,8 @@ dotenv.config();
 
 import cookieParser from "cookie-parser";
 import express from "express";
-import nocsrf from "./lib/cross-origin/block-unknown-origin";
-import cors from "./lib/cross-origin/multiorigin-cors";
+import csrf from "./lib/cross-origin/block-unknown-origin";
+import cors from "./lib/cross-origin/multi-origin-cors";
 import { initializeSocket } from "./lib/socket/socket";
 import chatRoutes from "./router/chat";
 import coursesRoutes from "./router/courses";
@@ -32,7 +32,7 @@ export const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(nocsrf(corsOptions));
+app.use(csrf(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

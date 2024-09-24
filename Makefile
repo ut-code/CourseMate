@@ -28,13 +28,14 @@ docker-watch: copy-common
 seed:
 	cd server; bunx prisma db seed
 
-precommit: check-branch lint-staged
-	make type-check
+precommit: check-branch lint-staged spell-check
 
 lint-staged:
 	bunx lint-staged
 check-branch:
 	@ if [ "$(git branch --show-current)" == "main" ]; then echo "Cannot make commit on main! aborting..."; exit 1; fi
+spell-check:
+	bunx cspell --quiet .
 
 # Sync (install/update packages, generate prisma, etc)
 
