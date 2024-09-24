@@ -8,16 +8,16 @@ import UserAvatar from "../../../components/human/avatar";
 import { uploadImage } from "../../../firebase/store/photo";
 import { type BackProp, NextButton, type StepProps } from "../common";
 
-export type Step3Data = {
+export type Step2Data = {
   pictureUrl: string;
 };
 
-export default function Step3({
+export default function Step2({
   onSave,
   prev,
   back,
   caller,
-}: StepProps<Step3Data> & BackProp) {
+}: StepProps<Step2Data> & BackProp) {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [file, setFile] = useState<File>();
   const [url, setURL] = useState<string>("");
@@ -62,7 +62,7 @@ export default function Step3({
     console.log("open: ", open);
   }, [open]);
   return (
-    <>
+    <div style={{ textAlign: "center", marginTop: "20px" }}>
       <Typography>アイコン設定</Typography>
       <Modal
         id="MODAL"
@@ -100,21 +100,30 @@ export default function Step3({
           </Button>
         </Box>
       </Modal>
-      <div style={{ textAlign: "center" }}>
+      <div
+        style={{
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <UserAvatar width="300px" height="300px" pictureUrl={url} />
         <PhotoPreviewButton text="写真を選択" onSelect={() => setOpen(true)} />
         {errorMessage && <span>{errorMessage}</span>}
-        <Button onClick={back}>戻る</Button>
-        {file === null ? (
-          <Button disabled={true}>
-            {caller === "registration" ? "確定" : "保存"}
-          </Button>
-        ) : (
-          <NextButton onClick={next}>
-            {caller === "registration" ? "確定" : "保存"}
-          </NextButton>
-        )}
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Button onClick={back}>戻る</Button>
+          {file === null ? (
+            <Button disabled={true}>
+              {caller === "registration" ? "確定" : "保存"}
+            </Button>
+          ) : (
+            <NextButton onClick={next}>
+              {caller === "registration" ? "確定" : "保存"}
+            </NextButton>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 }

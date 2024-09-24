@@ -56,7 +56,7 @@ export function ImageCropper({ sameOriginURL: url, onImageChange }: Props) {
 // is this the right way to do this?
 // https://cloudinary.com/guides/automatic-image-cropping/cropping-images-in-javascript
 function operateCrop(
-  srcurl: string,
+  srcURL: string,
   diff: { x: number; y: number },
   size: { w: number; h: number },
 ): Promise<File> {
@@ -74,7 +74,7 @@ function operateCrop(
   if (!ctx) throw new Error("this shouldn't happen");
 
   const src = new Image();
-  src.src = srcurl;
+  src.src = srcURL;
   ctx.drawImage(src, diff.x, diff.y, size.w, size.h, 0, 0, size.w, size.h);
 
   return new Promise((resolve) => {

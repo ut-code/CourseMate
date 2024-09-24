@@ -24,24 +24,24 @@ export async function getOverview(
     const matched = await getMatchedUser(user);
     if (!matched.ok) return Err(matched.error);
 
-    const dmov = await Promise.all(
+    const dm = await Promise.all(
       matched.value.map(async (friend) => {
         const lastMessageResult = await getLastMessage(user, friend.id);
         const lastMessage = lastMessageResult.ok
           ? lastMessageResult.value
           : undefined;
-        const ov: DMOverview = {
+        const overview: DMOverview = {
           isDM: true,
           friendId: friend.id,
           name: friend.name,
           thumbnail: friend.pictureUrl,
-          lastmsg: lastMessage,
+          lastMsg: lastMessage,
         };
-        return ov;
+        return overview;
       }),
     );
 
-    const shared: {
+    const sharedRooms: {
       id: number;
       name: string;
       thumbnail: string;
@@ -52,16 +52,16 @@ export async function getOverview(
         },
       },
     });
-    const sharedov = shared.map((shared) => {
+    const shared = sharedRooms.map((room) => {
       const overview: SharedRoomOverview = {
-        roomId: shared.id as ShareRoomID,
-        name: shared.name,
-        thumbnail: shared.thumbnail,
+        roomId: room.id as ShareRoomID,
+        name: room.name,
+        thumbnail: room.thumbnail,
         isDM: false,
       };
       return overview;
     });
-    return Ok([...sharedov, ...dmov]);
+    return Ok([...shared, ...dm]);
   } catch (e) {
     return Err(e);
   }
