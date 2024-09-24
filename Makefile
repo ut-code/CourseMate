@@ -20,6 +20,7 @@ watch:
 
 test:
 	./run-psql.sh &
+	DATABASE_URL=postgres://user:database@localhost:5432/database make seed
 	DATABASE_URL=postgres://user:database@localhost:5432/database bun test
 	
 docker: copy-common

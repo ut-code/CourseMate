@@ -15,5 +15,5 @@ afterAll(() => {
 test("server up", async () => {
   const res = await fetch("localhost:3000/");
   const text = await res.text();
-  expect(text).toBe("Hello from Express!");
+  expect(text).toBe(`"Hello from Express!"`);
 });
