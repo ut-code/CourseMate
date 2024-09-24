@@ -70,7 +70,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
         border: "2px solid #3596C6",
         padding: "10px",
         height: "100%",
-        overflow: "scroll",
+        overflow: "hidden",
       }}
     >
       <div
@@ -81,10 +81,10 @@ const CardFront = ({ displayedUser }: CardProps) => {
           justifyContent: "space-around",
         }}
       >
-        <div style={{ width: "50%", maxWidth: "300px", maxHeight: "300px" }}>
+        <div style={{ width: "80%", maxWidth: "300px", maxHeight: "300px" }}>
           <UserAvatar
             pictureUrl={displayedUser?.pictureUrl}
-            width="80%"
+            width="100%"
             height="auto"
           />
         </div>
@@ -116,7 +116,7 @@ const CardBack = ({ displayedUser }: CardProps) => {
         border: "2px solid #3596C6",
         padding: "10px",
         height: "100%",
-        overflow: "scroll",
+        overflow: "hidden",
       }}
     >
       <div style={{ display: "flex", justifyContent: "center" }}>

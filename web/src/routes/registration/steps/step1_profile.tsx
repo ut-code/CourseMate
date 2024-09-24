@@ -118,7 +118,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
         </Select>
       </FormControl>
       <FormControl fullWidth>
-        <InputLabel>学科(先に学部を選択して下さい)</InputLabel>
+        <InputLabel>学科 (先に学部を選択して下さい)</InputLabel>
         <Select
           value={department}
           onChange={handleDepartmentChange}

@@ -14,7 +14,7 @@ export const NameSchema = z
   .string()
   .min(1, { message: "名前は1文字以上です" })
   .max(10, { message: "名前は10文字以下です" });
-export const PictureUrlSchema = z.string().url();
+export const PictureUrlSchema = z.string().url().min(1, "画像を選択して下さい");
 export const GenderSchema = z
   .string()
   .min(1, { message: "Gender must not be empty." });
@@ -37,10 +37,10 @@ export const UserSchema = z.object({
   guid: GUIDSchema,
   name: NameSchema,
   gender: GenderSchema,
-  grade: z.string(),
-  faculty: z.string(), // TODO: validate this further
-  department: z.string(), // same
-  intro: z.string(),
+  grade: z.string().min(1, { message: "学年を入力して下さい" }),
+  faculty: z.string().min(1, { message: "学部を入力して下さい" }), // TODO: validate this further
+  department: z.string().min(1, { message: "学科を入力して下さい" }), // same
+  intro: z.string().max(150, { message: "自己紹介文は225文字以下です" }),
   pictureUrl: z.string(),
 });
 
