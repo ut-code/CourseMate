@@ -1,8 +1,22 @@
+import { styled } from "@mui/material/styles";
 import { signOut } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebaseconfig";
 import { useAlert } from "./common/alert/AlertProvider";
+
+const StyledButton = styled("button")({
+  backgroundColor: "white",
+  border: "1px solid black",
+  color: "red",
+  padding: "10px 20px",
+  cursor: "pointer",
+  transition: "background-color 0.3s",
+  marginTop: "20px",
+  "&:hover": {
+    backgroundColor: "#f0f0f0",
+  },
+});
 
 export default function LogOutButton() {
   const { showAlert } = useAlert();
@@ -33,9 +47,9 @@ export default function LogOutButton() {
 
   return (
     <>
-      <button onClick={handleClick} type="button">
+      <StyledButton onClick={handleClick} type="button">
         ログアウト
-      </button>
+      </StyledButton>
     </>
   );
 }
