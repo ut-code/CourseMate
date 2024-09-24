@@ -12,7 +12,8 @@
     "autoincrement",
     "datasource",
     "lockb",
-    "psql"
+    "psql",
+    "isready"
   ],
   "dictionaries": [
     "softwareTerms",
