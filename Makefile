@@ -29,7 +29,6 @@ seed:
 	cd server; bunx prisma db seed
 
 precommit: check-branch lint-staged
-	make type-check
 
 lint-staged:
 	bunx lint-staged
