@@ -18,9 +18,11 @@ serve: serve-all # serve only. does not build.
 watch:
 		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
 
-test:
-	DATABASE_URL=postgres://user:password@localhost:5432/database make seed
-	DATABASE_URL=postgres://user:password@localhost:5432/database bun test
+LOCAL_DB := postgres://user:password@localhost:5432/database
+
+test: export DATABASE_URL=$(LOCAL_DB)
+test: dev-db
+	ENV_FILE=server/.env.dev bun test
 	docker stop postgres
 	
 docker: copy-common
@@ -34,8 +36,11 @@ seed:
 	cd server; bunx prisma db seed
 
 ## server/.envをDATABASE_URL=postgres://user:password@localhost:5432/databaseにしてから行う
+dev-db: export DATABASE_URL=$(LOCAL_DB)
+dev-db: export NEVER_LOAD_DOTENV=1
 dev-db:
-	docker run --rm --name postgres -d \
+	docker stop postgres || true
+	@docker run --rm --name postgres -d \
 	  -p 5432:5432 \
 	  -e POSTGRES_PASSWORD=password \
 	  -e POSTGRES_USER=user \
@@ -49,10 +54,8 @@ dev-db:
 	done
 	@echo "PostgreSQL is ready. Running seed..."
 	@cd server; bunx prisma generate; bunx prisma db push; cd ..
-	@make seed
+	@make seed;
 	@echo "Seeding completed."
-
-
 
 
 precommit: check-branch lint-staged spell-check

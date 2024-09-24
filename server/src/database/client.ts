@@ -1,9 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import * as dotenv from "dotenv";
-
-if (!process.env.DATABASE_URL) {
-  dotenv.config({ path: "./env.dev" });
-}
+import "../load-env";
 
 export let prisma = new PrismaClient();
 

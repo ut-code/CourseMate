@@ -10,7 +10,7 @@ beforeAll(() => {
     console.log(
       "SAFETY GUARD: test must be run via `make test`, otherwise it might break dev/prod database",
     );
-    throw new Error(`got: ${DATABASE_URL}`);
+    throw new Error(`got: \`${DATABASE_URL}\``);
   }
   server = main();
 });
@@ -25,9 +25,10 @@ test("server up", async () => {
   expect(text).toBe(`"Hello from Express!"`);
 });
 
-test("/user/exists", async () => {
-  const res = await fetch("localhost:3000/user/exists/abc101");
+test("/users/exists", async () => {
+  const res = await fetch("localhost:3000/users/exists/abc101");
+  expect(await res.text()).toBe("nothing");
   expect(res.status).toBe(200);
-  const res2 = await fetch("localhost:3000/user/exists/not-there");
+  const res2 = await fetch("localhost:3000/users/exists/not-there");
   expect(res2.status).toBe(404);
 });
