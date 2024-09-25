@@ -45,17 +45,18 @@ export default function CourseRegisterConfirmDialog({
         <Box mt={2}>
           {course && (
             <Alert color="success" icon={false} severity="info">
-              追加: ${course.name}(${course.teacher})
+              {`追加: ${course.name} (${course.teacher})`}
             </Alert>
           )}
           <Alert color="error" icon={false} severity="info" sx={{ mt: 1 }}>
-            削除:{" "}
-            {overlapCourses
-              .map(
-                (overlapCourse) =>
-                  `${overlapCourse.name}(${overlapCourse.teacher})`,
-              )
-              .join("・") || "なし"}
+            {`削除: ${
+              overlapCourses
+                .map(
+                  (overlapCourse) =>
+                    `${overlapCourse.name} (${overlapCourse.teacher})`,
+                )
+                .join("・") || "なし"
+            }`}
           </Alert>
         </Box>
       </DialogContent>

@@ -112,6 +112,8 @@ const CardBack = ({ displayedUser }: CardProps) => {
   return (
     <div
       style={{
+        display: "flex",
+        flexDirection: "column",
         backgroundColor: "#F7FCFF",
         border: "2px solid #3596C6",
         padding: "10px",
@@ -120,12 +122,12 @@ const CardBack = ({ displayedUser }: CardProps) => {
       }}
     >
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <p style={{ fontSize: "2vw", fontWeight: "bold" }}>
+        <p style={{ fontSize: "1rem", fontWeight: "bold" }}>
           {displayedUser?.name}
         </p>
       </div>
       <CoursesTable userId={displayedUser.id} />
-      <div style={{ position: "absolute", bottom: "0", right: "0", left: "0" }}>
+      <div>
         <ThreeSixtyIcon
           style={{ fontSize: "7vw", display: "block", margin: "auto" }}
         />
