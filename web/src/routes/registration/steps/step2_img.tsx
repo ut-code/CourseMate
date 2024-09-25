@@ -116,7 +116,7 @@ export default function Step2({
           }}
         >
           <UserAvatar width="35vh" height="35vh" pictureUrl={url} />
-          <div style={{ marginTop: "10vh" }}>
+          <div>
             <PhotoPreviewButton
               text="写真を選択"
               onSelect={() => setOpen(true)}

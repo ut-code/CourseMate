@@ -22,6 +22,7 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
         width: "70vw",
         maxWidth: "500px",
         height: "50px",
+        marginTop: "10vh",
         borderRadius: "25px", // 楕円にするための設定
       }}
     >
