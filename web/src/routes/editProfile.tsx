@@ -33,8 +33,8 @@ export default function EditProfile() {
   const { showAlert } = useAlert();
   const { state } = hooks.useMe();
   const data = state.data;
-  const error = state.state === "error" ? state.error : null;
-  const loading = state.state === "loading";
+  const error = state.current === "error" ? state.error : null;
+  const loading = state.current === "loading";
 
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");

@@ -10,9 +10,9 @@ export default function Step4() {
   const { state } = hooks.useMe();
   return (
     <Box>
-      {state.state === "loading" ? (
+      {state.current === "loading" ? (
         <CircularProgress />
-      ) : state.state === "error" ? (
+      ) : state.current === "error" ? (
         <p>Error: {state.error.message}</p>
       ) : (
         <Box

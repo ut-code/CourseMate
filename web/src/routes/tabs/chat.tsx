@@ -20,9 +20,9 @@ export default function Chat() {
       ) : (
         // activeRoomがfalseの場合、通常のRoomListを表示
         <Box>
-          {state.state === "loading" ? (
+          {state.current === "loading" ? (
             <CircularProgress />
-          ) : state.state === "error" ? (
+          ) : state.current === "error" ? (
             <Typography color="error">Error: {state.error.message}</Typography>
           ) : (
             <RoomList

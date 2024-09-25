@@ -8,8 +8,8 @@ export default function EditCourses() {
 
   const { state } = hooks.useMe();
   const data = state.data;
-  const loading = state.state === "loading";
-  const error = state.state === "error" ? state.error : null;
+  const loading = state.current === "loading";
+  const error = state.current === "error" ? state.error : null;
 
   function handleBack() {
     navigate("/settings");

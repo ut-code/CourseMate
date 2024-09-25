@@ -3,22 +3,22 @@ import { useCallback, useEffect, useState } from "react";
 // while using previous cache and (may or may not) waiting for fetch success
 type Stale<T> = {
   data: T;
-  state: "stale";
+  current: "stale";
 };
 // only occurs on first load.
 type Loading = {
   data: null;
-  state: "loading";
+  current: "loading";
 };
 // success. is the latest data.
 type Success<T> = {
   data: T;
-  state: "success";
+  current: "success";
 };
 // first load AND fetching failed
 type Failed = {
   data: null;
-  state: "error";
+  current: "error";
   error: Error;
 };
 
@@ -44,7 +44,7 @@ export function useSWR<T>(
   assertUnique(cacheKey, fetcher);
   console.log("useSWR: rendering...");
   const [state, setState] = useState<State<T>>(() => ({
-    state: "loading",
+    current: "loading",
     data: null,
   }));
 
@@ -53,11 +53,11 @@ export function useSWR<T>(
     setState((state) =>
       state.data === null
         ? {
-            state: "loading",
+            current: "loading",
             data: null,
           }
         : {
-            state: "stale",
+            current: "stale",
             data: state.data,
           },
     );
@@ -72,14 +72,14 @@ export function useSWR<T>(
       setState({
         // Success
         data: result.data,
-        state: "success",
+        current: "success",
       });
       localStorage.setItem(cacheKey, JSON.stringify(data));
       console.log("useSWR: update success");
     } catch (e) {
       setState({
         data: null,
-        state: "error",
+        current: "error",
         error: e as Error,
       });
       console.log("useSWR: update fail");
@@ -92,7 +92,7 @@ export function useSWR<T>(
       try {
         const data = JSON.parse(oldData);
         setState({
-          state: "stale",
+          current: "stale",
           data,
         });
       } catch {}

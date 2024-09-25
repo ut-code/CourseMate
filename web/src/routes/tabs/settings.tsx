@@ -11,8 +11,8 @@ export default function Settings() {
   const navigate = useNavigate();
   const { state } = hooks.useMe();
   const data = state.data;
-  const error = state.state === "error" ? state.error : null;
-  const loading = state.state === "loading";
+  const error = state.current === "error" ? state.error : null;
+  const loading = state.current === "loading";
 
   const [back, setBack] = useState<boolean>(false);
 
