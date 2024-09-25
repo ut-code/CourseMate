@@ -147,7 +147,11 @@ export default function Step2({
               onSelect={() => setOpen(true)}
             />
           </div>
-          {errorMessage && <span>{errorMessage}</span>}
+          {errorMessage && (
+            <Box color="red" mb={2}>
+              {errorMessage}
+            </Box>
+          )}
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Button onClick={back}>戻る</Button>
             {file === null ? (

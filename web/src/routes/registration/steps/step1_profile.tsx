@@ -10,19 +10,12 @@ import {
   Typography,
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
+import { parseStep1UserSchema } from "../../../common/zod/methods";
+import type { Step1User } from "../../../common/zod/types";
 import { NextButton, type StepProps } from "../common";
 import { facultiesAndDepartments } from "../data";
 
-export type Step1Data = {
-  name: string;
-  gender: string;
-  grade: string; // todo: make it enum
-  faculty: string; // 学部
-  department: string; // 学科
-  intro: string;
-};
-
-export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
+export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
   const [name, setName] = useState(prev?.name ?? "");
   const [gender, setGender] = useState(prev?.gender ?? "その他");
   const [grade, setGrade] = useState(prev?.grade ?? "");
@@ -33,8 +26,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
 
   async function save() {
     try {
-      // FIXME: create zod schema!
-      const data: Step1Data = {
+      const data: Step1User = {
         name,
         grade,
         gender,
@@ -42,6 +34,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
         department,
         intro,
       };
+      parseStep1UserSchema(data);
       onSave(data);
     } catch (error) {
       if (error instanceof Error) {
