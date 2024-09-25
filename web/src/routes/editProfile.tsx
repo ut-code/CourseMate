@@ -438,10 +438,22 @@ export default function EditProfile() {
           </div>
 
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button variant="contained" onClick={handleBack}>
+            <Button
+              variant="contained"
+              onClick={handleBack}
+              style={{
+                borderRadius: "25px",
+                backgroundColor: "white", // ボタンの背景色を白に設定
+                color: "black", // テキストの色を黒に設定
+              }}
+            >
               設定画面に戻る
             </Button>
-            <Button variant="contained" onClick={handleGoToCourses}>
+            <Button
+              variant="contained"
+              onClick={handleGoToCourses}
+              style={{ borderRadius: "25px" }}
+            >
               授業編集へ
             </Button>
           </Box>
