@@ -28,6 +28,13 @@ test: dev-db
 	ENV_FILE=server/.env.dev bun test
 	docker stop postgres
 	
+prepare-deploy-web:
+	cd web; bun install; bun run build
+prepare-deploy-server:
+	cd server; bun install; npx prisma generate;
+deploy-server:
+	cd server; bun src/index.ts
+
 docker: copy-common
 	@# deferring `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
 	trap 'docker compose down' EXIT; docker compose up --build
