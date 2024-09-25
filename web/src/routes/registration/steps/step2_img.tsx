@@ -1,13 +1,12 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { parsePictureUrl } from "../../../common/zod/methods";
 import {
   PhotoPreview,
   PhotoPreviewButton,
 } from "../../../components/config/PhotoPreview";
 import UserAvatar from "../../../components/human/avatar";
 import { uploadImage } from "../../../firebase/store/photo";
-import { type BackProp, NavigationButton, type StepProps } from "../common";
+import { type BackProp, NextButton, type StepProps } from "../common";
 
 export type Step2Data = {
   pictureUrl: string;
@@ -24,35 +23,11 @@ export default function Step2({
   const [url, setURL] = useState<string>("");
 
   async function next() {
-    try {
-      if (!url) throw new Error("画像は入力必須です");
-      const data = {
-        pictureUrl: url,
-      };
-      parsePictureUrl(url);
-
-      onSave(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        let errorMessages: string;
-        try {
-          const parsedError = JSON.parse(error.message);
-          if (Array.isArray(parsedError)) {
-            errorMessages = parsedError.map((err) => err.message).join(", ");
-          } else {
-            errorMessages = error.message;
-          }
-        } catch {
-          errorMessages = error.message;
-        }
-
-        // エラーメッセージをセット
-        setErrorMessage(errorMessages);
-      } else {
-        console.log("unknown error:", error);
-        setErrorMessage("入力に誤りがあります。");
-      }
-    }
+    if (!url) throw new Error("画像は入力必須");
+    const data = {
+      pictureUrl: url,
+    };
+    onSave(data);
   }
   async function select() {
     try {
