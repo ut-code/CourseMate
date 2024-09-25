@@ -6,13 +6,15 @@ import UserAvatar from "./human/avatar";
 
 interface CardProps {
   displayedUser: User;
+  onFlip?: (isBack: boolean) => void;
 }
 
-export function Card({ displayedUser }: CardProps) {
+export function Card({ displayedUser, onFlip }: CardProps) {
   const [isDisplayingBack, setIsDisplayingBack] = useState(false);
 
   const handleRotate = () => {
     setIsDisplayingBack(!isDisplayingBack);
+    if (onFlip) onFlip(!isDisplayingBack);
   };
 
   return (
