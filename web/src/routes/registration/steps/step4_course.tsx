@@ -25,7 +25,7 @@ export default function Step4() {
         >
           <p>授業情報を登録しましょう</p>
           <CoursesTable userId={data.id} editable={true} />
-          <NextButton onClick={() => navigate("/home")}>完了</NextButton>
+          <NextButton onClick={() => navigate("/home")}>次へ</NextButton>
         </Box>
       ) : (
         <p>データがありません。</p>

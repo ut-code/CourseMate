@@ -23,7 +23,10 @@ export function NextButton({
     <Button
       variant={weak ? "text" : "contained"}
       sx={{
-        alignSelf: "space-between",
+        marginLeft: "auto", // 右に寄せるために margin-left を使用
+        width: "100px",
+        height: "44.5px",
+        borderRadius: "25px",
       }}
       onClick={onClick}
     >
