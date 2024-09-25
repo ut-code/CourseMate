@@ -108,7 +108,7 @@ jobs:
       - run: test `ls web/dist | wc -l` != 0
 
   deploy-test-server:
-    name: Deploy Test (web)
+    name: Deploy Test (server)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
