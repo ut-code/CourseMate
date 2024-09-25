@@ -28,6 +28,7 @@ export type Hook<T> = {
   reload: () => void;
 };
 
+const SWR_PREFIX = "CourseMate::useSWR::";
 // todo: consider using useSWR Hook from external instead.
 /**
  use static function instead of inline arrow function
@@ -40,8 +41,9 @@ export function useSWR<T>(
   fetcher: () => Promise<T>,
   schema: Zod.Schema<T>,
 ): Hook<T> {
+  const CACHE_KEY = SWR_PREFIX + cacheKey;
   // just a dev assertion; don't mind this. it can simply be removed on prod.
-  assertUnique(cacheKey, fetcher);
+  assertUnique(CACHE_KEY, fetcher);
   console.log("useSWR: rendering...");
   const [state, setState] = useState<State<T>>(() => ({
     current: "loading",
@@ -74,7 +76,7 @@ export function useSWR<T>(
         data: result.data,
         current: "success",
       });
-      localStorage.setItem(cacheKey, JSON.stringify(data));
+      localStorage.setItem(CACHE_KEY, JSON.stringify(data));
       console.log("useSWR: update success");
     } catch (e) {
       setState({
@@ -84,10 +86,10 @@ export function useSWR<T>(
       });
       console.log("useSWR: update fail");
     }
-  }, [cacheKey, fetcher, schema]);
+  }, [CACHE_KEY, fetcher, schema]);
 
   useEffect(() => {
-    const oldData = localStorage.getItem(cacheKey);
+    const oldData = localStorage.getItem(CACHE_KEY);
     if (oldData) {
       try {
         const data = JSON.parse(oldData);
@@ -99,7 +101,7 @@ export function useSWR<T>(
     }
 
     go(reload);
-  }, [cacheKey, reload]);
+  }, [CACHE_KEY, reload]);
 
   if (!state) throw new Error("this isn't right!");
   return {
