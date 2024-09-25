@@ -40,7 +40,7 @@ export const UserSchema = z.object({
   grade: z.string().min(1, { message: "学年を入力して下さい" }),
   faculty: z.string().min(1, { message: "学部を入力して下さい" }), // TODO: validate this further
   department: z.string().min(1, { message: "学科を入力して下さい" }), // same
-  intro: z.string().max(150, { message: "自己紹介文は225文字以下です" }),
+  intro: z.string().max(150, { message: "自己紹介文は150文字以下です" }),
   pictureUrl: z.string(),
 });
 

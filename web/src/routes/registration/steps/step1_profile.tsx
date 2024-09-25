@@ -10,12 +10,19 @@ import {
   Typography,
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
-import { parseStep1UserSchema } from "../../../common/zod/methods";
-import type { Step1User } from "../../../common/zod/types";
-import { NavigationButton, type StepProps } from "../common";
+import { NextButton, type StepProps } from "../common";
 import { facultiesAndDepartments } from "../data";
 
-export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
+export type Step1Data = {
+  name: string;
+  gender: string;
+  grade: string; // todo: make it enum
+  faculty: string; // 学部
+  department: string; // 学科
+  intro: string;
+};
+
+export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
   const [name, setName] = useState(prev?.name ?? "");
   const [gender, setGender] = useState(prev?.gender ?? "その他");
   const [grade, setGrade] = useState(prev?.grade ?? "");
@@ -26,7 +33,8 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
 
   async function save() {
     try {
-      const data: Step1User = {
+      // FIXME: create zod schema!
+      const data: Step1Data = {
         name,
         grade,
         gender,
@@ -34,7 +42,6 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
         department,
         intro,
       };
-      parseStep1UserSchema(data);
       onSave(data);
     } catch (error) {
       if (error instanceof Error) {
@@ -69,14 +76,12 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
 
   return (
     <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
-      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-        アカウント設定
-      </Typography>
+      <Typography>アカウント設定</Typography>
       <FormControl fullWidth>
         <TextField
           value={name}
           onChange={(e) => setName(e.target.value)}
-          label="名前"
+          label="名前(必須)"
         />
       </FormControl>
       <FormControl fullWidth>
@@ -118,7 +123,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
         </Select>
       </FormControl>
       <FormControl fullWidth>
-        <InputLabel>学科 (先に学部を選択して下さい)</InputLabel>
+        <InputLabel>学科(先に学部を選択して下さい)</InputLabel>
         <Select
           value={department}
           onChange={handleDepartmentChange}
@@ -147,9 +152,9 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
           {errorMessage}
         </Box>
       )}
-      <NavigationButton onClick={save}>
+      <NextButton onClick={save}>
         {caller === "registration" ? "次へ" : "保存"}
-      </NavigationButton>
+      </NextButton>
     </Box>
   );
 }

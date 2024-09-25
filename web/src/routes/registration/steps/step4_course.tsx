@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import hooks from "../../../api/hooks";
 import CoursesTable from "../../../components/course/CoursesTable";
-import { NavigationButton } from "../common";
+import { NextButton } from "../common";
 
 export default function Step4() {
   const navigate = useNavigate();
@@ -25,9 +25,7 @@ export default function Step4() {
         >
           <p>授業情報を登録しましょう</p>
           <CoursesTable userId={data.id} editable={true} />
-          <NavigationButton onClick={() => navigate("/home")}>
-            完了
-          </NavigationButton>
+          <NextButton onClick={() => navigate("/home")}>完了</NextButton>
         </Box>
       ) : (
         <p>データがありません。</p>
