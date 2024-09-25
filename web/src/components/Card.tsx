@@ -77,29 +77,84 @@ const CardFront = ({ displayedUser }: CardProps) => {
     >
       <div
         style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
+          padding: "10px",
+          display: "grid",
+          gridTemplateColumns: "50% 50%",
+          gridTemplateRows: "11vh 5vh 5vh 5vh 42vh",
+          alignItems: "start",
           justifyContent: "space-around",
         }}
       >
-        <div style={{ width: "50%", maxWidth: "300px", maxHeight: "300px" }}>
+        <div
+          style={{
+            maxWidth: "300px",
+            maxHeight: "300px",
+            gridColumn: "1 / 2",
+            gridRow: "1 / 3",
+          }}
+        >
           <UserAvatar
             pictureUrl={displayedUser?.pictureUrl}
-            width="80%"
+            width="90%"
             height="auto"
           />
         </div>
-        <p style={{ fontSize: "4vw", fontWeight: "bold" }}>
-          {displayedUser?.name}
+
+        {displayedUser?.name && (
+          <p
+            style={{
+              fontSize: "5vw",
+              fontWeight: "bold",
+              gridColumn: "2 / 3",
+              gridRow: "1 / 3",
+            }}
+          >
+            {displayedUser?.name}
+          </p>
+        )}
+
+        {displayedUser?.department && (
+          <p
+            style={{
+              marginTop: "5%",
+              fontSize: "4vw",
+              gridColumn: "1 / 3",
+              gridRow: "4 / 5",
+            }}
+          >
+            {" "}
+            {displayedUser.department}
+          </p>
+        )}
+        <p
+          style={{
+            marginTop: "3%",
+            fontSize: "4vw",
+            gridColumn: "1 / 3",
+            gridRow: "3 / 4",
+          }}
+        >
+          {displayedUser?.faculty && (
+            <span style={{ marginTop: "3%", fontSize: "5vw" }}>
+              {`${displayedUser.faculty}··`}
+            </span>
+          )}
+          <span>
+            {`${
+              displayedUser?.gender in ["男性", "女性"] // todo: maybe this needs some rewrite when gender becomes its concrete type instead of just string
+                ? displayedUser?.gender
+                : "性別は公開されていません"
+            } `}
+            {displayedUser.grade && displayedUser.grade}
+          </span>
         </p>
-      </div>
-      <div style={{ padding: "10px" }}>
-        {displayedUser?.grade && <p>学年： {displayedUser.grade}</p>}
-        {displayedUser?.faculty && <p>学部： {displayedUser.faculty}</p>}
-        {displayedUser?.department && <p>学科： {displayedUser.department}</p>}
-        {displayedUser?.gender && <p>性別： {displayedUser?.gender}</p>}
-        {displayedUser?.intro && <p>自己紹介: {displayedUser.intro}</p>}
+        {displayedUser?.intro && (
+          <p
+            style={{ fontSize: "3.5vw", gridColumn: "1 / 3", gridRow: "5 / 6" }}
+          >
+            {displayedUser.intro}
+          </p>
+        )}
       </div>
       <div style={{ position: "absolute", bottom: "0", right: "0", left: "0" }}>
         <ThreeSixtyIcon
