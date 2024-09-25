@@ -21,7 +21,7 @@ export default function Step2({
 }: StepProps<Step2Data> & BackProp) {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [file, setFile] = useState<File>();
-  const [url, setURL] = useState<string>("");
+  const [url, setURL] = useState<string>(prev?.pictureUrl ?? "");
 
   async function next() {
     try {
