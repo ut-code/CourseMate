@@ -16,6 +16,7 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
   return (
     <Button
       variant="contained"
+      component="label"
       style={{
         backgroundColor: "#039BE5",
         color: "white",
@@ -24,25 +25,20 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
         height: "50px",
         marginTop: "10vh",
         borderRadius: "25px", // 楕円にするための設定
+        fontSize: "18px",
       }}
     >
-      <label
-        htmlFor="file-upload"
-        className="custom-file-label"
-        style={{ fontSize: "18px" }} // 文字サイズを調整
-      >
-        {text || "写真を選択"}
-        <input
-          id="file-upload"
-          type="file"
-          onChange={(e) => {
-            imageSelectHandler(e);
-            onSelect();
-          }}
-          accept=".png, .jpeg, .jpg"
-          style={{ display: "none" }}
-        />
-      </label>
+      {text || "写真を選択"}
+      <input
+        id="file-upload"
+        type="file"
+        onChange={(e) => {
+          imageSelectHandler(e);
+          onSelect();
+        }}
+        accept=".png, .jpeg, .jpg"
+        style={{ display: "none" }}
+      />
     </Button>
   );
 }
