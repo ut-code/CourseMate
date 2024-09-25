@@ -31,7 +31,10 @@ import { facultiesAndDepartments } from "./registration/data";
 export default function EditProfile() {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
-  const { data, loading, error } = hooks.useMe();
+  const { state } = hooks.useMe();
+  const data = state.data;
+  const error = state.state === "error" ? state.error : null;
+  const loading = state.state === "loading";
 
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");

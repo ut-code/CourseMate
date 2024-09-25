@@ -7,8 +7,12 @@ import { Card } from "../../components/Card";
 import LogOutButton from "../../components/LogOutButton";
 
 export default function Settings() {
+  console.log("Settings: rendering...");
   const navigate = useNavigate();
-  const { data, loading, error } = hooks.useMe();
+  const { state } = hooks.useMe();
+  const data = state.data;
+  const error = state.state === "error" ? state.error : null;
+  const loading = state.state === "loading";
 
   const [back, setBack] = useState<boolean>(false);
 

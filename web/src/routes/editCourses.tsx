@@ -5,7 +5,11 @@ import CoursesTable from "../components/course/CoursesTable";
 
 export default function EditCourses() {
   const navigate = useNavigate();
-  const { data, loading, error } = hooks.useMe();
+
+  const { state } = hooks.useMe();
+  const data = state.data;
+  const loading = state.state === "loading";
+  const error = state.state === "error" ? state.error : null;
 
   function handleBack() {
     navigate("/settings");
