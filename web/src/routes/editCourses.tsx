@@ -16,7 +16,7 @@ export default function EditCourses() {
   }
 
   return (
-    <Box sx={{ padding: "20px", maxWidth: "350px", margin: "0 auto" }}>
+    <Box sx={{ padding: "20px", textAlign: "center" }}>
       <h1>授業編集</h1>
       {loading ? (
         <CircularProgress />
@@ -37,10 +37,25 @@ export default function EditCourses() {
           marginTop: "20px",
         }}
       >
-        <Button variant="contained" onClick={handleBack}>
+        <Button
+          onClick={handleBack}
+          style={{
+            borderRadius: "25px",
+            width: "35vw",
+            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+          }}
+        >
           設定画面に戻る
         </Button>
-        <Button variant="contained" onClick={handleGoToProfile}>
+        <Button
+          variant="contained"
+          onClick={handleGoToProfile}
+          style={{
+            borderRadius: "25px",
+            width: "35vw",
+            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+          }}
+        >
           プロフィール編集へ
         </Button>
       </Box>
