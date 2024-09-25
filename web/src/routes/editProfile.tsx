@@ -115,21 +115,28 @@ export default function EditProfile() {
     console.log("open: ", open);
   }, [open]);
 
-  function hasUnsavedChanges() {
+  function hasUnsavedChangesOrErrors() {
     return (
       isEditingName ||
       isEditingGender ||
       isEditingGrade ||
       isEditingFaculty ||
       isEditingDepartment ||
-      isEditingIntro
+      isEditingIntro ||
+      errorMessage ||
+      nameError ||
+      genderError ||
+      gradeError ||
+      facultyError ||
+      departmentError ||
+      introError
     );
   }
 
   function handleGoToCourses() {
-    if (hasUnsavedChanges()) {
+    if (hasUnsavedChangesOrErrors()) {
       showAlert({
-        AlertMessage: "まだ編集中のフィールドがあります。",
+        AlertMessage: "まだ編集中のフィールド、もしくはエラーがあります",
         subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
         yesMessage: "移動",
         clickYes: () => {
@@ -142,9 +149,9 @@ export default function EditProfile() {
   }
 
   function handleBack() {
-    if (hasUnsavedChanges()) {
+    if (hasUnsavedChangesOrErrors()) {
       showAlert({
-        AlertMessage: "まだ編集中のフィールドがあります",
+        AlertMessage: "編集中のフィールド、もしくはエラーがあります。",
         subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
         yesMessage: "移動",
         clickYes: () => {
