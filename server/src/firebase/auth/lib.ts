@@ -12,13 +12,21 @@ type DecodedIdToken = admin.DecodedIdToken;
 export async function getGUID(req: Request): Promise<GUID> {
   const idToken = req.query.token;
   if (typeof idToken !== "string") throw new Error();
-  return (await verifyIDToken(idToken)).uid as GUID;
+  return await getGUIDFromToken(idToken);
 }
 
-export async function getGUIDFromToken(token: IDToken): Promise<GUID> {
-  const idToken = token;
-  if (typeof idToken !== "string") throw new Error();
-  return (await verifyIDToken(idToken)).uid as GUID;
+export let getGUIDFromToken = async (token: IDToken) => {
+  return (await verifyIDToken(token)).uid as GUID;
+};
+
+// skip auth in test
+if (process.env.UNSAFE_SKIP_AUTH) {
+  getGUIDFromToken = async (token: IDToken) => {
+    if (token === "I_AM_abc101") {
+      return "abc101";
+    }
+    return (await verifyIDToken(token)).uid as GUID;
+  };
 }
 
 export async function safeGetGUID(req: Request): Promise<Result<GUID>> {
