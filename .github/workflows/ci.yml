@@ -101,7 +101,7 @@ jobs:
     name: Deploy Test (web)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/chekcout@v4
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
       - uses: oven-sh/setup-bun@v2
       - run: make prepare-deploy-web
@@ -111,7 +111,7 @@ jobs:
     name: Deploy Test (web)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/chekcout@v4
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
       - uses: oven-sh/setup-bun@v2
       - run: make prepare-deploy-server
