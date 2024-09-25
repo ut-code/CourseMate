@@ -1,5 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, CircularProgress, IconButton, Typography } from "@mui/material";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import hooks from "../../api/hooks";
 import { Card } from "../../components/Card";
@@ -9,9 +10,7 @@ export default function Settings() {
   const navigate = useNavigate();
   const { data, loading, error } = hooks.useMe();
 
-  function handleProfileEdit() {
-    navigate("/edit/profile");
-  }
+  const [back, setBack] = useState<boolean>(false);
 
   return (
     <Box
@@ -41,11 +40,13 @@ export default function Settings() {
             <Typography variant="h6" sx={{ marginRight: 1 }}>
               あなたのカード
             </Typography>
-            <IconButton onClick={handleProfileEdit}>
+            <IconButton
+              onClick={() => navigate(back ? "/edit/courses" : "/edit/profile")}
+            >
               <EditIcon sx={{ color: "#039BE5" }} fontSize="large" />{" "}
             </IconButton>
           </Box>
-          <Card displayedUser={data} />
+          <Card displayedUser={data} onFlip={(back) => setBack(back)} />
           <LogOutButton />
         </>
       ) : (
