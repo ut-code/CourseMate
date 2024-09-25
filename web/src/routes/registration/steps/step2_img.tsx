@@ -153,14 +153,25 @@ export default function Step2({
             </Box>
           )}
           <div style={{ display: "flex", flexDirection: "row" }}>
-            <Button onClick={back}>戻る</Button>
+            <Button
+              onClick={back}
+              style={{
+                marginLeft: "auto", // 右に寄せるために margin-left を使用
+                width: "100px",
+                height: "44.5px",
+                borderRadius: "25px",
+                boxShadow: "0px 6px 8px rgba(0, 0, 0, 0.15)", // ホバー時の影
+              }}
+            >
+              前へ
+            </Button>
             {file === null ? (
               <Button disabled={true}>
-                {caller === "registration" ? "確定" : "保存"}
+                {caller === "registration" ? "次へ" : "保存"}
               </Button>
             ) : (
               <NextButton onClick={next}>
-                {caller === "registration" ? "確定" : "保存"}
+                {caller === "registration" ? "次へ" : "保存"}
               </NextButton>
             )}
           </div>

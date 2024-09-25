@@ -47,8 +47,31 @@ export default function Confirmation({
       >
         <p>この内容で登録しますか？</p>
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <Button onClick={back}>戻る</Button>
-          <Button onClick={() => onSave()}>OK</Button>
+          <Button
+            onClick={back}
+            style={{
+              marginLeft: "auto", // 右に寄せるために margin-left を使用
+              width: "100px",
+              height: "44.5px",
+              borderRadius: "25px",
+              boxShadow: "0px 6px 8px rgba(0, 0, 0, 0.15)", // ホバー時の影
+            }}
+          >
+            前へ
+          </Button>
+          <Button
+            onClick={() => onSave()}
+            style={{
+              marginLeft: "auto", // 右に寄せるために margin-left を使用
+              width: "100px",
+              height: "44.5px",
+              backgroundColor: "#039BE5",
+              color: "white",
+              borderRadius: "25px",
+            }}
+          >
+            次へ
+          </Button>
         </div>
       </div>
     </div>
