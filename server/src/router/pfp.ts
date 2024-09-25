@@ -1,8 +1,6 @@
 import bodyParser from "body-parser";
 import express from "express";
-import { getUserIDByGUID, updateUser } from "../database/users";
-import { safeGetUserId } from "../firebase/auth/db";
-import { getGUID, safeGetGUID } from "../firebase/auth/lib";
+import { safeGetGUID } from "../firebase/auth/lib";
 import { uploadImage } from "../firebase/store/uploadImage";
 import { compressImage } from "../functions/img/compress";
 
