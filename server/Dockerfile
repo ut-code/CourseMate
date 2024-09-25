@@ -1,4 +1,4 @@
-FROM node:22.4-alpine3.19
+FROM oven/bun:latest
 WORKDIR /coursemate/dev/server
 
 COPY package.json package-lock.json ./

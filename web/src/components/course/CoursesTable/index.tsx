@@ -101,16 +101,26 @@ export default function CoursesTable(props: Props) {
                         )
                       }
                     >
-                      {row[activeDay as Day]?.name
-                        ? truncateStr(row[activeDay as Day]?.name ?? "", 6)
+                      {row[activeDay as Day]?.name &&
+                      row[activeDay as Day]?.teacher
+                        ? truncateStr(
+                            `${row[activeDay as Day]?.name}(${row[activeDay as Day]?.teacher})`,
+                            6,
+                          )
                         : ""}
                     </button>
                   ) : (
                     <span
                       className={row[activeDay as Day]?.name && styles.enrolled}
                     >
-                      {row[activeDay as Day]?.name
-                        ? truncateStr(row[activeDay as Day]?.name ?? "", 6)
+                      {row[activeDay as Day]?.name &&
+                      row[activeDay as Day]?.teacher
+                        ? truncateStr(
+                            `${row[activeDay as Day]?.name}(${
+                              row[activeDay as Day]?.teacher
+                            })`,
+                            6,
+                          )
                         : ""}
                     </span>
                   )}

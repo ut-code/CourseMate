@@ -1,3 +1,4 @@
+import { Result } from "../common/lib/result";
 import type { GUID, User, UserID } from "../common/types";
 import { getMatchedUser } from "../database/requests";
 import * as db from "../database/users";
@@ -34,9 +35,11 @@ export async function getUserByID(
   return http.ok(user.value);
 }
 
-export async function userExists(guid: GUID): Promise<boolean> {
+export async function userExists(guid: GUID): Promise<http.Response<void>> {
   const user = await db.getUser(guid);
-  return user.ok;
+  if (user.ok) return http.ok(undefined);
+  if (user.error === 404) return http.notFound(undefined);
+  return http.internalError("db error");
 }
 
 export async function getMatched(user: UserID): Promise<http.Response<User[]>> {

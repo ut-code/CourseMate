@@ -69,6 +69,7 @@ export const DraggableCard = ({
           handleDragEnd();
         }}
         style={{ x: dragX, y: dragY, padding: "10px" }}
+        whileTap={{ scale: 0.95 }}
       >
         <Card displayedUser={displayedUser} />
       </motion.div>

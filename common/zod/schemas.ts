@@ -87,6 +87,7 @@ export const SlotSchema = z.object({
 export const CourseSchema = z.object({
   id: CourseIDSchema,
   name: z.string(),
+  teacher: z.string(),
   slots: SlotSchema.array(),
 });
 

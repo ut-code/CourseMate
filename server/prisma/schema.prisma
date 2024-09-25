@@ -1,6 +1,7 @@
 //schema.prisma
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -28,7 +29,7 @@ model User {
   name       String @default("名無し")
   gender     String @default("")
   grade      String @default("")
-  faculty String @default("")
+  faculty    String @default("")
   department String @default("")
   intro      String @default("")
   pictureUrl String @default("")
@@ -49,6 +50,7 @@ model User {
 model Course {
   id          String       @id
   name        String
+  teacher     String
   enrollments Enrollment[]
   slots       Slot[]
 }

@@ -87,70 +87,79 @@ export default function Step2({
     console.log("open: ", open);
   }, [open]);
   return (
-    <div style={{ textAlign: "center", marginTop: "20px" }}>
-      <Typography>アイコン設定</Typography>
-      <Modal
-        id="MODAL"
-        open={true}
-        sx={{
-          visibility: open ? "visible" : "hidden",
-          Margin: "auto",
-          alignItems: "center",
-          justifyContent: "center",
-          display: "flex",
-        }}
+    <div>
+      <Typography
+        variant="h5"
+        style={{ textAlign: "left", marginTop: "2vh", marginLeft: "10px" }}
       >
-        <Box
-          style={{
-            backgroundColor: "white",
-            width: "90%",
-            height: "auto",
-            padding: "20px",
+        アイコンを設定
+      </Typography>
+
+      <div style={{ textAlign: "center", marginTop: "15vh" }}>
+        <Modal
+          id="MODAL"
+          open={true}
+          sx={{
+            visibility: open ? "visible" : "hidden",
+            Margin: "auto",
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
           }}
         >
-          <PhotoPreview
-            prev={prev?.pictureUrl}
-            onCrop={(f) => {
-              setFile(f);
-            }}
-          />
-          <Button
-            sx={{ float: "right", marginRight: "30px" }}
-            onClick={() => {
-              select();
-              setOpen(false);
+          <Box
+            style={{
+              backgroundColor: "white",
+              width: "90%",
+              height: "auto",
+              padding: "20px",
             }}
           >
-            切り取り
-          </Button>
-        </Box>
-      </Modal>
-      <div
-        style={{
-          textAlign: "center",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <UserAvatar width="300px" height="300px" pictureUrl={url} />
-        <PhotoPreviewButton text="写真を選択" onSelect={() => setOpen(true)} />
-        {errorMessage && (
-          <Box color="red" mb={2}>
-            {errorMessage}
-          </Box>
-        )}
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <Button onClick={back}>戻る</Button>
-          {file === null ? (
-            <Button disabled={true}>
-              {caller === "registration" ? "確定" : "保存"}
+            <PhotoPreview
+              prev={prev?.pictureUrl}
+              onCrop={(f) => {
+                setFile(f);
+              }}
+            />
+            <Button
+              sx={{ float: "right", marginRight: "30px" }}
+              onClick={() => {
+                select();
+                setOpen(false);
+              }}
+            >
+              切り取り
             </Button>
-          ) : (
-            <NavigationButton onClick={next}>
-              {caller === "registration" ? "確定" : "保存"}
-            </NavigationButton>
-          )}
+          </Box>
+        </Modal>
+        <div
+          style={{
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <UserAvatar width="35vh" height="35vh" pictureUrl={url} />
+          <div>
+            <PhotoPreviewButton
+              text="写真を選択"
+              onSelect={() => setOpen(true)}
+            />
+          </div>
+          {errorMessage && <span>{errorMessage}</span>}
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Button onClick={back}>戻る</Button>
+            {file === null ? (
+              <Button disabled={true}>
+                {caller === "registration" ? "確定" : "保存"}
+              </Button>
+            ) : (
+              <NextButton onClick={next}>
+                {caller === "registration" ? "確定" : "保存"}
+              </NextButton>
+            )}
+          </div>
         </div>
       </div>
     </div>

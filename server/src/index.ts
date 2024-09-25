@@ -1,6 +1,3 @@
-import * as dotenv from "dotenv";
-dotenv.config();
-
 import cookieParser from "cookie-parser";
 import express from "express";
 import csrf from "./lib/cross-origin/block-unknown-origin";
@@ -49,8 +46,11 @@ app.use("/requests", requestsRoutes);
 app.use("/matches", matchesRoutes);
 app.use("/chat", chatRoutes);
 
-// サーバーの起動
-export const server = app.listen(port, () => {
-  console.log("running");
-});
-initializeSocket();
+export function main() {
+  // サーバーの起動
+  const server = app.listen(port, () => {
+    console.log("running");
+  });
+  initializeSocket(server, corsOptions);
+  return server;
+}

@@ -45,6 +45,7 @@ async function main() {
     create: {
       id: "10001",
       name: "国語八列",
+      teacher: "足助太郎",
     },
   });
   const course2 = await prisma.course.upsert({
@@ -53,6 +54,7 @@ async function main() {
     create: {
       id: "10002",
       name: "数学八列",
+      teacher: "足助太郎",
     },
   });
   const course3 = await prisma.course.upsert({
@@ -61,6 +63,7 @@ async function main() {
     create: {
       id: "10003",
       name: "英語八列",
+      teacher: "足助太郎",
     },
   });
   const course4 = await prisma.course.upsert({
@@ -69,6 +72,7 @@ async function main() {
     create: {
       id: "10004",
       name: "理科八列",
+      teacher: "足助太郎",
     },
   });
   const course5 = await prisma.course.upsert({
@@ -77,6 +81,7 @@ async function main() {
     create: {
       id: "10005",
       name: "社会八列",
+      teacher: "足助太郎",
     },
   });
   console.log({ course1, course2, course3, course4, course5 });
@@ -249,7 +254,7 @@ async function main() {
   });
 }
 
-main()
+await main()
   .then(async () => {
     await prisma.$disconnect();
   })
