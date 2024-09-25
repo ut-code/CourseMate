@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import hooks from "../api/hooks";
 import CoursesTable from "../components/course/CoursesTable";
@@ -27,7 +27,9 @@ export default function EditCourses() {
         textAlign: "center",
       }}
     >
-      <h1>授業編集</h1>
+      <Typography variant="h6" component="h1" mb={1}>
+        授業編集
+      </Typography>
       {loading ? (
         <CircularProgress />
       ) : error ? (
