@@ -24,6 +24,7 @@ import {
   ShareRoomIDSchema,
   SharedRoomOverviewSchema,
   SharedRoomSchema,
+  Step1UserSchema,
   UpdateRoomSchema,
   UpdateUserSchema,
   UserIDSchema,
@@ -68,6 +69,10 @@ export function parseInitUser(data: unknown) {
 
 export function parseUpdateUser(data: unknown) {
   return UpdateUserSchema.parse(data);
+}
+
+export function parseStep1UserSchema(data: unknown) {
+  return Step1UserSchema.parse(data);
 }
 
 export function parseRelationshipID(data: unknown) {

@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
+import type { Step1User } from "../../../common/zod/types";
 import UserAvatar from "../../../components/human/avatar";
 import type { BackProp, StepProps } from "../common";
-import type { Step1Data } from "./step1_profile";
 import type { Step2Data } from "./step2_img";
 
 interface UserInfoProp {
@@ -15,7 +15,7 @@ interface UserInfoProp {
 }
 
 interface inputDataProps {
-  Step1Data: Step1Data | undefined;
+  Step1Data: Step1User | undefined;
   Step2Data: Step2Data | undefined;
 }
 

@@ -17,6 +17,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import hooks from "../api/hooks";
 import { update } from "../api/user";
+import type { UpdateUser } from "../common/types";
+import { UpdateUserSchema } from "../common/zod/schemas";
+import { useAlert } from "../components/common/alert/AlertProvider";
 import {
   PhotoPreview,
   PhotoPreviewButton,
@@ -27,6 +30,7 @@ import { facultiesAndDepartments } from "./registration/data";
 
 export default function EditProfile() {
   const navigate = useNavigate();
+  const { showAlert } = useAlert();
   const { data, loading, error } = hooks.useMe();
 
   const [name, setName] = useState("");
@@ -52,6 +56,13 @@ export default function EditProfile() {
 
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [file, setFile] = useState<File>();
+
+  const [nameError, setNameError] = useState<string>("");
+  const [genderError, setGenderError] = useState<string>("");
+  const [gradeError, setGradeError] = useState<string>("");
+  const [facultyError, setFacultyError] = useState<string>("");
+  const [departmentError, setDepartmentError] = useState<string>("");
+  const [introError, setIntroError] = useState<string>("");
 
   useEffect(() => {
     if (data) {
@@ -104,20 +115,100 @@ export default function EditProfile() {
     console.log("open: ", open);
   }, [open]);
 
-  const handleGoToCourses = () => {
-    navigate("/edit/courses");
-  };
+  function hasUnsavedChangesOrErrors() {
+    return (
+      isEditingName ||
+      isEditingGender ||
+      isEditingGrade ||
+      isEditingFaculty ||
+      isEditingDepartment ||
+      isEditingIntro ||
+      errorMessage ||
+      nameError ||
+      genderError ||
+      gradeError ||
+      facultyError ||
+      departmentError ||
+      introError
+    );
+  }
 
-  async function handleSave() {
-    await update({
-      name: name,
-      gender: gender,
-      grade: grade,
-      faculty: faculty,
-      department: department,
-      intro: intro,
-      pictureUrl: pictureUrl,
-    });
+  function handleGoToCourses() {
+    if (hasUnsavedChangesOrErrors()) {
+      showAlert({
+        AlertMessage: "まだ編集中のフィールド、もしくはエラーがあります",
+        subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
+        yesMessage: "移動",
+        clickYes: () => {
+          navigate("/edit/courses");
+        },
+      });
+    } else {
+      navigate("/edit/courses");
+    }
+  }
+
+  function handleBack() {
+    if (hasUnsavedChangesOrErrors()) {
+      showAlert({
+        AlertMessage: "編集中のフィールド、もしくはエラーがあります。",
+        subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
+        yesMessage: "移動",
+        clickYes: () => {
+          navigate("/settings");
+        },
+      });
+    } else {
+      navigate("/settings");
+    }
+  }
+
+  async function handleSave(input: Partial<UpdateUser>) {
+    setErrorMessage("");
+    setNameError("");
+    setGenderError("");
+    setGradeError("");
+    setFacultyError("");
+    setDepartmentError("");
+    setIntroError("");
+    const data: UpdateUser = {
+      name: input.name ?? name,
+      gender: input.gender ?? gender,
+      grade: input.grade ?? grade,
+      faculty: input.faculty ?? faculty,
+      department: input.department ?? department,
+      intro: input.intro ?? intro,
+      pictureUrl: input.pictureUrl ?? pictureUrl,
+    };
+    const result = UpdateUserSchema.safeParse(data);
+    if (!result.success) {
+      result.error.errors.map((err) => {
+        switch (err.path[0]) {
+          case "name":
+            setNameError(err.message);
+            break;
+          case "gender":
+            setGenderError(err.message);
+            break;
+          case "grade":
+            setGradeError(err.message);
+            break;
+          case "faculty":
+            setFacultyError(err.message);
+            break;
+          case "department":
+            setDepartmentError(err.message);
+            break;
+          case "intro":
+            setIntroError(err.message);
+            break;
+          default:
+            setErrorMessage("入力に誤りがあります");
+        }
+      });
+      return;
+    }
+    await update(data);
   }
 
   function handleEdit(setter: React.Dispatch<React.SetStateAction<boolean>>) {
@@ -135,11 +226,6 @@ export default function EditProfile() {
     setIsEditingIntro(false);
     setter(true);
   }
-
-  const handleBack = () => {
-    navigate("/settings");
-    handleSave();
-  };
 
   const handleFacultyChange = (event: SelectChangeEvent<string>) => {
     setTmpFaculty(event.target.value);
@@ -166,13 +252,14 @@ export default function EditProfile() {
                 label="名前"
                 disabled={!isEditingName}
                 fullWidth
+                error={!!nameError}
+                helperText={nameError}
               />
-
               <IconButton
                 onClick={() => {
                   if (isEditingName) {
                     setName(tmpName);
-                    handleSave();
+                    handleSave({ name: tmpName });
                     setIsEditingName(false);
                   } else {
                     handleEdit(setIsEditingName);
@@ -197,17 +284,23 @@ export default function EditProfile() {
                 onChange={(e) => setTmpGender(e.target.value)}
                 disabled={!isEditingGender}
                 fullWidth
+                error={!!genderError} // エラースタイル適用
               >
                 <MenuItem value={"男性"}>男性</MenuItem>
                 <MenuItem value={"女性"}>女性</MenuItem>
                 <MenuItem value={"その他"}>その他</MenuItem>
                 <MenuItem value={"秘密"}>秘密</MenuItem>
               </Select>
+              {genderError && (
+                <Typography color="error" variant="caption">
+                  {genderError}
+                </Typography>
+              )}
               <IconButton
                 onClick={() => {
                   if (isEditingGender) {
                     setGender(tmpGender);
-                    handleSave();
+                    handleSave({ gender: tmpGender });
                     setIsEditingGender(false);
                   } else {
                     handleEdit(setIsEditingGender);
@@ -232,6 +325,7 @@ export default function EditProfile() {
                 onChange={(e) => setTmpGrade(e.target.value)}
                 disabled={!isEditingGrade}
                 fullWidth
+                error={!!gradeError}
               >
                 <MenuItem value={"B1"}>1年生 (B1)</MenuItem>
                 <MenuItem value={"B2"}>2年生 (B2)</MenuItem>
@@ -240,11 +334,16 @@ export default function EditProfile() {
                 <MenuItem value={"M1"}>修士1年 (M1)</MenuItem>
                 <MenuItem value={"M2"}>修士2年 (M2)</MenuItem>
               </Select>
+              {gradeError && (
+                <Typography color="error" variant="caption">
+                  {gradeError}
+                </Typography>
+              )}
               <IconButton
                 onClick={() => {
                   if (isEditingGrade) {
                     setGrade(tmpGrade);
-                    handleSave();
+                    handleSave({ grade: tmpGrade });
                     setIsEditingGrade(false);
                   } else {
                     handleEdit(setIsEditingGrade);
@@ -269,6 +368,7 @@ export default function EditProfile() {
                 onChange={handleFacultyChange}
                 disabled={!isEditingFaculty}
                 fullWidth
+                error={!!facultyError}
               >
                 {Object.keys(facultiesAndDepartments).map((fac) => (
                   <MenuItem key={fac} value={fac}>
@@ -276,12 +376,18 @@ export default function EditProfile() {
                   </MenuItem>
                 ))}
               </Select>
+              {facultyError && (
+                <Typography color="error" variant="caption">
+                  {facultyError}
+                </Typography>
+              )}
+
               <IconButton
                 onClick={() => {
                   if (isEditingFaculty) {
                     setDepartment("");
                     setFaculty(tmpFaculty);
-                    handleSave();
+                    handleSave({ faculty: tmpFaculty, department: "" });
                     setIsEditingFaculty(false);
                   } else {
                     handleEdit(setIsEditingFaculty);
@@ -306,6 +412,7 @@ export default function EditProfile() {
                 disabled={!isEditingDepartment || !faculty}
                 label="学科"
                 fullWidth
+                error={!!departmentError} // エラースタイル適用
               >
                 {faculty &&
                   facultiesAndDepartments[faculty].map((dep) => (
@@ -314,11 +421,17 @@ export default function EditProfile() {
                     </MenuItem>
                   ))}
               </Select>
+              {departmentError && (
+                <Typography color="error" variant="caption">
+                  {departmentError}
+                </Typography>
+              )}
+
               <IconButton
                 onClick={() => {
                   if (isEditingDepartment) {
                     setDepartment(tmpDepartment);
-                    handleSave();
+                    handleSave({ department: tmpDepartment });
                     setIsEditingDepartment(false);
                   } else {
                     handleEdit(setIsEditingDepartment);
@@ -344,12 +457,15 @@ export default function EditProfile() {
                 label="自己紹介"
                 disabled={!isEditingIntro}
                 fullWidth
+                error={!!introError} // エラースタイル適用
+                helperText={introError} // エラーメッセージを表示
               />
+
               <IconButton
                 onClick={() => {
                   if (isEditingIntro) {
                     setIntro(tmpIntro);
-                    handleSave();
+                    handleSave({ intro: tmpIntro });
                     setIsEditingIntro(false);
                   } else {
                     handleEdit(setIsEditingIntro);
@@ -364,6 +480,11 @@ export default function EditProfile() {
               </IconButton>
             </Box>
           </FormControl>
+          {errorMessage && (
+            <Box color="red" mb={2}>
+              {errorMessage}
+            </Box>
+          )}
 
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <Modal
@@ -395,8 +516,7 @@ export default function EditProfile() {
                   sx={{ float: "right", marginRight: "30px" }}
                   onClick={async () => {
                     await select();
-                    await handleSave();
-
+                    await handleSave({});
                     setOpen(false);
                   }}
                 >
@@ -427,8 +547,6 @@ export default function EditProfile() {
                 text="写真を選択"
                 onSelect={() => setOpen(true)}
               />
-
-              {errorMessage && <span>{errorMessage}</span>}
             </div>
           </div>
 
