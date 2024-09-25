@@ -19,6 +19,7 @@ import hooks from "../api/hooks";
 import { update } from "../api/user";
 import type { UpdateUser } from "../common/types";
 import { UpdateUserSchema } from "../common/zod/schemas";
+import { useAlert } from "../components/common/alert/AlertProvider";
 import {
   PhotoPreview,
   PhotoPreviewButton,
@@ -29,6 +30,7 @@ import { facultiesAndDepartments } from "./registration/data";
 
 export default function EditProfile() {
   const navigate = useNavigate();
+  const { showAlert } = useAlert();
   const { data, loading, error } = hooks.useMe();
 
   const [name, setName] = useState("");
@@ -55,9 +57,12 @@ export default function EditProfile() {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [file, setFile] = useState<File>();
 
-  // useEffect(() => {
-  //   handleSave();
-  // }, [name, gender, grade, faculty, department, intro, pictureUrl]);
+  const [nameError, setNameError] = useState<string>("");
+  const [genderError, setGenderError] = useState<string>("");
+  const [gradeError, setGradeError] = useState<string>("");
+  const [facultyError, setFacultyError] = useState<string>("");
+  const [departmentError, setDepartmentError] = useState<string>("");
+  const [introError, setIntroError] = useState<string>("");
 
   useEffect(() => {
     if (data) {
@@ -110,25 +115,91 @@ export default function EditProfile() {
     console.log("open: ", open);
   }, [open]);
 
-  const handleGoToCourses = () => {
-    navigate("/edit/courses");
-  };
+  function hasUnsavedChanges() {
+    return (
+      isEditingName ||
+      isEditingGender ||
+      isEditingGrade ||
+      isEditingFaculty ||
+      isEditingDepartment ||
+      isEditingIntro
+    );
+  }
+
+  function handleGoToCourses() {
+    if (hasUnsavedChanges()) {
+      showAlert({
+        AlertMessage: "まだ編集中のフィールドがあります。",
+        subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
+        yesMessage: "移動",
+        clickYes: () => {
+          navigate("/edit/courses");
+        },
+      });
+    } else {
+      navigate("/edit/courses");
+    }
+  }
+
+  function handleBack() {
+    if (hasUnsavedChanges()) {
+      showAlert({
+        AlertMessage: "まだ編集中のフィールドがあります",
+        subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
+        yesMessage: "移動",
+        clickYes: () => {
+          navigate("/settings");
+        },
+      });
+    } else {
+      navigate("/settings");
+    }
+  }
 
   async function handleSave(input: Partial<UpdateUser>) {
     setErrorMessage("");
+    setNameError("");
+    setGenderError("");
+    setGradeError("");
+    setFacultyError("");
+    setDepartmentError("");
+    setIntroError("");
     const data: UpdateUser = {
       name: input.name ?? name,
-      gender: gender,
-      grade: grade,
-      faculty: faculty,
-      department: department,
-      intro: intro,
-      pictureUrl: pictureUrl,
+      gender: input.gender ?? gender,
+      grade: input.grade ?? grade,
+      faculty: input.faculty ?? faculty,
+      department: input.department ?? department,
+      intro: input.intro ?? intro,
+      pictureUrl: input.pictureUrl ?? pictureUrl,
     };
     const result = UpdateUserSchema.safeParse(data);
     if (!result.success) {
-      const message = result.error.errors.map((m) => m.message).join(",");
-      setErrorMessage(message);
+      result.error.errors.map((err) => {
+        switch (err.path[0]) {
+          case "name":
+            setNameError(err.message);
+            break;
+          case "gender":
+            setGenderError(err.message);
+            break;
+          case "grade":
+            setGradeError(err.message);
+            break;
+          case "faculty":
+            setFacultyError(err.message);
+            break;
+          case "department":
+            setDepartmentError(err.message);
+            break;
+          case "intro":
+            setIntroError(err.message);
+            break;
+          default:
+            setErrorMessage("入力に誤りがあります");
+        }
+      });
+      return;
     }
     await update(data);
   }
@@ -148,11 +219,6 @@ export default function EditProfile() {
     setIsEditingIntro(false);
     setter(true);
   }
-
-  const handleBack = () => {
-    navigate("/settings");
-    handleSave({});
-  };
 
   const handleFacultyChange = (event: SelectChangeEvent<string>) => {
     setTmpFaculty(event.target.value);
@@ -180,6 +246,8 @@ export default function EditProfile() {
                   label="名前"
                   disabled={!isEditingName}
                   fullWidth
+                  error={!!nameError} // エラーメッセージがある場合はエラースタイルを適用
+                  helperText={nameError} // エラーメッセージを表示
                 />
               </Box>
               <IconButton
@@ -204,20 +272,26 @@ export default function EditProfile() {
 
           <FormControl>
             <Box display="flex" alignItems="center">
-              <InputLabel>性別</InputLabel>
               <Box width={"80%"}>
+                <InputLabel>性別</InputLabel>
                 <Select
                   value={tmpGender}
                   label="性別"
                   onChange={(e) => setTmpGender(e.target.value)}
                   disabled={!isEditingGender}
                   fullWidth
+                  error={!!genderError} // エラースタイル適用
                 >
                   <MenuItem value={"男性"}>男性</MenuItem>
                   <MenuItem value={"女性"}>女性</MenuItem>
                   <MenuItem value={"その他"}>その他</MenuItem>
                   <MenuItem value={"秘密"}>秘密</MenuItem>
                 </Select>
+                {genderError && (
+                  <Typography color="error" variant="caption">
+                    {genderError}
+                  </Typography>
+                )}
               </Box>
               <IconButton
                 onClick={() => {
@@ -249,6 +323,7 @@ export default function EditProfile() {
                   onChange={(e) => setTmpGrade(e.target.value)}
                   disabled={!isEditingGrade}
                   fullWidth
+                  error={!!gradeError}
                 >
                   <MenuItem value={"B1"}>1年生 (B1)</MenuItem>
                   <MenuItem value={"B2"}>2年生 (B2)</MenuItem>
@@ -257,6 +332,11 @@ export default function EditProfile() {
                   <MenuItem value={"M1"}>修士1年 (M1)</MenuItem>
                   <MenuItem value={"M2"}>修士2年 (M2)</MenuItem>
                 </Select>
+                {gradeError && (
+                  <Typography color="error" variant="caption">
+                    {gradeError}
+                  </Typography>
+                )}
               </Box>
               <IconButton
                 onClick={() => {
@@ -288,6 +368,7 @@ export default function EditProfile() {
                   onChange={handleFacultyChange}
                   disabled={!isEditingFaculty}
                   fullWidth
+                  error={!!facultyError}
                 >
                   {Object.keys(facultiesAndDepartments).map((fac) => (
                     <MenuItem key={fac} value={fac}>
@@ -295,6 +376,11 @@ export default function EditProfile() {
                     </MenuItem>
                   ))}
                 </Select>
+                {facultyError && (
+                  <Typography color="error" variant="caption">
+                    {facultyError}
+                  </Typography>
+                )}
               </Box>
               <IconButton
                 onClick={() => {
@@ -327,6 +413,7 @@ export default function EditProfile() {
                   disabled={!isEditingDepartment || !faculty}
                   label="学科"
                   fullWidth
+                  error={!!departmentError} // エラースタイル適用
                 >
                   {faculty &&
                     facultiesAndDepartments[faculty].map((dep) => (
@@ -335,6 +422,11 @@ export default function EditProfile() {
                       </MenuItem>
                     ))}
                 </Select>
+                {departmentError && (
+                  <Typography color="error" variant="caption">
+                    {departmentError}
+                  </Typography>
+                )}
               </Box>
               <IconButton
                 onClick={() => {
@@ -367,6 +459,8 @@ export default function EditProfile() {
                   label="自己紹介"
                   disabled={!isEditingIntro}
                   fullWidth
+                  error={!!introError} // エラースタイル適用
+                  helperText={introError} // エラーメッセージを表示
                 />
               </Box>
               <IconButton
