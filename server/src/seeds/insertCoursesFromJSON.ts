@@ -10,12 +10,13 @@ async function main() {
   const jsonData = JSON.parse(fs.readFileSync(FILE_PATH, "utf-8"));
 
   for (const courseData of jsonData) {
-    const { code, titleJp, periods } = courseData;
+    const { code, titleJp, lecturerJp, periods } = courseData;
 
     const newCourse = await prisma.course.create({
       data: {
         id: code,
         name: titleJp,
+        teacher: lecturerJp,
       },
     });
 
