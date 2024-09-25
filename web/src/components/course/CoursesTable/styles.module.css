@@ -2,6 +2,7 @@
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
+  flex: 1;
 }
 
 .table th,
@@ -26,22 +27,33 @@
   height: 100%;
   border: none;
   cursor: pointer;
-  padding: 0;
-  box-sizing: border-box;
-  display: block;
-  background-color: transparent;
-}
-
-.table span {
-  width: 100%;
-  height: 100%;
-  padding: 0;
+  padding: 0 0.1rem;
   box-sizing: border-box;
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: transparent;
+  font-size: 0.5rem;
+  vertical-align: top;
+}
+
+.table > tbody > tr > td > span {
+  width: 100%;
+  height: 100%;
+  padding: 0 0.1rem;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5rem;
 }
 
 .enrolled {
   background-color: rgb(255, 208, 42, 0.81) !important;
+}
+
+.spaceAround {
+  justify-content: space-around;
 }

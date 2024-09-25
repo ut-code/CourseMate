@@ -101,27 +101,31 @@ export default function CoursesTable(props: Props) {
                         )
                       }
                     >
-                      {row[activeDay as Day]?.name &&
-                      row[activeDay as Day]?.teacher
-                        ? truncateStr(
-                            `${row[activeDay as Day]?.name}(${row[activeDay as Day]?.teacher})`,
-                            6,
-                          )
-                        : ""}
+                      <span className={styles.spaceAround}>
+                        {row[activeDay as Day]?.name
+                          ? truncateStr(row[activeDay as Day]?.name ?? "", 16)
+                          : ""}
+                      </span>
+                      <span className={styles.spaceAround}>
+                        {row[activeDay as Day]?.teacher
+                          ? truncateStr(row[activeDay as Day]?.teacher ?? "", 6)
+                          : ""}
+                      </span>
                     </button>
                   ) : (
                     <span
                       className={row[activeDay as Day]?.name && styles.enrolled}
                     >
-                      {row[activeDay as Day]?.name &&
-                      row[activeDay as Day]?.teacher
-                        ? truncateStr(
-                            `${row[activeDay as Day]?.name}(${
-                              row[activeDay as Day]?.teacher
-                            })`,
-                            6,
-                          )
-                        : ""}
+                      <span>
+                        {row[activeDay as Day]?.name
+                          ? truncateStr(row[activeDay as Day]?.name ?? "", 16)
+                          : ""}
+                      </span>
+                      <span>
+                        {row[activeDay as Day]?.teacher
+                          ? truncateStr(row[activeDay as Day]?.teacher ?? "", 6)
+                          : ""}
+                      </span>
                     </span>
                   )}
                 </td>
