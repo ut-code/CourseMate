@@ -16,7 +16,17 @@ export default function EditCourses() {
   }
 
   return (
-    <Box sx={{ padding: "20px", textAlign: "center" }}>
+    <Box
+      sx={{
+        padding: "20px",
+        maxWidth: "350px",
+        height: "100%",
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        textAlign: "center",
+      }}
+    >
       <h1>授業編集</h1>
       {loading ? (
         <CircularProgress />
