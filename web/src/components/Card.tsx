@@ -138,10 +138,11 @@ const CardFront = ({ displayedUser }: CardProps) => {
             </span>
           )}
           <span>
-            {displayedUser?.gender &&
-              (displayedUser?.gender === "男性" ||
-                displayedUser?.gender === "女性") &&
-              displayedUser?.gender}{" "}
+            {`${
+              displayedUser?.gender in ["男性", "女性"] // todo: maybe this needs some rewrite when gender becomes its concrete type instead of just string
+                ? displayedUser?.gender
+                : "性別は公開されていません"
+            } `}
             {displayedUser.grade && displayedUser.grade}
           </span>
         </p>
