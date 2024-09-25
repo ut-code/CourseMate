@@ -17,7 +17,7 @@ export const NameSchema = z
 export const PictureUrlSchema = z.string().url().min(1, "画像を選択して下さい");
 export const GenderSchema = z
   .string()
-  .min(1, { message: "Gender must not be empty." });
+  .min(1, { message: "性別を入力して下さい" });
 
 export const HobbySchema = z
   .string()

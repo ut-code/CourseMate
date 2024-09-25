@@ -17,6 +17,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import hooks from "../api/hooks";
 import { update } from "../api/user";
+import type { UpdateUser } from "../common/types";
+import { UpdateUserSchema } from "../common/zod/schemas";
 import {
   PhotoPreview,
   PhotoPreviewButton,
@@ -52,6 +54,10 @@ export default function EditProfile() {
 
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [file, setFile] = useState<File>();
+
+  // useEffect(() => {
+  //   handleSave();
+  // }, [name, gender, grade, faculty, department, intro, pictureUrl]);
 
   useEffect(() => {
     if (data) {
@@ -108,16 +114,23 @@ export default function EditProfile() {
     navigate("/edit/courses");
   };
 
-  async function handleSave() {
-    await update({
-      name: name,
+  async function handleSave(input: Partial<UpdateUser>) {
+    setErrorMessage("");
+    const data: UpdateUser = {
+      name: input.name ?? name,
       gender: gender,
       grade: grade,
       faculty: faculty,
       department: department,
       intro: intro,
       pictureUrl: pictureUrl,
-    });
+    };
+    const result = UpdateUserSchema.safeParse(data);
+    if (!result.success) {
+      const message = result.error.errors.map((m) => m.message).join(",");
+      setErrorMessage(message);
+    }
+    await update(data);
   }
 
   function handleEdit(setter: React.Dispatch<React.SetStateAction<boolean>>) {
@@ -138,7 +151,7 @@ export default function EditProfile() {
 
   const handleBack = () => {
     navigate("/settings");
-    handleSave();
+    handleSave({});
   };
 
   const handleFacultyChange = (event: SelectChangeEvent<string>) => {
@@ -173,7 +186,7 @@ export default function EditProfile() {
                 onClick={() => {
                   if (isEditingName) {
                     setName(tmpName);
-                    handleSave();
+                    handleSave({ name: tmpName });
                     setIsEditingName(false);
                   } else {
                     handleEdit(setIsEditingName);
@@ -210,7 +223,7 @@ export default function EditProfile() {
                 onClick={() => {
                   if (isEditingGender) {
                     setGender(tmpGender);
-                    handleSave();
+                    handleSave({ gender: tmpGender });
                     setIsEditingGender(false);
                   } else {
                     handleEdit(setIsEditingGender);
@@ -249,7 +262,7 @@ export default function EditProfile() {
                 onClick={() => {
                   if (isEditingGrade) {
                     setGrade(tmpGrade);
-                    handleSave();
+                    handleSave({ grade: tmpGrade });
                     setIsEditingGrade(false);
                   } else {
                     handleEdit(setIsEditingGrade);
@@ -288,7 +301,7 @@ export default function EditProfile() {
                   if (isEditingFaculty) {
                     setDepartment("");
                     setFaculty(tmpFaculty);
-                    handleSave();
+                    handleSave({ faculty: tmpFaculty, department: "" });
                     setIsEditingFaculty(false);
                   } else {
                     handleEdit(setIsEditingFaculty);
@@ -327,7 +340,7 @@ export default function EditProfile() {
                 onClick={() => {
                   if (isEditingDepartment) {
                     setDepartment(tmpDepartment);
-                    handleSave();
+                    handleSave({ department: tmpDepartment });
                     setIsEditingDepartment(false);
                   } else {
                     handleEdit(setIsEditingDepartment);
@@ -360,7 +373,7 @@ export default function EditProfile() {
                 onClick={() => {
                   if (isEditingIntro) {
                     setIntro(tmpIntro);
-                    handleSave();
+                    handleSave({ intro: tmpIntro });
                     setIsEditingIntro(false);
                   } else {
                     handleEdit(setIsEditingIntro);
@@ -375,6 +388,11 @@ export default function EditProfile() {
               </IconButton>
             </Box>
           </FormControl>
+          {errorMessage && (
+            <Box color="red" mb={2}>
+              {errorMessage}
+            </Box>
+          )}
 
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <Modal
@@ -406,8 +424,7 @@ export default function EditProfile() {
                   sx={{ float: "right", marginRight: "30px" }}
                   onClick={async () => {
                     await select();
-                    await handleSave();
-
+                    await handleSave({});
                     setOpen(false);
                   }}
                 >
@@ -432,8 +449,6 @@ export default function EditProfile() {
                 text="写真を選択"
                 onSelect={() => setOpen(true)}
               />
-
-              {errorMessage && <span>{errorMessage}</span>}
             </div>
           </div>
 
