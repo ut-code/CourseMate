@@ -37,7 +37,7 @@ export default function Settings() {
               maxWidth: "500px",
             }}
           >
-            <Typography variant="h6" sx={{ marginRight: 1 }}>
+            <Typography variant="h6" component="h1" sx={{ marginRight: 1 }}>
               あなたのカード
             </Typography>
             <IconButton

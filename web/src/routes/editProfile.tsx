@@ -243,7 +243,9 @@ export default function EditProfile() {
         <p>Error: {error.message}</p>
       ) : data ? (
         <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
-          <Typography>プロフィール編集</Typography>
+          <Typography variant="h6" component="h1">
+            プロフィール編集
+          </Typography>
           <FormControl>
             <Box display="flex" alignItems="center">
               <TextField
@@ -525,7 +527,9 @@ export default function EditProfile() {
               </Box>
             </Modal>
             <div style={{ textAlign: "left" }}>
-              <Typography variant="h6">プロフィール画像</Typography>
+              <Typography variant="h6" component="h1">
+                プロフィール画像
+              </Typography>
             </div>
             <div
               style={{
