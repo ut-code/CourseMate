@@ -81,7 +81,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
         <TextField
           value={name}
           onChange={(e) => setName(e.target.value)}
-          label="名前(必須)"
+          label="名前"
         />
       </FormControl>
       <FormControl fullWidth>
@@ -123,7 +123,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1Data>) {
         </Select>
       </FormControl>
       <FormControl fullWidth>
-        <InputLabel>学科(先に学部を選択して下さい)</InputLabel>
+        <InputLabel>学科 (先に学部を選択して下さい)</InputLabel>
         <Select
           value={department}
           onChange={handleDepartmentChange}
