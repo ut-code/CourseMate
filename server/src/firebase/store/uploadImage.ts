@@ -7,10 +7,7 @@ import { prisma } from "../../database/client";
 /**
  * @throws if failed to upload image
  **/
-export async function uploadImage(
-  guid: GUID,
-  buf: Buffer,
-): Promise<Result<string>> {
+export async function set(guid: GUID, buf: Buffer): Promise<Result<string>> {
   return prisma.avatar
     .upsert({
       where: {
@@ -20,11 +17,20 @@ export async function uploadImage(
       update: { data: buf },
     })
     .then(() => {
-      const pictureUrl = `${process.env.SERVER_ORIGIN}/pfp/${guid}`;
+      const pictureUrl = `${process.env.SERVER_ORIGIN}/pfp/${guid}?update=${new Date().getTime()}`;
       return Ok(pictureUrl);
     })
     .catch((err) => {
       console.error("Error uploading file:", err);
       return Err(err);
     });
+}
+
+export async function get(guid: GUID): Promise<Result<Buffer>> {
+  return prisma.avatar
+    .findUnique({
+      where: { guid },
+    })
+    .then((res) => (res ? Ok(res.data) : Err(404)))
+    .catch((e) => Err(e));
 }

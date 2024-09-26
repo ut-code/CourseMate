@@ -82,7 +82,7 @@ export default function EditProfile() {
     }
   }, [data]);
 
-  async function select() {
+  async function onSelect() {
     try {
       if (!file) throw new Error("画像は入力必須です");
       const url = await uploadImage(file);
@@ -113,9 +113,6 @@ export default function EditProfile() {
   }
 
   const [open, setOpen] = useState<boolean>(false);
-  useEffect(() => {
-    console.log("open: ", open);
-  }, [open]);
 
   function hasUnsavedChangesOrErrors() {
     return (
@@ -519,8 +516,7 @@ export default function EditProfile() {
                 <Button
                   sx={{ float: "right", marginRight: "30px" }}
                   onClick={async () => {
-                    await select();
-                    await handleSave({});
+                    await onSelect();
                     setOpen(false);
                   }}
                 >

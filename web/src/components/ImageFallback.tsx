@@ -26,7 +26,10 @@ export function ImageFallback({ width, height, url, fallback, alt }: Props) {
         borderRadius: "50%",
         pointerEvents: "none",
       }}
-      onError={() => setOK(false)}
+      onError={() => {
+        console.log("failed to fetch image data of:", url);
+        setOK(false);
+      }}
       alt={alt}
     />
   ) : (

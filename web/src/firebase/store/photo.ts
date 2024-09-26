@@ -1,4 +1,5 @@
 import { getIdToken } from "../auth/lib";
+// TODO: move this out of firebase/store
 
 type URL = string;
 // todo: move this to api/internal/endpoints.ts
@@ -10,7 +11,7 @@ export async function uploadImage(file: File): Promise<URL> {
   const res = await fetch(`${PFP_POST_ENDPOINT}?token=${await getIdToken()}`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/octet-stream",
+      "Content-Type": "image/png",
     },
     body: file,
   });
