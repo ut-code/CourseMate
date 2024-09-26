@@ -6,9 +6,5 @@ import { getMyCourses } from "./course";
 
 const CourseListSchema = z.array(CourseSchema);
 export function useMyCourses(): Hook<Course[]> {
-  return useSWR(
-    "COURSEMATE_CACHE__useMyCourse()",
-    () => getMyCourses(),
-    CourseListSchema,
-  );
+  return useSWR("useMyCourses", getMyCourses, CourseListSchema);
 }

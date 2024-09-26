@@ -8,11 +8,7 @@ import * as chat from "./chat";
 
 const OverviewListSchema = z.array(RoomOverviewSchema);
 export function useRoomsOverview(): Hook<RoomOverview[]> {
-  return useSWR(
-    "COURSEMATE_CACHE__useRoomsOverview",
-    chat.overview,
-    OverviewListSchema,
-  );
+  return useSWR("useRoomsOverview", chat.overview, OverviewListSchema);
 }
 // export function useRoomsOverview(): Hook<RoomOverview[]> {
 //   const [data, setData] = useState<RoomOverview[] | null>(null);

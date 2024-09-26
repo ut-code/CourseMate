@@ -25,7 +25,7 @@ export function usePendingRequestsFromMe(): Hook<User[]> {
 }
 
 export function useMe(): SWRHook<User> {
-  return useSWR("COURSEMATE_CACHE__useMe", getMyData, UserSchema);
+  return useSWR("useMe", getMyData, UserSchema);
 }
 export async function getMyData() {
   const res = await credFetch("GET", endpoints.me);
