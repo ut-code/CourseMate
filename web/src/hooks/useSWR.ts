@@ -49,22 +49,9 @@ export function useSWR<T>(
   assertUnique(CACHE_KEY, fetcher, schema);
 
   console.log("useSWR: rendering...");
-  const [state, setState] = useState<State<T>>(() => {
-    const oldData = localStorage.getItem(CACHE_KEY);
-    if (oldData) {
-      try {
-        const data = schema.parse(JSON.parse(oldData));
-        return {
-          current: "stale",
-          data,
-        };
-      } catch {}
-    }
-    return {
-      current: "loading",
-      data: null,
-    };
-  });
+  const [state, setState] = useState<State<T>>(() =>
+    loadOldData(CACHE_KEY, schema),
+  );
 
   const reload = useCallback(async () => {
     console.log("useSWR: updating...");
@@ -85,7 +72,7 @@ export function useSWR<T>(
       const result = schema.safeParse(data);
       if (!result.success) {
         console.error(`useSWR: Schema Parse Error: ${result.error}`);
-        return;
+        throw new Error(`useSWR: zod parse error: ${result.error}`);
       }
       setState({
         // Success
@@ -108,10 +95,29 @@ export function useSWR<T>(
     go(reload);
   }, [reload]);
 
-  if (!state) throw new Error("this isn't right!");
   return {
     state,
     reload,
+  };
+}
+
+function loadOldData<T>(
+  CACHE_KEY: string,
+  schema: ZodSchema<T>,
+): Loading | Stale<T> {
+  const oldData = localStorage.getItem(CACHE_KEY);
+  if (oldData) {
+    try {
+      const data = schema.parse(JSON.parse(oldData));
+      return {
+        current: "stale",
+        data,
+      };
+    } catch {}
+  }
+  return {
+    current: "loading",
+    data: null,
   };
 }
 
