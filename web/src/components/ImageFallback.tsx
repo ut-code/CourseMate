@@ -12,9 +12,18 @@ type Props = {
 export function ImageFallback({ width, height, url, fallback, alt }: Props) {
   const [ok, setOK] = useState<boolean>(true);
   useEffect(() => {
-    url; // shut up linter
-    setOK(true);
-  }, [url]);
+    const reset = setInterval(() => {
+      setOK((ok) => {
+        if (ok) return true;
+
+        console.log(
+          "ImageFallback: settings OK to true (this shouldn't happen, fix it if you see this too often)",
+        );
+        return true;
+      });
+    }, 500);
+    return () => clearInterval(reset);
+  }, []);
 
   return ok ? (
     <img
