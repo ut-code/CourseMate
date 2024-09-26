@@ -1,43 +1,30 @@
-import {
-  deleteObject,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
-import { app } from "../config";
+import { Err, Ok, type Result } from "../../common/lib/result";
+import type { GUID } from "../../common/types";
+import { prisma } from "../../database/client";
 
-const storage = getStorage(app);
+// TODO: move this out of firebase/ since this is not firebase anymore.
 
 /**
  * @throws if failed to upload image
  **/
 export async function uploadImage(
-  path: string,
-  file: Uint8Array,
-): Promise<string> {
-  const storageRef = ref(storage, path);
-
-  try {
-    const snapshot = await uploadBytes(storageRef, file);
-    const pictureUrl = await getDownloadURL(snapshot.ref);
-    return pictureUrl;
-  } catch (error) {
-    console.error("Error uploading file:", error);
-    throw new Error("画像のアップロードに失敗しました");
-  }
-}
-
-/**
- * @throws if failed to delete file.
- **/
-export async function deleteImage(desertFileUrl: string) {
-  const desertRef = ref(storage, desertFileUrl);
-
-  try {
-    await deleteObject(desertRef);
-  } catch (e) {
-    console.error("Error deleting file:", e);
-    throw new Error("既存の画像の削除に失敗しました");
-  }
+  guid: GUID,
+  buf: Buffer,
+): Promise<Result<string>> {
+  return prisma.avatar
+    .upsert({
+      where: {
+        guid: guid,
+      },
+      create: { guid, data: buf },
+      update: { data: buf },
+    })
+    .then(() => {
+      const pictureUrl = `${process.env.SERVER_ORIGIN}/pfp/${guid}`;
+      return Ok(pictureUrl);
+    })
+    .catch((err) => {
+      console.error("Error uploading file:", err);
+      return Err(err);
+    });
 }
