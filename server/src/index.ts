@@ -6,6 +6,7 @@ import { initializeSocket } from "./lib/socket/socket";
 import chatRoutes from "./router/chat";
 import coursesRoutes from "./router/courses";
 import matchesRoutes from "./router/matches";
+import pfpRoutes from "./router/pfp";
 import requestsRoutes from "./router/requests";
 import usersRoutes from "./router/users";
 
@@ -45,6 +46,7 @@ app.use("/courses", coursesRoutes);
 app.use("/requests", requestsRoutes);
 app.use("/matches", matchesRoutes);
 app.use("/chat", chatRoutes);
+app.use("/pfp", pfpRoutes);
 
 export function main() {
   // サーバーの起動

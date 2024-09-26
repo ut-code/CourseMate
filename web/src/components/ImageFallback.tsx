@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   url?: string;
@@ -11,6 +11,10 @@ type Props = {
 // https://medium.com/@abhishekmicosoft/handling-img-fallback-307653b2f30
 export function ImageFallback({ width, height, url, fallback, alt }: Props) {
   const [ok, setOK] = useState<boolean>(true);
+  useEffect(() => {
+    url; // shut up linter
+    setOK(true);
+  }, [url]);
 
   return ok ? (
     <img

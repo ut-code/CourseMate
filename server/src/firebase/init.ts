@@ -8,6 +8,6 @@ const options = {
 if (!options.projectId)
   throw new Error("FIREBASE_PROJECT_ID required in server/.env");
 
-const app = initializeApp(options);
+const adminApp = initializeApp(options);
 
-export { app };
+export { adminApp };

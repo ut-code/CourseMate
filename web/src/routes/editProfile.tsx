@@ -86,7 +86,9 @@ export default function EditProfile() {
     try {
       if (!file) throw new Error("画像は入力必須です");
       const url = await uploadImage(file);
+      console.log("new URL:", url);
       setPictureUrl(url);
+      handleSave({ pictureUrl: url });
     } catch (error) {
       if (error instanceof Error) {
         let errorMessages: string;

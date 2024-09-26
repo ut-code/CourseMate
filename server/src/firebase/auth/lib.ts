@@ -2,9 +2,9 @@ import type { Request } from "express";
 import * as admin from "firebase-admin/auth";
 import { Err, Ok, type Result } from "../../common/lib/result";
 import type { GUID, IDToken } from "../../common/types";
-import { app } from "../init";
+import { adminApp } from "../init";
 
-const auth = admin.getAuth(app);
+const auth = admin.getAuth(adminApp);
 type DecodedIdToken = admin.DecodedIdToken;
 
 // REQUIRE: cookieParser middleware before this
