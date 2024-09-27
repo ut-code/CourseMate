@@ -28,9 +28,9 @@ test: dev-db
 	ENV_FILE=server/.env.dev bun test
 	docker stop postgres
 	
-prepare-deploy-web:
+prepare-deploy-web: copy-common
 	cd web; bun install; bun run build
-prepare-deploy-server:
+prepare-deploy-server: copy-common
 	cd server; bun install; npx prisma generate;
 deploy-server:
 	cd server; bun src/index.ts
