@@ -27,11 +27,11 @@ model User {
 
   // profile
   name       String @default("名無し")
-  gender     String @default("")
+  gender     String @default("その他")
   grade      String @default("")
-  faculty    String @default("")
-  department String @default("")
-  intro      String @default("")
+  faculty    String @default("前期教養学部")
+  department String @default("理科一類")
+  intro      String @default("自己紹介が設定されていません")
   pictureUrl String @default("")
 
   // bindings to other parts of this app

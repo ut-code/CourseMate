@@ -48,13 +48,12 @@ export function useSWR<T>(
   // just a dev assertion, don't mind this. it can simply be removed on prod.
   assertUnique(CACHE_KEY, fetcher, schema);
 
-  console.log("useSWR: rendering...");
   const [state, setState] = useState<State<T>>(() =>
     loadOldData(CACHE_KEY, schema),
   );
 
   const reload = useCallback(async () => {
-    console.log("useSWR: updating...");
+    console.log("useSWR: reloading...");
     setState((state) =>
       state.data === null
         ? {
@@ -71,12 +70,12 @@ export function useSWR<T>(
       const data = await fetcher();
       const result = schema.safeParse(data);
       if (!result.success) {
-        console.error(`useSWR: Schema Parse Error: ${result.error}`);
-        throw new Error(`useSWR: zod parse error: ${result.error}`);
+        console.error(
+          `WARNING: useSWR: UNEXPECTED ZOD PARSE ERROR: Schema Parse Error: ${result.error.message}`,
+        );
       }
       setState({
-        // Success
-        data: result.data,
+        data: data,
         current: "success",
       });
       localStorage.setItem(CACHE_KEY, JSON.stringify(data));
@@ -87,7 +86,7 @@ export function useSWR<T>(
         current: "error",
         error: e as Error,
       });
-      console.log("useSWR: update fail");
+      console.error("useSWR: update fail");
     }
   }, [CACHE_KEY, fetcher, schema]);
 
@@ -108,7 +107,10 @@ function loadOldData<T>(
   const oldData = localStorage.getItem(CACHE_KEY);
   if (oldData) {
     try {
-      const data = schema.parse(JSON.parse(oldData));
+      const data = JSON.parse(oldData);
+      const parse = schema.safeParse(data);
+      if (!parse.success)
+        console.error(`useSWR: zodParseError: ${parse.error}`);
       return {
         current: "stale",
         data,
