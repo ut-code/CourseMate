@@ -1,7 +1,7 @@
 import bodyParser from "body-parser";
 import express from "express";
+import * as storage from "../database/pfp";
 import { safeGetGUID } from "../firebase/auth/lib";
-import * as storage from "../firebase/store/uploadImage";
 import { compressImage } from "../functions/img/compress";
 
 // TODO: truncate file at frontend s.t. even the largest file won't trigger the limit

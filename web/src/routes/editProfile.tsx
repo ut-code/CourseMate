@@ -16,6 +16,7 @@ import type { SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import hooks from "../api/hooks";
+import { uploadImage } from "../api/image";
 import { update } from "../api/user";
 import type { UpdateUser } from "../common/types";
 import { UpdateUserSchema } from "../common/zod/schemas";
@@ -25,7 +26,6 @@ import {
   PhotoPreviewButton,
 } from "../components/config/PhotoPreview";
 import UserAvatar from "../components/human/avatar";
-import { uploadImage } from "../firebase/store/photo";
 import { facultiesAndDepartments } from "./registration/data";
 
 export default function EditProfile() {
