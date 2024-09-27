@@ -8,7 +8,7 @@ import { compressImage } from "../functions/img/compress";
 const parseLargeBuffer = bodyParser.raw({
   type: "image/png",
   // TODO: block large files (larger than 1mb? idk)
-  limit: "50mb",
+  limit: "5mb",
 });
 const router = express.Router();
 
