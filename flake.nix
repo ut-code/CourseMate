@@ -18,7 +18,6 @@
             gnumake
             bun
             biome
-            # stdenv.cc.cc.lib # required in sharp (or not, I'm not sure because it still isn't working)
           ];
           shellHook = with pkgs; ''
             export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${stdenv.cc.cc.lib}/lib"
