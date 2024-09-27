@@ -2,8 +2,6 @@ import { Err, Ok, type Result } from "../common/lib/result";
 import type { GUID } from "../common/types";
 import { prisma } from "./client";
 
-// TODO: move this out of firebase/ since this is not firebase anymore.
-
 /**
  * is safe to await.
  * @returns URL of the file.
