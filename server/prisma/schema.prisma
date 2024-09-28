@@ -26,13 +26,13 @@ model User {
   guid String @unique
 
   // profile
-  name       String @default("名無し")
-  gender     String @default("その他")
-  grade      String @default("")
-  faculty    String @default("前期教養学部")
-  department String @default("理科一類")
-  intro      String @default("自己紹介が設定されていません")
-  pictureUrl String @default("")
+  name       String
+  gender     String
+  grade      String
+  faculty    String
+  department String
+  intro      String
+  pictureUrl String
 
   // bindings to other parts of this app
   enrollments    Enrollment[]
