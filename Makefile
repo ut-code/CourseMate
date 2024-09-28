@@ -14,14 +14,19 @@ setup:
 	@echo "- run make sync"
 
 setup-ci: export DATABASE_URL=${DATABASE_URL_FOR_PRISMA_SQL_GENERATION}
-setup-ci: seed
-	make setup
+setup-ci:
+	make sync
+	make seed
+	make generate-sql
 
 sync: sync-server sync-web sync-root copy-common 
 	@echo '----------------------------------------------------------------------------------------------------------'
 	@echo '| Most work is done. now running prisma-generate-sql (which might fail if .env.dev is not set configured)|'
 	@echo '----------------------------------------------------------------------------------------------------------'
-	cd server; bun run prisma-generate-sql || true
+	make generate-sql || true
+
+generate-sql:
+	@cd server; bun run prisma-generate-sql
 
 start: start-all # build -> serve
 build: build-server build-web
