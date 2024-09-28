@@ -6,11 +6,8 @@ import RoomList from "../../components/chat/RoomList";
 import { RoomWindow } from "../../components/chat/RoomWindow";
 
 export default function Chat() {
-  const {
-    data: roomsData,
-    error: roomsError,
-    loading: roomsLoading,
-  } = useRoomsOverview();
+  console.log("Chat: rendering...");
+  const { state } = useRoomsOverview();
   const [activeRoom, setActiveRoom] = useState<DMOverview | null>(null);
 
   return (
@@ -23,13 +20,13 @@ export default function Chat() {
       ) : (
         // activeRoomがfalseの場合、通常のRoomListを表示
         <Box>
-          {roomsLoading ? (
+          {state.current === "loading" ? (
             <CircularProgress />
-          ) : roomsError ? (
-            <Typography color="error">Error: {roomsError.message}</Typography>
+          ) : state.current === "error" ? (
+            <Typography color="error">Error: {state.error.message}</Typography>
           ) : (
             <RoomList
-              roomsData={roomsData}
+              roomsData={state.data}
               activeRoom={activeRoom}
               setActiveRoom={setActiveRoom}
             />

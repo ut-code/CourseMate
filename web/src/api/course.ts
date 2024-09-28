@@ -32,6 +32,7 @@ export async function getCoursesByDayAndPeriod(
 }
 
 /**
+// FIXME: remove this function and use useMyCourses() from cache instead.
  * 指定した講義と曜限が重複している自身の講義を取得する。
  * @param courseId 指定する講義のID
  * @returns `courseId` で指定した講義と曜限が重複している講義
