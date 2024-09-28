@@ -6,11 +6,16 @@ setup:
 	bunx husky
 	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 	cd server; if [ ! -f .env.dev ]; then cp ./.env.sample ./.env.dev ; fi
-	echo "auto setup is done. now do:"
-	echo "- edit server/.env.dev"
-	echo "- edit web/.env"
+	@echo "auto setup is done. now do:"
+	@echo "- edit server/.env.dev"
+	@echo "- edit web/.env"
+	@echo "- run make sync"
 
 sync: sync-server sync-web sync-root copy-common
+	@echo '----------------------------------------------------------------------------------------------------------'
+	@echo '| Most work is done. now running prisma-generate-sql (which might fail if .env.dev is not set configured)|'
+	@echo '----------------------------------------------------------------------------------------------------------'
+	cd server; bun run prisma-generate-sql || true
 
 start: start-all # build -> serve
 build: build-server build-web
@@ -27,7 +32,7 @@ test: export FIREBASE_PROJECT_ID=mock-proj
 test: dev-db
 	ENV_FILE=server/.env.dev bun test
 	docker stop postgres
-	
+
 prepare-deploy-web: copy-common
 	cd web; bun install; bun run build
 prepare-deploy-server: copy-common
