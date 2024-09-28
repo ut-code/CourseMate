@@ -2,7 +2,7 @@ import { prisma } from "../database/client";
 
 async function main() {
   // users
-  const user1 = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { id: 101 },
     update: {},
     create: {
@@ -19,7 +19,7 @@ async function main() {
     },
   });
 
-  const user2 = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { id: 102 },
     update: {},
     create: {
@@ -35,11 +35,24 @@ async function main() {
       guid: "abc102",
     },
   });
+  await prisma.user.upsert({
+    where: { id: 103 },
+    update: {},
+    create: {
+      id: 103,
+      name: "小五郎",
+      gender: "男",
+      grade: "B3",
+      faculty: "経済学部",
+      department: "経営学科",
+      intro: "小五郎です。",
+      pictureUrl:
+        "https://firebasestorage.googleapis.com/v0/b/coursemate-tutorial.appspot.com/o/45QiYkH65OWHZYPruT9sHKAHa4I3%2FulavVaTxMNACkcn4.jpg?alt=media&token=6eea4c9f-c9ec-4c6e-943b-96b0afe013c3",
+      guid: "abc103",
+    },
+  }); // courses
 
-  console.log({ user1, user2 });
-
-  // courses
-  const course1 = await prisma.course.upsert({
+  await prisma.course.upsert({
     where: { id: "10001" },
     update: {},
     create: {
@@ -48,7 +61,7 @@ async function main() {
       teacher: "足助太郎",
     },
   });
-  const course2 = await prisma.course.upsert({
+  await prisma.course.upsert({
     where: { id: "10002" },
     update: {},
     create: {
@@ -57,7 +70,7 @@ async function main() {
       teacher: "足助太郎",
     },
   });
-  const course3 = await prisma.course.upsert({
+  await prisma.course.upsert({
     where: { id: "10003" },
     update: {},
     create: {
@@ -66,7 +79,7 @@ async function main() {
       teacher: "足助太郎",
     },
   });
-  const course4 = await prisma.course.upsert({
+  await prisma.course.upsert({
     where: { id: "10004" },
     update: {},
     create: {
@@ -75,7 +88,7 @@ async function main() {
       teacher: "足助太郎",
     },
   });
-  const course5 = await prisma.course.upsert({
+  await prisma.course.upsert({
     where: { id: "10005" },
     update: {},
     create: {
@@ -84,10 +97,9 @@ async function main() {
       teacher: "足助太郎",
     },
   });
-  console.log({ course1, course2, course3, course4, course5 });
 
   // slot
-  const course1Slot1 = await prisma.slot.upsert({
+  await prisma.slot.upsert({
     where: {
       courseId_period_day: { courseId: "10001", period: 4, day: "tue" },
     },
@@ -98,7 +110,7 @@ async function main() {
       period: 4,
     },
   });
-  const course1Slot2 = await prisma.slot.upsert({
+  await prisma.slot.upsert({
     where: {
       courseId_period_day: { courseId: "10001", period: 4, day: "thu" },
     },
@@ -109,7 +121,7 @@ async function main() {
       period: 4,
     },
   });
-  const course2Slot1 = await prisma.slot.upsert({
+  await prisma.slot.upsert({
     where: {
       courseId_period_day: { courseId: "10002", period: 3, day: "mon" },
     },
@@ -120,7 +132,7 @@ async function main() {
       period: 3,
     },
   });
-  const course3Slot1 = await prisma.slot.upsert({
+  await prisma.slot.upsert({
     where: {
       courseId_period_day: { courseId: "10003", period: 3, day: "mon" },
     },
@@ -131,7 +143,7 @@ async function main() {
       period: 3,
     },
   });
-  const course3Slot2 = await prisma.slot.upsert({
+  await prisma.slot.upsert({
     where: {
       courseId_period_day: { courseId: "10003", period: 3, day: "wed" },
     },
@@ -142,7 +154,7 @@ async function main() {
       period: 3,
     },
   });
-  const course4Slot1 = await prisma.slot.upsert({
+  await prisma.slot.upsert({
     where: {
       courseId_period_day: { courseId: "10004", period: 3, day: "wed" },
     },
@@ -153,7 +165,7 @@ async function main() {
       period: 3,
     },
   });
-  const course4Slot2 = await prisma.slot.upsert({
+  await prisma.slot.upsert({
     where: {
       courseId_period_day: { courseId: "10004", period: 3, day: "fri" },
     },
@@ -165,7 +177,7 @@ async function main() {
     },
   });
 
-  const course5Slot1 = await prisma.slot.upsert({
+  await prisma.slot.upsert({
     where: {
       courseId_period_day: { courseId: "10005", period: 2, day: "tue" },
     },
@@ -177,7 +189,7 @@ async function main() {
     },
   });
 
-  const course5Slot2 = await prisma.slot.upsert({
+  await prisma.slot.upsert({
     where: {
       courseId_period_day: { courseId: "10005", period: 3, day: "tue" },
     },
@@ -189,69 +201,35 @@ async function main() {
     },
   });
 
-  console.log({
-    course1Slot1,
-    course1Slot2,
-    course2Slot1,
-    course3Slot1,
-    course3Slot2,
-    course4Slot1,
-    course4Slot2,
-    course5Slot1,
-    course5Slot2,
-  });
+  //                       userId, courseId
+  const enrollments: Array<[number, string]> = [
+    // assert: 101 and 102 has more overlaps in courses than 101 and 103, but less than 102 and 103
+    // if you change the assertion above, fix test in engines/recommendation.test.ts too.
+    [101, "10001"],
+    [101, "10002"],
+    [101, "10003"],
+    [102, "10002"],
+    [102, "10003"],
+    [102, "10004"],
+    [102, "10005"],
+    [103, "10003"],
+    [103, "10004"],
+    [103, "10005"],
+  ];
 
-  // enrollment
-  const user1Enrollment1 = await prisma.enrollment.upsert({
-    where: {
-      userId_courseId: { userId: 101, courseId: "10001" },
-    },
-    update: {},
-    create: {
-      userId: 101,
-      courseId: "10001",
-    },
+  const promises = enrollments.map(async ([user, course]) => {
+    await prisma.enrollment.upsert({
+      where: {
+        userId_courseId: { userId: user, courseId: course },
+      },
+      update: {},
+      create: {
+        userId: user,
+        courseId: course,
+      },
+    });
   });
-
-  const user1Enrollment2 = await prisma.enrollment.upsert({
-    where: {
-      userId_courseId: { userId: 101, courseId: "10002" },
-    },
-    update: {},
-    create: {
-      userId: 101,
-      courseId: "10002",
-    },
-  });
-
-  const user2Enrollment1 = await prisma.enrollment.upsert({
-    where: {
-      userId_courseId: { userId: 102, courseId: "10003" },
-    },
-    update: {},
-    create: {
-      userId: 102,
-      courseId: "10003",
-    },
-  });
-
-  const user2Enrollment2 = await prisma.enrollment.upsert({
-    where: {
-      userId_courseId: { userId: 102, courseId: "10005" },
-    },
-    update: {},
-    create: {
-      userId: 102,
-      courseId: "10005",
-    },
-  });
-
-  console.log({
-    user1Enrollment1,
-    user1Enrollment2,
-    user2Enrollment1,
-    user2Enrollment2,
-  });
+  await Promise.all(promises);
 }
 
 await main()

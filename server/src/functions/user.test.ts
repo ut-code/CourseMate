@@ -14,7 +14,7 @@ beforeAll(() => {
 test("get all users", async () => {
   const result = await getAllUsers();
   expect(result.code).toBe(200);
-  expect(result.body).toSatisfy((s) => s.length === 2);
+  expect(result.body).toSatisfy((s) => s.length === 3);
   expect(result.body).toSatisfy(
     (s) => typeof s !== "string" && s[0].name === "田中太郎",
   );

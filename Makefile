@@ -30,7 +30,8 @@ test: export NEVER_LOAD_DOTENV=1
 test: export UNSAFE_SKIP_AUTH=1
 test: export FIREBASE_PROJECT_ID=mock-proj
 test: dev-db
-	ENV_FILE=server/.env.dev bun test
+	cd server/src; ENV_FILE=../.env.dev bun test
+	cd ./test; ENV_FILE=../server/.env.dev bun test
 	docker stop postgres
 
 prepare-deploy-web: copy-common
