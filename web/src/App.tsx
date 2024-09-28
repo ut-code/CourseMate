@@ -1,13 +1,12 @@
 import { CssBaseline, createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
-import { getAuth } from "firebase/auth";
 import { SnackbarProvider } from "notistack";
-import type { ReactNode } from "react";
 import {
   Navigate,
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
+import { RedirectUnauthenticated } from "./components/common/RedirectUnauthenticated";
 import EditCourses from "./routes/editCourses";
 import EditProfile from "./routes/editProfile";
 import Login from "./routes/login";
@@ -19,13 +18,6 @@ import Home from "./routes/tabs/home";
 import Settings from "./routes/tabs/settings";
 
 export default function App() {
-  /**
-   * Google アカウントでログインしていなければ Login にリダイレクト
-   */
-  const RedirectUnauthenticated = ({ children }: { children: ReactNode }) => {
-    return getAuth().currentUser ? children : <Navigate to="/login" />;
-  };
-
   const router = createBrowserRouter([
     {
       path: "/",
@@ -34,11 +26,7 @@ export default function App() {
       children: [
         {
           index: true,
-          element: (
-            <RedirectUnauthenticated>
-              <Home />
-            </RedirectUnauthenticated>
-          ),
+          element: <Navigate to="/home" replace />,
         },
         {
           path: "home",
