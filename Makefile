@@ -13,9 +13,9 @@ setup:
 	@echo "- edit web/.env"
 	@echo "- run make sync"
 
+setup-ci: export DATABASE_URL=${LOCAL_DB}
 setup-ci: dev-db
 	make setup
-drop-ci:
 	docker kill postgres || true
 
 sync: sync-server sync-web sync-root copy-common 

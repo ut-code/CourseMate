@@ -16,7 +16,6 @@ jobs:
           bun-version: latest
       - run: make setup-ci
       - run: make build
-      - run: make drop-ci
 
   biome:
     name: Code style check via Biome
@@ -48,7 +47,6 @@ jobs:
       - run: bunx tsc --noEmit
         working-directory: server
 
-      - run: make drop-ci
 
   spell-check:
     name: Spell Check
@@ -70,7 +68,6 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: make setup-ci
       - run: make test
-      - run: make drop-ci
 
   deploy-test-web:
     name: Deploy Test (web)
