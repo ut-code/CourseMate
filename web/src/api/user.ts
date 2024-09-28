@@ -68,11 +68,21 @@ export async function getByGUID(
       return { status: res.status, data: null };
     }
 
-    const data = await res.json();
-    const safeData = parseUser(data);
-    return { status: res.status, data: safeData };
+    try {
+      const data = await res.json();
+      try {
+        const safeData = parseUser(data);
+        return { status: res.status, data: safeData };
+      } catch {
+        return { status: res.status, data };
+      }
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   } catch (error) {
-    throw new Error("ネットワークエラーまたは型エラーが発生しました");
+    console.error(error);
+    throw error;
   }
 }
 
