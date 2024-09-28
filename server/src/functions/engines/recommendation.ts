@@ -1,3 +1,4 @@
+import { recommend } from "@prisma/client/sql";
 import type { UserID } from "../../common/types";
 import { prisma } from "../../database/client";
 

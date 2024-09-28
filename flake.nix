@@ -3,12 +3,13 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/master";
     flake-utils.url = "github:numtide/flake-utils";
+    nixos-prisma.url = "github:pimeys/nixos-prisma";
   };
 
-  outputs = { nixpkgs, flake-utils, ... }:
+  outputs = { nixpkgs, flake-utils, nixos-prisma, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs { inherit system; overlays = [ nixos-prisma.overlay ]; };
       in
       {
         devShell = pkgs.mkShell {
