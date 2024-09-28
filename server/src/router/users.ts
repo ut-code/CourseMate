@@ -28,6 +28,14 @@ router.get("/", async (_: Request, res: Response) => {
   const result = await core.getAllUsers();
   res.status(result.code).send(result.body);
 });
+router.get("/recommended", async (req, res) => {
+  const u = await safeGetUserId(req);
+  if (!u.ok) return res.status(401).end();
+
+  u.value;
+
+  res.send("ok");
+});
 
 // 自分の情報を確認するエンドポイント。
 router.get("/me", async (req: Request, res: Response) => {
