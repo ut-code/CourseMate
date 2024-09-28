@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL_FOR_PRISMA_SQL_GENERATION }}
 jobs:
   build:
     name: Build

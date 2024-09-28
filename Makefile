@@ -13,8 +13,8 @@ setup:
 	@echo "- edit web/.env"
 	@echo "- run make sync"
 
-setup-ci: export DATABASE_URL=${DATABASE_URL_FOR_PRISMA_SQL_GENERATION}
 setup-ci:
+	if [ ${DATABASE_URL} == "" ]; then echo 'Please set DATABASE_URL_FOR_SQL_GENERATION!'; exit 1; fi
 	make sync
 	make seed
 	make generate-sql
