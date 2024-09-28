@@ -1,5 +1,7 @@
 default: start
 
+LOCAL_DB := postgres://user:password@localhost:5432/database
+
 setup: 
 	if [ ! `command -v bun` ]; then echo 'ERR: Bun is required!'; exit 1; fi
 	make sync
@@ -11,7 +13,12 @@ setup:
 	@echo "- edit web/.env"
 	@echo "- run make sync"
 
-sync: sync-server sync-web sync-root copy-common
+setup-ci: dev-db
+	make setup
+drop-ci:
+	docker kill postgres || true
+
+sync: sync-server sync-web sync-root copy-common 
 	@echo '----------------------------------------------------------------------------------------------------------'
 	@echo '| Most work is done. now running prisma-generate-sql (which might fail if .env.dev is not set configured)|'
 	@echo '----------------------------------------------------------------------------------------------------------'
@@ -23,7 +30,6 @@ serve: serve-all # serve only. does not build.
 watch:
 		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
 
-LOCAL_DB := postgres://user:password@localhost:5432/database
 
 test: export DATABASE_URL=$(LOCAL_DB)
 test: export NEVER_LOAD_DOTENV=1
