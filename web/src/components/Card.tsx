@@ -79,34 +79,27 @@ const CardFront = ({ displayedUser }: CardProps) => {
         style={{
           padding: "10px",
           display: "grid",
-          gridTemplateColumns: "50% 50%",
-          gridTemplateRows: "11vh 5vh 5vh 5vh 42vh",
-          alignItems: "start",
-          justifyContent: "space-around",
+          gridTemplateColumns: "1fr 1fr 1fr",
+          gridTemplateRows: "30% 10% 10% 10% 10% 10% 20%",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
         }}
       >
-        <div
-          style={{
-            maxWidth: "300px",
-            maxHeight: "300px",
-            gridColumn: "1 / 2",
-            gridRow: "1 / 3",
-          }}
-        >
-          <UserAvatar
-            pictureUrl={displayedUser?.pictureUrl}
-            width="90%"
-            height="auto"
-          />
-        </div>
-
+        <UserAvatar
+          pictureUrl={displayedUser?.pictureUrl}
+          width="auto"
+          height="80%"
+        />
         {displayedUser?.name && (
           <p
             style={{
-              fontSize: "5vw",
+              fontSize: "5vmin",
               fontWeight: "bold",
-              gridColumn: "2 / 3",
-              gridRow: "1 / 3",
+              gridColumn: "2 / 4",
+              gridRow: "1 / 2",
+              margin: "10px",
+              marginRight: "0",
             }}
           >
             {displayedUser?.name}
@@ -116,37 +109,43 @@ const CardFront = ({ displayedUser }: CardProps) => {
         {displayedUser?.department && (
           <p
             style={{
-              marginTop: "5%",
-              fontSize: "4vw",
-              gridColumn: "1 / 3",
-              gridRow: "4 / 5",
+              fontSize: "4vmin",
+              gridColumn: "1 / 4",
+              gridRow: "3 / 4",
             }}
           >
-            {" "}
             {displayedUser.department}
           </p>
         )}
         <p
           style={{
-            marginTop: "3%",
-            fontSize: "4vw",
+            fontSize: "5vmin",
             gridColumn: "1 / 3",
-            gridRow: "3 / 4",
+            gridRow: "2 / 3",
           }}
         >
-          {displayedUser?.faculty && (
-            <span style={{ marginTop: "3%", fontSize: "5vw" }}>
-              {`${displayedUser.faculty}··`}
-            </span>
-          )}
-          <span>
-            {`${displayedUser?.gender} `}
-            {displayedUser.grade && displayedUser.grade}
-          </span>
+          {`${displayedUser.faculty}`}
+        </p>
+        <p
+          style={{
+            fontSize: "5vmin",
+            gridColumn: "2 / 4",
+            gridRow: "4 / 5",
+          }}
+        >
+          {displayedUser?.grade}
+        </p>
+        <p style={{ fontSize: "5vmin", gridColumn: "1 / 3", gridRow: "4 / 5" }}>
+          {displayedUser.gender}
         </p>
         {displayedUser?.intro && (
           <p
-            style={{ fontSize: "3.5vw", gridColumn: "1 / 3", gridRow: "5 / 6" }}
+            style={{
+              fontSize: "4vmin",
+              gridColumn: "1 / 4",
+              gridRow: "5 / 8",
+              alignSelf: "start",
+            }}
           >
             {displayedUser.intro}
           </p>
@@ -154,7 +153,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
       </div>
       <div style={{ position: "absolute", bottom: "0", right: "0", left: "0" }}>
         <ThreeSixtyIcon
-          style={{ fontSize: "7vw", display: "block", margin: "auto" }}
+          style={{ fontSize: "7vmin", display: "block", margin: "auto" }}
         />
       </div>
     </div>
@@ -182,7 +181,7 @@ const CardBack = ({ displayedUser }: CardProps) => {
       <CoursesTable userId={displayedUser.id} />
       <div>
         <ThreeSixtyIcon
-          style={{ fontSize: "7vw", display: "block", margin: "auto" }}
+          style={{ fontSize: "7vmin", display: "block", margin: "auto" }}
         />
       </div>
     </div>
