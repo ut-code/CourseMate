@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { type ChangeEvent, useEffect, useState } from "react";
-import { uploadImage } from "../../firebase/store/photo";
+import { uploadImage } from "../../api/image";
 import { ImageCropper } from "../ImageCropper";
 import { photo } from "../data/photo-preview";
 

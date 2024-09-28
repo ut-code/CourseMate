@@ -1,12 +1,12 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { uploadImage } from "../../../api/image";
 import { parsePictureUrl } from "../../../common/zod/methods";
 import {
   PhotoPreview,
   PhotoPreviewButton,
 } from "../../../components/config/PhotoPreview";
 import UserAvatar from "../../../components/human/avatar";
-import { uploadImage } from "../../../firebase/store/photo";
 import { type BackProp, NextButton, type StepProps } from "../common";
 
 export type Step2Data = {

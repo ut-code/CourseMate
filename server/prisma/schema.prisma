@@ -41,6 +41,12 @@ model User {
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
 }
 
+// プロフィールの画像。
+model Avatar {
+  guid String @id
+  data Bytes
+}
+
 // enum Gender {
 //   MALE
 //   FEMALE

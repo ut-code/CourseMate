@@ -16,6 +16,7 @@ import type { SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import hooks from "../api/hooks";
+import { uploadImage } from "../api/image";
 import { update } from "../api/user";
 import type { UpdateUser } from "../common/types";
 import { UpdateUserSchema } from "../common/zod/schemas";
@@ -25,7 +26,6 @@ import {
   PhotoPreviewButton,
 } from "../components/config/PhotoPreview";
 import UserAvatar from "../components/human/avatar";
-import { uploadImage } from "../firebase/store/photo";
 import { facultiesAndDepartments } from "./registration/data";
 
 export default function EditProfile() {
@@ -82,11 +82,13 @@ export default function EditProfile() {
     }
   }, [data]);
 
-  async function select() {
+  async function onSelect() {
     try {
       if (!file) throw new Error("画像は入力必須です");
       const url = await uploadImage(file);
+      console.log("new URL:", url);
       setPictureUrl(url);
+      handleSave({ pictureUrl: url });
     } catch (error) {
       if (error instanceof Error) {
         let errorMessages: string;
@@ -111,9 +113,6 @@ export default function EditProfile() {
   }
 
   const [open, setOpen] = useState<boolean>(false);
-  useEffect(() => {
-    console.log("open: ", open);
-  }, [open]);
 
   function hasUnsavedChangesOrErrors() {
     return (
@@ -517,8 +516,7 @@ export default function EditProfile() {
                 <Button
                   sx={{ float: "right", marginRight: "30px" }}
                   onClick={async () => {
-                    await select();
-                    await handleSave({});
+                    await onSelect();
                     setOpen(false);
                   }}
                 >
