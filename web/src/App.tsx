@@ -98,10 +98,6 @@ export default function App() {
       path: "/signup",
       element: <RegistrationPage />,
     },
-    {
-      path: "/chat",
-      element: <Chat />,
-    },
   ]);
 
   return (
