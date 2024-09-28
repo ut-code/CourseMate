@@ -2,6 +2,7 @@ import { CssBaseline, createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
 import { getAuth } from "firebase/auth";
 import { SnackbarProvider } from "notistack";
+import type { ReactNode } from "react";
 import {
   Navigate,
   RouterProvider,
@@ -18,13 +19,11 @@ import Home from "./routes/tabs/home";
 import Settings from "./routes/tabs/settings";
 
 export default function App() {
-  const PrivateRoute = () => {
-    // Google アカウントでログインしていれば home に、ログインしていなければ login にリダイレクト
-    return getAuth().currentUser ? (
-      <Navigate to="/home" />
-    ) : (
-      <Navigate to="/login" />
-    );
+  /**
+   * Google アカウントでログインしていなければ Login にリダイレクト
+   */
+  const RedirectUnauthenticated = ({ children }: { children: ReactNode }) => {
+    return getAuth().currentUser ? children : <Navigate to="/login" />;
   };
 
   const router = createBrowserRouter([
@@ -35,31 +34,59 @@ export default function App() {
       children: [
         {
           index: true,
-          element: <PrivateRoute />,
+          element: (
+            <RedirectUnauthenticated>
+              <Home />
+            </RedirectUnauthenticated>
+          ),
         },
         {
           path: "home",
-          element: <Home />,
+          element: (
+            <RedirectUnauthenticated>
+              <Home />
+            </RedirectUnauthenticated>
+          ),
         },
         {
           path: "friends",
-          element: <Friends />,
+          element: (
+            <RedirectUnauthenticated>
+              <Friends />
+            </RedirectUnauthenticated>
+          ),
         },
         {
           path: "settings",
-          element: <Settings />,
+          element: (
+            <RedirectUnauthenticated>
+              <Settings />
+            </RedirectUnauthenticated>
+          ),
         },
         {
           path: "chat",
-          element: <Chat />,
+          element: (
+            <RedirectUnauthenticated>
+              <Chat />
+            </RedirectUnauthenticated>
+          ),
         },
         {
           path: "edit/profile",
-          element: <EditProfile />,
+          element: (
+            <RedirectUnauthenticated>
+              <EditProfile />
+            </RedirectUnauthenticated>
+          ),
         },
         {
           path: "edit/courses",
-          element: <EditCourses />,
+          element: (
+            <RedirectUnauthenticated>
+              <EditCourses />
+            </RedirectUnauthenticated>
+          ),
         },
       ],
     },
