@@ -22,7 +22,7 @@ type URL = string;
 
 export async function uploadImage(file: File): Promise<URL> {
   console.log("sending image to server...");
-  const res = await fetch(`${endpoints.pfp}?token=${await getIdToken()}`, {
+  const res = await fetch(`${endpoints.picture}?token=${await getIdToken()}`, {
     method: "POST",
     headers: {
       "Content-Type": "image/png",

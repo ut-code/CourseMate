@@ -337,12 +337,12 @@ const message = (messageId: MessageID) =>
 /**
  * GET: get profile picture of URL (this is usually hard-encoded in pictureURL so this variable is barely used)
  */
-const pfpOf = (guid: GUID) => `${origin}/pfp/${guid}`;
+const pictureOf = (guid: GUID) => `${origin}/picture/${guid}`;
 
 /**
  * POST: update my profile picture.
  */
-const pfp = `${origin}/pfp`;
+const picture = `${origin}/picture`;
 
 export default {
   user,
@@ -369,6 +369,6 @@ export default {
   sharedRooms,
   roomInvite,
   message,
-  pfpOf,
-  pfp,
+  pictureOf,
+  picture,
 };

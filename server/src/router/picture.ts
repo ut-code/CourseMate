@@ -1,6 +1,6 @@
 import bodyParser from "body-parser";
 import express from "express";
-import * as storage from "../database/pfp";
+import * as storage from "../database/picture";
 import { safeGetGUID } from "../firebase/auth/lib";
 import { compressImage } from "../functions/img/compress";
 

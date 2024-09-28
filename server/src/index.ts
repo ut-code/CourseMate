@@ -6,7 +6,7 @@ import { initializeSocket } from "./lib/socket/socket";
 import chatRoutes from "./router/chat";
 import coursesRoutes from "./router/courses";
 import matchesRoutes from "./router/matches";
-import pfpRoutes from "./router/pfp";
+import pictureRoutes from "./router/picture";
 import requestsRoutes from "./router/requests";
 import usersRoutes from "./router/users";
 
@@ -41,7 +41,7 @@ app.get("/", (_, res) => {
 });
 
 // ルーティング
-app.use("/pfp", pfpRoutes);
+app.use("/picture", pictureRoutes);
 app.use("/users", usersRoutes);
 app.use("/courses", coursesRoutes);
 app.use("/requests", requestsRoutes);
