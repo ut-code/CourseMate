@@ -9,13 +9,12 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    env: DATABASE_URL=${{ secrets.DATABASE_URL_FOR_PRISMA_SQL_GENERATION }}
     steps:
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - run: make setup
+      - run: make setup-ci
       - run: make build
 
   biome:
@@ -36,13 +35,12 @@ jobs:
   type-check:
     name: Type Check
     runs-on: ubuntu-latest
-    env: DATABASE_URL=${{ secrets.DATABASE_URL_FOR_PRISMA_SQL_GENERATION }}
     steps:
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - run: make setup
+      - run: make setup-ci
 
       - run: bunx tsc --noEmit
         working-directory: web
@@ -58,17 +56,16 @@ jobs:
         with:
           bun-version: latest
 
-      - run: make setup
+      - run: make setup-ci
       - run: make spell-check
 
   test:
     name: Bun Test
     runs-on: ubuntu-latest
-    env: DATABASE_URL=${{ secrets.DATABASE_URL_FOR_PRISMA_SQL_GENERATION }}
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - run: make setup
+      - run: make setup-ci
       - run: make test
 
   deploy-test-web:
