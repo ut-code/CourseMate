@@ -10,7 +10,6 @@ type Props = {
 export function AvatarWithFallback({ width, height, url }: Props) {
   return (
     <ImageFallback
-      key={url}
       width={width}
       height={height}
       url={url}

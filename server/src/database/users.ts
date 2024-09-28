@@ -30,6 +30,25 @@ export async function getUser(guid: GUID): Promise<Result<User>> {
     return Err(e);
   }
 }
+export async function getGUIDByUserID(id: UserID): Promise<Result<GUID>> {
+  return prisma.user
+    .findUnique({
+      where: { id },
+      select: { guid: true },
+    })
+    .then((v) => (v ? Ok(v.guid) : Err(404)))
+    .catch((e) => Err(e));
+}
+export async function getUserIDByGUID(guid: GUID): Promise<Result<UserID>> {
+  return prisma.user
+    .findUnique({
+      where: { guid },
+      select: { id: true },
+    })
+    .then((res) => res?.id)
+    .then((id) => (id ? Ok(id) : Err(404)))
+    .catch((err) => Err(err));
+}
 
 export async function getUserByID(id: UserID): Promise<Result<User>> {
   try {

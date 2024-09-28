@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   url?: string;
@@ -11,6 +11,10 @@ type Props = {
 // https://medium.com/@abhishekmicosoft/handling-img-fallback-307653b2f30
 export function ImageFallback({ width, height, url, fallback, alt }: Props) {
   const [ok, setOK] = useState<boolean>(true);
+  useEffect(() => {
+    url;
+    setOK(true);
+  }, [url]);
 
   return ok ? (
     <img
@@ -22,7 +26,10 @@ export function ImageFallback({ width, height, url, fallback, alt }: Props) {
         borderRadius: "50%",
         pointerEvents: "none",
       }}
-      onError={() => setOK(false)}
+      onError={() => {
+        console.log("failed to fetch image data of:", url);
+        setOK(false);
+      }}
       alt={alt}
     />
   ) : (
