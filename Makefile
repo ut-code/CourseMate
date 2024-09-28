@@ -13,11 +13,6 @@ setup:
 	@echo "- edit web/.env"
 	@echo "- run make sync"
 
-setup-ci: export DATABASE_URL=${LOCAL_DB}
-setup-ci: dev-db
-	make setup
-	docker kill postgres || true
-
 sync: sync-server sync-web sync-root copy-common 
 	@echo '----------------------------------------------------------------------------------------------------------'
 	@echo '| Most work is done. now running prisma-generate-sql (which might fail if .env.dev is not set configured)|'
