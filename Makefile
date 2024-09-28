@@ -16,7 +16,6 @@ setup:
 setup-ci:
 	if [ ${DATABASE_URL} == "" ]; then echo 'Please set DATABASE_URL_FOR_SQL_GENERATION!'; exit 1; fi
 	make sync
-	make seed
 	make generate-sql
 
 sync: sync-server sync-web sync-root copy-common 
