@@ -1,5 +1,9 @@
 import type { User } from "../common/types";
+import { UserSchema } from "../common/zod/schemas";
+import { credFetch } from "../firebase/auth/lib";
 import { useAuthorizedData } from "../hooks/useData";
+import { useSWR } from "../hooks/useSWR";
+import type { Hook as SWRHook } from "../hooks/useSWR";
 import endpoints from "./internal/endpoints";
 import type { Hook } from "./share/types";
 
@@ -20,9 +24,12 @@ export function usePendingRequestsFromMe(): Hook<User[]> {
   return useAuthorizedData<User[]>(url);
 }
 
-export function useMe(): Hook<User> {
-  const url = endpoints.me;
-  return useAuthorizedData<User>(url);
+export function useMe(): SWRHook<User> {
+  return useSWR("useMe", getMyData, UserSchema);
+}
+export async function getMyData() {
+  const res = await credFetch("GET", endpoints.me);
+  return await res.json();
 }
 
 export default {
