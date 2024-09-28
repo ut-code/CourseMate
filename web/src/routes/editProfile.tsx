@@ -2,7 +2,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   Button,
-  CircularProgress,
   FormControl,
   IconButton,
   InputLabel,
@@ -20,6 +19,7 @@ import { uploadImage } from "../api/image";
 import { update } from "../api/user";
 import type { UpdateUser } from "../common/types";
 import { UpdateUserSchema } from "../common/zod/schemas";
+import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
 import { useAlert } from "../components/common/alert/AlertProvider";
 import {
   PhotoPreview,
@@ -240,7 +240,7 @@ export default function EditProfile() {
   return (
     <Box sx={{ padding: "20px" }}>
       {loading ? (
-        <CircularProgress />
+        <FullScreenCircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : data ? (

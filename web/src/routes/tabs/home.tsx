@@ -1,6 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Box, Button, CircularProgress } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import request from "../../api/request";
 import user from "../../api/user";
@@ -9,6 +9,7 @@ import { useCurrentUserId } from "../../hooks/useCurrentUser";
 
 import shadows from "@mui/material/styles/shadows";
 import { DraggableCard } from "../../components/DraggableCard";
+import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
 const getBackgroundColor = (x: number) => {
   const maxVal = 300; // 255より大きくして原色や黒にならないようにする
@@ -120,7 +121,7 @@ export default function Home() {
           </div>
         </Box>
       ) : (
-        <CircularProgress />
+        <FullScreenCircularProgress />
       )}
     </div>
   );
