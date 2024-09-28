@@ -6,7 +6,7 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
-import { RedirectUnauthenticated } from "./components/common/RedirectUnauthenticated";
+import { NavigateByAuthState } from "./components/common/NavigateByAuthState";
 import EditCourses from "./routes/editCourses";
 import EditProfile from "./routes/editProfile";
 import Login from "./routes/login";
@@ -31,60 +31,68 @@ export default function App() {
         {
           path: "home",
           element: (
-            <RedirectUnauthenticated>
+            <NavigateByAuthState type="toLoginForUnauthenticated">
               <Home />
-            </RedirectUnauthenticated>
+            </NavigateByAuthState>
           ),
         },
         {
           path: "friends",
           element: (
-            <RedirectUnauthenticated>
+            <NavigateByAuthState type="toLoginForUnauthenticated">
               <Friends />
-            </RedirectUnauthenticated>
+            </NavigateByAuthState>
           ),
         },
         {
           path: "settings",
           element: (
-            <RedirectUnauthenticated>
+            <NavigateByAuthState type="toLoginForUnauthenticated">
               <Settings />
-            </RedirectUnauthenticated>
+            </NavigateByAuthState>
           ),
         },
         {
           path: "chat",
           element: (
-            <RedirectUnauthenticated>
+            <NavigateByAuthState type="toLoginForUnauthenticated">
               <Chat />
-            </RedirectUnauthenticated>
+            </NavigateByAuthState>
           ),
         },
         {
           path: "edit/profile",
           element: (
-            <RedirectUnauthenticated>
+            <NavigateByAuthState type="toLoginForUnauthenticated">
               <EditProfile />
-            </RedirectUnauthenticated>
+            </NavigateByAuthState>
           ),
         },
         {
           path: "edit/courses",
           element: (
-            <RedirectUnauthenticated>
+            <NavigateByAuthState type="toLoginForUnauthenticated">
               <EditCourses />
-            </RedirectUnauthenticated>
+            </NavigateByAuthState>
           ),
         },
       ],
     },
     {
       path: "/login",
-      element: <Login />,
+      element: (
+        <NavigateByAuthState type="toHomeForAuthenticated">
+          <Login />
+        </NavigateByAuthState>
+      ),
     },
     {
       path: "/signup",
-      element: <RegistrationPage />,
+      element: (
+        <NavigateByAuthState type="toHomeForAuthenticated">
+          <RegistrationPage />
+        </NavigateByAuthState>
+      ),
     },
   ]);
 
