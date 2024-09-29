@@ -1,0 +1,16 @@
+name: Keep Alive
+
+on:
+  schedule:
+    - cron: "0 */3 * * *"
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    name: Keep Alive
+    runs-on: ubuntu-latest
+    steps:
+      - run: sudo apt install curl
+        shell: bash
+      - run: ./runners/keep-alive.sh
+        shell: bash
