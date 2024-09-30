@@ -15,6 +15,7 @@ import {
   deleteUser,
   getUser,
   getUserByID,
+  unmatched,
   updateUser,
 } from "../database/users";
 import { safeGetUserId } from "../firebase/auth/db";
@@ -44,11 +45,10 @@ router.get("/recommended", async (req: Request, res: Response) => {
   const id = await safeGetUserId(req);
   if (!id.ok) return res.status(401).send("auth error");
 
-  const result = await core.getAllUsers();
-  if (!result.ok) return res.status(result.code).send();
+  const result = await unmatched(id.value);
+  if (!result.ok) return res.status(500).send();
 
-  const raw = result.body.filter((u) => u.id !== id.value);
-  const shuffled = raw
+  const shuffled = result.value
     .map((value) => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);

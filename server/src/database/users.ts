@@ -108,3 +108,39 @@ export async function getAllUsers(): Promise<Result<User[]>> {
     return Err(e);
   }
 }
+
+// TODO: FIXME: currently also showing users that the requester has already sent request to, to not change behavior.
+// but this is probably not ideal. consider only showing people with no relation.
+// (or just remove this function and use recommended() instead)
+export async function unmatched(id: UserID): Promise<Result<User[]>> {
+  return prisma.user
+    .findMany({
+      where: {
+        AND: [
+          {
+            receivingUsers: {
+              none: {
+                sendingUserId: id,
+                status: "MATCHED",
+              },
+            },
+          },
+          {
+            sendingUsers: {
+              none: {
+                receivingUserId: id,
+                status: "MATCHED",
+              },
+            },
+          },
+          {
+            NOT: {
+              id: id,
+            },
+          },
+        ],
+      },
+    })
+    .then((res) => Ok(res))
+    .catch((err) => Err(err));
+}
