@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { User } from "../common/types";
 import { UserSchema } from "../common/zod/schemas";
 import { credFetch } from "../firebase/auth/lib";
@@ -7,7 +8,16 @@ import type { Hook as SWRHook } from "../hooks/useSWR";
 import endpoints from "./internal/endpoints";
 import type { Hook } from "./share/types";
 
-// TODO: install zod.
+// TODO: install zod to all funcs.
+const UserListSchema = z.array(UserSchema);
+
+async function getRecommendedUsers() {
+  const res = await credFetch("GET", endpoints.recommendedUsers);
+  return await res.json();
+}
+export function useRecommended(): SWRHook<User[]> {
+  return useSWR("useRecommended", getRecommendedUsers, UserListSchema);
+}
 
 export function useMatchedUsers(): Hook<User[]> {
   const url = endpoints.matchedUsers;

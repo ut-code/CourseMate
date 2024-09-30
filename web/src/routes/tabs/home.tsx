@@ -1,13 +1,11 @@
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Box, Button, CircularProgress } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import request from "../../api/request";
-import user from "../../api/user";
-import type { User } from "../../common/types";
-import { useCurrentUserId } from "../../hooks/useCurrentUser";
 
 import shadows from "@mui/material/styles/shadows";
+import { useRecommended } from "../../api/hooks";
 import { DraggableCard } from "../../components/DraggableCard";
 
 const getBackgroundColor = (x: number) => {
@@ -29,72 +27,25 @@ const getBackgroundColor = (x: number) => {
 };
 
 export default function Home() {
-  const [users, setUsers] = useState<User[] | null>(null);
-  const [skippedUsers, setSkippedUsers] = useState<User[] | null>(null);
-  const [displayedUser, setDisplayedUser] = useState<User | null>(null);
-  const { currentUserId, loading } = useCurrentUserId();
-  const [isAllUsersLiked, setIsAllUsersLiked] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      if (loading || !currentUserId) return;
-      const matched = await user.matched();
-      const users = await user.except(currentUserId);
-      const unmatched = users.filter(
-        (user) => !matched.some((matchedUser) => matchedUser.id === user.id),
-      );
-      setUsers(unmatched);
-    })().catch(console.error);
-  }, [currentUserId, loading]);
-
-  useEffect(() => {
-    if (users) {
-      const randomIndex = Math.floor(Math.random() * users.length);
-      setDisplayedUser(users[randomIndex]);
-    }
-  }, [users]);
-
-  const handleReject = (): void => {
-    if (!users || !displayedUser) return;
-    const newUsers = users.filter((user) => user.id !== displayedUser.id);
-    const newSkippedUsers = skippedUsers
-      ? [...skippedUsers, displayedUser]
-      : [displayedUser];
-    setSkippedUsers(newSkippedUsers);
-    setUsers(newUsers);
-    if (newUsers.length === 0) {
-      setUsers(newSkippedUsers);
-      setSkippedUsers([]);
-    }
-  };
-
-  const handleAccept = (): void => {
-    if (!displayedUser) return;
-    request.send(displayedUser.id).catch((err: unknown) => {
-      console.error("Error liking user:", err);
-    });
-    if (!users) return;
-    const newUsers = users.filter((user) => user.id !== displayedUser.id);
-    setUsers(newUsers);
-    if (newUsers.length === 0) {
-      if (skippedUsers) {
-        setUsers(skippedUsers);
-        setSkippedUsers(null);
-      } else {
-        setIsAllUsersLiked(true);
-      }
-    }
-  };
+  const { state: recommended } = useRecommended();
+  const [nth, setNth] = useState<number>(0);
+  const displayedUser = recommended.data?.[nth]; // biome told me to do this
+  const isAllUsersLiked = recommended.data?.length === nth;
 
   const [dragValue, setDragValue] = useState(0); // x方向の値を保存
-
-  const handleDrag = (dragProgress: number) => {
+  const handleDrag = useCallback((dragProgress: number) => {
     setDragValue(dragProgress);
-  };
+  }, []);
 
   if (isAllUsersLiked) {
     return <div>全員にいいねを送りました！</div>;
   }
+
+  const reject = useCallback(() => setNth((n) => n + 1), []);
+  const accept = useCallback(async () => {
+    setNth((n) => n + 1);
+    if (displayedUser?.id) request.send(displayedUser.id);
+  }, [displayedUser?.id]);
 
   return (
     <div style={{ backgroundColor: getBackgroundColor(dragValue) }}>
@@ -102,8 +53,8 @@ export default function Home() {
         <Box display="flex" flexDirection="column" alignItems="center">
           <DraggableCard
             displayedUser={displayedUser}
-            onSwipeLeft={handleReject}
-            onSwipeRight={handleAccept}
+            onSwipeLeft={reject}
+            onSwipeRight={accept}
             onDrag={handleDrag}
           />
           <div
@@ -115,8 +66,8 @@ export default function Home() {
               width: "50%",
             }}
           >
-            <RoundButton onclick={handleReject} icon={<CloseIconStyled />} />
-            <RoundButton onclick={handleAccept} icon={<FavoriteIconStyled />} />
+            <RoundButton onclick={reject} icon={<CloseIconStyled />} />
+            <RoundButton onclick={accept} icon={<FavoriteIconStyled />} />
           </div>
         </Box>
       ) : (

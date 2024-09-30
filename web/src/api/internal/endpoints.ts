@@ -40,6 +40,17 @@ const users = `${origin}/users`;
 
 /**
  * [v] 実装済み
+ * GET -> get top N users recommended to me.
+ * - statuses:
+ *   - 200: good.
+ *     - body: User[]
+ *   - 401: auth error.
+ *   - 500: internal error
+ **/
+export const recommendedUsers = `${origin}/users/recommended`;
+
+/**
+ * [v] 実装済み
  * GET -> get info of me.
  * - status:
  *   - 200: ok.
@@ -347,8 +358,7 @@ const picture = `${origin}/picture`;
 export default {
   user,
   me,
-  coursesMine,
-  coursesMineOverlaps,
+  recommendedUsers,
   userByGUID,
   userExists,
   users,
@@ -369,6 +379,8 @@ export default {
   sharedRooms,
   roomInvite,
   message,
+  coursesMine,
+  coursesMineOverlaps,
   pictureOf,
   picture,
 };

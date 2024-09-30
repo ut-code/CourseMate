@@ -38,6 +38,24 @@ router.get("/me", async (req: Request, res: Response) => {
   res.status(result.code).send(result.body);
 });
 
+// おすすめ順でソートされたユーザー
+// (レコメンデーションエンジン未実装のため、ランダム順)
+router.get("/recommended", async (req: Request, res: Response) => {
+  const id = await safeGetUserId(req);
+  if (!id.ok) return res.status(401).send("auth error");
+
+  const result = await core.getAllUsers();
+  if (!result.ok) return res.status(result.code).send();
+
+  const raw = result.body.filter((u) => u.id !== id.value);
+  const shuffled = raw
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+
+  res.status(200).send(shuffled);
+});
+
 // ユーザーの存在を確認するためのエンドポイント。だれでもアクセス可能
 router.get("/exists/:guid", async (req: Request, res: Response) => {
   const guid = req.params.guid;
