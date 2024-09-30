@@ -1,5 +1,4 @@
 import { Button } from "@mui/material";
-import { useSnackbar } from "notistack";
 import { type ChangeEvent, useCallback, useEffect, useState } from "react";
 import { uploadImage } from "../../api/image";
 import { ImageCropper } from "../ImageCropper";
