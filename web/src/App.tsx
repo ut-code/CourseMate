@@ -7,6 +7,7 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
+import { About } from "./components/about";
 import EditCourses from "./routes/editCourses";
 import EditProfile from "./routes/editProfile";
 import Login from "./routes/login";
@@ -47,7 +48,13 @@ export default function App() {
         },
         {
           path: "settings",
-          element: <Settings />,
+          element: (
+            <>
+              <Settings />
+              <hr />
+              <About />
+            </>
+          ),
         },
         {
           path: "chat",
