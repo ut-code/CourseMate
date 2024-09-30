@@ -3,28 +3,38 @@ import type { GUID, UpdateUser, User, UserID } from "../common/types";
 import { parseUser } from "../common/zod/methods.ts";
 import { UserIDSchema, UserSchema } from "../common/zod/schemas.ts";
 import { credFetch } from "../firebase/auth/lib.ts";
+import { useAuthorizedData } from "../hooks/useData.ts";
 import { type Hook, useSWR } from "../hooks/useSWR.ts";
 import endpoints from "./internal/endpoints.ts";
+import type { Hook as UseHook } from "./share/types.ts";
 
 const UserListSchema = z.array(UserSchema);
 
-//全てのユーザ情報を取得する
-export function useAll(): Hook<User[]> {
-  return useSWR("users::all", all, UserListSchema);
+export function useRecommended(): UseHook<User[]> {
+  const url = endpoints.recommendedUsers;
+  return useAuthorizedData<User[]>(url);
 }
-
-async function all(): Promise<User[]> {
-  const res = await credFetch("GET", endpoints.users);
-  return await res.json();
-}
-
 export function useMatched(): Hook<User[]> {
   return useSWR("users::matched", matched, UserListSchema);
+}
+export function usePendingToMe(): Hook<User[]> {
+  return useSWR("users::pending::to-me", pendingToMe, UserListSchema);
+}
+export function usePendingFromMe(): Hook<User[]> {
+  return useSWR("users::pending::from-me", pendingFromMe, UserListSchema);
 }
 
 async function matched(): Promise<User[]> {
   const res = await credFetch("GET", endpoints.matchedUsers);
   return res.json();
+}
+async function pendingToMe(): Promise<User[]> {
+  const res = await credFetch("GET", endpoints.pendingRequestsToMe);
+  return await res.json();
+}
+async function pendingFromMe(): Promise<User[]> {
+  const res = await credFetch("GET", endpoints.pendingRequestsFromMe);
+  return await res.json();
 }
 
 // 自身のユーザー情報を取得する
@@ -38,7 +48,7 @@ async function aboutMe(): Promise<User> {
 }
 
 // 自身のユーザーIDを取得する
-export function useCurrentUserId(): Hook<UserID> {
+export function useMyID(): Hook<UserID> {
   return useSWR("users::myId", getMyId, UserIDSchema);
 }
 async function getMyId(): Promise<UserID> {

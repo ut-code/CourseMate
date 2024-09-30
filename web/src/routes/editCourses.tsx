@@ -1,12 +1,12 @@
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import hooks from "../api/hooks";
+import { useAboutMe } from "../api/user";
 import CoursesTable from "../components/course/CoursesTable";
 
 export default function EditCourses() {
   const navigate = useNavigate();
 
-  const { state } = hooks.useMe();
+  const { state } = useAboutMe();
   const data = state.data;
   const loading = state.current === "loading";
   const error = state.current === "error" ? state.error : null;

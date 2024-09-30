@@ -2,14 +2,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Box, CircularProgress, IconButton, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import hooks from "../../api/hooks";
+import { useAboutMe } from "../../api/user";
 import { Card } from "../../components/Card";
 import LogOutButton from "../../components/LogOutButton";
 
 export default function Settings() {
   console.log("Settings: rendering...");
   const navigate = useNavigate();
-  const { state } = hooks.useMe();
+  const { state } = useAboutMe();
   const data = state.data;
   const error = state.current === "error" ? state.error : null;
   const loading = state.current === "loading";

@@ -15,9 +15,8 @@ import {
 import type { SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import hooks from "../api/hooks";
 import { uploadImage } from "../api/image";
-import { update } from "../api/user";
+import { update, useAboutMe } from "../api/user";
 import type { UpdateUser } from "../common/types";
 import { UpdateUserSchema } from "../common/zod/schemas";
 import { useAlert } from "../components/common/alert/AlertProvider";
@@ -31,7 +30,7 @@ import { facultiesAndDepartments } from "./registration/data";
 export default function EditProfile() {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
-  const { state } = hooks.useMe();
+  const { state } = useAboutMe();
   const data = state.data;
   const error = state.current === "error" ? state.error : null;
   const loading = state.current === "loading";

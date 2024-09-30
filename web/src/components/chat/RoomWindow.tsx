@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import * as chat from "../../api/chat/chat";
 import { useMessages } from "../../api/chat/hooks";
 import * as user from "../../api/user";
-import { useCurrentUserId } from "../../api/user";
+import { useMyID } from "../../api/user";
 import type {
   DMOverview,
   Message,
@@ -28,7 +28,7 @@ export function RoomWindow(props: Prop) {
   const { room, setActiveRoom } = props;
   const {
     state: { data: myId },
-  } = useCurrentUserId();
+  } = useMyID();
   const { state, reload, write } = useMessages(room.friendId);
   const [messages, setMessages] = useState(state.data);
   useEffect(() => {

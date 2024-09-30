@@ -1,11 +1,15 @@
 import { Box, CircularProgress, List } from "@mui/material";
-import hooks from "../../api/hooks";
 import request from "../../api/request";
+import { usePendingToMe } from "../../api/user";
 import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
 
 export default function OthersReq() {
-  const { data, loading, error, reload } = hooks.usePendingRequestsToMe();
+  const {
+    state: { data, current, error },
+    reload,
+  } = usePendingToMe();
+  const loading = current === "loading";
   const { openModal } = useModal();
 
   return (

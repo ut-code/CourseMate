@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import request from "../../api/request";
 
 import shadows from "@mui/material/styles/shadows";
-import { useRecommended } from "../../api/hooks";
+import { useRecommended } from "../../api/user";
 import { DraggableCard } from "../../components/DraggableCard";
 
 const getBackgroundColor = (x: number) => {
@@ -27,10 +27,10 @@ const getBackgroundColor = (x: number) => {
 };
 
 export default function Home() {
-  const { state: recommended } = useRecommended();
+  const { data: recommended } = useRecommended();
   const [nth, setNth] = useState<number>(0);
-  const displayedUser = recommended.data?.[nth]; // biome told me to do this
-  const isAllUsersLiked = recommended.data?.length === nth;
+  const displayedUser = recommended?.[nth]; // biome told me to do this
+  const isAllUsersLiked = recommended?.length === nth;
 
   const [dragValue, setDragValue] = useState(0); // x方向の値を保存
   const handleDrag = useCallback((dragProgress: number) => {

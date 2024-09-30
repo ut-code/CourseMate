@@ -5,16 +5,19 @@ import type { ZodSchema } from "zod";
 type Stale<T> = {
   data: T;
   current: "stale";
+  error: null;
 };
 // only occurs on first load.
 type Loading = {
   data: null;
   current: "loading";
+  error: null;
 };
 // success. is the latest data.
 type Success<T> = {
   data: T;
   current: "success";
+  error: null;
 };
 // first load AND fetching failed
 type Failed = {
@@ -56,10 +59,12 @@ export function useSWR<T>(
         ? {
             current: "loading",
             data: null,
+            error: null,
           }
         : {
             current: "stale",
             data: state.data,
+            error: null,
           },
     );
 
@@ -74,6 +79,7 @@ export function useSWR<T>(
       setState({
         data: data,
         current: "success",
+        error: null,
       });
       localStorage.setItem(CACHE_KEY, JSON.stringify(data));
       console.log("useSWR: update success");
@@ -119,12 +125,14 @@ function loadOldData<T>(
       return {
         current: "stale",
         data,
+        error: null,
       };
     } catch {}
   }
   return {
     current: "loading",
     data: null,
+    error: null,
   };
 }
 
