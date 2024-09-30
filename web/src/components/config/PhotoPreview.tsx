@@ -1,10 +1,9 @@
 import { Button } from "@mui/material";
-import { type ChangeEvent, useEffect, useState } from "react";
+import { useSnackbar } from "notistack";
+import { type ChangeEvent, useCallback, useEffect, useState } from "react";
 import { uploadImage } from "../../api/image";
 import { ImageCropper } from "../ImageCropper";
 import { photo } from "../data/photo-preview";
-
-const MAX_SIZE_IN_BYTES = 5 * 1024 * 1024; // 5MB
 
 type ButtonProps = {
   text?: string;
@@ -33,8 +32,10 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
         id="file-upload"
         type="file"
         onChange={(e) => {
-          imageSelectHandler(e);
-          onSelect();
+          const ok = imageSelectHandler(e);
+          if (ok) {
+            onSelect();
+          }
         }}
         accept=".png, .jpeg, .jpg"
         style={{ display: "none" }}
@@ -46,7 +47,7 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
 // NOTE: this implementation is so dumb and unsafe.
 // it's either I'm just being a fool, or the React system itself is wrong
 // please fix this and prove that I am the fool...
-let imageSelectHandler: (f: ChangeEvent<HTMLInputElement>) => void;
+let imageSelectHandler: (f: ChangeEvent<HTMLInputElement>) => boolean;
 
 type Props = {
   prev?: string;
@@ -59,21 +60,23 @@ export function PhotoPreview({ prev, onCrop }: Props) {
   const [originalFile, setOriginalFile] = useState<File>();
   const [croppedFile, setCroppedFile] = useState<File | null>(null);
 
-  function handleImageChange(event: ChangeEvent<HTMLInputElement>): void {
-    if (!event.target.files || event.target.files.length <= 0) {
-      return;
-    }
-    if (event.target.files[0].size > MAX_SIZE_IN_BYTES) {
-      alert(
-        "ファイルサイズが大きすぎます。5MB以下の画像をアップロードしてください。",
-      );
-      return;
-    }
-    if (event.target.files && event.target.files.length > 0) {
-      setOriginalFile(event.target.files[0]);
-    }
-  }
-  imageSelectHandler = handleImageChange;
+  // returns true if it's OK to open.
+  const onSelectImage = useCallback(
+    (event: ChangeEvent<HTMLInputElement>): boolean => {
+      if (!event.target.files || event.target.files.length <= 0) {
+        return false;
+      }
+      if (event.target.files && event.target.files.length > 0) {
+        setOriginalFile(event.target.files[0]);
+        return true;
+      }
+      return false;
+    },
+    [],
+  );
+  useEffect(() => {
+    imageSelectHandler = onSelectImage;
+  }, [onSelectImage]);
 
   useEffect(() => {
     if (!croppedFile) return;
