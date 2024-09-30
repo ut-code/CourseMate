@@ -29,17 +29,12 @@ const getBackgroundColor = (x: number) => {
 export default function Home() {
   const { data: recommended } = useRecommended();
   const [nth, setNth] = useState<number>(0);
-  const displayedUser = recommended?.[nth]; // biome told me to do this
-  const isAllUsersLiked = recommended?.length === nth;
+  const displayedUser = recommended?.[nth];
 
   const [dragValue, setDragValue] = useState(0); // x方向の値を保存
   const handleDrag = useCallback((dragProgress: number) => {
     setDragValue(dragProgress);
   }, []);
-
-  if (isAllUsersLiked) {
-    return <div>全員にいいねを送りました！</div>;
-  }
 
   const reject = useCallback(() => setNth((n) => n + 1), []);
   const accept = useCallback(async () => {
@@ -47,32 +42,35 @@ export default function Home() {
     if (displayedUser?.id) request.send(displayedUser.id);
   }, [displayedUser?.id]);
 
+  if (recommended == null) {
+    return <CircularProgress />;
+  }
+  if (displayedUser == null) {
+    return <div>全員にいいねを送りました！</div>;
+  }
+
   return (
     <div style={{ backgroundColor: getBackgroundColor(dragValue) }}>
-      {displayedUser ? (
-        <Box display="flex" flexDirection="column" alignItems="center">
-          <DraggableCard
-            displayedUser={displayedUser}
-            onSwipeLeft={reject}
-            onSwipeRight={accept}
-            onDrag={handleDrag}
-          />
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-around",
-              width: "50%",
-            }}
-          >
-            <RoundButton onclick={reject} icon={<CloseIconStyled />} />
-            <RoundButton onclick={accept} icon={<FavoriteIconStyled />} />
-          </div>
-        </Box>
-      ) : (
-        <CircularProgress />
-      )}
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <DraggableCard
+          displayedUser={displayedUser}
+          onSwipeLeft={reject}
+          onSwipeRight={accept}
+          onDrag={handleDrag}
+        />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-around",
+            width: "50%",
+          }}
+        >
+          <RoundButton onclick={reject} icon={<CloseIconStyled />} />
+          <RoundButton onclick={accept} icon={<FavoriteIconStyled />} />
+        </div>
+      </Box>
     </div>
   );
 }
