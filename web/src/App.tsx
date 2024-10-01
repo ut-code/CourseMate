@@ -1,4 +1,4 @@
-import { CssBaseline, createTheme } from "@mui/material";
+import { CssBaseline, Link, createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
 import { SnackbarProvider } from "notistack";
 import {
@@ -22,7 +22,12 @@ export default function App() {
     {
       path: "/",
       element: <Root />,
-      errorElement: <p>Sorry, an unexpected error has occurred.</p>,
+      errorElement: (
+        <p>
+          Sorry, an unexpected error has occurred.{" "}
+          <Link href="/home">Go Back</Link>
+        </p>
+      ),
       children: [
         {
           index: true,
@@ -92,6 +97,14 @@ export default function App() {
         <NavigateByAuthState type="toHomeForAuthenticated">
           <RegistrationPage />
         </NavigateByAuthState>
+      ),
+    },
+    {
+      path: "*",
+      element: (
+        <p>
+          お探しのリンクは見つかりませんでした。 <Link href="/home">戻る</Link>
+        </p>
       ),
     },
   ]);
