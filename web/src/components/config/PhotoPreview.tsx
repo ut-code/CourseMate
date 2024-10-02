@@ -17,7 +17,7 @@ type ButtonProps = {
 
 // DANGER: PhotoPreview component MUST have been rendered before this button is pressed.
 export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
-  const inputRef = useRef(null);
+  const inputRef: React.LegacyRef<HTMLInputElement> = useRef(null);
   return (
     <Button
       variant="contained"
@@ -33,7 +33,7 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
         fontSize: "18px",
       }}
       onClick={() => {
-        if (inputRef) inputRef.current.value = "";
+        if (inputRef.current) inputRef.current.value = "";
       }}
     >
       {text || "写真を選択"}
