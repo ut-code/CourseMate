@@ -75,6 +75,7 @@ function operateCrop(
 
   const src = new Image();
   src.src = srcURL;
+  // TODO: downscale the image if it's too large to upload.
   ctx.drawImage(src, diff.x, diff.y, size.w, size.h, 0, 0, size.w, size.h);
 
   return new Promise((resolve) => {

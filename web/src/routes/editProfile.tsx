@@ -13,9 +13,11 @@ import {
   Typography,
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
+import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { uploadImage } from "../api/image";
+import { MAX_IMAGE_SIZE } from "../api/internal/fetch-func";
 import { update, useAboutMe } from "../api/user";
 import type { UpdateUser } from "../common/types";
 import { UpdateUserSchema } from "../common/zod/schemas";
@@ -87,30 +89,44 @@ export default function EditProfile() {
   async function onSelect() {
     try {
       if (!file) throw new Error("画像は入力必須です");
+      if (file.size >= MAX_IMAGE_SIZE) {
+        enqueueSnackbar("ファイルサイズが大きすぎます", {
+          variant: "error",
+          autoHideDuration: 2000,
+        });
+        return;
+      }
       const url = await uploadImage(file);
       console.log("new URL:", url);
-      setPictureUrl(url);
-      handleSave({ pictureUrl: url });
-    } catch (error) {
-      if (error instanceof Error) {
-        let errorMessages: string;
-        try {
-          const parsedError = JSON.parse(error.message);
-          if (Array.isArray(parsedError)) {
-            errorMessages = parsedError.map((err) => err.message).join(", ");
-          } else {
+      try {
+        setPictureUrl(url);
+        handleSave({ pictureUrl: url });
+      } catch (error) {
+        if (error instanceof Error) {
+          let errorMessages: string;
+          try {
+            const parsedError = JSON.parse(error.message);
+            if (Array.isArray(parsedError)) {
+              errorMessages = parsedError.map((err) => err.message).join(", ");
+            } else {
+              errorMessages = error.message;
+            }
+          } catch {
             errorMessages = error.message;
           }
-        } catch {
-          errorMessages = error.message;
-        }
 
-        // エラーメッセージをセット
-        setErrorMessage(errorMessages);
-      } else {
-        console.log("unknown error:", error);
-        setErrorMessage("入力に誤りがあります。");
+          // エラーメッセージをセット
+          setErrorMessage(errorMessages);
+        } else {
+          console.log("unknown error:", error);
+          setErrorMessage("入力に誤りがあります。");
+        }
       }
+    } catch (e) {
+      console.error(e);
+      enqueueSnackbar("画像のアップロードに失敗しました", {
+        variant: "error",
+      });
     }
   }
 
@@ -517,12 +533,21 @@ export default function EditProfile() {
                 />
                 <Button
                   sx={{ float: "right", marginRight: "30px" }}
+                  variant="contained"
                   onClick={async () => {
                     await onSelect();
                     setOpen(false);
                   }}
                 >
                   切り取って保存
+                </Button>
+                <Button
+                  sx={{ float: "right", marginRight: "30px" }}
+                  onClick={async () => {
+                    setOpen(false);
+                  }}
+                >
+                  キャンセル
                 </Button>
               </Box>
             </Modal>
