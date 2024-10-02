@@ -1,5 +1,6 @@
+import { GitHub, Language } from "@mui/icons-material";
+import XIcon from "@mui/icons-material/X";
 import { Button, Link } from "@mui/material";
-import { FiGithub, FiGlobe, FiTwitter } from "react-icons/fi";
 
 export function About() {
   return (
@@ -21,17 +22,17 @@ export function About() {
       <p>
         <p>
           <Link href="https://utcode.net" target="_blank">
-            <FiGlobe /> ウェブサイト
+            <Language /> ウェブサイト
           </Link>
         </p>
         <p>
           <Link href="https://github.com/ut-code" target="_blank">
-            <FiGithub /> ut.code(); の GitHub
+            <GitHub /> ut.code(); の GitHub
           </Link>
         </p>
         <p>
           <Link href="https://x.com/utokyo_code" target="_blank">
-            <FiTwitter /> Twitter (現 X)
+            <XIcon /> X (旧 Twitter)
           </Link>
         </p>
       </p>
