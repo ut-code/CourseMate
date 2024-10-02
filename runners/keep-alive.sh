@@ -1,11 +1,11 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
-# run for 4 hours
-COUNT=$((4 * 60))
-INTERVAL=60
-
-repeat $COUNT do
-  echo "PINGING ${origins}"
+if [ "$PING_ORIGINS" == '' ]; then
+  echo 'env variable PING_ORIGINS is required!'
+  exit 1
+fi
+origins=($PING_ORIGINS)
+for origin in "${origins[@]}" ; do
+  echo "pinging $origin"
   curl http://localhost:3000 >/dev/null 2>&1 
-  sleep $INTERVAL
 done
