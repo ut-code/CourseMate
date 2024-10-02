@@ -19,6 +19,7 @@ import {
 } from "../database/users";
 import { safeGetUserId } from "../firebase/auth/db";
 import { safeGetGUID } from "../firebase/auth/lib";
+import { recommendedTo } from "../functions/engines/recommendation";
 import * as core from "../functions/user";
 
 const router = express.Router();
@@ -28,13 +29,18 @@ router.get("/", async (_: Request, res: Response) => {
   const result = await core.getAllUsers();
   res.status(result.code).send(result.body);
 });
+
 router.get("/recommended", async (req, res) => {
   const u = await safeGetUserId(req);
   if (!u.ok) return res.status(401).end();
 
-  u.value;
+  const recommended = await recommendedTo(u.value, 20, 0); // とりあえず 20 人
 
-  res.send("ok");
+  if (recommended.ok) {
+    res.send(recommended.value);
+  } else {
+    res.status(500).send(recommended.error);
+  }
 });
 
 // 自分の情報を確認するエンドポイント。

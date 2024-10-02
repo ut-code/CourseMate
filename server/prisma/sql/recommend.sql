@@ -1,4 +1,4 @@
-SELECT recv.id, COUNT(recv_enroll) AS overlap FROM "User" recv
+SELECT recv.id AS recv, COUNT(recv_enroll) AS overlap FROM "User" recv
 INNER JOIN "Enrollment" recv_enroll ON recv_enroll."userId" = recv.id
 INNER JOIN "Course" course ON recv_enroll."courseId" = course.id
 INNER JOIN "Enrollment" req_enroll ON req_enroll."courseId" = course.id
