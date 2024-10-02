@@ -20,8 +20,12 @@ import endpoints from "./endpoints";
 
 type URL = string;
 
+export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+
 export async function uploadImage(file: File): Promise<URL> {
-  console.log("sending image to server...");
+  if (file.size >= MAX_IMAGE_SIZE) {
+    throw new Error("画像のアップロードに失敗しました: 画像が大きすぎます");
+  }
   const res = await fetch(`${endpoints.picture}?token=${await getIdToken()}`, {
     method: "POST",
     headers: {

@@ -1,6 +1,5 @@
-import { CssBaseline, createTheme } from "@mui/material";
+import { CssBaseline, Link, createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
-import { getAuth } from "firebase/auth";
 import { SnackbarProvider } from "notistack";
 import {
   Navigate,
@@ -8,6 +7,7 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import { About } from "./components/about";
+import { NavigateByAuthState } from "./components/common/NavigateByAuthState";
 import EditCourses from "./routes/editCourses";
 import EditProfile from "./routes/editProfile";
 import Login from "./routes/login";
@@ -19,68 +19,96 @@ import Home from "./routes/tabs/home";
 import Settings from "./routes/tabs/settings";
 
 export default function App() {
-  const PrivateRoute = () => {
-    // Google アカウントでログインしていれば home に、ログインしていなければ login にリダイレクト
-    return getAuth().currentUser ? (
-      <Navigate to="/home" />
-    ) : (
-      <Navigate to="/login" />
-    );
-  };
-
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Root />,
-      errorElement: <p>Sorry, an unexpected error has occurred.</p>,
+      errorElement: (
+        <p>
+          Sorry, an unexpected error has occurred.{" "}
+          <Link href="/home">Go Back</Link>
+        </p>
+      ),
       children: [
         {
           index: true,
-          element: <PrivateRoute />,
+          element: <Navigate to="/home" replace />,
         },
         {
           path: "home",
-          element: <Home />,
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <Home />
+            </NavigateByAuthState>
+          ),
         },
         {
           path: "friends",
-          element: <Friends />,
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <Friends />
+            </NavigateByAuthState>
+          ),
         },
         {
           path: "settings",
           element: (
-            <>
+            <NavigateByAuthState type="toLoginForUnauthenticated">
               <Settings />
               <hr />
               <About />
-            </>
+            </NavigateByAuthState>
           ),
         },
         {
           path: "chat",
-          element: <Chat />,
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <Chat />
+            </NavigateByAuthState>
+          ),
         },
         {
           path: "edit/profile",
-          element: <EditProfile />,
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <EditProfile />
+            </NavigateByAuthState>
+          ),
         },
         {
           path: "edit/courses",
-          element: <EditCourses />,
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <EditCourses />
+            </NavigateByAuthState>
+          ),
         },
       ],
     },
     {
       path: "/login",
-      element: <Login />,
+      element: (
+        <NavigateByAuthState type="toHomeForAuthenticated">
+          <Login />
+        </NavigateByAuthState>
+      ),
     },
     {
       path: "/signup",
-      element: <RegistrationPage />,
+      element: (
+        <NavigateByAuthState type="toHomeForAuthenticated">
+          <RegistrationPage />
+        </NavigateByAuthState>
+      ),
     },
     {
-      path: "/chat",
-      element: <Chat />,
+      path: "*",
+      element: (
+        <p>
+          お探しのリンクは見つかりませんでした。 <Link href="/home">戻る</Link>
+        </p>
+      ),
     },
   ]);
 
