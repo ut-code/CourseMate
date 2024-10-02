@@ -14,14 +14,29 @@ const provider = new GoogleAuthProvider();
 
 async function signInWithGoogle() {
   try {
+    provider.setCustomParameters({
+      hd: "g.ecc.u-tokyo.ac.jp",
+    });
     const result = await signInWithPopup(auth, provider);
     const credential = GoogleAuthProvider.credentialFromResult(result);
-    if (credential) {
-      const user = result.user;
-      return user.uid;
+
+    if (!credential) {
+      throw new Error("Failed to retrieve Google credentials.");
     }
+
+    const user = result.user;
+    const email = user?.email;
+
+    if (!email || !email.endsWith("@g.ecc.u-tokyo.ac.jp")) {
+      throw new Error(
+        "Unauthorized domain. Access is restricted to g.ecc.u-tokyo.ac.jp domain.",
+      );
+    }
+
+    return user.uid;
   } catch (error) {
-    console.error(error);
+    console.error("Error during Google sign-in:", error);
+    throw error; // 必要に応じてエラーを上位に伝搬させる
   }
 }
 
