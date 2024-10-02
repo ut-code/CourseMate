@@ -8,7 +8,7 @@
     "dev": "bun --watch src/main.ts",
     "build": "tsc",
     "serve": "bun target/main.js",
-    "prisma-generate-sql": "bunx dotenv -e .env.dev -- bunx prisma generate --sql"
+    "prisma-generate-sql": "bunx dotenv -e .env.dev -- prisma generate --sql"
   },
   "prisma": {
     "seed": "bun src/seeds/seed.ts"
@@ -22,22 +22,21 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "dotenv-cli": "^7.4.2",
-    "express": "^4.21.0",
-    "firebase-admin": "^12.5.0",
+    "express": "^4.18.2",
+    "firebase-admin": "^12.2.0",
     "sharp": "^0.33.5",
-    "socket.io": "^4.8.0",
+    "socket.io": "^4.7.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",
     "@types/express": "^4.17.21",
-    "@types/react": "^18.3.10",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.1",
-    "globals": "^15.9.0",
-    "prisma": "^5.20.0",
-    "typescript": "^5.6.2",
-    "vite": "^5.4.8"
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
+    "@vitejs/plugin-react": "^4.2.1",
+    "globals": "^15.8.0",
+    "prisma": "^5.11.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.1.6"
   }
 }
