@@ -1,5 +1,11 @@
 import { Button } from "@mui/material";
-import { type ChangeEvent, useCallback, useEffect, useState } from "react";
+import {
+  type ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { uploadImage } from "../../api/image";
 import { ImageCropper } from "../ImageCropper";
 import { photo } from "../data/photo-preview";
@@ -11,6 +17,7 @@ type ButtonProps = {
 
 // DANGER: PhotoPreview component MUST have been rendered before this button is pressed.
 export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
+  const inputRef = useRef(null);
   return (
     <Button
       variant="contained"
@@ -25,10 +32,14 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
         borderRadius: "25px", // 楕円にするための設定
         fontSize: "18px",
       }}
+      onClick={() => {
+        if (inputRef) inputRef.current.value = "";
+      }}
     >
       {text || "写真を選択"}
       <input
         id="file-upload"
+        ref={inputRef}
         type="file"
         onChange={(e) => {
           const ok = imageSelectHandler(e);
