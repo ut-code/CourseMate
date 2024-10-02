@@ -16,7 +16,7 @@ export function ImageFallback({ width, height, url, fallback, alt }: Props) {
     setOK(true);
   }, [url]);
   const URL = url?.startsWith("/")
-    ? `${import.meta.env.SERVER_ORIGIN}/${url}`
+    ? `${import.meta.env.VITE_API_ENDPOINT}/${url}`
     : url;
 
   return ok ? (
