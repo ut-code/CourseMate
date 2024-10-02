@@ -1,6 +1,7 @@
-import { Box, CircularProgress, List } from "@mui/material";
+import { Box, List } from "@mui/material";
 import hooks from "../../api/hooks";
 import request from "../../api/request";
+import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
 import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
 
@@ -20,7 +21,7 @@ export default function OthersReq() {
           : "リクエストは受け取っていません。"}
       </p>
       {loading ? (
-        <CircularProgress />
+        <FullScreenCircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (
