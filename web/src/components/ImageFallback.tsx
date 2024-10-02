@@ -15,10 +15,13 @@ export function ImageFallback({ width, height, url, fallback, alt }: Props) {
     url;
     setOK(true);
   }, [url]);
+  const URL = url?.startsWith("/")
+    ? `${import.meta.env.SERVER_ORIGIN}/${url}`
+    : url;
 
   return ok ? (
     <img
-      src={url}
+      src={URL}
       style={{
         width,
         height,
@@ -27,7 +30,7 @@ export function ImageFallback({ width, height, url, fallback, alt }: Props) {
         pointerEvents: "none",
       }}
       onError={() => {
-        console.log("failed to fetch image data of:", url);
+        console.log("failed to fetch image data of:", URL);
         setOK(false);
       }}
       alt={alt}
