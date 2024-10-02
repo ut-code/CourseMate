@@ -93,11 +93,7 @@ export default function App() {
     },
     {
       path: "/signup",
-      element: (
-        <NavigateByAuthState type="toHomeForAuthenticated">
-          <RegistrationPage />
-        </NavigateByAuthState>
-      ),
+      element: <RegistrationPage />,
     },
     {
       path: "*",
