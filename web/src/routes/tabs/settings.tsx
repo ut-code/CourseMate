@@ -1,10 +1,11 @@
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, CircularProgress, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import hooks from "../../api/hooks";
 import { Card } from "../../components/Card";
 import LogOutButton from "../../components/LogOutButton";
+import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
 export default function Settings() {
   console.log("Settings: rendering...");
@@ -27,7 +28,7 @@ export default function Settings() {
       }}
     >
       {loading ? (
-        <CircularProgress />
+        <FullScreenCircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : data ? (
