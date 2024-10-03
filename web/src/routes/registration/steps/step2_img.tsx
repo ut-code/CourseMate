@@ -3,7 +3,6 @@ import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { uploadImage } from "../../../api/image";
 import { MAX_IMAGE_SIZE } from "../../../api/internal/fetch-func";
-import { parsePictureUrl } from "../../../common/zod/methods";
 import {
   PhotoPreview,
   PhotoPreviewButton,
@@ -31,8 +30,6 @@ export default function Step2({
       const data = {
         pictureUrl: url,
       };
-      parsePictureUrl(url);
-
       onSave(data);
     } catch (error) {
       if (error instanceof Error) {
