@@ -12,6 +12,7 @@ export default function Chat() {
   const [activeRoom, setActiveRoom] = useState<DMOverview | null>(null);
 
   return (
+    //ここら辺を一気に変える方が良さげ
     <Box>
       {activeRoom ? (
         // activeRoomがtrueの場合、画面全体にRoomWindowを表示
