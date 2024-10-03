@@ -1,10 +1,26 @@
 SELECT recv.id, 
-    (SELECT COUNT(*) FROM "Enrollment" recv_enroll 
+    (SELECT COUNT(*) FROM "Enrollment" recv_enroll
     INNER JOIN "Enrollment" req_enroll
     ON recv_enroll."courseId" = req_enroll."courseId" 
     WHERE recv_enroll."userId" = recv.id
     AND req_enroll."userId" = $1)
-AS overlap FROM "User" recv ORDER BY overlap DESC LIMIT $2 OFFSET $3;
+AS overlap FROM "User" recv
+WHERE recv.id <> $1
+
+AND NOT EXISTS (
+    SELECT * FROM "Relationship" rel
+    WHERE rel."sendingUserId" IN ($1, recv.id) AND rel."receivingUserId" IN ($1, recv.id)
+    AND status = 'MATCHED'
+)
+
+AND NOT EXISTS (
+    SELECT * FROM  "Relationship" rel
+    WHERE rel."sendingUserId" = $1 AND rel."receivingUserId" = recv.id
+    AND status = 'PENDING'
+)
+
+ORDER BY overlap DESC
+LIMIT $2 OFFSET $3;
 
 -- SELECT recv.id AS recv, COUNT(recv_enroll) AS overlap FROM "User" recv
 -- LEFT JOIN "Relationship" rel ON (rel."sendingUserId" = recv.id AND rel."receivingUserId" = $1) OR (rel."sendingUserId" = $1 AND rel."sendingUserId" = recv.id)
