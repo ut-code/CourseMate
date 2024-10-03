@@ -31,7 +31,6 @@ export default function Step2({
       const data = {
         pictureUrl: url,
       };
-      parsePictureUrl(url);
 
       onSave(data);
     } catch (error) {
