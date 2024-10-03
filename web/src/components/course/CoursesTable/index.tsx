@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import courseApi from "../../../api/course";
 import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "../../../common/consts";
 import type { Course, Day, UserID } from "../../../common/types";
+import FullScreenCircularProgress from "../../common/FullScreenCircularProgress";
 import SelectCourseDialog from "../SelectCourseDialog";
 import { truncateStr } from "./lib";
 import styles from "./styles.module.css";
@@ -67,7 +68,9 @@ export default function CoursesTable(props: Props) {
     })();
   }, [userId, handleCoursesUpdate]);
 
-  return (
+  return !transposedRows ? (
+    <FullScreenCircularProgress />
+  ) : (
     <>
       <table className={styles.table}>
         <thead>
@@ -81,7 +84,7 @@ export default function CoursesTable(props: Props) {
           </tr>
         </thead>
         <tbody>
-          {transposedRows?.map((row, rowIndex) => (
+          {transposedRows.map((row, rowIndex) => (
             <tr key={`period-${rowIndex + 1}`}>
               <th key={`header-period-${rowIndex + 1}`}>{rowIndex + 1}</th>
               {ACTIVE_DAYS.map((activeDay) => (
