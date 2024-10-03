@@ -292,10 +292,17 @@ export async function getLastMessage(
   friendId: UserID,
 ): Promise<Result<Message>> {
   try {
-    const dm = await getDMbetween(userId, friendId);
-    if (!dm.ok) return Err("direct messages not found");
-    const messages = dm.value.messages;
-    const lastMessage = messages.slice(-1)[0];
+    const rel = await getRelation(userId, friendId);
+    if (!rel.ok) return Err("relation not found"); // relation not found
+    const lastMessage = await prisma.message.findFirst({
+      where: {
+        relationId: rel.value.id,
+      },
+      orderBy: {
+        id: "desc",
+      },
+      take: 1,
+    });
     if (!lastMessage) return Err("last message not found");
     return Ok(lastMessage);
   } catch (e) {

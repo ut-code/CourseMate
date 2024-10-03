@@ -6,6 +6,7 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
+import { About } from "./components/about";
 import { NavigateByAuthState } from "./components/common/NavigateByAuthState";
 import EditCourses from "./routes/editCourses";
 import EditProfile from "./routes/editProfile";
@@ -54,6 +55,8 @@ export default function App() {
           element: (
             <NavigateByAuthState type="toLoginForUnauthenticated">
               <Settings />
+              <hr />
+              <About />
             </NavigateByAuthState>
           ),
         },
@@ -93,11 +96,7 @@ export default function App() {
     },
     {
       path: "/signup",
-      element: (
-        <NavigateByAuthState type="toHomeForAuthenticated">
-          <RegistrationPage />
-        </NavigateByAuthState>
-      ),
+      element: <RegistrationPage />,
     },
     {
       path: "*",

@@ -1,6 +1,7 @@
-import { Box, CircularProgress, List } from "@mui/material";
+import { Box, List } from "@mui/material";
 import hooks from "../../api/hooks";
 import { deleteMatch } from "../../api/match";
+import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
 import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
 
@@ -25,7 +26,7 @@ export default function Matchings() {
         )}
       </p>
       {loading ? (
-        <CircularProgress />
+        <FullScreenCircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (

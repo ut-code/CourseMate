@@ -1,6 +1,7 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import hooks from "../api/hooks";
+import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
 import CoursesTable from "../components/course/CoursesTable";
 
 export default function EditCourses() {
@@ -35,7 +36,7 @@ export default function EditCourses() {
         授業編集
       </Typography>
       {loading ? (
-        <CircularProgress />
+        <FullScreenCircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : data ? (
