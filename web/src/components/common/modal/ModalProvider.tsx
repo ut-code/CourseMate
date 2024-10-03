@@ -1,4 +1,4 @@
-import { Box, ClickAwayListener } from "@mui/material";
+import { Box } from "@mui/material";
 import { styled } from "@mui/system";
 import { type ReactNode, createContext, useContext, useState } from "react";
 import type { User } from "../../../common/types";
@@ -46,12 +46,10 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
     <ModalContext.Provider value={{ openModal, closeModal }}>
       {children}
       {open && selectedUser && (
-        <Overlay>
-          <ClickAwayListener onClickAway={closeModal}>
-            <Box>
-              <Card displayedUser={selectedUser} />
-            </Box>
-          </ClickAwayListener>
+        <Overlay onClick={closeModal}>
+          <Box onClick={(e) => e.stopPropagation()}>
+            <Card displayedUser={selectedUser} />
+          </Box>
         </Overlay>
       )}
     </ModalContext.Provider>
