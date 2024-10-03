@@ -31,7 +31,7 @@
           ];
           shellHook = ''
             export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.stdenv.cc.cc.lib}/lib
-          ''; # + prisma.shellHook;
+          '' + (if pkgs.system == "x86_64-linux" then prisma.shellHook else "");
         };
       });
 }
