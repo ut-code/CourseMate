@@ -6,6 +6,7 @@ import { initializeSocket } from "./lib/socket/socket";
 import chatRoutes from "./router/chat";
 import coursesRoutes from "./router/courses";
 import matchesRoutes from "./router/matches";
+import pictureRoutes from "./router/picture";
 import requestsRoutes from "./router/requests";
 import usersRoutes from "./router/users";
 
@@ -23,7 +24,7 @@ const allowedOrigins = [
   process.env.WEB_ORIGIN_BUILD,
 ];
 export const corsOptions = {
-  origins: allowedOrigins.map((s) => s || "").filter((s) => s !== ""),
+  origins: allowedOrigins.filter((s) => s != null).filter((s) => s), // ignore empty string too
   methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
   credentials: true,
 };
@@ -33,13 +34,14 @@ app.use(csrf(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+// app.use(cookieParser());
 
 app.get("/", (_, res) => {
   res.json("Hello from Express!");
 });
 
 // ルーティング
+app.use("/picture", pictureRoutes);
 app.use("/users", usersRoutes);
 app.use("/courses", coursesRoutes);
 app.use("/requests", requestsRoutes);

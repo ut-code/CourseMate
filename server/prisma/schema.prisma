@@ -2,6 +2,7 @@
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
@@ -26,18 +27,24 @@ model User {
   guid String @unique
 
   // profile
-  name       String @default("名無し")
-  gender     String @default("")
-  grade      String @default("")
-  faculty    String @default("")
-  department String @default("")
-  intro      String @default("")
-  pictureUrl String @default("")
+  name       String
+  gender     String
+  grade      String
+  faculty    String
+  department String
+  intro      String
+  pictureUrl String
 
   // bindings to other parts of this app
   enrollments    Enrollment[]
   sendingUsers   Relationship[] @relation("sending") // 自分がマッチリクエストを送ったユーザー
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
+}
+
+// プロフィールの画像。
+model Avatar {
+  guid String @id
+  data Bytes
 }
 
 // enum Gender {

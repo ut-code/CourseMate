@@ -2,7 +2,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   Button,
-  CircularProgress,
   FormControl,
   IconButton,
   InputLabel,
@@ -13,25 +12,31 @@ import {
   Typography,
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
+import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import hooks from "../api/hooks";
+import { uploadImage } from "../api/image";
+import { MAX_IMAGE_SIZE } from "../api/internal/fetch-func";
 import { update } from "../api/user";
 import type { UpdateUser } from "../common/types";
 import { UpdateUserSchema } from "../common/zod/schemas";
+import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
 import { useAlert } from "../components/common/alert/AlertProvider";
 import {
   PhotoPreview,
   PhotoPreviewButton,
 } from "../components/config/PhotoPreview";
 import UserAvatar from "../components/human/avatar";
-import { uploadImage } from "../firebase/store/photo";
 import { facultiesAndDepartments } from "./registration/data";
 
 export default function EditProfile() {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
-  const { data, loading, error } = hooks.useMe();
+  const { state } = hooks.useMe();
+  const data = state.data;
+  const error = state.current === "error" ? state.error : null;
+  const loading = state.current === "loading";
 
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
@@ -82,38 +87,51 @@ export default function EditProfile() {
     }
   }, [data]);
 
-  async function select() {
+  async function onSelect() {
     try {
       if (!file) throw new Error("画像は入力必須です");
+      if (file.size >= MAX_IMAGE_SIZE) {
+        enqueueSnackbar("ファイルサイズが大きすぎます", {
+          variant: "error",
+          autoHideDuration: 2000,
+        });
+        return;
+      }
       const url = await uploadImage(file);
-      setPictureUrl(url);
-    } catch (error) {
-      if (error instanceof Error) {
-        let errorMessages: string;
-        try {
-          const parsedError = JSON.parse(error.message);
-          if (Array.isArray(parsedError)) {
-            errorMessages = parsedError.map((err) => err.message).join(", ");
-          } else {
+      console.log("new URL:", url);
+      try {
+        setPictureUrl(url);
+        handleSave({ pictureUrl: url });
+      } catch (error) {
+        if (error instanceof Error) {
+          let errorMessages: string;
+          try {
+            const parsedError = JSON.parse(error.message);
+            if (Array.isArray(parsedError)) {
+              errorMessages = parsedError.map((err) => err.message).join(", ");
+            } else {
+              errorMessages = error.message;
+            }
+          } catch {
             errorMessages = error.message;
           }
-        } catch {
-          errorMessages = error.message;
-        }
 
-        // エラーメッセージをセット
-        setErrorMessage(errorMessages);
-      } else {
-        console.log("unknown error:", error);
-        setErrorMessage("入力に誤りがあります。");
+          // エラーメッセージをセット
+          setErrorMessage(errorMessages);
+        } else {
+          console.log("unknown error:", error);
+          setErrorMessage("入力に誤りがあります。");
+        }
       }
+    } catch (e) {
+      console.error(e);
+      enqueueSnackbar("画像のアップロードに失敗しました", {
+        variant: "error",
+      });
     }
   }
 
   const [open, setOpen] = useState<boolean>(false);
-  useEffect(() => {
-    console.log("open: ", open);
-  }, [open]);
 
   function hasUnsavedChangesOrErrors() {
     return (
@@ -238,7 +256,7 @@ export default function EditProfile() {
   return (
     <Box sx={{ padding: "20px" }}>
       {loading ? (
-        <CircularProgress />
+        <FullScreenCircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : data ? (
@@ -516,13 +534,21 @@ export default function EditProfile() {
                 />
                 <Button
                   sx={{ float: "right", marginRight: "30px" }}
+                  variant="contained"
                   onClick={async () => {
-                    await select();
-                    await handleSave({});
+                    await onSelect();
                     setOpen(false);
                   }}
                 >
                   切り取って保存
+                </Button>
+                <Button
+                  sx={{ float: "right", marginRight: "30px" }}
+                  onClick={async () => {
+                    setOpen(false);
+                  }}
+                >
+                  キャンセル
                 </Button>
               </Box>
             </Modal>

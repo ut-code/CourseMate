@@ -1,0 +1,20 @@
+name: Keep Alive
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+env:
+  # This env can be multi-value, if separated by spaces.
+  # Example: https://example.com https://api.example.com 
+  PING_ORIGINS: ${{ secrets.PING_ORIGINS }}
+jobs:
+  keep-alive:
+    name: Keep Alive
+    runs-on: ubuntu-latest
+    steps:
+      - run: sudo apt install curl
+        shell: bash
+      - run: ./runners/keep-alive.sh
+        shell: bash

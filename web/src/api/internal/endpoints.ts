@@ -334,6 +334,16 @@ const roomInvite = (roomId: ShareRoomID) =>
 const message = (messageId: MessageID) =>
   `${origin}/chat/messages/id/${messageId}`;
 
+/**
+ * GET: get profile picture of URL (this is usually hard-encoded in pictureURL so this variable is barely used)
+ */
+const pictureOf = (guid: GUID) => `${origin}/picture/${guid}`;
+
+/**
+ * POST: update my profile picture.
+ */
+const picture = `${origin}/picture`;
+
 export default {
   user,
   me,
@@ -359,4 +369,6 @@ export default {
   sharedRooms,
   roomInvite,
   message,
+  pictureOf,
+  picture,
 };

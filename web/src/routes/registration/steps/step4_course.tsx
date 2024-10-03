@@ -1,20 +1,20 @@
-import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import hooks from "../../../api/hooks";
+import FullScreenCircularProgress from "../../../components/common/FullScreenCircularProgress";
 import CoursesTable from "../../../components/course/CoursesTable";
 import { NextButton } from "../common";
 
 export default function Step4() {
   const navigate = useNavigate();
-  const { data, loading, error } = hooks.useMe();
+  const { state } = hooks.useMe();
   return (
     <Box>
-      {loading ? (
-        <CircularProgress />
-      ) : error ? (
-        <p>Error: {error.message}</p>
-      ) : data ? (
+      {state.current === "loading" ? (
+        <FullScreenCircularProgress />
+      ) : state.current === "error" ? (
+        <p>Error: {state.error.message}</p>
+      ) : (
         <Box
           mt={2}
           mx={2}
@@ -24,11 +24,9 @@ export default function Step4() {
           alignItems="center"
         >
           <p>授業情報を登録しましょう</p>
-          <CoursesTable userId={data.id} editable={true} />
+          <CoursesTable userId={state.data.id} editable={true} />
           <NextButton onClick={() => navigate("/home")}>次へ</NextButton>
         </Box>
-      ) : (
-        <p>データがありません。</p>
       )}
     </Box>
   );

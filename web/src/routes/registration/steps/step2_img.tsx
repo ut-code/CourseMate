@@ -1,12 +1,14 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
+import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
+import { uploadImage } from "../../../api/image";
+import { MAX_IMAGE_SIZE } from "../../../api/internal/fetch-func";
 import { parsePictureUrl } from "../../../common/zod/methods";
 import {
   PhotoPreview,
   PhotoPreviewButton,
 } from "../../../components/config/PhotoPreview";
 import UserAvatar from "../../../components/human/avatar";
-import { uploadImage } from "../../../firebase/store/photo";
 import { type BackProp, NextButton, type StepProps } from "../common";
 
 export type Step2Data = {
@@ -57,8 +59,21 @@ export default function Step2({
   async function select() {
     try {
       if (!file) throw new Error("画像は入力必須です");
-      const url = await uploadImage(file);
-      setURL(url);
+      try {
+        if (file.size >= MAX_IMAGE_SIZE) {
+          enqueueSnackbar("画像が大きすぎます", {
+            variant: "error",
+            autoHideDuration: 2000,
+          });
+          return;
+        }
+        const url = await uploadImage(file);
+        setURL(url);
+      } catch {
+        enqueueSnackbar("画像のアップロードに失敗しました", {
+          variant: "error",
+        });
+      }
     } catch (error) {
       if (error instanceof Error) {
         let errorMessages: string;

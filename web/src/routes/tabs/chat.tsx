@@ -1,16 +1,14 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { useRoomsOverview } from "../../api/chat/hooks";
 import type { DMOverview } from "../../common/types";
 import RoomList from "../../components/chat/RoomList";
 import { RoomWindow } from "../../components/chat/RoomWindow";
+import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
 export default function Chat() {
-  const {
-    data: roomsData,
-    error: roomsError,
-    loading: roomsLoading,
-  } = useRoomsOverview();
+  console.log("Chat: rendering...");
+  const { state } = useRoomsOverview();
   const [activeRoom, setActiveRoom] = useState<DMOverview | null>(null);
 
   return (
@@ -23,13 +21,13 @@ export default function Chat() {
       ) : (
         // activeRoomがfalseの場合、通常のRoomListを表示
         <Box>
-          {roomsLoading ? (
-            <CircularProgress />
-          ) : roomsError ? (
-            <Typography color="error">Error: {roomsError.message}</Typography>
+          {state.current === "loading" ? (
+            <FullScreenCircularProgress />
+          ) : state.current === "error" ? (
+            <Typography color="error">Error: {state.error.message}</Typography>
           ) : (
             <RoomList
-              roomsData={roomsData}
+              roomsData={state.data}
               activeRoom={activeRoom}
               setActiveRoom={setActiveRoom}
             />

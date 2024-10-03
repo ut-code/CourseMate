@@ -5,87 +5,60 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL_FOR_PRISMA_SQL_GENERATION }}
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Install Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+      - run: make setup-ci
+      - run: make build
 
-      - name: setup
-        run: make setup
-
-      - name: Build
-        run: make build
-
-  # Biome
-  style-check:
-    name: Code style check
+  biome:
+    name: Code style check via Biome
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-
-      - name: Install Biome
-        uses: biomejs/setup-biome@v2
+      - uses: biomejs/setup-biome@v2
         with:
           version: latest
 
       - run: make setup
-
-      - name: Biome Check
-        run: biome check
+      - run: biome check
 
   type-check:
     name: Type Check
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+      - run: make setup-ci
 
-      - name: setup
-        run: make setup
-        working-directory: .
-        shell: bash
-
-      - name: Type Check web
-        run: bunx tsc --noEmit
+      - run: bunx tsc --noEmit
         working-directory: web
-        shell: bash
-
-      - name: Type Check server
-        run: bunx tsc --noEmit
+      - run: bunx tsc --noEmit
         working-directory: server
-        shell: bash
 
   spell-check:
     name: Spell Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
-      - run: make setup
+      - run: make setup-ci
       - run: make spell-check
 
   test:
@@ -94,5 +67,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - run: make setup
+      - run: make setup-ci
       - run: make test
+
+  deploy-test-web:
+    name: Deploy Test (web)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+      - uses: oven-sh/setup-bun@v2
+      - run: make prepare-deploy-web
+      - run: test `ls web/dist | wc -l` != 0
+
+  deploy-test-server:
+    name: Deploy Test (server)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+      - uses: oven-sh/setup-bun@v2
+      - run: make prepare-deploy-server

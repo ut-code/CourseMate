@@ -13,7 +13,8 @@
     "datasource",
     "lockb",
     "psql",
-    "isready"
+    "isready",
+    "ECCS"
   ],
   "dictionaries": [
     "softwareTerms",

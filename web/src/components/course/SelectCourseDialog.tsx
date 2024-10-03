@@ -59,10 +59,12 @@ export default function SelectCourseDialog({
   }, [currentEdit]);
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} fullWidth>
       <DialogTitle>
         {currentEdit
-          ? `${DAY_TO_JAPANESE_MAP.get(currentEdit.columnName)}曜${currentEdit.rowIndex + 1}限の授業を選択`
+          ? `${DAY_TO_JAPANESE_MAP.get(currentEdit.columnName)}曜${
+              currentEdit.rowIndex + 1
+            }限の授業を選択`
           : "授業を選択"}
       </DialogTitle>
       <DialogContent>
