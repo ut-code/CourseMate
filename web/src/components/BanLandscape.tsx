@@ -6,8 +6,8 @@ const BanLandscape = () => {
   const checkOrientation = useCallback(() => {
     const userAgent = navigator.userAgent;
     const isMobile = /iPhone|Android|Mobile/i.test(userAgent);
-    if (isMobile) {
-      setIsLandscape(window.innerHeight < window.innerWidth);
+    if (isMobile && window.matchMedia("(orientation: landscape)").matches) {
+      setIsLandscape(true);
     } else {
       setIsLandscape(false); // モバイルデバイスでない場合は常に縦画面扱い
     }

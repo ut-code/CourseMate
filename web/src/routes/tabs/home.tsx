@@ -7,6 +7,7 @@ import request from "../../api/request";
 import shadows from "@mui/material/styles/shadows";
 import { useRecommended } from "../../api/user";
 import { DraggableCard } from "../../components/DraggableCard";
+import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
 const getBackgroundColor = (x: number) => {
   const maxVal = 300; // 255より大きくして原色や黒にならないようにする
@@ -51,26 +52,30 @@ export default function Home() {
 
   return (
     <div style={{ backgroundColor: getBackgroundColor(dragValue) }}>
-      <Box display="flex" flexDirection="column" alignItems="center">
-        <DraggableCard
-          displayedUser={displayedUser}
-          onSwipeLeft={reject}
-          onSwipeRight={accept}
-          onDrag={handleDrag}
-        />
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-around",
-            width: "50%",
-          }}
-        >
-          <RoundButton onclick={reject} icon={<CloseIconStyled />} />
-          <RoundButton onclick={accept} icon={<FavoriteIconStyled />} />
-        </div>
-      </Box>
+      {displayedUser ? (
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <DraggableCard
+            displayedUser={displayedUser}
+            onSwipeLeft={reject}
+            onSwipeRight={accept}
+            onDrag={handleDrag}
+          />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-around",
+              width: "50%",
+            }}
+          >
+            <RoundButton onclick={reject} icon={<CloseIconStyled />} />
+            <RoundButton onclick={accept} icon={<FavoriteIconStyled />} />
+          </div>
+        </Box>
+      ) : (
+        <FullScreenCircularProgress />
+      )}
     </div>
   );
 }

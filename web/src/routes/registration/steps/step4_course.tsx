@@ -1,7 +1,7 @@
-import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { useMyID } from "../../../api/user";
+import FullScreenCircularProgress from "../../../components/common/FullScreenCircularProgress";
 import CoursesTable from "../../../components/course/CoursesTable";
 import { NextButton } from "../common";
 
@@ -11,7 +11,7 @@ export default function Step4() {
   return (
     <Box>
       {state.current === "loading" ? (
-        <CircularProgress />
+        <FullScreenCircularProgress />
       ) : state.current === "error" ? (
         <p>Error: {state.error.message}</p>
       ) : (
