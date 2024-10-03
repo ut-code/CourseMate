@@ -1,5 +1,4 @@
-import { Box, CircularProgress, List } from "@mui/material";
-import hooks from "../../api/hooks";
+import { Box, List } from "@mui/material";
 import { deleteMatch } from "../../api/match";
 import { useMatched } from "../../api/user";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
