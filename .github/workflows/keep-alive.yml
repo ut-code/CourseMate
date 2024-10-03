@@ -6,6 +6,8 @@ on:
   workflow_dispatch:
 
 env:
+  # This env can be multi-value, if separated by spaces.
+  # Example: https://example.com https://api.example.com 
   PING_ORIGINS: ${{ secrets.PING_ORIGINS }}
 jobs:
   keep-alive:
