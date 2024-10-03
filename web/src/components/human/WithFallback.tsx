@@ -13,7 +13,11 @@ export function AvatarWithFallback({ width, height, url }: Props) {
       width={width}
       height={height}
       url={url}
-      fallback={<Avatar sx={{ width: `${width}`, height: `${height}` }} />}
+      fallback={
+        <Avatar
+          sx={{ width: `${width}`, height: `${height}`, objectFit: "cover" }}
+        />
+      }
       alt=""
     />
   );

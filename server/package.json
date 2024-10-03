@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun --watch src/main.ts",
     "build": "tsc",
-    "serve": "bun target/main.js"
+    "serve": "bun target/main.js",
+    "prisma-generate-sql": "bunx dotenv -e .env.dev -- prisma generate --sql"
   },
   "prisma": {
     "seed": "bun src/seeds/seed.ts"
@@ -16,11 +17,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.11.0",
+    "@prisma/client": "^5.20.0",
     "@types/cors": "^2.8.17",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.2",
     "express": "^4.18.2",
     "firebase-admin": "^12.2.0",
     "sharp": "^0.33.5",

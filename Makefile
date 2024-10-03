@@ -1,16 +1,31 @@
 default: start
 
+LOCAL_DB := postgres://user:password@localhost:5432/database
+
 setup: 
 	if [ ! `command -v bun` ]; then echo 'ERR: Bun is required!'; exit 1; fi
 	make sync
 	bunx husky
 	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
 	cd server; if [ ! -f .env.dev ]; then cp ./.env.sample ./.env.dev ; fi
-	echo "auto setup is done. now do:"
-	echo "- edit server/.env.dev"
-	echo "- edit web/.env"
+	@echo "auto setup is done. now do:"
+	@echo "- edit server/.env.dev"
+	@echo "- edit web/.env"
+	@echo "- run make sync"
 
-sync: sync-server sync-web sync-root copy-common
+setup-ci:
+	if [ ${DATABASE_URL} == "" ]; then echo 'Please set DATABASE_URL_FOR_SQL_GENERATION!'; exit 1; fi
+	make sync
+	make generate-sql
+
+sync: sync-server sync-web sync-root copy-common 
+	@echo '----------------------------------------------------------------------------------------------------------'
+	@echo '| Most work is done. now running prisma-generate-sql (which might fail if .env.dev is not set configured)|'
+	@echo '----------------------------------------------------------------------------------------------------------'
+	make generate-sql || true
+
+generate-sql:
+	@cd server; bun run prisma-generate-sql
 
 start: start-all # build -> serve
 build: build-server build-web
@@ -18,16 +33,16 @@ serve: serve-all # serve only. does not build.
 watch:
 		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
 
-LOCAL_DB := postgres://user:password@localhost:5432/database
 
 test: export DATABASE_URL=$(LOCAL_DB)
 test: export NEVER_LOAD_DOTENV=1
 test: export UNSAFE_SKIP_AUTH=1
 test: export FIREBASE_PROJECT_ID=mock-proj
 test: dev-db
-	ENV_FILE=server/.env.dev bun test
+	cd server/src; ENV_FILE=../.env.dev bun test
+	cd ./test; ENV_FILE=../server/.env.dev bun test
 	docker stop postgres
-	
+
 prepare-deploy-web: copy-common
 	cd web; bun install; bun run build
 prepare-deploy-server: copy-common
