@@ -104,6 +104,7 @@ export function RoomWindow(props: Prop) {
   //画面スクロール
   const scrollDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    state.data;
     if (scrollDiv.current) {
       const element = scrollDiv.current;
       element.scrollTo({
@@ -111,7 +112,7 @@ export function RoomWindow(props: Prop) {
         behavior: "instant",
       });
     }
-  }, []);
+  }, [state.data]);
 
   const startEditing = useCallback(
     (messageId: number, currentContent: string) => {

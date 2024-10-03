@@ -7,7 +7,6 @@ import { RoomWindow } from "../../components/chat/RoomWindow";
 import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
 export default function Chat() {
-  console.log("Chat: rendering...");
   const { state } = useRoomsOverview();
   const [activeRoom, setActiveRoom] = useState<DMOverview | null>(null);
 

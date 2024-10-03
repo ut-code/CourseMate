@@ -53,7 +53,6 @@ export function useSWR<T>(
   );
 
   const reload = useCallback(async () => {
-    console.log("useSWR: reloading...");
     setState((state) =>
       state.data === null
         ? {
@@ -82,14 +81,12 @@ export function useSWR<T>(
         error: null,
       });
       localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-      console.log("useSWR: update success");
     } catch (e) {
       setState({
         data: null,
         current: "error",
         error: e as Error,
       });
-      console.error("useSWR: update fail");
     }
   }, [CACHE_KEY, fetcher, schema]);
 
