@@ -1,14 +1,15 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Box, Button, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import type { DMOverview } from "../../common/types";
 import UserAvatar from "../human/avatar";
 type Props = {
   room: DMOverview;
-  setActiveRoom: (room: DMOverview | null) => void;
 };
 
 export function RoomHeader(props: Props) {
-  const { room, setActiveRoom } = props;
+  const { room } = props;
+  const navigation = useNavigate();
   return (
     <Box
       sx={{
@@ -21,7 +22,7 @@ export function RoomHeader(props: Props) {
         variant="text"
         sx={{ color: "black", padding: "0px", margin: "0px", minWidth: "0px" }}
         onClick={() => {
-          setActiveRoom(null);
+          navigation("/chat");
         }}
       >
         <ArrowBackIcon />
