@@ -35,9 +35,9 @@ export default function Root() {
   const location = useLocation();
   const [tabIndex, setTabIndex] = useState(0);
 
-  //TODO 元々はどこでリロードしてもheaderがhomeになっていた。それを解消するために以下のコードを追加した。しかし、微妙だと思うので、より良い方法を求む。
+  //TODO: この処理の遅さが気になる場合は、Header は 各コンポーネントから呼ぶことにしてもよい
   useEffect(() => {
-    const currentPath = location.pathname;
+    const currentPath = `/${location.pathname.split("/")[1]}`;
     const currentIndex = paths.indexOf(currentPath);
     if (currentIndex !== -1) {
       setTabIndex(currentIndex);
