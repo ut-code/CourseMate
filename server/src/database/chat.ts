@@ -15,7 +15,6 @@ import type {
 import { prisma } from "./client";
 import { getRelation } from "./matches";
 import { getMatchedUser } from "./requests";
-import { getUserByID } from "./users";
 
 // ユーザーの参加しているすべての Room の概要 (Overview) の取得
 export async function getOverview(
