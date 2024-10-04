@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import type { Step1User } from "../../../common/zod/types";
 import UserAvatar from "../../../components/human/avatar";
 import type { BackProp, StepProps } from "../common";
@@ -33,11 +33,21 @@ export default function Confirmation({
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
         margin: "20px",
       }}
     >
-      <CardFront UserInfo={{ ...Step1Data, ...Step2Data }} />
+      <Typography variant="h6" component="h1" mb={2}>
+        確認
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <CardFront UserInfo={{ ...Step1Data, ...Step2Data }} />
+      </Box>
       <div
         style={{
           display: "flex",

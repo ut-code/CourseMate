@@ -99,11 +99,12 @@ export default function Step2({
     console.log("open: ", open);
   }, [open]);
   return (
-    <div>
-      <Typography
+    <Box m={2} display={"flex"} flexDirection={"column"} gap={2}>
+      {/* <Typography
         variant="h5"
         style={{ textAlign: "left", marginTop: "2vh", marginLeft: "10px" }}
-      >
+      > */}
+      <Typography variant="h6" component="h1">
         アイコンを設定
       </Typography>
 
@@ -189,6 +190,6 @@ export default function Step2({
           </div>
         </div>
       </div>
-    </div>
+    </Box>
   );
 }

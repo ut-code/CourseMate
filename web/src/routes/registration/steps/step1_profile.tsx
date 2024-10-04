@@ -69,7 +69,9 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
 
   return (
     <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
-      <Typography>アカウント設定</Typography>
+      <Typography variant="h6" component="h1">
+        アカウント設定
+      </Typography>
       <FormControl fullWidth>
         <TextField
           value={name}

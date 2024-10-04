@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import hooks from "../../../api/hooks";
@@ -15,16 +16,13 @@ export default function Step4() {
       ) : state.current === "error" ? (
         <p>Error: {state.error.message}</p>
       ) : (
-        <Box
-          mt={2}
-          mx={2}
-          display="flex"
-          flexDirection="column"
-          gap={2}
-          alignItems="center"
-        >
-          <p>授業情報を登録しましょう</p>
-          <CoursesTable userId={state.data.id} editable={true} />
+        <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
+          <Typography variant="h6" component="h1">
+            授業情報の登録 (スキップ可)
+          </Typography>
+          <Box>
+            <CoursesTable userId={state.data.id} editable={true} />
+          </Box>
           <NextButton onClick={() => navigate("/home")}>次へ</NextButton>
         </Box>
       )}
