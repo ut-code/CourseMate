@@ -1,6 +1,7 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import * as chat from "../../api/chat/chat";
 import user from "../../api/user";
 import type {
@@ -16,19 +17,16 @@ import { socket } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
-type Prop = {
-  room: DMOverview;
-  setActiveRoom: (room: DMOverview | null) => void;
-};
-
-export function RoomWindow(props: Prop) {
-  const { room, setActiveRoom } = props;
+export function RoomWindow() {
   const { currentUserId, loading } = useCurrentUserId();
   const [dm, setDM] = useState<Message[]>([]);
   const { enqueueSnackbar } = useSnackbar();
   const id = useCurrentUserId();
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState<string>("");
+
+  const { state } = useLocation();
+  const { room } = state as { room: DMOverview }; // `room`データを抽出
 
   async function sendDMMessage(to: UserID, msg: SendMessage): Promise<void> {
     const message = await chat.sendDM(to, msg);
@@ -161,7 +159,7 @@ export function RoomWindow(props: Prop) {
           top: "56px",
         }}
       >
-        <RoomHeader room={room} setActiveRoom={setActiveRoom} />
+        <RoomHeader room={room} />
       </Box>
       <Box
         sx={{

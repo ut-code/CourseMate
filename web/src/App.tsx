@@ -6,6 +6,7 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
+import { RoomWindow } from "./components/chat/RoomWindow";
 import { NavigateByAuthState } from "./components/common/NavigateByAuthState";
 import EditCourses from "./routes/editCourses";
 import EditProfile from "./routes/editProfile";
@@ -98,6 +99,14 @@ export default function App() {
           element: (
             <NavigateByAuthState type="toLoginForUnauthenticated">
               <Chat />
+            </NavigateByAuthState>
+          ),
+        },
+        {
+          path: "chat/:friendId",
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <RoomWindow />
             </NavigateByAuthState>
           ),
         },
