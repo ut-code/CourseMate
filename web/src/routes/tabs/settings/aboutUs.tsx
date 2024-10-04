@@ -20,7 +20,7 @@ export default function AboutUs() {
     >
       <IconButton
         sx={{ position: "absolute", top: "20px", left: "20px" }}
-        onClick={() => navigate(-1)} // 1つ前のページに戻る
+        onClick={() => navigate("/settings")}
       >
         <ArrowBack />
       </IconButton>
