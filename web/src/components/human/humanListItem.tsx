@@ -57,28 +57,35 @@ export function HumanListItem(props: HumanListItemProps) {
         pr: 2,
       }}
     >
-      <ListItemAvatar sx={{ marginLeft: "8px" }}>
-        <Button onClick={handleOpenClick}>
-          <UserAvatar pictureUrl={pictureUrl} width="50px" height="50px" />
-        </Button>
-      </ListItemAvatar>
-      <Box
+      <Button
+        onClick={handleOpenClick}
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          marginLeft: "20px",
+          width: "100%",
+          justifyContent: "flex-start",
+          textTransform: "none",
         }}
       >
-        <Typography variant="body1" noWrap>
-          {name}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" noWrap>
-          {lastMessage && lastMessage.length > 15
-            ? `${lastMessage.slice(0, 15)}...`
-            : lastMessage || ""}
-        </Typography>
-      </Box>
+        <ListItemAvatar sx={{ marginLeft: "8px" }}>
+          <UserAvatar pictureUrl={pictureUrl} width="50px" height="50px" />
+        </ListItemAvatar>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            marginLeft: "20px",
+          }}
+        >
+          <Typography variant="body1" noWrap color={"text.primary"}>
+            {name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" noWrap>
+            {lastMessage && lastMessage.length > 15
+              ? `${lastMessage.slice(0, 15)}...`
+              : lastMessage || ""}
+          </Typography>
+        </Box>
+      </Button>
       {hasDots && (
         <Box
           sx={{

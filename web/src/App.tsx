@@ -6,7 +6,6 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
-import { About } from "./components/about";
 import { NavigateByAuthState } from "./components/common/NavigateByAuthState";
 import EditCourses from "./routes/editCourses";
 import EditProfile from "./routes/editProfile";
@@ -16,7 +15,11 @@ import Root from "./routes/root";
 import Chat from "./routes/tabs/chat";
 import { Friends } from "./routes/tabs/friends";
 import Home from "./routes/tabs/home";
-import Settings from "./routes/tabs/settings";
+import AboutUs from "./routes/tabs/settings/aboutUs";
+import Contact from "./routes/tabs/settings/contact";
+import Disclaimer from "./routes/tabs/settings/disclaimer";
+import Profile from "./routes/tabs/settings/profile";
+import Settings from "./routes/tabs/settings/settings";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -55,8 +58,38 @@ export default function App() {
           element: (
             <NavigateByAuthState type="toLoginForUnauthenticated">
               <Settings />
-              <hr />
-              <About />
+            </NavigateByAuthState>
+          ),
+        },
+        {
+          path: "settings/profile",
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <Profile />
+            </NavigateByAuthState>
+          ),
+        },
+        {
+          path: "settings/contact",
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <Contact />
+            </NavigateByAuthState>
+          ),
+        },
+        {
+          path: "settings/aboutUs",
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <AboutUs />
+            </NavigateByAuthState>
+          ),
+        },
+        {
+          path: "settings/disclaimer",
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <Disclaimer />
             </NavigateByAuthState>
           ),
         },

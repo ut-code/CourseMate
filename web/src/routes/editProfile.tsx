@@ -172,11 +172,11 @@ export default function EditProfile() {
         subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
         yesMessage: "移動",
         clickYes: () => {
-          navigate("/settings");
+          navigate("/settings/profile");
         },
       });
     } else {
-      navigate("/settings");
+      navigate("/settings/profile");
     }
   }
 

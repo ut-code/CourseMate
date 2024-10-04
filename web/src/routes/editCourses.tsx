@@ -13,7 +13,7 @@ export default function EditCourses() {
   const error = state.current === "error" ? state.error : null;
 
   function handleBack() {
-    navigate("/settings");
+    navigate("/settings/profile");
   }
 
   function handleGoToProfile() {
