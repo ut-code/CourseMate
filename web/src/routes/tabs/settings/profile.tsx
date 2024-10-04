@@ -28,41 +28,61 @@ export default function Profile() {
   }
 
   return (
-    <Box
-      sx={{
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "flex-start",
-      }}
-    >
-      <IconButton
-        sx={{ position: "absolute", top: "20px", left: "20px" }}
-        onClick={() => navigate(-1)} // 1つ前のページに戻る
-      >
-        <ArrowBack />
-      </IconButton>
+    <>
       <Box
         sx={{
+          padding: "20px",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
-          justifyContent: "space-between",
-          width: "75%",
-          maxWidth: "500px",
-          marginBottom: "20px",
+          justifyContent: "center",
+          textAlign: "center",
         }}
       >
-        <Typography variant="h6" component="h1" sx={{ marginRight: 1 }}>
-          あなたのカード
-        </Typography>
         <IconButton
-          onClick={() => navigate(back ? "/edit/courses" : "/edit/profile")}
+          sx={{ position: "absolute", top: "20px", left: "20px", zIndex: 10 }}
+          onClick={() => {
+            navigate("/settings");
+          }}
         >
-          <EditIcon sx={{ color: "#039BE5" }} fontSize="large" />{" "}
+          <ArrowBack />
         </IconButton>
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: "600px",
+            paddingTop: "30px",
+            paddingRight: "30px",
+            paddingLeft: "30px",
+            position: "relative",
+          }}
+        >
+          <Typography
+            variant="h5"
+            component="h3"
+            gutterBottom
+            sx={{ fontWeight: "bold" }}
+          >
+            あなたのカード
+          </Typography>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "16px",
+              right: "16px",
+            }}
+          >
+            <IconButton
+              onClick={() => navigate(back ? "/edit/courses" : "/edit/profile")}
+            >
+              <EditIcon sx={{ color: "#039BE5" }} fontSize="large" />
+            </IconButton>
+          </Box>
+        </Box>
       </Box>
-      <Card displayedUser={data} onFlip={(back) => setBack(back)} />
-    </Box>
+      <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
+        <Card displayedUser={data} onFlip={(back) => setBack(back)} />
+      </Box>
+    </>
   );
 }

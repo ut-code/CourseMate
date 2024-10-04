@@ -21,7 +21,7 @@ export default function Settings() {
         justifyContent: "flex-start",
       }}
     >
-      <List sx={{ width: "100%", maxWidth: "500px" }}>
+      <List sx={{ width: "100%" }}>
         <ListItemButton onClick={() => navigate("/settings/profile")}>
           <ListItemText primary="あなたのカード" />
         </ListItemButton>
@@ -31,7 +31,7 @@ export default function Settings() {
         </ListItemButton>
         <Divider />
         <ListItemButton onClick={() => navigate("/settings/aboutUs")}>
-          <ListItemText primary="私たちのサークルについて" />
+          <ListItemText primary="About Us" />
         </ListItemButton>
         <Divider />
         <ListItemButton onClick={() => navigate("/settings/disclaimer")}>
