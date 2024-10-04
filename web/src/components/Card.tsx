@@ -38,7 +38,7 @@ export function Card({ displayedUser, onFlip }: CardProps) {
     <div
       style={{
         perspective: "1000px",
-        width: "70vw",
+        width: "85vw",
         height: "70vh",
         position: "relative",
       }}
