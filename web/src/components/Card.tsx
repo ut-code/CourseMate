@@ -88,8 +88,8 @@ const CardFront = ({ displayedUser }: CardProps) => {
       >
         <UserAvatar
           pictureUrl={displayedUser?.pictureUrl}
-          width="auto"
-          height="80%"
+          width="10vh"
+          height="10vh"
         />
         {displayedUser?.name && (
           <p
