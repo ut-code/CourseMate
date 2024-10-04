@@ -1,5 +1,5 @@
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { User } from "../common/types";
 import CoursesTable from "./course/CoursesTable";
 import UserAvatar from "./human/avatar";
@@ -17,6 +17,22 @@ export function Card({ displayedUser, onFlip }: CardProps) {
     if (onFlip) onFlip(!isDisplayingBack);
   };
 
+  // biome-ignore lint: FIXME! 本来はuseEffectではなくスワイプのイベントで実装するべき
+  useEffect(() => {
+    const card = document.getElementById("card");
+
+    if (card) {
+      card.style.transition = "none";
+      setIsDisplayingBack(false);
+
+      requestAnimationFrame(() => {
+        if (card) {
+          card.style.transition = "transform 600ms";
+        }
+      });
+    }
+  }, [displayedUser]);
+
   return (
     // biome-ignore lint: this cannot just be fixed rn FIXME!
     <div
@@ -29,6 +45,7 @@ export function Card({ displayedUser, onFlip }: CardProps) {
       onClick={handleRotate}
     >
       <div
+        id="card"
         style={{
           position: "absolute",
           width: "100%",
