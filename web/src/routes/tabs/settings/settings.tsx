@@ -31,7 +31,7 @@ export default function Settings() {
         </ListItemButton>
         <Divider />
         <ListItemButton onClick={() => navigate("/settings/aboutUs")}>
-          <ListItemText primary="私たちのサークルについて" />
+          <ListItemText primary="About Us" />
         </ListItemButton>
         <Divider />
         <ListItemButton onClick={() => navigate("/settings/disclaimer")}>

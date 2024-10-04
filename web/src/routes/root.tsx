@@ -12,6 +12,9 @@ const labels = [
   "フレンド/Friends",
   "チャット/Chat",
   "設定/Settings",
+  "設定/Settings",
+  "設定/Settings",
+  "設定/Settings",
   "編集/Edit",
   "編集/Edit",
 ];
@@ -20,6 +23,10 @@ const paths = [
   "/friends",
   "/chat",
   "/settings",
+  "/settings/profile",
+  "/settings/contact",
+  "/settings/aboutUs",
+  "/settings/disclaim",
   "/edit/profile",
   "/edit/courses",
 ];

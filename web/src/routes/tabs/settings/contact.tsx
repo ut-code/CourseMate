@@ -12,8 +12,7 @@ export default function Contact() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start",
-        textAlign: "center",
+        justifyContent: "center",
       }}
     >
       <IconButton
@@ -22,17 +21,42 @@ export default function Contact() {
       >
         <ArrowBack />
       </IconButton>
-      <Typography variant="h6" component="h2" sx={{ marginTop: "20px" }}>
-        お問い合わせ
-      </Typography>
-      <Button
-        variant="contained"
-        href="https://forms.gle/WvFTbsJoHjGp9Qt88"
-        target="_blank"
-        sx={{ marginTop: "10px" }}
+
+      <Box
+        sx={{
+          width: "100%",
+          padding: "30px",
+          textAlign: "left",
+        }}
       >
-        ご意見・バグ報告をする
-      </Button>
+        <Typography
+          variant="h5"
+          component="h2"
+          gutterBottom
+          sx={{ fontWeight: "bold", mb: "24px", textAlign: "center" }}
+        >
+          お問い合わせ
+        </Typography>
+
+        <Typography sx={{ mb: "16px", lineHeight: "1.8" }}>
+          ご利用いただきありがとうございます。サービスに関するご意見やバグ報告がございましたら、以下のリンクからお問い合わせください。皆様のフィードバックは、サービスの改善に役立てさせていただきます。
+        </Typography>
+
+        <Button
+          variant="contained"
+          href="https://forms.gle/WvFTbsJoHjGp9Qt88"
+          target="_blank"
+          sx={{
+            textAlign: "center",
+            display: "block",
+            marginTop: "20px",
+            padding: "12px",
+            fontSize: "16px",
+          }}
+        >
+          ご意見・バグ報告をする
+        </Button>
+      </Box>
     </Box>
   );
 }
