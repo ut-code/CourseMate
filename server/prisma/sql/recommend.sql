@@ -14,8 +14,8 @@ AND NOT EXISTS (
 )
 
 AND NOT EXISTS (
-    SELECT * FROM  "Relationship" rel
-    WHERE rel."sendingUserId" = $1 AND rel."receivingUserId" = recv.id
+    SELECT * FROM  "Relationship" rel_pd
+    WHERE rel_pd."sendingUserId" = $1 AND rel_pd."receivingUserId" = recv.id
     AND status = 'PENDING'
 )
 
