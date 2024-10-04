@@ -98,9 +98,22 @@ export default function Home() {
   }
 
   return (
-    <div style={{ backgroundColor: getBackgroundColor(dragValue) }}>
+    <div
+      style={{
+        backgroundColor: getBackgroundColor(dragValue),
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
       {displayedUser ? (
-        <Box display="flex" flexDirection="column" alignItems="center">
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          height="100%"
+        >
           <DraggableCard
             displayedUser={displayedUser}
             onSwipeLeft={handleReject}
@@ -113,7 +126,9 @@ export default function Home() {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-around",
-              width: "50%",
+              width: "100%",
+              height: "100%",
+              marginBottom: "10px",
             }}
           >
             <RoundButton onclick={handleReject} icon={<CloseIconStyled />} />
@@ -144,17 +159,16 @@ const RoundButton = ({ onclick, icon }: RoundButtonProps) => {
 
 const ButtonStyle = {
   borderRadius: "50%",
-  width: "7vw",
-  height: "auto",
-  margin: "10px",
+  width: "15vw",
+  height: "15vw",
   boxShadow: shadows[10],
   backgroundColor: "white",
 };
 
 const CloseIconStyled = () => {
-  return <CloseIcon style={{ color: "grey", fontSize: "5vw" }} />;
+  return <CloseIcon style={{ color: "grey", fontSize: "10vw" }} />;
 };
 
 const FavoriteIconStyled = () => {
-  return <FavoriteIcon style={{ color: "red", fontSize: "5vw" }} />;
+  return <FavoriteIcon style={{ color: "red", fontSize: "10vw" }} />;
 };

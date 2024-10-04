@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import type { User } from "../common/types";
 import { Card } from "./Card";
 
-const SWIPE_THRESHOLD = 200;
+const SWIPE_THRESHOLD = 125;
 
 interface DraggableCardProps {
   displayedUser: User;
@@ -57,7 +57,9 @@ export const DraggableCard = ({
   }, [dragX, dragY, onSwipeRight, onSwipeLeft]);
 
   return (
-    <section style={{ pointerEvents: dragging ? "none" : undefined }}>
+    <section
+      style={{ pointerEvents: dragging ? "none" : undefined, height: "100%" }}
+    >
       <motion.div
         drag
         dragElastic={0.9}
