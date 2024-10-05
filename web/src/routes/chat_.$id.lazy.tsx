@@ -13,14 +13,17 @@ function ChatRoom() {
   const id = Number.parseInt(params.id);
   if (!id) throw new Error("Invalid param: `id`");
   const { state } = useDMOverview(id);
+
+  console.log(state.current);
+
   switch (state.current) {
     case "loading":
       return <FullScreenCircularProgress />;
-    case "success":
+    case "error":
+      return <p> Sorry, Something Went Wrong: {state.error.message}</p>;
+    default:
       return (
         <RoomWindow room={state.data as DMOverview /* todo: fix zod infer */} />
       );
-    case "error":
-      return <p> Something Went Wrong: {state.error.message}</p>;
   }
 }

@@ -15,7 +15,7 @@ export function useRoomsOverview(): Hook<RoomOverview[]> {
 
 export function useDMOverview(id: UserID): Hook<RoomOverview> {
   const fetcher = useCallback(async () => chat.getDMOverview(id), [id]);
-  return useSWR("useDMOverview", fetcher, RoomOverviewSchema);
+  return useSWR(`useDMOverview::${id}`, fetcher, RoomOverviewSchema);
 }
 
 const MessageListSchema = z.array(MessageSchema);
