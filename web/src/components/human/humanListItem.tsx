@@ -19,6 +19,7 @@ type HumanListItemProps = {
   onOpen?: (user: { id: number; name: string; pictureUrl: string }) => void;
   onAccept?: (id: number) => void;
   onReject?: (id: number) => void;
+  onCancel?: (id: number) => void;
   hasDots?: boolean;
   dotsActions?: object;
 };
@@ -33,6 +34,7 @@ export function HumanListItem(props: HumanListItemProps) {
     onOpen,
     onAccept,
     onReject,
+    onCancel,
     hasDots,
   } = props;
   const handleDeleteClick = () => {
@@ -51,6 +53,7 @@ export function HumanListItem(props: HumanListItemProps) {
         <Stack direction="row" spacing={1}>
           {onAccept && <Button onClick={() => onAccept(id)}>承認</Button>}
           {onReject && <Button onClick={() => onReject(id)}>拒否</Button>}
+          {onCancel && <Button onClick={() => onCancel(id)}>キャンセル</Button>}
         </Stack>
       }
       sx={{

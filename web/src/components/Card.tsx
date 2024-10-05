@@ -38,8 +38,8 @@ export function Card({ displayedUser, onFlip }: CardProps) {
     <div
       style={{
         perspective: "1000px",
-        width: "70vw",
-        height: "70vh",
+        width: "85vw",
+        height: "70dvh",
         position: "relative",
       }}
       onClick={handleRotate}
