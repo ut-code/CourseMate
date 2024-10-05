@@ -79,7 +79,12 @@ export function HumanListItem(props: HumanListItemProps) {
             marginLeft: "20px",
           }}
         >
-          <Typography variant="body1" noWrap color={"text.primary"}>
+          <Typography
+            variant="body1"
+            noWrap
+            color={"text.primary"}
+            sx={{ textAlign: "left" }}
+          >
             {name}
           </Typography>
           <Typography variant="body2" color="text.secondary" noWrap>
