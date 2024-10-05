@@ -15,6 +15,7 @@ type HumanListItemProps = {
   name: string;
   pictureUrl: string;
   lastMessage?: string;
+  rollUpName?: boolean; // is currently only intended to be used in Chat
   onDelete?: (id: number) => void;
   onOpen?: (user: { id: number; name: string; pictureUrl: string }) => void;
   onAccept?: (id: number) => void;
@@ -29,6 +30,7 @@ export function HumanListItem(props: HumanListItemProps) {
     id,
     name,
     pictureUrl,
+    rollUpName,
     lastMessage,
     onDelete,
     onOpen,
@@ -87,11 +89,19 @@ export function HumanListItem(props: HumanListItemProps) {
           >
             {name}
           </Typography>
-          <Typography variant="body2" color="text.secondary" noWrap>
-            {lastMessage && lastMessage.length > 15
-              ? `${lastMessage.slice(0, 15)}...`
-              : lastMessage || ""}
-          </Typography>
+          {rollUpName && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              noWrap
+              sx={{
+                minHeight: "1rem",
+                maxWidth: "60vw",
+              }}
+            >
+              {lastMessage}
+            </Typography>
+          )}
         </Box>
       </Button>
       {hasDots && (
