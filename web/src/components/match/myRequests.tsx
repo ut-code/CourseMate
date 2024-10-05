@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
 import { List } from "@mui/material";
-import hooks from "../../api/hooks";
 import * as request from "../../api/request";
+import { usePendingFromMe } from "../../api/user";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
 import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
 
 export default function MyReq() {
-  const { data, loading, error } = hooks.usePendingRequestsFromMe();
+  const { state } = usePendingFromMe();
   const { openModal } = useModal();
 
   return (
@@ -17,17 +17,17 @@ export default function MyReq() {
           marginLeft: "40px",
         }}
       >
-        {data && data.length > 0
+        {state.data && state.data.length > 0
           ? "以下のリクエストを送信しました！"
           : "リクエストを送信しましょう！"}
       </p>
-      {loading ? (
+      {state.current === "loading" ? (
         <FullScreenCircularProgress />
-      ) : error ? (
-        <p>Error: {error.message}</p>
+      ) : state.error ? (
+        <p>Error: {state.error.message}</p>
       ) : (
         <List>
-          {data?.map((receivingUser) => (
+          {state.data?.map((receivingUser) => (
             <HumanListItem
               key={receivingUser.id}
               id={receivingUser.id}

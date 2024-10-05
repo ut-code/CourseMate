@@ -1,31 +1,57 @@
+import { z } from "zod";
 import type { GUID, UpdateUser, User, UserID } from "../common/types";
 import { parseUser } from "../common/zod/methods.ts";
+import { UserIDSchema, UserSchema } from "../common/zod/schemas.ts";
 import { credFetch } from "../firebase/auth/lib.ts";
+import { useAuthorizedData } from "../hooks/useData.ts";
+import { type Hook, useSWR } from "../hooks/useSWR.ts";
 import endpoints from "./internal/endpoints.ts";
+import type { Hook as UseHook } from "./share/types.ts";
 
-// TODO: migrate to safe functions
+const UserListSchema = z.array(UserSchema);
 
-//全てのユーザ情報を取得する
-export async function all(): Promise<User[]> {
-  const res = await credFetch("GET", endpoints.users);
-  const users = await res.json();
-  const safeUsers: User[] = users.map((user: User) => parseUser(user));
-  return safeUsers;
+export function useRecommended(): UseHook<User[]> {
+  const url = endpoints.recommendedUsers;
+  return useAuthorizedData<User[]>(url);
+}
+export function useMatched(): Hook<User[]> {
+  return useSWR("users::matched", matched, UserListSchema);
+}
+export function usePendingToMe(): Hook<User[]> {
+  return useSWR("users::pending::to-me", pendingToMe, UserListSchema);
+}
+export function usePendingFromMe(): Hook<User[]> {
+  return useSWR("users::pending::from-me", pendingFromMe, UserListSchema);
 }
 
-export async function matched(): Promise<User[]> {
+async function matched(): Promise<User[]> {
   const res = await credFetch("GET", endpoints.matchedUsers);
   return res.json();
 }
+async function pendingToMe(): Promise<User[]> {
+  const res = await credFetch("GET", endpoints.pendingRequestsToMe);
+  return await res.json();
+}
+async function pendingFromMe(): Promise<User[]> {
+  const res = await credFetch("GET", endpoints.pendingRequestsFromMe);
+  return await res.json();
+}
 
 // 自身のユーザー情報を取得する
-export async function aboutMe(): Promise<User> {
+export function useAboutMe(): Hook<User> {
+  return useSWR("users::aboutMe", aboutMe, UserSchema);
+}
+
+async function aboutMe(): Promise<User> {
   const res = await credFetch("GET", endpoints.me);
   return res.json();
 }
 
 // 自身のユーザーIDを取得する
-export async function getMyId(): Promise<UserID> {
+export function useMyID(): Hook<UserID> {
+  return useSWR("users::myId", getMyId, UserIDSchema);
+}
+async function getMyId(): Promise<UserID> {
   const me = await aboutMe();
   return me.id;
 }
@@ -39,17 +65,6 @@ export async function update(newData: UpdateUser): Promise<void> {
 // 自身のユーザ情報を削除する
 export async function remove(): Promise<void> {
   await credFetch("DELETE", endpoints.me);
-}
-
-//指定した id のユーザ情報を除いた全てのユーザ情報を取得する
-export async function except(id: UserID): Promise<User[]> {
-  try {
-    const data = await all();
-    return data.filter((user: User) => user.id !== id);
-  } catch (err) {
-    console.error("Error fetching data:", err);
-    throw err;
-  }
 }
 
 /**
@@ -88,13 +103,12 @@ export async function getByGUID(
 
 //指定した guid のユーザが存在するかどうかを取得する
 export async function exists(guid: GUID): Promise<boolean> {
-  try {
-    const res = await credFetch("GET", endpoints.userExists(guid));
-    if (res.status === 404) return false;
-    return true;
-  } catch {
-    return false;
-  }
+  const res = await credFetch("GET", endpoints.userExists(guid));
+  if (res.status === 404) return false;
+  if (res.status === 200) return true;
+  throw new Error(
+    `Unexpected status code: expected 200 or 404, got ${res.status}`,
+  );
 }
 
 // 指定した id のユーザ情報を取得する
@@ -108,16 +122,3 @@ export async function create(userdata: Omit<User, "id">): Promise<User> {
   const res = await credFetch("POST", endpoints.users, userdata);
   return await res.json();
 }
-
-export default {
-  get,
-  aboutMe,
-  getByGUID,
-  all,
-  matched,
-  except,
-  exists,
-  create,
-  update,
-  remove,
-};

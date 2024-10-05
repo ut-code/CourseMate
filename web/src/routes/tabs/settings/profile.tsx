@@ -3,12 +3,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Box, IconButton, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import hooks from "../../../api/hooks";
+import { useAboutMe } from "../../../api/user";
+("../../../api/user");
 import { Card } from "../../../components/Card";
 import FullScreenCircularProgress from "../../../components/common/FullScreenCircularProgress";
 
 export default function Profile() {
-  const { state } = hooks.useMe();
+  const { state } = useAboutMe();
   const data = state.data;
   const navigate = useNavigate();
   const error = state.current === "error" ? state.error : null;
