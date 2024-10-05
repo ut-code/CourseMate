@@ -7,22 +7,34 @@ import CoursesTableCore from "../components/CoursesTableCore";
 
 type Props = {
   userId: UserID;
+  comparisonUserId?: UserID;
 };
 
 export default function NonEditableCoursesTable(props: Props) {
-  const { userId } = props;
+  const { userId, comparisonUserId } = props;
   const [courses, setCourses] = useState<Course[] | null>(null);
+  const [comparisonCourses, setComparisonCourses] = useState<Course[] | null>(
+    null,
+  );
 
   useEffect(() => {
     (async () => {
-      const courses = await courseApi.getCoursesByUserId(userId);
-      setCourses(courses);
+      const newCourses = await courseApi.getCoursesByUserId(userId);
+      setCourses(newCourses);
+      if (comparisonUserId) {
+        const comparisonCourses =
+          await courseApi.getCoursesByUserId(comparisonUserId);
+        setComparisonCourses(comparisonCourses);
+      }
     })();
-  }, [userId]);
+  }, [userId, comparisonUserId]);
 
   return !courses ? (
     <FullScreenCircularProgress />
   ) : (
-    <CoursesTableCore courses={courses} />
+    <CoursesTableCore
+      courses={courses}
+      comparisonCourses={comparisonCourses ? comparisonCourses : undefined}
+    />
   );
 }

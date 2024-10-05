@@ -1,12 +1,13 @@
 import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { useCallback, useState } from "react";
-import type { User } from "../common/types";
+import type { User, UserID } from "../common/types";
 import { Card } from "./Card";
 
 const SWIPE_THRESHOLD = 125;
 
 interface DraggableCardProps {
   displayedUser: User;
+  comparisonUserId?: UserID;
   onSwipeRight: () => void;
   onSwipeLeft: () => void;
   onDrag?: (X: number) => void;
@@ -14,6 +15,7 @@ interface DraggableCardProps {
 
 export const DraggableCard = ({
   displayedUser,
+  comparisonUserId,
   onSwipeRight,
   onSwipeLeft,
   onDrag,
@@ -73,7 +75,10 @@ export const DraggableCard = ({
         style={{ x: dragX, y: dragY, padding: "10px" }}
         whileTap={{ scale: 0.95 }}
       >
-        <Card displayedUser={displayedUser} />
+        <Card
+          displayedUser={displayedUser}
+          comparisonUserId={comparisonUserId}
+        />
       </motion.div>
     </section>
   );

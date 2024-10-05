@@ -7,11 +7,13 @@ import styles from "./styles.module.css";
 type Props =
   | {
       courses: Course[];
+      comparisonCourses?: Course[];
       isButton?: false | undefined;
       onCellClick?: never;
     }
   | {
       courses: Course[];
+      comparisonCourses?: Course[];
       isButton: true;
       onCellClick: (rowIndex: number, day: Day, course: Course | null) => void;
     };
@@ -22,7 +24,11 @@ type Props =
 export default function CoursesTableCore(props: Props) {
   const [rows, setRows] = useState<
     {
-      [day in Day]: Course | null;
+      [day in Day]:
+        | (Course & {
+            isOverlapping?: boolean;
+          })
+        | null;
     }[]
   >(
     Array.from({ length: 6 }, () => ({
@@ -37,32 +43,55 @@ export default function CoursesTableCore(props: Props) {
     })),
   );
 
-  const transformCoursesToRows = useCallback((courses: Course[]) => {
-    const newRows: {
-      [day in Day]: Course | null;
-    }[] = Array.from({ length: 6 }, () => ({
-      mon: null,
-      tue: null,
-      wed: null,
-      thu: null,
-      fri: null,
-      sat: null,
-      sun: null,
-      other: null,
-    }));
-    for (const course of courses) {
-      for (const slot of course.slots) {
-        const { day, period } = slot;
-        newRows[period - 1][day] = course;
+  const transformCoursesToRows = useCallback(
+    (courses: Course[], comparisonCourses?: Course[]) => {
+      const newRows: {
+        [day in Day]: (Course & { isOverlapping?: boolean }) | null;
+      }[] = Array.from({ length: 6 }, () => ({
+        mon: null,
+        tue: null,
+        wed: null,
+        thu: null,
+        fri: null,
+        sat: null,
+        sun: null,
+        other: null,
+      }));
+      for (const course of courses) {
+        if (comparisonCourses) {
+          for (const comparisonCourse of comparisonCourses) {
+            if (course.id === comparisonCourse.id) {
+              for (const slot of course.slots) {
+                const { day, period } = slot;
+                newRows[period - 1][day] = { ...course, isOverlapping: true };
+              }
+            } else {
+              for (const slot of course.slots) {
+                const { day, period } = slot;
+                newRows[period - 1][day] = course;
+              }
+            }
+          }
+        } else {
+          for (const slot of course.slots) {
+            const { day, period } = slot;
+            newRows[period - 1][day] = course;
+          }
+        }
       }
-    }
-    return newRows;
-  }, []);
+      console.log("newRows", newRows);
+      return newRows;
+    },
+    [],
+  );
 
   useEffect(() => {
-    const newRows = transformCoursesToRows(props.courses);
+    const newRows = transformCoursesToRows(
+      props.courses,
+      props.comparisonCourses,
+    );
     setRows(newRows);
-  }, [props.courses, transformCoursesToRows]);
+  }, [props.courses, props.comparisonCourses, transformCoursesToRows]);
 
   return (
     <table className={styles.table}>
@@ -85,6 +114,7 @@ export default function CoursesTableCore(props: Props) {
                 key={`cell-${day}-${rowIndex.toString()}`}
                 courseName={row[day]?.name ?? null}
                 teacherName={row[day]?.teacher ?? null}
+                isOverlapping={row[day]?.isOverlapping}
                 editable={props.isButton}
                 onClick={
                   props.isButton
@@ -104,11 +134,13 @@ function Cell({
   courseName,
   teacherName,
   editable = false,
+  isOverlapping = false,
   onClick,
 }: {
   courseName: string | null;
   teacherName: string | null;
   editable?: boolean;
+  isOverlapping?: boolean;
   onClick?: () => void;
 }) {
   const content = (
@@ -123,13 +155,29 @@ function Cell({
       {editable ? (
         <button
           type="button"
-          className={courseName ? styles.enrolled : ""}
+          className={
+            isOverlapping
+              ? styles.overlapped
+              : courseName
+                ? styles.enrolled
+                : ""
+          }
           onClick={onClick}
         >
           {content}
         </button>
       ) : (
-        <span className={courseName ? styles.enrolled : ""}>{content}</span>
+        <span
+          className={
+            isOverlapping
+              ? styles.overlapped
+              : courseName
+                ? styles.enrolled
+                : ""
+          }
+        >
+          {content}
+        </span>
       )}
     </td>
   );
