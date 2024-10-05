@@ -1,6 +1,6 @@
+import { Navigate } from "@tanstack/react-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { type ReactNode, useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
 import FullScreenCircularProgress from "./FullScreenCircularProgress";
 
 /**
