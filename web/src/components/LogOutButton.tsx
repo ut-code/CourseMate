@@ -1,6 +1,7 @@
 import { ListItemButton, ListItemText } from "@mui/material";
 import { signOut } from "firebase/auth";
 import { useSnackbar } from "notistack";
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/config";
 import { useAlert } from "./common/alert/AlertProvider";
@@ -10,7 +11,7 @@ export default function LogOutButton() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  async function signOutUser() {
+  const signOutUser = useCallback(async () => {
     try {
       await signOut(auth);
       enqueueSnackbar("ログアウトしました", { variant: "success" });
@@ -20,9 +21,9 @@ export default function LogOutButton() {
     } finally {
       navigate("/login");
     }
-  }
+  }, [navigate, enqueueSnackbar]);
 
-  const handleClick = () => {
+  const onClick = useCallback(() => {
     showAlert({
       AlertMessage: "本当にログアウトしますか？",
       yesMessage: "ログアウト",
@@ -30,10 +31,10 @@ export default function LogOutButton() {
         signOutUser();
       },
     });
-  };
+  }, [showAlert, signOutUser]);
 
   return (
-    <ListItemButton onClick={handleClick}>
+    <ListItemButton onClick={onClick}>
       <ListItemText primary="ログアウト" sx={{ color: "red" }} />
     </ListItemButton>
   );
