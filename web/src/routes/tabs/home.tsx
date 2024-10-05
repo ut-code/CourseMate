@@ -1,6 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Box, Button, CircularProgress } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import request from "../../api/request";
 
@@ -38,7 +38,7 @@ export default function Home() {
   }, [displayedUser]);
 
   if (recommended == null) {
-    return <CircularProgress />;
+    return <FullScreenCircularProgress />;
   }
   if (displayedUser == null) {
     return <div>全員にいいねを送りました！</div>;
