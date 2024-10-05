@@ -22,7 +22,6 @@ export function MessageInput(props: Props) {
     crossRoomMessageState.set(room.friendId, m);
   };
 
-  // change input message based on currently open room
   useEffect(() => {
     _setMessage(crossRoomMessageState.get(room.friendId) || "");
   }, [room.friendId]);
@@ -56,14 +55,26 @@ export function MessageInput(props: Props) {
             size="small"
             value={message}
             fullWidth={true}
+            multiline
+            minRows={1}
+            maxRows={3}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                e.preventDefault();
+                if (message.trim()) {
+                  send(room.friendId, { content: message });
+                  setMessage("");
+                }
+              }
+            }}
             error={!!error}
           />
           <IconButton type="submit" color="primary">
             <SendIcon />
           </IconButton>
         </Stack>
-        {error && ( // エラーメッセージがある場合に表示
+        {error && (
           <Typography color="error" variant="body2" marginLeft={2}>
             {error}
           </Typography>
