@@ -13,7 +13,7 @@ export default function DeleteAccountButton() {
   const onClick = useCallback(() => {
     showAlert({
       AlertMessage: "本当にアカウントを削除しますか？",
-      subAlertMessage: "このアカウントに関連するすべてのデータが失われます",
+      subAlertMessage: "このアカウントに関連するすべてのデータが失われます。",
       yesMessage: "削除",
       clickYes: async () => {
         try {

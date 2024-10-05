@@ -35,7 +35,7 @@ export default function LogOutButton() {
 
   return (
     <ListItemButton onClick={onClick}>
-      <ListItemText primary="ログアウト" sx={{ color: "red" }} />
+      <ListItemText primary="ログアウト" sx={{ color: "indianred" }} />
     </ListItemButton>
   );
 }
