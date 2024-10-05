@@ -7,7 +7,7 @@ import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
 
 export default function MyReq() {
-  const { state } = usePendingFromMe();
+  const { state, reload } = usePendingFromMe();
   const { openModal } = useModal();
 
   return (
@@ -35,7 +35,7 @@ export default function MyReq() {
               pictureUrl={receivingUser.pictureUrl}
               onOpen={() => openModal(receivingUser)}
               onCancel={(id) => {
-                request.cancel(id);
+                request.cancel(id).then(reload);
               }}
             />
           ))}
