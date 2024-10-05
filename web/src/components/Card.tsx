@@ -1,7 +1,7 @@
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
 import { useEffect, useState } from "react";
 import type { User } from "../common/types";
-import EditableCoursesTable from "./course/EditableCoursesTable";
+import NonEditableCoursesTable from "./course/NonEditableCoursesTable";
 import UserAvatar from "./human/avatar";
 
 interface CardProps {
@@ -195,7 +195,7 @@ const CardBack = ({ displayedUser }: CardProps) => {
           {displayedUser?.name}
         </p>
       </div>
-      <EditableCoursesTable userId={displayedUser.id} />
+      <NonEditableCoursesTable userId={displayedUser.id} />
       <div>
         <ThreeSixtyIcon
           style={{ fontSize: "7vmin", display: "block", margin: "auto" }}

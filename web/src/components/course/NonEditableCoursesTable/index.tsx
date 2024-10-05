@@ -3,22 +3,14 @@ import { useCallback, useEffect, useState } from "react";
 import courseApi from "../../../api/course";
 import type { Course, Day, UserID } from "../../../common/types";
 import FullScreenCircularProgress from "../../common/FullScreenCircularProgress";
-import SelectCourseDialog from "../SelectCourseDialog";
 import CoursesTableCore from "../components/CoursesTableCore";
 
 type Props = {
   userId: UserID;
 };
 
-export default function EditableCoursesTable(props: Props) {
+export default function NonEditableCoursesTable(props: Props) {
   const { userId } = props;
-  const [isSelectCourseDialogOpen, setIsSelectCourseDialogOpen] =
-    useState(false);
-  const [currentEdit, setCurrentEdit] = useState<{
-    rowIndex: number;
-    columnName: Day;
-    course: Course | null;
-  } | null>(null);
 
   const [transposedRows, setTransposedRows] = useState<
     | {
@@ -26,15 +18,6 @@ export default function EditableCoursesTable(props: Props) {
       }[]
     | null
   >(null);
-
-  async function handleSelectCourseDialogOpen(
-    rowIndex: number,
-    columnName: Day,
-    course: Course | null,
-  ) {
-    setCurrentEdit({ rowIndex, columnName, course });
-    setIsSelectCourseDialogOpen(true);
-  }
 
   const handleCoursesUpdate = useCallback((courses: Course[]) => {
     const newCourses: {
@@ -68,18 +51,6 @@ export default function EditableCoursesTable(props: Props) {
   return !transposedRows ? (
     <FullScreenCircularProgress />
   ) : (
-    <>
-      <CoursesTableCore
-        rows={transposedRows}
-        isButton
-        onCellClick={handleSelectCourseDialogOpen}
-      />
-      <SelectCourseDialog
-        open={isSelectCourseDialogOpen}
-        onClose={() => setIsSelectCourseDialogOpen(false)}
-        currentEdit={currentEdit}
-        handleCoursesUpdate={handleCoursesUpdate}
-      />
-    </>
+    <CoursesTableCore rows={transposedRows} />
   );
 }

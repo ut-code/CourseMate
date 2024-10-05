@@ -41,7 +41,7 @@ export default function EditCourses() {
         <p>Error: {error.message}</p>
       ) : data ? (
         <>
-          <EditableCoursesTable userId={data.id} editable={true} />
+          <EditableCoursesTable userId={data.id} />
         </>
       ) : (
         <p>データがありません。</p>
