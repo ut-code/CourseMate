@@ -57,6 +57,13 @@ export async function overview(): Promise<RoomOverview[]> {
   return await res.json();
 }
 
+export async function getDMOverview(id: UserID): Promise<RoomOverview> {
+  // TODO: only fetch one
+  const all = await overview();
+  const found = all.find((room) => room.isDM && room.friendId === id);
+  if (!found) throw new Error(`DMOverview not found for room ${id}`);
+  return found;
+}
 //// DM関連 ////
 
 // TODO

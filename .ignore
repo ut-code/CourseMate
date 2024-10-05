@@ -1,3 +1,4 @@
 /mobile
 *lock*
 *.svg
+/web/src/routeTree.gen.ts

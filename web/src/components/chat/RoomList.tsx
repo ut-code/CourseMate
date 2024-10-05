@@ -33,7 +33,7 @@ export function RoomList(props: RoomListProps) {
             <Box
               key={room.friendId}
               onClick={() => {
-                navigate({ to: `./${room.friendId}` });
+                navigate({ to: `/chat/${room.friendId}` });
               }}
             >
               <HumanListItem

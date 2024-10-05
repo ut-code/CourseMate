@@ -1,33 +1,31 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
 import * as chat from "../../api/chat/chat";
 import { useMessages } from "../../api/chat/hooks";
 import * as user from "../../api/user";
 import { useMyID } from "../../api/user";
 import type {
-  DMOverview,
   Message,
   MessageID,
   SendMessage,
   UserID,
 } from "../../common/types";
-import type { Content } from "../../common/zod/types";
+import type { Content, DMOverview } from "../../common/zod/types";
 import { getIdToken } from "../../firebase/auth/lib";
 import Dots from "../common/Dots";
 import { socket } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
-export function RoomWindow() {
-  const { state: locationState } = useLocation();
-  const { room } = locationState as { room: DMOverview }; // `room`データを抽出
-
+type Props = {
+  room: DMOverview;
+};
+export function RoomWindow({ room }: Props) {
   const {
     state: { data: myId },
   } = useMyID();
-  const { state, reload, write } = useMessages(room.friendId);
+  const { state, reload, write } = useMessages(room.friendId); // todo: make it also available for SharedRoom
   const [messages, setMessages] = useState(state.data);
 
   useEffect(() => {

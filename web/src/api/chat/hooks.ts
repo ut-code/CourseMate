@@ -13,6 +13,11 @@ export function useRoomsOverview(): Hook<RoomOverview[]> {
   return useSWR("useRoomsOverview", chat.overview, OverviewListSchema);
 }
 
+export function useDMOverview(id: UserID): Hook<RoomOverview> {
+  const fetcher = useCallback(async () => chat.getDMOverview(id), [id]);
+  return useSWR("useDMOverview", fetcher, RoomOverviewSchema);
+}
+
 const MessageListSchema = z.array(MessageSchema);
 // 相手のIDを指定して、
 export function useMessages(friendId: UserID): Hook<Message[]> {
