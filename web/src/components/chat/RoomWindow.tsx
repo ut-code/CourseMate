@@ -1,6 +1,7 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import * as chat from "../../api/chat/chat";
 import { useMessages } from "../../api/chat/hooks";
 import * as user from "../../api/user";
@@ -19,18 +20,16 @@ import { socket } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
-type Prop = {
-  room: DMOverview;
-  setActiveRoom: (room: DMOverview | null) => void;
-};
+export function RoomWindow() {
+  const { state: locationState } = useLocation();
+  const { room } = locationState as { room: DMOverview }; // `room`データを抽出
 
-export function RoomWindow(props: Prop) {
-  const { room, setActiveRoom } = props;
   const {
     state: { data: myId },
   } = useMyID();
   const { state, reload, write } = useMessages(room.friendId);
   const [messages, setMessages] = useState(state.data);
+
   useEffect(() => {
     setMessages(state.data);
   }, [state.data]);
@@ -161,7 +160,7 @@ export function RoomWindow(props: Prop) {
           top: "56px",
         }}
       >
-        <RoomHeader room={room} setActiveRoom={setActiveRoom} />
+        <RoomHeader room={room} />
       </Box>
       <Box
         sx={{
