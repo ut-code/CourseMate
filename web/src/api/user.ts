@@ -122,3 +122,11 @@ export async function create(userdata: Omit<User, "id">): Promise<User> {
   const res = await credFetch("POST", endpoints.users, userdata);
   return await res.json();
 }
+
+export async function deleteAccount(): Promise<void> {
+  const res = await credFetch("DELETE", endpoints.me);
+  if (res.status !== 204)
+    throw new Error(
+      `failed to delete account: expected status code 204, but got ${res.status} with text ${await res.text()}`,
+    );
+}
