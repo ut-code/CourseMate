@@ -20,9 +20,11 @@ type Props =
  * NonEditableCoursesTable および EditableCoursesTable から呼び出して使用する。ページで直接呼び出さない。
  */
 export default function CoursesTableCore(props: Props) {
-  const [rows, setRows] = useState<{
-    [day in Day]: Course | null;
-  }[]>(
+  const [rows, setRows] = useState<
+    {
+      [day in Day]: Course | null;
+    }[]
+  >(
     Array.from({ length: 6 }, () => ({
       mon: null,
       tue: null,
@@ -81,8 +83,6 @@ export default function CoursesTableCore(props: Props) {
             {ACTIVE_DAYS.map((day) => (
               <Cell
                 key={`cell-${day}-${rowIndex.toString()}`}
-                day={day}
-                rowIndex={rowIndex}
                 courseName={row[day]?.name ?? null}
                 teacherName={row[day]?.teacher ?? null}
                 editable={props.isButton}
@@ -106,8 +106,6 @@ function Cell({
   editable = false,
   onClick,
 }: {
-  day: (typeof ACTIVE_DAYS)[number];
-  rowIndex: number;
   courseName: string | null;
   teacherName: string | null;
   editable?: boolean;
