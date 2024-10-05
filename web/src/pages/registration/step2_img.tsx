@@ -1,14 +1,14 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { uploadImage } from "../../../api/image";
-import { MAX_IMAGE_SIZE } from "../../../api/internal/fetch-func";
+import { uploadImage } from "../../api/image";
+import { MAX_IMAGE_SIZE } from "../../api/internal/fetch-func";
 import {
   PhotoPreview,
   PhotoPreviewButton,
-} from "../../../components/config/PhotoPreview";
-import UserAvatar from "../../../components/human/avatar";
-import type { BackProp, StepProps } from "../common";
+} from "../../components/config/PhotoPreview";
+import UserAvatar from "../../components/human/avatar";
+import type { BackProp, StepProps } from "./common";
 
 export type Step2Data = {
   pictureUrl: string;

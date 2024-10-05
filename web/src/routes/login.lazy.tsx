@@ -1,13 +1,14 @@
 import { Box, Button, Link, Typography } from "@mui/material";
+import { useNavigate } from "@tanstack/react-router";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
 import * as user from "../api/user";
 import { getByGUID } from "../api/user";
 import type { GUID } from "../common/types";
 import Header from "../components/Header";
 import { auth } from "../firebase/config";
 import "../styles/login.css";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { CourseMateIcon } from "../components/common/CourseMateIcon";
 
 const provider = new GoogleAuthProvider();
@@ -39,7 +40,10 @@ async function signInWithGoogle() {
   }
 }
 
-export default function Login() {
+export const Route = createLazyFileRoute("/login")({
+  component: Login,
+});
+function Login() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -56,7 +60,7 @@ export default function Login() {
           "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
           { variant: "info" },
         );
-        navigate("/signup");
+        navigate({ to: "/signup" });
       } else if (response.status >= 500) {
         enqueueSnackbar(
           "サーバーエラーが発生しました。しばらくしてから再度お試しください。",
@@ -66,7 +70,7 @@ export default function Login() {
         enqueueSnackbar(`こんにちは、${response.data.name} さん！`, {
           variant: "success",
         });
-        navigate("/home");
+        navigate({ to: "/home" });
       }
     } catch (error) {
       console.error(error);
@@ -88,10 +92,10 @@ export default function Login() {
         enqueueSnackbar("この Google アカウントはすでに登録されています", {
           variant: "error",
         });
-        navigate("/login");
+        navigate({ to: "/login" });
       } else {
         enqueueSnackbar("新規登録を開始します", { variant: "info" });
-        navigate("/signup");
+        navigate({ to: "/signup" });
       }
     } catch (e) {
       console.error(e);

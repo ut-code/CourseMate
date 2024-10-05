@@ -1,7 +1,7 @@
 import { ListItemButton, ListItemText } from "@mui/material";
+import { useNavigate } from "@tanstack/react-router";
 import { useSnackbar } from "notistack";
 import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { deleteAccount } from "../api/user";
 import { useAlert } from "./common/alert/AlertProvider";
 
@@ -25,7 +25,10 @@ export default function DeleteAccountButton() {
             variant: "error",
           });
         } finally {
-          navigate("/login");
+          navigate({
+            // todo: where am i at rn?
+            to: "/login",
+          });
         }
       },
     });

@@ -1,10 +1,14 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useAboutMe } from "../api/user";
-import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
-import CoursesTable from "../components/course/CoursesTable";
+import { useNavigate } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { useAboutMe } from "../../api/user";
+import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
+import CoursesTable from "../../components/course/CoursesTable";
 
-export default function EditCourses() {
+export const Route = createLazyFileRoute("/edit/courses")({
+  component: EditCourses,
+});
+function EditCourses() {
   const navigate = useNavigate();
 
   const { state } = useAboutMe();
@@ -13,11 +17,11 @@ export default function EditCourses() {
   const error = state.current === "error" ? state.error : null;
 
   function handleBack() {
-    navigate("/settings/profile");
+    navigate({ to: "/settings/profile" });
   }
 
   function handleGoToProfile() {
-    navigate("/edit/profile");
+    navigate({ to: "/edit/profile" });
   }
 
   return (

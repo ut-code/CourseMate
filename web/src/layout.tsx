@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
+import { CssBaseline, createTheme } from "@mui/material";
 import { SnackbarProvider } from "notistack";
-import { createTheme, CssBaseline } from "@mui/material";
 import BanLandscape from "./components/BanLandscape";
 import { AlertProvider } from "./components/common/alert/AlertProvider";
 import { ModalProvider } from "./components/common/modal/ModalProvider";

@@ -14,7 +14,8 @@
     "lockb",
     "psql",
     "isready",
-    "ECCS"
+    "ECCS",
+    "tanstack"
   ],
   "dictionaries": [
     "softwareTerms",

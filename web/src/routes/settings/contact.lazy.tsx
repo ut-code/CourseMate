@@ -1,8 +1,12 @@
 import { ArrowBack } from "@mui/icons-material";
 import { Box, Button, IconButton, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 
-export default function Contact() {
+export const Route = createLazyFileRoute("/settings/contact")({
+  component: Contact,
+});
+function Contact() {
   const navigate = useNavigate();
 
   return (
@@ -17,7 +21,7 @@ export default function Contact() {
     >
       <IconButton
         sx={{ position: "absolute", top: "20px", left: "20px" }}
-        onClick={() => navigate("/settings")}
+        onClick={() => navigate({ to: "/settings" })}
       >
         <ArrowBack />
       </IconButton>

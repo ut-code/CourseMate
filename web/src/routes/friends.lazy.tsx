@@ -1,9 +1,13 @@
 import { Box, Tab, Tabs } from "@mui/material";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import Matchings from "../../components/match/matching";
-import Requests from "../../components/match/requests";
+import Matchings from "../components/match/matching";
+import Requests from "../components/match/requests";
 
-export function Friends() {
+export const Route = createLazyFileRoute("/friends")({
+  component: Friends,
+});
+function Friends() {
   const [open, setOpen] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newOpen: number) => {

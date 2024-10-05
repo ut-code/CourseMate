@@ -10,6 +10,6 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignore": ["bun.lockb", "server/target"]
+    "ignore": ["bun.lockb", "server/target", "web/src/routeTree.gen.ts"]
   }
 }

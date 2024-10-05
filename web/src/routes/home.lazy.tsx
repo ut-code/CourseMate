@@ -2,14 +2,19 @@ import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Box, Button, CircularProgress } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import request from "../../api/request";
+import request from "../api/request";
 
 import shadows from "@mui/material/styles/shadows";
-import { useRecommended } from "../../api/user";
-import { DraggableCard } from "../../components/DraggableCard";
-import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { useRecommended } from "../api/user";
+import { DraggableCard } from "../components/DraggableCard";
+import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
 
-export default function Home() {
+export const Route = createLazyFileRoute("/home")({
+  component: Home,
+});
+
+function Home() {
   const { data: recommended, error } = useRecommended();
 
   const [nth, setNth] = useState<number>(0);

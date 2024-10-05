@@ -1,6 +1,6 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Box, Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import type { DMOverview } from "../../common/types";
 import UserAvatar from "../human/avatar";
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 
 export function RoomHeader(props: Props) {
   const { room } = props;
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -22,7 +22,7 @@ export function RoomHeader(props: Props) {
         variant="text"
         sx={{ color: "black", padding: "0px", margin: "0px", minWidth: "0px" }}
         onClick={() => {
-          navigation("/chat");
+          navigate({ to: "/chat" });
         }}
       >
         <ArrowBackIcon />

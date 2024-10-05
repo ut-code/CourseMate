@@ -1,9 +1,13 @@
 import { ArrowBack, GitHub, Language } from "@mui/icons-material";
 import XIcon from "@mui/icons-material/X";
 import { Box, IconButton, Link, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 
-export default function AboutUs() {
+export const Route = createLazyFileRoute("/settings/about-us")({
+  component: aboutUs,
+});
+function aboutUs() {
   const navigate = useNavigate();
 
   return (
@@ -24,7 +28,7 @@ export default function AboutUs() {
           top: "20px",
           left: "20px",
         }}
-        onClick={() => navigate("/settings")}
+        onClick={() => navigate({ to: "/settings" })}
       >
         <ArrowBack />
       </IconButton>

@@ -12,24 +12,28 @@ import {
   Typography,
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
+import { useNavigate } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { uploadImage } from "../api/image";
-import { MAX_IMAGE_SIZE } from "../api/internal/fetch-func";
-import { update, useAboutMe } from "../api/user";
-import type { UpdateUser } from "../common/types";
-import { UpdateUserSchema } from "../common/zod/schemas";
-import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
-import { useAlert } from "../components/common/alert/AlertProvider";
+import { uploadImage } from "../../api/image";
+import { MAX_IMAGE_SIZE } from "../../api/internal/fetch-func";
+import { update, useAboutMe } from "../../api/user";
+import type { UpdateUser } from "../../common/types";
+import { UpdateUserSchema } from "../../common/zod/schemas";
+import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
+import { useAlert } from "../../components/common/alert/AlertProvider";
 import {
   PhotoPreview,
   PhotoPreviewButton,
-} from "../components/config/PhotoPreview";
-import UserAvatar from "../components/human/avatar";
-import { facultiesAndDepartments } from "./registration/data";
+} from "../../components/config/PhotoPreview";
+import UserAvatar from "../../components/human/avatar";
+import { facultiesAndDepartments } from "../../pages/registration/data";
 
-export default function EditProfile() {
+export const Route = createLazyFileRoute("/edit/profile")({
+  component: EditProfile,
+});
+function EditProfile() {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
   const { state } = useAboutMe();
@@ -157,11 +161,11 @@ export default function EditProfile() {
         subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
         yesMessage: "移動",
         clickYes: () => {
-          navigate("/edit/courses");
+          navigate({ to: "/edit/courses" });
         },
       });
     } else {
-      navigate("/edit/courses");
+      navigate({ to: "/edit/courses" });
     }
   }
 
@@ -172,11 +176,11 @@ export default function EditProfile() {
         subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
         yesMessage: "移動",
         clickYes: () => {
-          navigate("/settings/profile");
+          navigate({ to: "/settings/profile" });
         },
       });
     } else {
-      navigate("/settings/profile");
+      navigate({ to: "/settings/profile" });
     }
   }
 

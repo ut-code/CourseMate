@@ -1,14 +1,15 @@
 import { Box } from "@mui/material";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { Step1User } from "../../common/zod/types";
-import Header from "../../components/Header";
-import { register } from "./functions";
-import Step1 from "./steps/step1_profile";
-import Step2, { type Step2Data } from "./steps/step2_img";
-import Confirmation from "./steps/step3_confirmation";
-import Step4 from "./steps/step4_course";
+import type { Step1User } from "../common/zod/types";
+import Header from "../components/Header";
+import { register } from "../pages/registration/functions";
+import Step1 from "../pages/registration/step1_profile";
+import Step2, { type Step2Data } from "../pages/registration/step2_img";
+import Confirmation from "../pages/registration/step3_confirmation";
+import Step4 from "../pages/registration/step4_course";
 
 function Registration() {
   const { enqueueSnackbar } = useSnackbar();
@@ -71,7 +72,10 @@ function Registration() {
       return <Step4 />;
   }
 }
-export default function RegistrationPage() {
+export const Route = createLazyFileRoute("/signup")({
+  component: RegistrationPage,
+});
+function RegistrationPage() {
   return (
     <Box
       sx={{

@@ -1,14 +1,18 @@
 import { ArrowBack } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, IconButton, Typography } from "@mui/material";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAboutMe } from "../../../api/user";
+import { useAboutMe } from "../../api/user";
 ("../../../api/user");
-import { Card } from "../../../components/Card";
-import FullScreenCircularProgress from "../../../components/common/FullScreenCircularProgress";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { Card } from "../../components/Card";
+import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
-export default function Profile() {
+export const Route = createLazyFileRoute("/settings/profile")({
+  component: profile,
+});
+function profile() {
   const { state } = useAboutMe();
   const data = state.data;
   const navigate = useNavigate();
@@ -43,7 +47,7 @@ export default function Profile() {
         <IconButton
           sx={{ position: "absolute", top: "20px", left: "20px", zIndex: 10 }}
           onClick={() => {
-            navigate("/settings");
+            navigate({ to: "/settings" });
           }}
         >
           <ArrowBack />
@@ -74,7 +78,9 @@ export default function Profile() {
             }}
           >
             <IconButton
-              onClick={() => navigate(back ? "/edit/courses" : "/edit/profile")}
+              onClick={() =>
+                navigate({ to: back ? "/edit/courses" : "/edit/profile" })
+              }
             >
               <EditIcon sx={{ color: "#039BE5" }} fontSize="large" />
             </IconButton>

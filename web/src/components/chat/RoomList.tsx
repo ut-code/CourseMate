@@ -1,5 +1,5 @@
 import { Box, List, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import type { RoomOverview } from "../../common/types";
 import { HumanListItem } from "../human/humanListItem";
 
@@ -33,8 +33,7 @@ export function RoomList(props: RoomListProps) {
             <Box
               key={room.friendId}
               onClick={() => {
-                // `state`を使って`room`データを渡す
-                navigate(`./${room.friendId}`, { state: { room } });
+                navigate({ to: `./${room.friendId}` });
               }}
             >
               <HumanListItem

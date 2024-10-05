@@ -1,9 +1,9 @@
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useNavigate } from "react-router-dom";
-import { useMyID } from "../../../api/user";
-import FullScreenCircularProgress from "../../../components/common/FullScreenCircularProgress";
-import CoursesTable from "../../../components/course/CoursesTable";
+import { useNavigate } from "@tanstack/react-router";
+import { useMyID } from "../../api/user";
+import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
+import CoursesTable from "../../components/course/CoursesTable";
 
 export default function Step4() {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export default function Step4() {
         }}
       >
         <span />
-        <Button onClick={() => navigate("/home")} variant="contained">
+        <Button onClick={() => navigate({ to: "/home" })} variant="contained">
           次へ
         </Button>
       </Box>

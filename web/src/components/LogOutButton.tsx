@@ -1,8 +1,8 @@
 import { ListItemButton, ListItemText } from "@mui/material";
+import { useNavigate } from "@tanstack/react-router";
 import { signOut } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/config";
 import { useAlert } from "./common/alert/AlertProvider";
 
@@ -19,7 +19,7 @@ export default function LogOutButton() {
       console.error(error);
       enqueueSnackbar("ログアウトに失敗しました", { variant: "error" });
     } finally {
-      navigate("/login");
+      navigate({ to: "/login" });
     }
   }, [navigate, enqueueSnackbar]);
 

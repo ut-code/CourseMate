@@ -11,10 +11,10 @@ import {
   Typography,
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
-import { parseStep1UserSchema } from "../../../common/zod/methods";
-import type { Step1User } from "../../../common/zod/types";
-import type { StepProps } from "../common";
-import { facultiesAndDepartments } from "../data";
+import { parseStep1UserSchema } from "../../common/zod/methods";
+import type { Step1User } from "../../common/zod/types";
+import type { StepProps } from "./common";
+import { facultiesAndDepartments } from "./data";
 
 export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
   const [name, setName] = useState(prev?.name ?? "");

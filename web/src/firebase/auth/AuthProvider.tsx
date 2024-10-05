@@ -3,6 +3,7 @@ import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import * as userAPI from "../../api/user";
 import type { GUID, User } from "../../common/types";
+import "../config";
 
 const AuthContext = createContext<User | null | undefined>(undefined);
 
