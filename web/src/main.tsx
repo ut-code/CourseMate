@@ -1,29 +1,32 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
-import { CssBaseline } from "@mui/material";
-import App from "./App";
-import BanLandscape from "./components/BanLandscape";
-import { AlertProvider } from "./components/common/alert/AlertProvider";
-import { ModalProvider } from "./components/common/modal/ModalProvider";
-import AuthProvider from "./firebase/auth/AuthProvider";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
+import Layout from "./layout";
+
+/* @template Tanstack Router https://tanstack.com/router/latest/docs/framework/react/quick-start */
+
+// you don't need to edit routeTree.gen, Vite will do it automatically for us.
+import { routeTree } from "./routeTree.gen";
+const router = createRouter({ routeTree });
+
+// Register the router instance for type safety
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
 
 const root = document.getElementById("root");
 if (!root) throw "couldn't find root!";
-ReactDOM.createRoot(root).render(
-  <React.StrictMode>
-    <AuthProvider>
-      <CssBaseline />
-      <AlertProvider>
-        <ModalProvider>
-          <BanLandscape />
-          <App />
-        </ModalProvider>
-      </AlertProvider>
-    </AuthProvider>
-  </React.StrictMode>,
-);
+
+// ? Tanstack router template does this like this. I don't understand why, but it may be related to SSR or something so I'll leave this like this.
+// delete this if cond if something goes wrong. (like watch mode not working? idk)
+if (!root.innerHTML) {
+  ReactDOM.createRoot(root).render(
+    <React.StrictMode>
+      <Layout>
+        <RouterProvider router={router} />
+      </Layout>
+    </React.StrictMode>,
+  );
+}
