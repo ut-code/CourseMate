@@ -11,42 +11,55 @@ type Props = {
 
 const crossRoomMessageState = new Map<number, string>();
 
-export function MessageInput(props: Props) {
-  const { send, room } = props;
-
-  const [message, _setMessage] = useState<string>("");
+export function MessageInput({ send, room }: Props) {
+  const [message, setMessage] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
-  const setMessage = (m: string) => {
-    _setMessage(m);
+  function handleSetMessage(m: string) {
+    setMessage(m);
     crossRoomMessageState.set(room.friendId, m);
-  };
+  }
 
   useEffect(() => {
-    _setMessage(crossRoomMessageState.get(room.friendId) || "");
+    setMessage(crossRoomMessageState.get(room.friendId) || "");
   }, [room.friendId]);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      parseContent(message);
+    } catch {
+      return;
+    }
+
+    if (message.trim()) {
+      send(room.friendId, { content: message });
+      handleSetMessage("");
+    }
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+      e.preventDefault();
+      setError(null);
+
+      try {
+        parseContent(message);
+      } catch {
+        return;
+      }
+      if (message.trim()) {
+        send(room.friendId, { content: message });
+        handleSetMessage("");
+      }
+    }
+  }
 
   return (
     <Box sx={{ padding: "0px" }}>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setError(null);
-
-          try {
-            parseContent(message);
-          } catch {
-            return;
-          }
-
-          if (message.trim()) {
-            send(room.friendId, {
-              content: message,
-            });
-            setMessage("");
-          }
-        }}
-      >
+      <form onSubmit={handleSubmit}>
         <Stack direction="row" spacing={1} alignItems="center" margin={2}>
           <TextField
             name="message"
@@ -54,20 +67,12 @@ export function MessageInput(props: Props) {
             variant="outlined"
             size="small"
             value={message}
-            fullWidth={true}
+            fullWidth
             multiline
             minRows={1}
             maxRows={3}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => {
-              if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                e.preventDefault();
-                if (message.trim()) {
-                  send(room.friendId, { content: message });
-                  setMessage("");
-                }
-              }
-            }}
+            onChange={(e) => handleSetMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
             error={!!error}
           />
           <IconButton type="submit" color="primary">
