@@ -3,52 +3,60 @@ import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import * as chat from "../../api/chat/chat";
-import user from "../../api/user";
+import { useMessages } from "../../api/chat/hooks";
+import * as user from "../../api/user";
+import { useMyID } from "../../api/user";
 import type {
   DMOverview,
   Message,
+  MessageID,
   SendMessage,
   UserID,
 } from "../../common/types";
+import type { Content } from "../../common/zod/types";
 import { getIdToken } from "../../firebase/auth/lib";
-import { useCurrentUserId } from "../../hooks/useCurrentUser";
 import Dots from "../common/Dots";
 import { socket } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
 export function RoomWindow() {
-  const { currentUserId, loading } = useCurrentUserId();
-  const [dm, setDM] = useState<Message[]>([]);
+  const { state: locationState } = useLocation();
+  const { room } = locationState as { room: DMOverview }; // `room`データを抽出
+
+  const {
+    state: { data: myId },
+  } = useMyID();
+  const { state, reload, write } = useMessages(room.friendId);
+  const [messages, setMessages] = useState(state.data);
+
+  useEffect(() => {
+    setMessages(state.data);
+  }, [state.data]);
+
   const { enqueueSnackbar } = useSnackbar();
-  const id = useCurrentUserId();
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState<string>("");
 
-  const { state } = useLocation();
-  const { room } = state as { room: DMOverview }; // `room`データを抽出
-
   async function sendDMMessage(to: UserID, msg: SendMessage): Promise<void> {
     const message = await chat.sendDM(to, msg);
-    appendMessage(message);
+    appendLocalMessage(message);
   }
 
   //メッセージの追加
-  const appendMessage = useCallback((newMessage: Message) => {
-    setDM((prevDM) => {
-      return [...prevDM, newMessage];
-    });
-  }, []);
-  const updateMessages = useCallback((updatedMessage: Message) => {
-    setDM((prevDM) => {
-      return prevDM.map((m) => {
-        if (m.id === updatedMessage.id) {
-          return updatedMessage;
-        }
-        return m;
+  // TODO: make a better UX with better responsibility (using something like SWR)
+  const appendLocalMessage = useCallback(
+    (m: Message) => {
+      setMessages((curr) => {
+        const next = curr ? [...curr, m] : [m];
+        write(next);
+        return next;
       });
-    });
-  }, []);
+    },
+    [write],
+  );
+  const updateLocalMessage = useCallback((_: Message) => reload(), [reload]);
+  const deleteLocalMessage = useCallback((_: MessageID) => reload(), [reload]);
 
   useEffect(() => {
     async function registerSocket() {
@@ -56,7 +64,7 @@ export function RoomWindow() {
       socket.emit("register", idToken);
       socket.on("newMessage", async (msg: Message) => {
         if (msg.creator === room.friendId) {
-          appendMessage(msg);
+          appendLocalMessage(msg);
         } else {
           const creator = await user.get(msg.creator);
           if (creator == null) return;
@@ -70,46 +78,32 @@ export function RoomWindow() {
       });
       socket.on("updateMessage", async (msg: Message) => {
         if (msg.creator === room.friendId) {
-          updateMessages(msg);
+          updateLocalMessage(msg);
         }
       });
       socket.on("deleteMessage", async (msgId: number) => {
-        setDM((prevDM) => {
-          return prevDM.filter((m) => m.id !== msgId);
-        });
+        deleteLocalMessage(msgId);
       });
     }
-    if (!loading && currentUserId) {
-      registerSocket();
-    }
+    registerSocket();
     // Clean up
     return () => {
       socket.off("newMessage");
+      socket.off("updateMessage");
+      socket.off("deleteMessage");
     };
   }, [
-    loading,
-    currentUserId,
     room.friendId,
     enqueueSnackbar,
-    appendMessage,
-    updateMessages,
+    appendLocalMessage,
+    updateLocalMessage,
+    deleteLocalMessage,
   ]);
-
-  useEffect(
-    () =>
-      run(async () => {
-        if (room?.friendId) {
-          const newDM = await chat.getDM(room.friendId);
-          setDM(newDM.messages);
-        }
-      }),
-    [room.friendId],
-  );
 
   //画面スクロール
   const scrollDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    dm;
+    state.data;
     if (scrollDiv.current) {
       const element = scrollDiv.current;
       element.scrollTo({
@@ -117,36 +111,43 @@ export function RoomWindow() {
         behavior: "instant",
       });
     }
-  }, [dm]);
+  }, [state.data]);
 
-  const handleEdit = (messageId: number, currentContent: string) => {
-    setEditingMessageId(messageId);
-    setEditedContent(currentContent);
-  };
+  const startEditing = useCallback(
+    (messageId: number, currentContent: string) => {
+      setEditingMessageId(messageId);
+      setEditedContent(currentContent);
+    },
+    [],
+  );
 
-  async function handleSaveEdit() {
-    if (!editingMessageId || editedContent === "") return;
-    const editedMessage = await chat.updateMessage(
-      editingMessageId,
-      { content: editedContent },
-      room.friendId,
-    );
+  const commitEdit = useCallback(
+    async (message: MessageID, content: Content) => {
+      if (!message || content === "") return;
+      setEditingMessageId(null);
+      setEditedContent("");
+      const editedMessage = await chat.updateMessage(
+        message,
+        { content },
+        room.friendId,
+      );
+      updateLocalMessage(editedMessage);
+    },
+    [updateLocalMessage, room.friendId],
+  );
+
+  const cancelEdit = useCallback(() => {
     setEditingMessageId(null);
     setEditedContent("");
-    updateMessages(editedMessage);
-  }
+  }, []);
 
-  const handleCancelEdit = () => {
-    setEditingMessageId(null);
-    setEditedContent("");
-  };
-
-  const handleDelete = async (messageId: number, friendId: UserID) => {
-    await chat.deleteMessage(messageId, friendId);
-    setDM((prevDM) => {
-      return prevDM.filter((m) => m.id !== messageId);
-    });
-  };
+  const deleteMessage = useCallback(
+    async (messageId: number, friendId: UserID) => {
+      deleteLocalMessage(messageId);
+      await chat.deleteMessage(messageId, friendId);
+    },
+    [deleteLocalMessage],
+  );
 
   return (
     <>
@@ -173,18 +174,18 @@ export function RoomWindow() {
           overflowY: "auto",
         }}
       >
-        {dm ? (
+        {messages ? (
           <Box
             sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}
             ref={scrollDiv}
           >
-            {dm.map((m) => (
+            {messages.map((m) => (
               <Box
                 key={m.id}
                 sx={{
                   display: "flex",
                   justifyContent:
-                    m.creator === id.currentUserId ? "flex-end" : "flex-start",
+                    m.creator === myId ? "flex-end" : "flex-start",
                   marginBottom: 1,
                 }}
               >
@@ -214,14 +215,16 @@ export function RoomWindow() {
                     >
                       <Button
                         variant="contained"
-                        onClick={handleSaveEdit}
+                        onClick={() =>
+                          commitEdit(editingMessageId, editedContent)
+                        }
                         sx={{ minWidth: 100 }}
                       >
                         保存
                       </Button>
                       <Button
                         variant="outlined"
-                        onClick={handleCancelEdit}
+                        onClick={cancelEdit}
                         sx={{ minWidth: 100 }}
                       >
                         キャンセル
@@ -236,30 +239,26 @@ export function RoomWindow() {
                       padding: 1,
                       borderRadius: 2,
                       backgroundColor:
-                        m.creator === id.currentUserId
-                          ? "secondary.main"
-                          : "#FFF",
+                        m.creator === myId ? "secondary.main" : "#FFF",
                       boxShadow: 1,
                       border: 1,
-                      // cursor:
-                      //   m.creator === id.currentUserId ? "pointer" : "default",
                     }}
                   >
                     <Typography sx={{ wordBreak: "break-word" }}>
                       {m.content}
                     </Typography>
-                    {m.creator === id.currentUserId && (
+                    {m.creator === myId && (
                       <Dots
                         actions={[
                           {
                             label: "編集",
-                            onClick: () => handleEdit(m.id, m.content),
+                            onClick: () => startEditing(m.id, m.content),
                             alert: false,
                           },
                           {
                             label: "削除",
                             color: "red",
-                            onClick: () => handleDelete(m.id, room.friendId),
+                            onClick: () => deleteMessage(m.id, room.friendId),
                             alert: true,
                             messages: {
                               buttonMessage: "削除",
@@ -293,8 +292,4 @@ export function RoomWindow() {
       </Box>
     </>
   );
-}
-
-function run(task: () => void): void {
-  task();
 }

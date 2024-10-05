@@ -1,12 +1,15 @@
 import { Box, List } from "@mui/material";
-import hooks from "../../api/hooks";
 import { deleteMatch } from "../../api/match";
+import { useMatched } from "../../api/user";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
 import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
 
 export default function Matchings() {
-  const { data, loading, error, reload } = hooks.useMatchedUsers();
+  const {
+    state: { data, current, error },
+    reload,
+  } = useMatched();
   const { openModal } = useModal();
 
   return (
@@ -25,7 +28,7 @@ export default function Matchings() {
           </>
         )}
       </p>
-      {loading ? (
+      {current === "loading" ? (
         <FullScreenCircularProgress />
       ) : error ? (
         <p>Error: {error.message}</p>

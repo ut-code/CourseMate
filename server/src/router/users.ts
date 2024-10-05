@@ -15,6 +15,7 @@ import {
   deleteUser,
   getUser,
   getUserByID,
+  unmatched,
   updateUser,
 } from "../database/users";
 import { safeGetUserId } from "../firebase/auth/db";
@@ -37,7 +38,7 @@ router.get("/recommended", async (req, res) => {
   const recommended = await recommendedTo(u.value, 20, 0); // とりあえず 20 人
 
   if (recommended.ok) {
-    res.send(recommended.value);
+    res.send(recommended.value.map((entry) => entry.u));
   } else {
     res.status(500).send(recommended.error);
   }

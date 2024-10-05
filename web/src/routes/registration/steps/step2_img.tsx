@@ -30,6 +30,7 @@ export default function Step2({
       const data = {
         pictureUrl: url,
       };
+
       onSave(data);
     } catch (error) {
       if (error instanceof Error) {
