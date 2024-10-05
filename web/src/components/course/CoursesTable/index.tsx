@@ -87,51 +87,22 @@ export default function CoursesTable(props: Props) {
           {transposedRows.map((row, rowIndex) => (
             <tr key={`period-${rowIndex + 1}`}>
               <th key={`header-period-${rowIndex + 1}`}>{rowIndex + 1}</th>
-              {ACTIVE_DAYS.map((activeDay) => (
-                <td
-                  key={`cell-${activeDay}-${rowIndex.toString()}`}
-                  align="center"
-                >
-                  {editable ? (
-                    <button
-                      type="button"
-                      className={row[activeDay as Day]?.name && styles.enrolled}
-                      onClick={() =>
-                        handleSelectCourseDialogOpen(
-                          rowIndex,
-                          activeDay as Day,
-                          row[activeDay as Day] ?? null,
-                        )
-                      }
-                    >
-                      <span className={styles.spaceAround}>
-                        {row[activeDay as Day]?.name
-                          ? truncateStr(row[activeDay as Day]?.name ?? "", 16)
-                          : ""}
-                      </span>
-                      <span className={styles.spaceAround}>
-                        {row[activeDay as Day]?.teacher
-                          ? truncateStr(row[activeDay as Day]?.teacher ?? "", 6)
-                          : ""}
-                      </span>
-                    </button>
-                  ) : (
-                    <span
-                      className={row[activeDay as Day]?.name && styles.enrolled}
-                    >
-                      <span>
-                        {row[activeDay as Day]?.name
-                          ? truncateStr(row[activeDay as Day]?.name ?? "", 16)
-                          : ""}
-                      </span>
-                      <span>
-                        {row[activeDay as Day]?.teacher
-                          ? truncateStr(row[activeDay as Day]?.teacher ?? "", 6)
-                          : ""}
-                      </span>
-                    </span>
-                  )}
-                </td>
+              {ACTIVE_DAYS.map((day) => (
+                <Cell
+                  key={`cell-${day}-${rowIndex.toString()}`}
+                  day={day}
+                  rowIndex={rowIndex}
+                  courseName={row[day]?.name ?? null}
+                  teacherName={row[day]?.teacher ?? null}
+                  editable={editable}
+                  onClick={() =>
+                    handleSelectCourseDialogOpen(
+                      rowIndex,
+                      day,
+                      row[day] ?? null,
+                    )
+                  }
+                />
               ))}
             </tr>
           ))}
@@ -146,5 +117,42 @@ export default function CoursesTable(props: Props) {
         />
       )}
     </>
+  );
+}
+
+function Cell({
+  courseName,
+  teacherName,
+  editable = false,
+  onClick,
+}: {
+  day: (typeof ACTIVE_DAYS)[number];
+  rowIndex: number;
+  courseName: string | null;
+  teacherName: string | null;
+  editable?: boolean;
+  onClick?: () => void;
+}) {
+  const content = (
+    <>
+      <span>{courseName ? truncateStr(courseName ?? "", 16) : ""}</span>
+      <span>{teacherName ? truncateStr(teacherName ?? "", 6) : ""}</span>
+    </>
+  );
+
+  return (
+    <td align="center">
+      {editable ? (
+        <button
+          type="button"
+          className={courseName ? styles.enrolled : ""}
+          onClick={onClick}
+        >
+          {content}
+        </button>
+      ) : (
+        <span className={courseName ? styles.enrolled : ""}>{content}</span>
+      )}
+    </td>
   );
 }
