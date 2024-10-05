@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import courseApi from "../../../api/course";
 import type { Course, Day, UserID } from "../../../common/types";
@@ -12,6 +12,7 @@ type Props = {
 
 export default function EditableCoursesTable(props: Props) {
   const { userId } = props;
+  const [courses, setCourses] = useState<Course[] | null>(null);
   const [isSelectCourseDialogOpen, setIsSelectCourseDialogOpen] =
     useState(false);
   const [currentEdit, setCurrentEdit] = useState<{
@@ -19,13 +20,6 @@ export default function EditableCoursesTable(props: Props) {
     columnName: Day;
     course: Course | null;
   } | null>(null);
-
-  const [transposedRows, setTransposedRows] = useState<
-    | {
-        [day in Day]: Course | null;
-      }[]
-    | null
-  >(null);
 
   async function handleSelectCourseDialogOpen(
     rowIndex: number,
@@ -36,41 +30,19 @@ export default function EditableCoursesTable(props: Props) {
     setIsSelectCourseDialogOpen(true);
   }
 
-  const handleCoursesUpdate = useCallback((courses: Course[]) => {
-    const newCourses: {
-      [day in Day]: Course | null;
-    }[] = Array.from({ length: 6 }, () => ({
-      mon: null,
-      tue: null,
-      wed: null,
-      thu: null,
-      fri: null,
-      sat: null,
-      sun: null,
-      other: null,
-    }));
-    for (const course of courses) {
-      for (const slot of course.slots) {
-        const { day, period } = slot;
-        newCourses[period - 1][day] = course;
-      }
-    }
-    setTransposedRows(newCourses);
-  }, []);
-
   useEffect(() => {
     (async () => {
       const courses = await courseApi.getCoursesByUserId(userId);
-      handleCoursesUpdate(courses);
+      setCourses(courses);
     })();
-  }, [userId, handleCoursesUpdate]);
+  }, [userId]);
 
-  return !transposedRows ? (
+  return !courses ? (
     <FullScreenCircularProgress />
   ) : (
     <>
       <CoursesTableCore
-        rows={transposedRows}
+        courses={courses}
         isButton
         onCellClick={handleSelectCourseDialogOpen}
       />
@@ -78,7 +50,7 @@ export default function EditableCoursesTable(props: Props) {
         open={isSelectCourseDialogOpen}
         onClose={() => setIsSelectCourseDialogOpen(false)}
         currentEdit={currentEdit}
-        handleCoursesUpdate={handleCoursesUpdate}
+        handleCoursesUpdate={setCourses}
       />
     </>
   );

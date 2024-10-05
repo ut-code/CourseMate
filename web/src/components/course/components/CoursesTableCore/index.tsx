@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from "react";
 import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "../../../../common/consts";
 import type { Course, Day } from "../../../../common/types";
 import { truncateStr } from "./lib";
@@ -5,16 +6,12 @@ import styles from "./styles.module.css";
 
 type Props =
   | {
-      rows: {
-        [day in Day]: Course | null;
-      }[];
+      courses: Course[];
       isButton?: false | undefined;
       onCellClick?: never;
     }
   | {
-      rows: {
-        [day in Day]: Course | null;
-      }[];
+      courses: Course[];
       isButton: true;
       onCellClick: (rowIndex: number, day: Day, course: Course | null) => void;
     };
@@ -23,6 +20,48 @@ type Props =
  * NonEditableCoursesTable および EditableCoursesTable から呼び出して使用する。ページで直接呼び出さない。
  */
 export default function CoursesTableCore(props: Props) {
+  const [rows, setRows] = useState<{
+    [day in Day]: Course | null;
+  }[]>(
+    Array.from({ length: 6 }, () => ({
+      mon: null,
+      tue: null,
+      wed: null,
+      thu: null,
+      fri: null,
+      sat: null,
+      sun: null,
+      other: null,
+    })),
+  );
+
+  const transformCoursesToRows = useCallback((courses: Course[]) => {
+    const newRows: {
+      [day in Day]: Course | null;
+    }[] = Array.from({ length: 6 }, () => ({
+      mon: null,
+      tue: null,
+      wed: null,
+      thu: null,
+      fri: null,
+      sat: null,
+      sun: null,
+      other: null,
+    }));
+    for (const course of courses) {
+      for (const slot of course.slots) {
+        const { day, period } = slot;
+        newRows[period - 1][day] = course;
+      }
+    }
+    return newRows;
+  }, []);
+
+  useEffect(() => {
+    const newRows = transformCoursesToRows(props.courses);
+    setRows(newRows);
+  }, [props.courses, transformCoursesToRows]);
+
   return (
     <table className={styles.table}>
       <thead>
@@ -36,7 +75,7 @@ export default function CoursesTableCore(props: Props) {
         </tr>
       </thead>
       <tbody>
-        {props.rows.map((row, rowIndex) => (
+        {rows.map((row, rowIndex) => (
           <tr key={`period-${rowIndex + 1}`}>
             <th key={`header-period-${rowIndex + 1}`}>{rowIndex + 1}</th>
             {ACTIVE_DAYS.map((day) => (
