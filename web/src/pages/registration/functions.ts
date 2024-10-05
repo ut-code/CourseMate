@@ -1,12 +1,12 @@
+import type { NavigateFn } from "@tanstack/react-router";
 import { getAuth } from "firebase/auth";
 import type { EnqueueSnackbar } from "notistack";
-import type { NavigateFunction } from "react-router-dom";
 import * as userAPI from "../../api/user";
 import type { GUID, User } from "../../common/types";
 import type { UpdateUser } from "../../common/types";
 
 type Dependencies = {
-  navigate: NavigateFunction;
+  navigate: NavigateFn;
   enqueueSnackbar: EnqueueSnackbar;
 };
 
@@ -33,7 +33,7 @@ export async function register(
     enqueueSnackbar("アカウント作成に失敗しました", {
       variant: "error",
     });
-    navigate("/", { replace: true });
+    navigate({ to: "/login", replace: true });
   }
 }
 

@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import type { Step1User } from "../common/zod/types";
 import Header from "../components/Header";
 import { register } from "../pages/registration/functions";
