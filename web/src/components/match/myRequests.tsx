@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { List } from "@mui/material";
 import { usePendingFromMe } from "../../api/user";
+import * as request from "../../api/request";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
 import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
@@ -33,6 +34,9 @@ export default function MyReq() {
               name={receivingUser.name}
               pictureUrl={receivingUser.pictureUrl}
               onOpen={() => openModal(receivingUser)}
+              onCancel={(id) => {
+                request.cancel(id);
+              }}
             />
           ))}
         </List>

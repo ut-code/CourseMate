@@ -1,7 +1,7 @@
 import type { CourseID, Day, GUID } from "../../common/types";
 import type { MessageID, ShareRoomID } from "../../common/types";
 
-const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
+export const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
 if (!origin) throw new Error("import.meta.env.VITE_API_ENDPOINT not found!");
 
 // TODO: de-export this and use one from /common
@@ -16,7 +16,7 @@ export type UserID = number;
  *   - 400: not found.
  *   - 500: internal error.
  **/
-const user = (userId: UserID) => {
+export const user = (userId: UserID) => {
   return `${origin}/users/id/${userId}`;
 };
 
@@ -36,7 +36,7 @@ const user = (userId: UserID) => {
  *   - 500: internal error.
  *
  **/
-const users = `${origin}/users`;
+export const users = `${origin}/users`;
 
 /**
  * [v] 実装済み
@@ -72,7 +72,7 @@ export const recommendedUsers = `${origin}/users/recommended`;
  *   - 500: internal error.
  *
  **/
-const me = `${origin}/users/me`;
+export const me = `${origin}/users/me`;
 
 /**
  * [v] 実装済み
@@ -83,7 +83,7 @@ const me = `${origin}/users/me`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const matchedUsers = `${origin}/users/matched`;
+export const matchedUsers = `${origin}/users/matched`;
 
 /**
  * [v] 実装済み
@@ -94,7 +94,7 @@ const matchedUsers = `${origin}/users/matched`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const pendingRequestsToMe = `${origin}/users/pending/to-me`;
+export const pendingRequestsToMe = `${origin}/users/pending/to-me`;
 
 /**
  * [v] 実装済み
@@ -105,7 +105,7 @@ const pendingRequestsToMe = `${origin}/users/pending/to-me`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const pendingRequestsFromMe = `${origin}/users/pending/from-me`;
+export const pendingRequestsFromMe = `${origin}/users/pending/from-me`;
 
 /**
  * [v] 実装済み
@@ -116,7 +116,7 @@ const pendingRequestsFromMe = `${origin}/users/pending/from-me`;
  *   - 400: not found.
  *   - 500: internal error.
  **/
-const userByGUID = (guid: GUID) => {
+export const userByGUID = (guid: GUID) => {
   return `${origin}/users/guid/${guid}`;
 };
 
@@ -129,7 +129,7 @@ const userByGUID = (guid: GUID) => {
  *   - 404: no, user doesn't exist.
  *   - 500: internal error.
  **/
-const userExists = (guid: GUID) => {
+export const userExists = (guid: GUID) => {
   return `${origin}/users/exists/${guid}`;
 };
 
@@ -143,7 +143,7 @@ const userExists = (guid: GUID) => {
  *          (not implemented at server)
  *   - 500: internal error.
  **/
-const match = (opponentID: UserID) => {
+export const match = (opponentID: UserID) => {
   return `${origin}/matches/${opponentID}`;
 };
 
@@ -157,7 +157,7 @@ const match = (opponentID: UserID) => {
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const matches = `${origin}/matches`;
+export const matches = `${origin}/matches`;
 
 /**
  * [x] 実装済み
@@ -178,7 +178,7 @@ const matches = `${origin}/matches`;
  *  - 401: unauthorized.
  *  - 500: internal error.
  */
-const coursesUserId = (userId: UserID) => {
+export const coursesUserId = (userId: UserID) => {
   return `${origin}/courses/userId/${userId}`;
 };
 
@@ -205,7 +205,7 @@ const coursesUserId = (userId: UserID) => {
  *  - 401: unauthorized.
  *  - 500: internal error.
  */
-const coursesMine = `${origin}/courses/mine`;
+export const coursesMine = `${origin}/courses/mine`;
 
 /**
  * [v] 実装済み
@@ -216,7 +216,7 @@ const coursesMine = `${origin}/courses/mine`;
  *  - 401: unauthorized.
  *  - 500: internal error.
  */
-const coursesMineOverlaps = (courseId: CourseID) => {
+export const coursesMineOverlaps = (courseId: CourseID) => {
   return `${origin}/courses/mine/overlaps/${courseId}`;
 };
 
@@ -229,7 +229,7 @@ const coursesMineOverlaps = (courseId: CourseID) => {
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const coursesDayPeriod = (day: Day, period: number) => {
+export const coursesDayPeriod = (day: Day, period: number) => {
   return `${origin}/courses/day-period?day=${day}&period=${period}`;
 };
 
@@ -241,10 +241,20 @@ const coursesDayPeriod = (day: Day, period: number) => {
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-const sendRequest = (opponentId: UserID) => {
+export const sendRequest = (opponentId: UserID) => {
   return `${origin}/requests/send/${opponentId}`;
 };
 
+/**
+ * PUT -> cancel request that you already sent.
+ * - status:
+ *   - 204: Successfully
+ *   - 401: Unauthorized
+ *   - 500: internal error
+ **/
+export const cancelRequest = (opponentId: UserID) => {
+  return `${origin}/requests/cancel/${opponentId}`;
+};
 /**
  * [v] 実装済み
  * PUT -> accept request.
@@ -253,7 +263,7 @@ const sendRequest = (opponentId: UserID) => {
  *   - 403: (not implemented) Forbidden. he hasn't sent a request to you.
  *   - 500: internal error.
  **/
-const acceptRequest = (opponentId: UserID) => {
+export const acceptRequest = (opponentId: UserID) => {
   return `${origin}/requests/accept/${opponentId}`;
 };
 
@@ -266,7 +276,7 @@ const acceptRequest = (opponentId: UserID) => {
  *   - 404: (not implemented) Not found. he hasn't sent a request to you.
  *   - 500: internal error.
  **/
-const rejectRequest = (opponentId: UserID) => {
+export const rejectRequest = (opponentId: UserID) => {
   return `${origin}/requests/reject/${opponentId}`;
 };
 
@@ -279,7 +289,7 @@ const rejectRequest = (opponentId: UserID) => {
  *   - 401: unauthorized
  *   - 500: internal error
  */
-const roomOverview = `${origin}/chat/overview`;
+export const roomOverview = `${origin}/chat/overview`;
 
 /**
  * []実装済み
@@ -292,7 +302,7 @@ const roomOverview = `${origin}/chat/overview`;
  *   - 403: Forbidden
  *   - 500: internal error
  **/
-const dmTo = (userId: UserID) => `${origin}/chat/dm/to/${userId}`;
+export const dmTo = (userId: UserID) => `${origin}/chat/dm/to/${userId}`;
 
 /**
  * PUT -> start dm with userId. created one if none was found. authorized.
@@ -306,7 +316,7 @@ const dmTo = (userId: UserID) => `${origin}/chat/dm/to/${userId}`;
  *   - 403: forbidden. you and the user are not matched yet.
  *   - 500: internal error.
  **/
-const dmWith = (userId: UserID) => `${origin}/chat/dm/with/${userId}`;
+export const dmWith = (userId: UserID) => `${origin}/chat/dm/with/${userId}`;
 
 /**
  * POST -> Create a room. authenticated
@@ -318,14 +328,15 @@ const dmWith = (userId: UserID) => `${origin}/chat/dm/with/${userId}`;
  *   - 403: forbidden (cannot invite non-friends)
  *   - 500: internal error
  **/
-const sharedRooms = `${origin}/chat/shared`;
+export const sharedRooms = `${origin}/chat/shared`;
 
 /** authorized
  * GET -> Get info of a room (including the message log).
  * PATCH -> update room info. (excluding the message log).
  * - body: UpdateRoom
  **/
-const sharedRoom = (roomId: ShareRoomID) => `${origin}/chat/shared/${roomId}`;
+export const sharedRoom = (roomId: ShareRoomID) =>
+  `${origin}/chat/shared/${roomId}`;
 
 /** POST: invite. authorized
  * - body: UserID[]
@@ -335,25 +346,25 @@ const sharedRoom = (roomId: ShareRoomID) => `${origin}/chat/shared/${roomId}`;
  *   - 403: forbidden (cannot invite non-friends)
  *   - 500: internal error
  **/
-const roomInvite = (roomId: ShareRoomID) =>
+export const roomInvite = (roomId: ShareRoomID) =>
   `${origin}/chat/shared/id/${roomId}/invite`;
 
 /**
  * PATCH: authorized body=SendMessage
  * DELETE: authorized
  **/
-const message = (messageId: MessageID) =>
+export const message = (messageId: MessageID) =>
   `${origin}/chat/messages/id/${messageId}`;
 
 /**
  * GET: get profile picture of URL (this is usually hard-encoded in pictureURL so this variable is barely used)
  */
-const pictureOf = (guid: GUID) => `${origin}/picture/${guid}`;
+export const pictureOf = (guid: GUID) => `${origin}/picture/${guid}`;
 
 /**
  * POST: update my profile picture.
  */
-const picture = `${origin}/picture`;
+export const picture = `${origin}/picture`;
 
 export default {
   user,
@@ -370,6 +381,7 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
+  cancelRequest,
   coursesUserId,
   coursesDayPeriod,
   roomOverview,

@@ -29,7 +29,6 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
         maxWidth: "500px",
         height: "50px",
         marginTop: "10vh",
-        borderRadius: "25px", // 楕円にするための設定
         fontSize: "18px",
       }}
       onClick={() => {
