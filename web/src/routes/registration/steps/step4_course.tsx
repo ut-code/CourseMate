@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { useMyID } from "../../../api/user";
 import FullScreenCircularProgress from "../../../components/common/FullScreenCircularProgress";
-import CoursesTable from "../../../components/course/CoursesTable";
+import EditableCoursesTable from "../../../components/course/EditableCoursesTable";
 
 export default function Step4() {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function Step4() {
               授業情報の登録 (スキップ可)
             </Typography>
             <Box>
-              <CoursesTable userId={state.data} editable={true} />
+              <EditableCoursesTable userId={state.data} editable={true} />
             </Box>
           </Box>
         )}

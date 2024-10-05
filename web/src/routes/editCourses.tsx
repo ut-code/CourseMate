@@ -2,7 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAboutMe } from "../api/user";
 import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
-import CoursesTable from "../components/course/CoursesTable";
+import EditableCoursesTable from "../components/course/EditableCoursesTable";
 
 export default function EditCourses() {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ export default function EditCourses() {
         <p>Error: {error.message}</p>
       ) : data ? (
         <>
-          <CoursesTable userId={data.id} editable={true} />
+          <EditableCoursesTable userId={data.id} editable={true} />
         </>
       ) : (
         <p>データがありません。</p>

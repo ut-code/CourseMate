@@ -13,7 +13,7 @@ type Props = {
   editable?: boolean;
 };
 
-export default function CoursesTable(props: Props) {
+export default function EditableCoursesTable(props: Props) {
   const { userId, editable } = props;
   const [isSelectCourseDialogOpen, setIsSelectCourseDialogOpen] =
     useState(false);
