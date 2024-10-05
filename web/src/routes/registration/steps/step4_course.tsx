@@ -21,7 +21,7 @@ export default function Step4() {
               授業情報の登録 (スキップ可)
             </Typography>
             <Box>
-              <CoursesTable userId={state.data.id} editable={true} />
+              <CoursesTable userId={state.data} editable={true} />
             </Box>
           </Box>
         )}
