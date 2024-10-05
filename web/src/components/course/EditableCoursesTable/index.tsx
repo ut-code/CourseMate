@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 
 import courseApi from "../../../api/course";
-import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "../../../common/consts";
 import type { Course, Day, UserID } from "../../../common/types";
 import FullScreenCircularProgress from "../../common/FullScreenCircularProgress";
 import SelectCourseDialog from "../SelectCourseDialog";
-import { truncateStr } from "./lib";
-import styles from "./styles.module.css";
+import CoursesTableCore from "../components/CoursesTableCore";
 
 type Props = {
   userId: UserID;
@@ -14,7 +12,7 @@ type Props = {
 };
 
 export default function EditableCoursesTable(props: Props) {
-  const { userId, editable } = props;
+  const { userId, editable = false } = props;
   const [isSelectCourseDialogOpen, setIsSelectCourseDialogOpen] =
     useState(false);
   const [currentEdit, setCurrentEdit] = useState<{
@@ -72,42 +70,11 @@ export default function EditableCoursesTable(props: Props) {
     <FullScreenCircularProgress />
   ) : (
     <>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th />
-            {ACTIVE_DAYS.map((activeDay) => (
-              <th align="center" key={`header-${activeDay}`}>
-                {DAY_TO_JAPANESE_MAP.get(activeDay as Day)}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {transposedRows.map((row, rowIndex) => (
-            <tr key={`period-${rowIndex + 1}`}>
-              <th key={`header-period-${rowIndex + 1}`}>{rowIndex + 1}</th>
-              {ACTIVE_DAYS.map((day) => (
-                <Cell
-                  key={`cell-${day}-${rowIndex.toString()}`}
-                  day={day}
-                  rowIndex={rowIndex}
-                  courseName={row[day]?.name ?? null}
-                  teacherName={row[day]?.teacher ?? null}
-                  editable={editable}
-                  onClick={() =>
-                    handleSelectCourseDialogOpen(
-                      rowIndex,
-                      day,
-                      row[day] ?? null,
-                    )
-                  }
-                />
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <CoursesTableCore
+        rows={transposedRows}
+        isButton={editable}
+        onCellClick={handleSelectCourseDialogOpen}
+      />
       {editable && (
         <SelectCourseDialog
           open={isSelectCourseDialogOpen}
@@ -117,42 +84,5 @@ export default function EditableCoursesTable(props: Props) {
         />
       )}
     </>
-  );
-}
-
-function Cell({
-  courseName,
-  teacherName,
-  editable = false,
-  onClick,
-}: {
-  day: (typeof ACTIVE_DAYS)[number];
-  rowIndex: number;
-  courseName: string | null;
-  teacherName: string | null;
-  editable?: boolean;
-  onClick?: () => void;
-}) {
-  const content = (
-    <>
-      <span>{courseName ? truncateStr(courseName ?? "", 16) : ""}</span>
-      <span>{teacherName ? truncateStr(teacherName ?? "", 6) : ""}</span>
-    </>
-  );
-
-  return (
-    <td align="center">
-      {editable ? (
-        <button
-          type="button"
-          className={courseName ? styles.enrolled : ""}
-          onClick={onClick}
-        >
-          {content}
-        </button>
-      ) : (
-        <span className={courseName ? styles.enrolled : ""}>{content}</span>
-      )}
-    </td>
   );
 }
