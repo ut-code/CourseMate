@@ -37,8 +37,8 @@ export default function OthersReq() {
               name={sendingUser.name}
               pictureUrl={sendingUser.pictureUrl}
               onOpen={() => openModal(sendingUser)}
-              onAccept={() => request.accept(sendingUser.id).then(() => reload)}
-              onReject={() => request.reject(sendingUser.id).then(() => reload)}
+              onAccept={() => request.accept(sendingUser.id).then(reload)}
+              onReject={() => request.reject(sendingUser.id).then(reload)}
             />
           ))}
         </List>
