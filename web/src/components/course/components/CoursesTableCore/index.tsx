@@ -115,7 +115,7 @@ export default function CoursesTableCore(props: Props) {
                 courseName={row[day]?.name ?? null}
                 teacherName={row[day]?.teacher ?? null}
                 isOverlapping={row[day]?.isOverlapping}
-                editable={props.isButton}
+                isButton={props.isButton}
                 onClick={
                   props.isButton
                     ? () => props.onCellClick(rowIndex, day, row[day] ?? null)
@@ -133,13 +133,13 @@ export default function CoursesTableCore(props: Props) {
 function Cell({
   courseName,
   teacherName,
-  editable = false,
+  isButton = false,
   isOverlapping = false,
   onClick,
 }: {
   courseName: string | null;
   teacherName: string | null;
-  editable?: boolean;
+  isButton?: boolean;
   isOverlapping?: boolean;
   onClick?: () => void;
 }) {
@@ -152,7 +152,7 @@ function Cell({
 
   return (
     <td align="center">
-      {editable ? (
+      {isButton ? (
         <button
           type="button"
           className={
