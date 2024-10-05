@@ -1,0 +1,44 @@
+services:
+  - name: CourseMate API Server
+    type: web
+    plan: free
+    runtime: node
+    repo: github.com/ut-code/CourseMate
+    branch: release
+    buildCommand: make prepare-deploy-server
+    startCommand: make deploy-server
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SERVER_ORIGIN
+        sync: false
+      - key: WEB_ORIGIN
+        sync: false
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+
+  - name: CourseMate Web App
+    type: web
+    plan: free
+    runtime: static
+    repo: github.com/ut-code/CourseMate
+    branch: release
+    buildCommand: make prepare-deploy-web
+    staticPublishPath: web/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /
+    envVars:
+      - key: VITE_API_ENDPOINT 
+        sync: false
+      - key: VITE_FIREBASE_API_KEY
+        sync: false
+      - key: VITE_FIREBASE_AUTH_DOMAIN
+        sync: false
+      - key: VITE_FIREBASE_PROJECT_ID
+        sync: false
+      - key: VITE_FIREBASE_APP_ID
+        sync: false
+      - key: VITE_FIREBASE_MEASUREMENT_ID
+        sync: false
