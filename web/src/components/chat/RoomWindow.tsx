@@ -244,7 +244,9 @@ export function RoomWindow() {
                       border: 1,
                     }}
                   >
-                    <Typography sx={{ wordBreak: "break-word" }}>
+                    <Typography
+                      sx={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                    >
                       {m.content}
                     </Typography>
                     {m.creator === myId && (
