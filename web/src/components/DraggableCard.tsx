@@ -159,6 +159,7 @@ export const DraggableCard = ({
             displayedUser={displayedUser}
             comparisonUserId={comparisonUserId}
           />
+          <Card displayedUser={displayedUser} />
         </motion.div>
       </section>
     </div>
