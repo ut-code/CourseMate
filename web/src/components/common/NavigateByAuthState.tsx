@@ -1,6 +1,8 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { type ReactNode, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { userExists } from "../../api/internal/endpoints";
+import { getIdToken } from "../../firebase/auth/lib";
 import FullScreenCircularProgress from "./FullScreenCircularProgress";
 
 /**
@@ -19,8 +21,12 @@ export function NavigateByAuthState({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
-      setIsAuthenticated(!!user);
+    const unsubscribe = onAuthStateChanged(getAuth(), async (user) => {
+      if (!user) return void setIsAuthenticated(false);
+      const idToken = await getIdToken();
+      const res = await fetch(userExists(idToken));
+      const exists = res.status === 200;
+      setIsAuthenticated(exists);
     });
     return unsubscribe;
   }, []);
