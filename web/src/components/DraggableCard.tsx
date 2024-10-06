@@ -6,7 +6,7 @@ import { useCallback, useState } from "react";
 import type { User } from "../common/types";
 import { Card } from "./Card";
 
-const SWIPE_THRESHOLD = 100;
+const SWIPE_THRESHOLD = 30;
 
 interface DraggableCardProps {
   displayedUser: User;
