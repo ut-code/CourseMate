@@ -17,11 +17,6 @@ export default function Home() {
   const displayedUser = recommended?.[nth];
   const controls = useAnimation();
 
-  const [dragValue, setDragValue] = useState(0); // x方向の値を保存
-  const handleDrag = useCallback((dragProgress: number) => {
-    setDragValue(dragProgress);
-  }, []);
-
   const reject = useCallback(() => {
     if (!displayedUser) return;
     recommended?.push(displayedUser);
@@ -76,7 +71,6 @@ export default function Home() {
   return (
     <div
       style={{
-        backgroundColor: getBackgroundColor(dragValue),
         height: "100%",
         display: "flex",
         flexDirection: "column",
@@ -95,7 +89,6 @@ export default function Home() {
               displayedUser={displayedUser}
               onSwipeLeft={reject}
               onSwipeRight={accept}
-              onDrag={handleDrag}
             />
           </motion.div>
           <div
@@ -119,24 +112,6 @@ export default function Home() {
     </div>
   );
 }
-
-const getBackgroundColor = (x: number) => {
-  const maxVal = 300; // 255より大きくして原色や黒にならないようにする
-  const normalizedValue = Math.max(-maxVal, Math.min(maxVal, x / 2));
-
-  // xが0に近いと白、正の方向に進むと緑、負の方向に進むと赤
-  if (normalizedValue === 0) {
-    return `rgb(${maxVal}, ${maxVal}, ${maxVal})`; // 白
-  }
-  if (normalizedValue > 0) {
-    const redValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
-    return `rgb(${maxVal}, ${maxVal - redValue}, ${maxVal - redValue})`; // 赤
-  }
-  const grayValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
-  return `rgb(${maxVal - grayValue}, ${maxVal - grayValue}, ${
-    maxVal - grayValue
-  })`; // 灰色
-};
 
 interface RoundButtonProps {
   onclick: () => void;
