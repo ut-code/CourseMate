@@ -55,6 +55,10 @@
   background-color: rgb(255, 208, 42, 0.81) !important;
 }
 
+.overlapped {
+  background-color: rgb(245, 130, 32, 0.81) !important;
+}
+
 .spaceAround {
   justify-content: space-around;
 }

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import request from "../../api/request";
 
 import shadows from "@mui/material/styles/shadows";
-import { useRecommended } from "../../api/user";
+import { useMyID, useRecommended } from "../../api/user";
 import { DraggableCard } from "../../components/DraggableCard";
 import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
@@ -14,6 +14,9 @@ export default function Home() {
 
   const [nth, setNth] = useState<number>(0);
   const displayedUser = recommended?.[nth];
+  const {
+    state: { data: myId },
+  } = useMyID();
 
   const reject = useCallback(() => {
     if (!displayedUser) return;
@@ -60,6 +63,7 @@ export default function Home() {
         >
           <DraggableCard
             displayedUser={displayedUser}
+            comparisonUserId={myId ? myId : undefined}
             onSwipeLeft={reject}
             onSwipeRight={accept}
           />

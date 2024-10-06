@@ -1,15 +1,16 @@
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
 import { useEffect, useState } from "react";
-import type { User } from "../common/types";
-import CoursesTable from "./course/CoursesTable";
+import type { User, UserID } from "../common/types";
+import NonEditableCoursesTable from "./course/NonEditableCoursesTable";
 import UserAvatar from "./human/avatar";
 
 interface CardProps {
   displayedUser: User;
+  comparisonUserId?: UserID;
   onFlip?: (isBack: boolean) => void;
 }
 
-export function Card({ displayedUser, onFlip }: CardProps) {
+export function Card({ displayedUser, comparisonUserId, onFlip }: CardProps) {
   const [isDisplayingBack, setIsDisplayingBack] = useState(false);
 
   const handleRotate = () => {
@@ -74,7 +75,10 @@ export function Card({ displayedUser, onFlip }: CardProps) {
             transform: "rotateY(180deg)",
           }}
         >
-          <CardBack displayedUser={displayedUser} />
+          <CardBack
+            displayedUser={displayedUser}
+            comparisonUserId={comparisonUserId}
+          />
         </div>
       </div>
     </div>
@@ -177,7 +181,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
   );
 };
 
-const CardBack = ({ displayedUser }: CardProps) => {
+const CardBack = ({ displayedUser, comparisonUserId }: CardProps) => {
   return (
     <div
       style={{
@@ -195,7 +199,10 @@ const CardBack = ({ displayedUser }: CardProps) => {
           {displayedUser?.name}
         </p>
       </div>
-      <CoursesTable userId={displayedUser.id} />
+      <NonEditableCoursesTable
+        userId={displayedUser.id}
+        comparisonUserId={comparisonUserId}
+      />
       <div>
         <ThreeSixtyIcon
           style={{ fontSize: "7vmin", display: "block", margin: "auto" }}

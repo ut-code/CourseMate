@@ -9,10 +9,10 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { addMyCourse, getMyCoursesOverlapWith } from "../../api/course";
-import type { Course } from "../../common/types";
+import { deleteMyCourse, getMyCoursesOverlapWith } from "../../../api/course";
+import type { Course } from "../../../common/types";
 
-export default function CourseRegisterConfirmDialog({
+export default function CourseDeleteRegisterConfirmDialog({
   open,
   onClose,
   course,
@@ -37,26 +37,20 @@ export default function CourseRegisterConfirmDialog({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>変更の確認</DialogTitle>
+      <DialogTitle>削除の確認</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          次のように変更します。よろしいですか？
+          次の授業を削除します。よろしいですか？
         </DialogContentText>
-        <Box mt={2}>
-          {course && (
-            <Alert color="success" icon={false} severity="info">
-              {`追加: ${course.name} (${course.teacher})`}
-            </Alert>
-          )}
+        <Box mt={1}>
           <Alert color="error" icon={false} severity="info" sx={{ mt: 1 }}>
-            {`削除: ${
-              overlapCourses
-                .map(
-                  (overlapCourse) =>
-                    `${overlapCourse.name} (${overlapCourse.teacher})`,
-                )
-                .join("・") || "なし"
-            }`}
+            削除:{" "}
+            {overlapCourses
+              .map(
+                (overlapCourse) =>
+                  `${overlapCourse.name}(${overlapCourse.teacher})`,
+              )
+              .join("・") || "なし"}
           </Alert>
         </Box>
       </DialogContent>
@@ -65,8 +59,9 @@ export default function CourseRegisterConfirmDialog({
         {course && (
           <Button
             onClick={async () => {
-              const newCourses = await addMyCourse(course.id);
+              const newCourses = await deleteMyCourse(course.id);
               handleCoursesUpdate(newCourses);
+
               onClose();
               handleSelectDialogClose();
             }}
