@@ -68,15 +68,15 @@ function operateCrop(
   // https://stackoverflow.com/questions/17764012/image-being-clipped-when-copied-to-html-canvas-using-drawimage
 
   const dest = document.createElement("canvas");
-  dest.width = size.w;
-  dest.height = size.h;
+  dest.width = 640;
+  dest.height = 640;
   const ctx = dest.getContext("2d");
   if (!ctx) throw new Error("this shouldn't happen");
 
   const src = new Image();
   src.src = srcURL;
   // TODO: downscale the image if it's too large to upload.
-  ctx.drawImage(src, diff.x, diff.y, size.w, size.h, 0, 0, size.w, size.h);
+  ctx.drawImage(src, diff.x, diff.y, size.w, size.h, 0, 0, 640, 640);
 
   return new Promise((resolve) => {
     // stack overflow: JS-Convert an Image object to a jpeg file
