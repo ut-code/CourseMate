@@ -79,7 +79,6 @@ export default function CoursesTableCore(props: Props) {
           }
         }
       }
-      console.log("newRows", newRows);
       return newRows;
     },
     [],
