@@ -2,7 +2,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { type ReactNode, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { userExists } from "../../api/internal/endpoints";
-import { getIdToken } from "../../firebase/auth/lib";
 import FullScreenCircularProgress from "./FullScreenCircularProgress";
 
 /**
