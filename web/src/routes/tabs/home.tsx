@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import request from "../../api/request";
 
 import shadows from "@mui/material/styles/shadows";
+import { set } from "date-fns";
 import { motion, useAnimation } from "framer-motion";
 import { useRecommended } from "../../api/user";
 import { DraggableCard } from "../../components/DraggableCard";
@@ -16,6 +17,7 @@ export default function Home() {
   const [nth, setNth] = useState<number>(0);
   const displayedUser = recommended?.[nth];
   const controls = useAnimation();
+  const [clickedButton, setClickedButton] = useState<string>("");
 
   const reject = useCallback(() => {
     if (!displayedUser) return;
@@ -29,25 +31,29 @@ export default function Home() {
   }, [displayedUser?.id]);
 
   const onClickCross = useCallback(() => {
+    setClickedButton("cross");
     controls
       .start({
         x: [0, -1000],
-        transition: { duration: 0.5, times: [0, 1] },
+        transition: { duration: 0.5, times: [0, 1], delay: 0.2 },
       })
       .then(() => {
         reject();
+        setClickedButton("");
         controls.set({ x: 0 });
       });
   }, [controls, reject]);
 
   const onClickHeart = useCallback(() => {
+    setClickedButton("heart");
     controls
       .start({
         x: [0, 1000],
-        transition: { duration: 0.5, times: [0, 1] },
+        transition: { duration: 0.5, times: [0, 1], delay: 0.2 },
       })
       .then(() => {
         accept();
+        setClickedButton("");
         controls.set({ x: 0 });
       });
   }, [controls, accept]);
@@ -89,6 +95,7 @@ export default function Home() {
               displayedUser={displayedUser}
               onSwipeLeft={reject}
               onSwipeRight={accept}
+              clickedButton={clickedButton}
             />
           </motion.div>
           <div
