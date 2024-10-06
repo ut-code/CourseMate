@@ -15,17 +15,12 @@ import type { SelectChangeEvent } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { uploadImage } from "../api/image";
-import { MAX_IMAGE_SIZE } from "../api/internal/fetch-func";
 import { update, useAboutMe } from "../api/user";
 import type { UpdateUser } from "../common/types";
 import { UpdateUserSchema } from "../common/zod/schemas";
 import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
 import { useAlert } from "../components/common/alert/AlertProvider";
-import {
-  PhotoPreview,
-  PhotoPreviewButton,
-} from "../components/config/PhotoPreview";
+import { PhotoPreviewButton } from "../components/config/PhotoPreview";
 import UserAvatar from "../components/human/avatar";
 import { facultiesAndDepartments } from "./registration/data";
 
@@ -59,7 +54,6 @@ export default function EditProfile() {
   const [isEditingIntro, setIsEditingIntro] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [file, setFile] = useState<File>();
 
   const [nameError, setNameError] = useState<string>("");
   const [genderError, setGenderError] = useState<string>("");
@@ -86,48 +80,37 @@ export default function EditProfile() {
     }
   }, [data]);
 
-  async function onSelect() {
+  function afterUpload(result: string) {
     try {
-      if (!file) throw new Error("画像は入力必須です");
-      if (file.size >= MAX_IMAGE_SIZE) {
-        enqueueSnackbar("ファイルサイズが大きすぎます", {
-          variant: "error",
-          autoHideDuration: 2000,
-        });
-        return;
-      }
-      const url = await uploadImage(file);
-      console.log("new URL:", url);
-      try {
-        setPictureUrl(url);
-        handleSave({ pictureUrl: url });
-      } catch (error) {
-        if (error instanceof Error) {
-          let errorMessages: string;
-          try {
-            const parsedError = JSON.parse(error.message);
-            if (Array.isArray(parsedError)) {
-              errorMessages = parsedError.map((err) => err.message).join(", ");
-            } else {
-              errorMessages = error.message;
-            }
-          } catch {
+      setPictureUrl(result);
+      handleSave({ pictureUrl: result });
+    } catch (err) {
+      if (error instanceof Error) {
+        let errorMessages: string;
+        try {
+          const parsedError = JSON.parse(error.message);
+          if (Array.isArray(parsedError)) {
+            errorMessages = parsedError.map((err) => err.message).join(", ");
+          } else {
             errorMessages = error.message;
           }
-
-          // エラーメッセージをセット
-          setErrorMessage(errorMessages);
-        } else {
-          console.log("unknown error:", error);
-          setErrorMessage("入力に誤りがあります。");
+        } catch {
+          errorMessages = error.message;
         }
+
+        // エラーメッセージをセット
+        setErrorMessage(errorMessages);
+      } else {
+        console.log("unknown error:", error);
+        setErrorMessage("入力に誤りがあります。");
       }
-    } catch (e) {
-      console.error(e);
-      enqueueSnackbar("画像のアップロードに失敗しました", {
-        variant: "error",
-      });
     }
+  }
+
+  function onError() {
+    enqueueSnackbar("画像のアップロードに失敗しました", {
+      variant: "error",
+    });
   }
 
   const [open, setOpen] = useState<boolean>(false);
@@ -508,51 +491,6 @@ export default function EditProfile() {
           )}
 
           <div style={{ textAlign: "center", marginTop: "20px" }}>
-            <Modal
-              id="MODAL"
-              open={true}
-              sx={{
-                visibility: open ? "visible" : "hidden",
-                Margin: "auto",
-                alignItems: "center",
-                justifyContent: "center",
-                display: "flex",
-              }}
-            >
-              <Box
-                style={{
-                  backgroundColor: "white",
-                  width: "90%",
-                  height: "auto",
-                  padding: "20px",
-                }}
-              >
-                <PhotoPreview
-                  prev={pictureUrl}
-                  onCrop={(f) => {
-                    setFile(f);
-                  }}
-                />
-                <Button
-                  sx={{ float: "right", marginRight: "30px" }}
-                  variant="contained"
-                  onClick={async () => {
-                    await onSelect();
-                    setOpen(false);
-                  }}
-                >
-                  切り取って保存
-                </Button>
-                <Button
-                  sx={{ float: "right", marginRight: "30px" }}
-                  onClick={async () => {
-                    setOpen(false);
-                  }}
-                >
-                  キャンセル
-                </Button>
-              </Box>
-            </Modal>
             <div style={{ textAlign: "left" }}>
               <Typography variant="h6" component="h1">
                 プロフィール画像
@@ -578,6 +516,7 @@ export default function EditProfile() {
                 text="写真を選択"
                 onSelect={() => setOpen(true)}
               />
+              <PhotoModal afterUpload={afterUpload} />
             </div>
           </div>
 
