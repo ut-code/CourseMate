@@ -23,8 +23,9 @@ export function NavigateByAuthState({
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), async (user) => {
       if (!user) return void setIsAuthenticated(false);
-      const idToken = await getIdToken();
-      const res = await fetch(userExists(idToken));
+      const guid = getAuth().currentUser?.uid;
+      if (!guid) return void setIsAuthenticated(false);
+      const res = await fetch(userExists(guid));
       const exists = res.status === 200;
       setIsAuthenticated(exists);
     });
