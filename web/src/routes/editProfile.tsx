@@ -605,6 +605,7 @@ export default function EditProfile() {
                 borderRadius: "25px",
                 width: "35vw",
                 boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                minHeight: "61px",
               }}
             >
               授業編集へ
