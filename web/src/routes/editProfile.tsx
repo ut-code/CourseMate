@@ -273,6 +273,7 @@ export default function EditProfile() {
                 fullWidth
                 error={!!nameError}
                 helperText={nameError}
+                autoComplete="off"
               />
               <IconButton
                 onClick={() => {
@@ -476,6 +477,7 @@ export default function EditProfile() {
                 label="自己紹介"
                 disabled={!isEditingIntro}
                 fullWidth
+                autoComplete="off"
                 error={!!introError} // エラースタイル適用
                 helperText={introError} // エラーメッセージを表示
               />
