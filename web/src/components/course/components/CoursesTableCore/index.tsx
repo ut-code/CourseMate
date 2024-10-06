@@ -65,8 +65,6 @@ export default function CoursesTableCore(props: Props) {
         if (comparisonCourses) {
           for (const comparisonCourse of comparisonCourses) {
             if (course.id === comparisonCourse.id) {
-              console.log("course.id", course.id);
-              console.log("comparisonCourse.id", comparisonCourse.id);
               for (const slot of course.slots) {
                 const { day, period } = slot;
                 newRows[period - 1][day] = { ...course, isOverlapping: true };
@@ -75,7 +73,6 @@ export default function CoursesTableCore(props: Props) {
           }
         }
       }
-      console.log("newRows", newRows);
       return newRows;
     },
     [],
