@@ -58,27 +58,24 @@ export default function CoursesTableCore(props: Props) {
         other: null,
       }));
       for (const course of courses) {
+        for (const slot of course.slots) {
+          const { day, period } = slot;
+          newRows[period - 1][day] = course;
+        }
         if (comparisonCourses) {
           for (const comparisonCourse of comparisonCourses) {
             if (course.id === comparisonCourse.id) {
+              console.log("course.id", course.id);
+              console.log("comparisonCourse.id", comparisonCourse.id);
               for (const slot of course.slots) {
                 const { day, period } = slot;
                 newRows[period - 1][day] = { ...course, isOverlapping: true };
               }
-            } else {
-              for (const slot of course.slots) {
-                const { day, period } = slot;
-                newRows[period - 1][day] = course;
-              }
             }
-          }
-        } else {
-          for (const slot of course.slots) {
-            const { day, period } = slot;
-            newRows[period - 1][day] = course;
           }
         }
       }
+      console.log("newRows", newRows);
       return newRows;
     },
     [],
