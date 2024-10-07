@@ -15,7 +15,7 @@ export function MessageInput({ send, room }: Props) {
   const [message, _setMessage] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
-  function handleSetMessage(m: string) {
+  function setMessage(m: string) {
     _setMessage(m);
     crossRoomMessageState.set(room.friendId, m);
   }
@@ -24,7 +24,7 @@ export function MessageInput({ send, room }: Props) {
     _setMessage(crossRoomMessageState.get(room.friendId) || "");
   }, [room.friendId]);
 
-  function handleSubmit(e: React.FormEvent) {
+  function submit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
@@ -36,7 +36,7 @@ export function MessageInput({ send, room }: Props) {
 
     if (message.trim()) {
       send(room.friendId, { content: message });
-      handleSetMessage("");
+      setMessage("");
     }
   }
 
@@ -52,14 +52,14 @@ export function MessageInput({ send, room }: Props) {
       }
       if (message.trim()) {
         send(room.friendId, { content: message });
-        handleSetMessage("");
+        setMessage("");
       }
     }
   }
 
   return (
     <Box sx={{ padding: "0px" }}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={submit}>
         <Stack direction="row" spacing={1} alignItems="center" margin={2}>
           <TextField
             name="message"
@@ -71,7 +71,7 @@ export function MessageInput({ send, room }: Props) {
             multiline
             minRows={1}
             maxRows={3}
-            onChange={(e) => handleSetMessage(e.target.value)}
+            onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             error={!!error}
           />
