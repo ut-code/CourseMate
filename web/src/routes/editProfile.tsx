@@ -94,7 +94,6 @@ export default function EditProfile() {
   function onPhotoError(err: Error) {
     enqueueSnackbar({
       message: err?.message ?? "画像の更新に失敗しました",
-      autoHideDuration: 2000,
     });
   }
   const [open, setOpen] = useState<boolean>(false);
