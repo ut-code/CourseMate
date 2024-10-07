@@ -41,10 +41,13 @@ export function RoomWindow() {
 
   const appendLocalMessage = useCallback(
     (m: Message) => {
-      setMessages((curr) => (curr ? [...curr, m] : [m]));
-      write(messages ? [...messages, m] : [m]);
+      setMessages((curr) => {
+        const next = curr ? [...curr, m] : [m];
+        write(next);
+        return next;
+      });
     },
-    [messages, write],
+    [write],
   );
   const updateLocalMessage = useCallback((_: Message) => reload(), [reload]);
   const deleteLocalMessage = useCallback((_: MessageID) => reload(), [reload]);
