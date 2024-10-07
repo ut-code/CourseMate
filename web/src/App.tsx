@@ -10,6 +10,7 @@ import { RoomWindow } from "./components/chat/RoomWindow";
 import { NavigateByAuthState } from "./components/common/NavigateByAuthState";
 import EditCourses from "./routes/editCourses";
 import EditProfile from "./routes/editProfile";
+import FAQ from "./routes/faq";
 import Login from "./routes/login";
 import RegistrationPage from "./routes/registration/index";
 import Root from "./routes/root";
@@ -139,6 +140,10 @@ export default function App() {
     {
       path: "/signup",
       element: <RegistrationPage />,
+    },
+    {
+      path: "/faq",
+      element: <FAQ />,
     },
     {
       path: "*",
