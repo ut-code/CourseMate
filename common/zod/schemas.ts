@@ -102,7 +102,8 @@ export const ShareRoomIDSchema = z.number();
 
 export const ContentSchema = z
   .string()
-  .min(1, { message: "Content must not be empty." });
+  .min(1, { message: "Content must not be empty." })
+  .max(255, { message: "Content is too big" });
 
 export const MessageSchema = z.object({
   id: MessageIDSchema,
