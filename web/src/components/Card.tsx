@@ -110,40 +110,25 @@ const CardFront = ({ displayedUser }: CardProps) => {
         }}
       >
         <UserAvatar
-          pictureUrl={displayedUser?.pictureUrl}
+          pictureUrl={displayedUser.pictureUrl}
           width="10dvh"
           height="10dvh"
         />
-        {displayedUser?.name && (
-          <p
-            style={{
-              fontSize: "2.2dvh",
-              fontWeight: "bold",
-              gridColumn: "2 / 4",
-              gridRow: "1 / 2",
-              margin: "1.1dvh",
-              marginRight: "0",
-            }}
-          >
-            {displayedUser?.name}
-          </p>
-        )}
-
-        {displayedUser?.department && (
-          <p
-            style={{
-              fontSize: "1.76dvh",
-              gridColumn: "1 / 4",
-              gridRow: "3 / 4",
-            }}
-          >
-            {displayedUser.department}
-          </p>
-        )}
         <p
           style={{
-            fontSize: "2.2dvh",
-            gridColumn: "1 / 3",
+            fontSize: "4vh",
+            fontWeight: "bold",
+            gridColumn: "2 / 4",
+            gridRow: "1 / 2",
+            margin: "1.1dvh",
+          }}
+        >
+          {displayedUser.name}
+        </p>
+        <p
+          style={{
+            fontSize: "3dvh",
+            gridColumn: "1 / 4",
             gridRow: "2 / 3",
           }}
         >
@@ -151,30 +136,37 @@ const CardFront = ({ displayedUser }: CardProps) => {
         </p>
         <p
           style={{
-            fontSize: "2.2dvh",
+            fontSize: "1.76dvh",
+            gridColumn: "1 / 4",
+            gridRow: "3 / 4",
+          }}
+        >
+          {displayedUser.department}
+        </p>
+
+        <p
+          style={{
+            fontSize: "3dvh",
             gridColumn: "2 / 4",
             gridRow: "4 / 5",
           }}
         >
-          {displayedUser?.grade}
+          {displayedUser.grade}
         </p>
-        <p
-          style={{ fontSize: "2.2dvh", gridColumn: "1 / 3", gridRow: "4 / 5" }}
-        >
+        <p style={{ fontSize: "3dvh", gridColumn: "1 / 3", gridRow: "4 / 5" }}>
           {displayedUser.gender}
         </p>
-        {displayedUser?.intro && (
-          <p
-            style={{
-              fontSize: "1.76dvh",
-              gridColumn: "1 / 4",
-              gridRow: "5 / 8",
-              alignSelf: "start",
-            }}
-          >
-            {displayedUser.intro}
-          </p>
-        )}
+
+        <p
+          style={{
+            fontSize: "1.76dvh",
+            gridColumn: "1 / 4",
+            gridRow: "5 / 8",
+            alignSelf: "start",
+          }}
+        >
+          {displayedUser.intro}
+        </p>
       </div>
       <div>
         <ThreeSixtyIcon
