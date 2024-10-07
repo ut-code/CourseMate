@@ -273,6 +273,7 @@ export default function EditProfile() {
                 fullWidth
                 error={!!nameError}
                 helperText={nameError}
+                autoComplete="off"
               />
               <IconButton
                 onClick={() => {
@@ -476,6 +477,7 @@ export default function EditProfile() {
                 label="自己紹介"
                 disabled={!isEditingIntro}
                 fullWidth
+                autoComplete="off"
                 error={!!introError} // エラースタイル適用
                 helperText={introError} // エラーメッセージを表示
               />
@@ -603,6 +605,7 @@ export default function EditProfile() {
                 borderRadius: "25px",
                 width: "35vw",
                 boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                minHeight: "61px",
               }}
             >
               授業編集へ

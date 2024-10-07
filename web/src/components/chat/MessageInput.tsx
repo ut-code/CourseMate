@@ -58,6 +58,7 @@ export function MessageInput(props: Props) {
             fullWidth={true}
             onChange={(e) => setMessage(e.target.value)}
             error={!!error}
+            autoComplete="off"
           />
           <IconButton type="submit" color="primary">
             <SendIcon />

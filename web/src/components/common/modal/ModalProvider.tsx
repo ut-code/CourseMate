@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { styled } from "@mui/system";
 import { type ReactNode, createContext, useContext, useState } from "react";
+import { useMyID } from "../../../api/user";
 import type { User } from "../../../common/types";
 import { Card } from "../../Card";
 
@@ -31,6 +32,9 @@ const ModalContext = createContext<ModalContextProps | undefined>(undefined);
 export const ModalProvider = ({ children }: ModalProviderProps) => {
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const {
+    state: { data: myId },
+  } = useMyID();
 
   const openModal = (user: User) => {
     setSelectedUser(user);
@@ -48,7 +52,10 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
       {open && selectedUser && (
         <Overlay onClick={closeModal}>
           <Box onClick={(e) => e.stopPropagation()}>
-            <Card displayedUser={selectedUser} />
+            <Card
+              displayedUser={selectedUser}
+              comparisonUserId={myId ? myId : undefined}
+            />
           </Box>
         </Overlay>
       )}

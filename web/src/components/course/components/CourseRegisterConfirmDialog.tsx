@@ -9,11 +9,10 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getMyCoursesOverlapWith } from "../../api/course";
-import { deleteMyCourse } from "../../api/course";
-import type { Course } from "../../common/types";
+import { addMyCourse, getMyCoursesOverlapWith } from "../../../api/course";
+import type { Course } from "../../../common/types";
 
-export default function CourseDeleteRegisterConfirmDialog({
+export default function CourseRegisterConfirmDialog({
   open,
   onClose,
   course,
@@ -38,20 +37,26 @@ export default function CourseDeleteRegisterConfirmDialog({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>削除の確認</DialogTitle>
+      <DialogTitle>変更の確認</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          次の授業を削除します。よろしいですか？
+          次のように変更します。よろしいですか？
         </DialogContentText>
-        <Box mt={1}>
+        <Box mt={2}>
+          {course && (
+            <Alert color="success" icon={false} severity="info">
+              {`追加: ${course.name} (${course.teacher})`}
+            </Alert>
+          )}
           <Alert color="error" icon={false} severity="info" sx={{ mt: 1 }}>
-            削除:{" "}
-            {overlapCourses
-              .map(
-                (overlapCourse) =>
-                  `${overlapCourse.name}(${overlapCourse.teacher})`,
-              )
-              .join("・") || "なし"}
+            {`削除: ${
+              overlapCourses
+                .map(
+                  (overlapCourse) =>
+                    `${overlapCourse.name} (${overlapCourse.teacher})`,
+                )
+                .join("・") || "なし"
+            }`}
           </Alert>
         </Box>
       </DialogContent>
@@ -60,9 +65,8 @@ export default function CourseDeleteRegisterConfirmDialog({
         {course && (
           <Button
             onClick={async () => {
-              const newCourses = await deleteMyCourse(course.id);
+              const newCourses = await addMyCourse(course.id);
               handleCoursesUpdate(newCourses);
-
               onClose();
               handleSelectDialogClose();
             }}

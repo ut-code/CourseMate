@@ -37,6 +37,7 @@
     "**/package.json",
     "**/bun.lockb",
     "**/*.svg",
-    "**/migration.sql"
+    "**/migration.sql",
+    "**/data.json"
   ]
 }
