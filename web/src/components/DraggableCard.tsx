@@ -54,7 +54,7 @@ export const DraggableCard = ({
               position: "absolute",
               zIndex: 2,
               backgroundColor: "rgba(255, 0, 0, 0.3)",
-              width: "85vw",
+              width: "min(40dvh, 87.5vw)",
               height: "70dvh",
               pointerEvents: "none",
               display: "flex",
@@ -69,10 +69,10 @@ export const DraggableCard = ({
               flexDirection={"column"}
               borderRadius={"50%"}
               bgcolor={"white"}
-              width={"35vw"}
-              height={"35vw"}
+              width={"16dvh"}
+              height={"16dvh"}
             >
-              <FavoriteIcon style={{ color: "red", fontSize: "10vw" }} />
+              <FavoriteIcon style={{ color: "red", fontSize: "4.5dvh" }} />
               <Typography variant="h5" component="h1" mb={1}>
                 いいね！
               </Typography>
@@ -84,7 +84,7 @@ export const DraggableCard = ({
               position: "absolute",
               zIndex: 2,
               backgroundColor: "rgba(0, 0, 0, 0.3)",
-              width: "85vw",
+              width: "min(40dvh, 87.5vw)",
               height: "70dvh",
               pointerEvents: "none",
               display: "flex",
@@ -99,10 +99,10 @@ export const DraggableCard = ({
               flexDirection={"column"}
               borderRadius={"50%"}
               bgcolor={"white"}
-              width={"35vw"}
-              height={"35vw"}
+              width={"16dvh"}
+              height={"16dvh"}
             >
-              <CloseIcon style={{ color: "black", fontSize: "10vw" }} />
+              <CloseIcon style={{ color: "black", fontSize: "4.5dvh" }} />
               <Typography variant="h5" component="h1" mb={1}>
                 スキップ
               </Typography>
@@ -114,7 +114,7 @@ export const DraggableCard = ({
               position: "absolute",
               zIndex: 2,
               backgroundColor: "rgba(0, 0, 0, 0)",
-              width: "85vw",
+              width: "min(40dvh, 87.5vw)",
               height: "70dvh",
               pointerEvents: "none",
             }}
