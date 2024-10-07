@@ -49,6 +49,7 @@ export async function updateMessage(
     );
   return res.json();
 }
+
 // 自身の参加しているすべての Room (DM グループチャットともに) の概要 (Overview) の取得 (メッセージの履歴を除く)
 export async function overview(): Promise<RoomOverview[]> {
   const res = await credFetch("GET", endpoints.roomOverview);
@@ -73,7 +74,7 @@ export async function sendDM(
   return res.json();
 }
 
-// 相手のIDを指定して、
+// WARNING: don't use this outside of api/
 export async function getDM(friendId: UserID): Promise<DMRoom> {
   const res = await credFetch("GET", endpoints.dmWith(friendId));
   if (res.status === 401) throw new ErrUnauthorized();

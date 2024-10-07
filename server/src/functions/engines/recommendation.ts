@@ -13,7 +13,7 @@ export async function recommendedTo(
     const result = await prisma.$queryRawTyped(sql(user, limit, offset));
     return Promise.all(
       result.map(async (res) => {
-        const user = await getUserByID(res.recv);
+        const user = await getUserByID(res.id);
         if (!user.ok) throw new Error("not found"); // this shouldn't happen
         return {
           count: Number.parseInt(res.overlap?.toString() ?? "0"),

@@ -15,10 +15,12 @@ type HumanListItemProps = {
   name: string;
   pictureUrl: string;
   lastMessage?: string;
+  rollUpName?: boolean; // is currently only intended to be used in Chat
   onDelete?: (id: number) => void;
   onOpen?: (user: { id: number; name: string; pictureUrl: string }) => void;
   onAccept?: (id: number) => void;
   onReject?: (id: number) => void;
+  onCancel?: (id: number) => void;
   hasDots?: boolean;
   dotsActions?: object;
 };
@@ -28,11 +30,13 @@ export function HumanListItem(props: HumanListItemProps) {
     id,
     name,
     pictureUrl,
+    rollUpName,
     lastMessage,
     onDelete,
     onOpen,
     onAccept,
     onReject,
+    onCancel,
     hasDots,
   } = props;
   const handleDeleteClick = () => {
@@ -51,6 +55,7 @@ export function HumanListItem(props: HumanListItemProps) {
         <Stack direction="row" spacing={1}>
           {onAccept && <Button onClick={() => onAccept(id)}>承認</Button>}
           {onReject && <Button onClick={() => onReject(id)}>拒否</Button>}
+          {onCancel && <Button onClick={() => onCancel(id)}>キャンセル</Button>}
         </Stack>
       }
       sx={{
@@ -76,14 +81,27 @@ export function HumanListItem(props: HumanListItemProps) {
             marginLeft: "20px",
           }}
         >
-          <Typography variant="body1" noWrap color={"text.primary"}>
+          <Typography
+            variant="body1"
+            noWrap
+            color={"text.primary"}
+            sx={{ textAlign: "left" }}
+          >
             {name}
           </Typography>
-          <Typography variant="body2" color="text.secondary" noWrap>
-            {lastMessage && lastMessage.length > 15
-              ? `${lastMessage.slice(0, 15)}...`
-              : lastMessage || ""}
-          </Typography>
+          {rollUpName && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              noWrap
+              sx={{
+                minHeight: "1rem",
+                maxWidth: "60vw",
+              }}
+            >
+              {lastMessage}
+            </Typography>
+          )}
         </Box>
       </Button>
       {hasDots && (

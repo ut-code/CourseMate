@@ -4,7 +4,6 @@ import RoomList from "../../components/chat/RoomList";
 import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
 export default function Chat() {
-  console.log("Chat: rendering...");
   const { state } = useRoomsOverview();
 
   if (state.current === "loading") {
