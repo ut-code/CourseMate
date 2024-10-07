@@ -98,6 +98,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
         height: "100%",
         gap: "2dvh",
         overflow: "hidden",
+        justifyContent: "space-between",
       }}
     >
       <div
@@ -115,10 +116,11 @@ const CardFront = ({ displayedUser }: CardProps) => {
         />
         <p
           style={{
-            fontSize: "4vh",
+            fontSize: "3.4vh",
             fontWeight: "bold",
             gridColumn: "2 / 4",
-            margin: "1.1dvh",
+            margin: 0,
+            marginLeft: "1.2dvh",
           }}
         >
           {displayedUser.name}
@@ -126,73 +128,102 @@ const CardFront = ({ displayedUser }: CardProps) => {
       </div>
       <div
         style={{
-          display: "flex",
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
           alignItems: "center",
-          gap: "1.1dvh",
+          gap: "1.5dvh",
         }}
       >
-        <Chip label="学部" size="small" />
-        <span
+        <Chip
+          label="学部"
+          size="small"
+          sx={{
+            gridColumn: "1 / 2",
+          }}
+        />
+        <p
           style={{
+            margin: 0,
             fontSize: "3dvh",
           }}
         >
           {displayedUser.faculty}
-        </span>
+        </p>
       </div>
       <div
         style={{
-          display: "flex",
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
           alignItems: "center",
-          gap: "1.1dvh",
+          gap: "1.5dvh",
         }}
       >
         <Chip label="学科" size="small" />
-        <span
+        <p
           style={{
+            margin: 0,
             fontSize: "1.76dvh",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
           }}
         >
           {displayedUser.department}
-        </span>
+        </p>
       </div>
       <div
         style={{
-          display: "flex",
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
           alignItems: "center",
-          gap: "1.1dvh",
+          gap: "1.5dvh",
         }}
       >
         <Chip label="性別" size="small" />
-        <span style={{ fontSize: "3dvh" }}>{displayedUser.gender}</span>
+        <p style={{ margin: 0, fontSize: "3dvh" }}>{displayedUser.gender}</p>
       </div>
       <div
         style={{
-          display: "flex",
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
           alignItems: "center",
-          gap: "1.1dvh",
+          gap: "1.5dvh",
         }}
       >
         <Chip label="学年" size="small" />
-        <span style={{ fontSize: "3dvh" }}> {displayedUser.grade}</span>
+        <p style={{ margin: 0, fontSize: "3dvh" }}> {displayedUser.grade}</p>
       </div>
       <div
         style={{
           flex: 1,
-          display: "flex",
-          gap: "1.1dvh",
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
+          gap: "1.5dvh",
+          maxHeight: "32%", // WebKitLineClamp の フォールバックとして
         }}
       >
         <Chip
           label="自己紹介"
           size="small"
           sx={{
-            fontSize: "0.5rem",
+            fontSize: "0.45rem",
           }}
         />
-        <span style={{ fontSize: "1.76dvh" }}>{displayedUser.intro}</span>
+        <p
+          style={{
+            margin: 0,
+            fontSize: "1.76dvh",
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 8,
+            lineClamp: 8,
+            textOverflow: "ellipsis",
+          }}
+        >
+          {displayedUser.intro}
+        </p>
       </div>
-
       <div>
         <ThreeSixtyIcon
           style={{ fontSize: "3.08dvh", display: "block", margin: "auto" }}
