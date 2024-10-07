@@ -27,7 +27,7 @@ export function RoomWindow() {
   const {
     state: { data: myId },
   } = useMyID();
-  const { state, reload } = useMessages(room.friendId);
+  const { state, reload, write } = useMessages(room.friendId);
   const [messages, setMessages] = useState(state.data);
   // todo: cache sent messages s.t. chat feels faster
 
@@ -40,8 +40,11 @@ export function RoomWindow() {
   }, [state.data]);
 
   const appendLocalMessage = useCallback(
-    (m: Message) => setMessages((curr) => (curr ? [...curr, m] : [m])),
-    [],
+    (m: Message) => {
+      setMessages((curr) => (curr ? [...curr, m] : [m]));
+      write(messages ? [...messages, m] : [m]);
+    },
+    [messages, write],
   );
   const updateLocalMessage = useCallback((_: Message) => reload(), [reload]);
   const deleteLocalMessage = useCallback((_: MessageID) => reload(), [reload]);
