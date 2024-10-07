@@ -114,17 +114,24 @@ const CardFront = ({ displayedUser }: CardProps) => {
           width="10dvh"
           height="10dvh"
         />
-        <p
+        <div
           style={{
-            fontSize: "3.4vh",
-            fontWeight: "bold",
+            display: "flex",
             gridColumn: "2 / 4",
-            margin: 0,
-            marginLeft: "1.2dvh",
+            marginLeft: "1dvh",
+            justifyContent: "center",
           }}
         >
-          {displayedUser.name}
-        </p>
+          <span
+            style={{
+              fontSize: "3.4vh",
+              fontWeight: "bold",
+              margin: "0 auto",
+            }}
+          >
+            {displayedUser.name}
+          </span>
+        </div>
       </div>
       <div
         style={{
