@@ -3,7 +3,7 @@ import { useState } from "react";
 import { MAX_IMAGE_SIZE, uploadImage } from "../../api/internal/fetch-func";
 import { PhotoPreview } from "./PhotoPreview";
 
-async function onSelect(
+async function upload(
   file: File,
   afterUpload: (url: string) => void,
   onError: (err: Error) => void,
@@ -23,25 +23,26 @@ async function onSelect(
 }
 
 type Props = {
-  original: File;
+  open: boolean;
   prevUrl?: string;
   closeFunc: () => void;
   afterUpload: (url: string) => void;
   onError: (e: Error) => void;
 };
 export default function PhotoModal({
-  original,
+  open,
   prevUrl,
   closeFunc,
   afterUpload,
   onError,
 }: Props) {
-  const [cropped, setCropped] = useState(original);
+  const [cropped, setCropped] = useState<File | null>(null);
   return (
     <Modal
       id="MODAL"
       open={true}
       sx={{
+        visibility: open ? "visible" : "hidden",
         Margin: "auto",
         alignItems: "center",
         justifyContent: "center",
@@ -66,8 +67,20 @@ export default function PhotoModal({
           sx={{ float: "right", marginRight: "30px" }}
           variant="contained"
           onClick={async () => {
-            await onSelect(cropped, afterUpload, onError);
-            closeFunc();
+            try {
+              if (cropped === null) throw new Error("画像は必須です");
+              if (cropped.size >= MAX_IMAGE_SIZE)
+                throw new Error("画像が大きすぎます");
+              try {
+                await upload(cropped, afterUpload, onError);
+              } catch (e) {
+                console.error(e);
+                throw new Error("画像のアップロードに失敗しました");
+              }
+              closeFunc();
+            } catch (err) {
+              onError(err as Error);
+            }
           }}
         >
           切り取って保存
@@ -75,7 +88,11 @@ export default function PhotoModal({
         <Button
           sx={{ float: "right", marginRight: "30px" }}
           onClick={async () => {
-            closeFunc();
+            try {
+              closeFunc();
+            } catch (err) {
+              onError(err as Error);
+            }
           }}
         >
           キャンセル

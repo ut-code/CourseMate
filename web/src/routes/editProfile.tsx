@@ -20,6 +20,7 @@ import type { UpdateUser } from "../common/types";
 import { UpdateUserSchema } from "../common/zod/schemas";
 import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
 import { useAlert } from "../components/common/alert/AlertProvider";
+import PhotoModal from "../components/config/PhotoModal";
 import { PhotoPreviewButton } from "../components/config/PhotoPreview";
 import UserAvatar from "../components/human/avatar";
 import { facultiesAndDepartments } from "./registration/data";
@@ -80,39 +81,23 @@ export default function EditProfile() {
     }
   }, [data]);
 
-  function afterUpload(result: string) {
+  function afterPhotoUpload(result: string) {
     try {
       setPictureUrl(result);
       handleSave({ pictureUrl: result });
     } catch (err) {
-      if (error instanceof Error) {
-        let errorMessages: string;
-        try {
-          const parsedError = JSON.parse(error.message);
-          if (Array.isArray(parsedError)) {
-            errorMessages = parsedError.map((err) => err.message).join(", ");
-          } else {
-            errorMessages = error.message;
-          }
-        } catch {
-          errorMessages = error.message;
-        }
-
-        // エラーメッセージをセット
-        setErrorMessage(errorMessages);
-      } else {
-        console.log("unknown error:", error);
-        setErrorMessage("入力に誤りがあります。");
-      }
+      console.error(err);
+      // probably a network error
+      onPhotoError(new Error("画像の更新に失敗しました"));
     }
   }
 
-  function onError() {
-    enqueueSnackbar("画像のアップロードに失敗しました", {
-      variant: "error",
+  function onPhotoError(err: Error) {
+    enqueueSnackbar({
+      message: err?.message ?? "画像の更新に失敗しました",
+      autoHideDuration: 2000,
     });
   }
-
   const [open, setOpen] = useState<boolean>(false);
 
   function hasUnsavedChangesOrErrors() {
@@ -516,7 +501,12 @@ export default function EditProfile() {
                 text="写真を選択"
                 onSelect={() => setOpen(true)}
               />
-              <PhotoModal afterUpload={afterUpload} />
+              <PhotoModal
+                open={open}
+                closeFunc={() => setOpen(false)}
+                afterUpload={afterPhotoUpload}
+                onError={onPhotoError}
+              />
             </div>
           </div>
 
