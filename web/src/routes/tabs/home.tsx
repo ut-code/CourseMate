@@ -58,6 +58,7 @@ export default function Home() {
         <Box
           display="flex"
           flexDirection="column"
+          justifyContent="space-evenly"
           alignItems="center"
           height="100%"
         >
