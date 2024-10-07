@@ -58,6 +58,7 @@ export default function Home() {
         <Box
           display="flex"
           flexDirection="column"
+          justifyContent="space-evenly"
           alignItems="center"
           height="100%"
         >
@@ -74,7 +75,6 @@ export default function Home() {
               alignItems: "center",
               justifyContent: "space-around",
               width: "100%",
-              height: "100%",
               marginBottom: "10px",
             }}
           >
