@@ -111,17 +111,17 @@ const CardFront = ({ displayedUser }: CardProps) => {
       >
         <UserAvatar
           pictureUrl={displayedUser?.pictureUrl}
-          width="10vh"
-          height="10vh"
+          width="10dvh"
+          height="10dvh"
         />
         {displayedUser?.name && (
           <p
             style={{
-              fontSize: "2.2vh",
+              fontSize: "2.2dvh",
               fontWeight: "bold",
               gridColumn: "2 / 4",
               gridRow: "1 / 2",
-              margin: "1.1vh",
+              margin: "1.1dvh",
               marginRight: "0",
             }}
           >
@@ -132,7 +132,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
         {displayedUser?.department && (
           <p
             style={{
-              fontSize: "1.76vh",
+              fontSize: "1.76dvh",
               gridColumn: "1 / 4",
               gridRow: "3 / 4",
             }}
@@ -142,7 +142,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
         )}
         <p
           style={{
-            fontSize: "2.2vh",
+            fontSize: "2.2dvh",
             gridColumn: "1 / 3",
             gridRow: "2 / 3",
           }}
@@ -151,20 +151,22 @@ const CardFront = ({ displayedUser }: CardProps) => {
         </p>
         <p
           style={{
-            fontSize: "2.2vh",
+            fontSize: "2.2dvh",
             gridColumn: "2 / 4",
             gridRow: "4 / 5",
           }}
         >
           {displayedUser?.grade}
         </p>
-        <p style={{ fontSize: "2.2vh", gridColumn: "1 / 3", gridRow: "4 / 5" }}>
+        <p
+          style={{ fontSize: "2.2dvh", gridColumn: "1 / 3", gridRow: "4 / 5" }}
+        >
           {displayedUser.gender}
         </p>
         {displayedUser?.intro && (
           <p
             style={{
-              fontSize: "1.76vh",
+              fontSize: "1.76dvh",
               gridColumn: "1 / 4",
               gridRow: "5 / 8",
               alignSelf: "start",
@@ -176,7 +178,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
       </div>
       <div>
         <ThreeSixtyIcon
-          style={{ fontSize: "3.08vh", display: "block", margin: "auto" }}
+          style={{ fontSize: "3.08dvh", display: "block", margin: "auto" }}
         />
       </div>
     </div>
@@ -207,7 +209,7 @@ const CardBack = ({ displayedUser, comparisonUserId }: CardProps) => {
       />
       <div>
         <ThreeSixtyIcon
-          style={{ fontSize: "3.08vh", display: "block", margin: "auto" }}
+          style={{ fontSize: "3.08dvh", display: "block", margin: "auto" }}
         />
       </div>
     </div>
