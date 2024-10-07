@@ -29,28 +29,29 @@ export function RoomWindow() {
   } = useMyID();
   const { state, reload } = useMessages(room.friendId);
   const [messages, setMessages] = useState(state.data);
-
-  useEffect(() => {
-    setMessages(state.data);
-  }, [state.data]);
+  // todo: cache sent messages s.t. chat feels faster
 
   const { enqueueSnackbar } = useSnackbar();
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState<string>("");
 
+  useEffect(() => {
+    setMessages(state.data);
+  }, [state.data]);
+
   const appendLocalMessage = useCallback(
-    (_: SendMessage) => reload(),
-    [reload],
+    (m: Message) => setMessages((curr) => (curr ? [...curr, m] : [m])),
+    [],
   );
   const updateLocalMessage = useCallback((_: Message) => reload(), [reload]);
   const deleteLocalMessage = useCallback((_: MessageID) => reload(), [reload]);
 
   const sendMessage = useCallback(
     async (to: UserID, m: SendMessage) => {
-      chat.sendDM(to, m);
-      appendLocalMessage(m);
+      await chat.sendDM(to, m);
+      reload();
     },
-    [appendLocalMessage],
+    [reload],
   );
 
   useEffect(() => {
