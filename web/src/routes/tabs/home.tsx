@@ -70,7 +70,6 @@ export default function Home() {
           />
           <div
             style={{
-              flex: 1,
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
