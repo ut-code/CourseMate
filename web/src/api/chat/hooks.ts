@@ -18,7 +18,11 @@ const MessageListSchema = z.array(MessageSchema);
 export function useMessages(friendId: UserID): Hook<Message[]> {
   const key = `chat::dm::${friendId}`;
   const fetcher = useCallback(
-    async () => (await chat.getDM(friendId)).messages,
+    async () =>
+      (await chat.getDM(friendId)).messages.map((m) => ({
+        createdAt: new Date(m.createdAt),
+        ...m,
+      })),
     [friendId],
   );
   return useSWR(key, fetcher, MessageListSchema);

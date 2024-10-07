@@ -72,7 +72,7 @@ export function useSWR<T>(
       const result = schema.safeParse(data);
       if (!result.success) {
         console.error(
-          `WARNING: useSWR: UNEXPECTED ZOD PARSE ERROR: Schema Parse Error: ${result.error.message}`,
+          `useSWR: Schema Parse Error | in incoming data | at schema ${CACHE_KEY} | Error: ${result.error.message}`,
         );
       }
       setState({
@@ -118,7 +118,9 @@ function loadOldData<T>(
       const data = JSON.parse(oldData);
       const parse = schema.safeParse(data);
       if (!parse.success)
-        console.error(`useSWR: zodParseError: ${parse.error}`);
+        console.error(
+          `useSWR: zodParseError | in stale data | at schema ${CACHE_KEY} | ${parse.error}`,
+        );
       return {
         current: "stale",
         data,
