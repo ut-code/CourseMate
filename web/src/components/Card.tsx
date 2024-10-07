@@ -1,4 +1,5 @@
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
+import { Chip } from "@mui/material";
 import { useEffect, useState } from "react";
 import type { User, UserID } from "../common/types";
 import NonEditableCoursesTable from "./course/NonEditableCoursesTable";
@@ -93,88 +94,142 @@ const CardFront = ({ displayedUser }: CardProps) => {
         flexDirection: "column",
         backgroundColor: "#F7FCFF",
         border: "2px solid #3596C6",
-        padding: "10px",
+        padding: "20px 20px 10px 20px",
         height: "100%",
+        gap: "2dvh",
         overflow: "hidden",
+        justifyContent: "space-between",
       }}
     >
       <div
         style={{
-          padding: "10px",
           display: "grid",
           gridTemplateColumns: "1fr 1fr 1fr",
-          gridTemplateRows: "30% 10% 10% 10% 10% 10% 20%",
           alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
+          height: "30%",
         }}
       >
         <UserAvatar
-          pictureUrl={displayedUser?.pictureUrl}
+          pictureUrl={displayedUser.pictureUrl}
           width="10dvh"
           height="10dvh"
         />
-        {displayedUser?.name && (
-          <p
-            style={{
-              fontSize: "2.2dvh",
-              fontWeight: "bold",
-              gridColumn: "2 / 4",
-              gridRow: "1 / 2",
-              margin: "1.1dvh",
-              marginRight: "0",
-            }}
-          >
-            {displayedUser?.name}
-          </p>
-        )}
-
-        {displayedUser?.department && (
-          <p
-            style={{
-              fontSize: "1.76dvh",
-              gridColumn: "1 / 4",
-              gridRow: "3 / 4",
-            }}
-          >
-            {displayedUser.department}
-          </p>
-        )}
-        <p
+        <div
           style={{
-            fontSize: "2.2dvh",
-            gridColumn: "1 / 3",
-            gridRow: "2 / 3",
-          }}
-        >
-          {`${displayedUser.faculty}`}
-        </p>
-        <p
-          style={{
-            fontSize: "2.2dvh",
+            display: "flex",
             gridColumn: "2 / 4",
-            gridRow: "4 / 5",
+            marginLeft: "1dvh",
+            justifyContent: "center",
           }}
         >
-          {displayedUser?.grade}
-        </p>
-        <p
-          style={{ fontSize: "2.2dvh", gridColumn: "1 / 3", gridRow: "4 / 5" }}
-        >
-          {displayedUser.gender}
-        </p>
-        {displayedUser?.intro && (
-          <p
+          <span
             style={{
-              fontSize: "1.76dvh",
-              gridColumn: "1 / 4",
-              gridRow: "5 / 8",
-              alignSelf: "start",
+              fontSize: "3.4vh",
+              fontWeight: "bold",
+              margin: "0 auto",
             }}
           >
-            {displayedUser.intro}
-          </p>
-        )}
+            {displayedUser.name}
+          </span>
+        </div>
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
+          alignItems: "center",
+          gap: "1.5dvh",
+        }}
+      >
+        <Chip
+          label="学部"
+          size="small"
+          sx={{
+            gridColumn: "1 / 2",
+          }}
+        />
+        <p
+          style={{
+            margin: 0,
+            fontSize: "3dvh",
+          }}
+        >
+          {displayedUser.faculty}
+        </p>
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
+          alignItems: "center",
+          gap: "1.5dvh",
+        }}
+      >
+        <Chip label="学科" size="small" />
+        <p
+          style={{
+            margin: 0,
+            fontSize: "1.76dvh",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {displayedUser.department}
+        </p>
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
+          alignItems: "center",
+          gap: "1.5dvh",
+        }}
+      >
+        <Chip label="性別" size="small" />
+        <p style={{ margin: 0, fontSize: "3dvh" }}>{displayedUser.gender}</p>
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
+          alignItems: "center",
+          gap: "1.5dvh",
+        }}
+      >
+        <Chip label="学年" size="small" />
+        <p style={{ margin: 0, fontSize: "3dvh" }}> {displayedUser.grade}</p>
+      </div>
+      <div
+        style={{
+          flex: 1,
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
+          gap: "1.5dvh",
+          maxHeight: "32%", // WebKitLineClamp の フォールバックとして
+        }}
+      >
+        <Chip
+          label="自己紹介"
+          size="small"
+          sx={{
+            fontSize: "0.45rem",
+          }}
+        />
+        <p
+          style={{
+            margin: 0,
+            fontSize: "1.76dvh",
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 8,
+            lineClamp: 8,
+            textOverflow: "ellipsis",
+          }}
+        >
+          {displayedUser.intro}
+        </p>
       </div>
       <div>
         <ThreeSixtyIcon
