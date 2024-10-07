@@ -1,4 +1,5 @@
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
+import { Chip } from "@mui/material";
 import { useEffect, useState } from "react";
 import type { User, UserID } from "../common/types";
 import NonEditableCoursesTable from "./course/NonEditableCoursesTable";
@@ -101,72 +102,104 @@ const CardFront = ({ displayedUser }: CardProps) => {
       <div
         style={{
           padding: "10px",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gridTemplateRows: "30% 10% 10% 10% 10% 10% 20%",
-          alignItems: "center",
-          justifyContent: "center",
+          display: "flex",
+          flexDirection: "column",
           height: "100%",
+          gap: "2dvh",
         }}
       >
-        <UserAvatar
-          pictureUrl={displayedUser.pictureUrl}
-          width="10dvh"
-          height="10dvh"
-        />
-        <p
+        <div
           style={{
-            fontSize: "4vh",
-            fontWeight: "bold",
-            gridColumn: "2 / 4",
-            gridRow: "1 / 2",
-            margin: "1.1dvh",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            alignItems: "center",
+            height: "30%",
           }}
         >
-          {displayedUser.name}
-        </p>
-        <p
+          <UserAvatar
+            pictureUrl={displayedUser.pictureUrl}
+            width="10dvh"
+            height="10dvh"
+          />
+          <p
+            style={{
+              fontSize: "4vh",
+              fontWeight: "bold",
+              gridColumn: "2 / 4",
+              margin: "1.1dvh",
+            }}
+          >
+            {displayedUser.name}
+          </p>
+        </div>
+        <div
           style={{
-            fontSize: "3dvh",
-            gridColumn: "1 / 4",
-            gridRow: "2 / 3",
+            display: "flex",
+            alignItems: "center",
+            gap: "1.1dvh",
           }}
         >
-          {`${displayedUser.faculty}`}
-        </p>
-        <p
+          <Chip label="学部" size="small" />
+          <span
+            style={{
+              fontSize: "3dvh",
+            }}
+          >
+            {displayedUser.faculty}
+          </span>
+        </div>
+        <div
           style={{
-            fontSize: "1.76dvh",
-            gridColumn: "1 / 4",
-            gridRow: "3 / 4",
+            display: "flex",
+            alignItems: "center",
+            gap: "1.1dvh",
           }}
         >
-          {displayedUser.department}
-        </p>
-
-        <p
+          <Chip label="学科" size="small" />
+          <span
+            style={{
+              fontSize: "1.76dvh",
+            }}
+          >
+            {displayedUser.department}
+          </span>
+        </div>
+        <div
           style={{
-            fontSize: "3dvh",
-            gridColumn: "2 / 4",
-            gridRow: "4 / 5",
+            display: "flex",
+            alignItems: "center",
+            gap: "1.1dvh",
           }}
         >
-          {displayedUser.grade}
-        </p>
-        <p style={{ fontSize: "3dvh", gridColumn: "1 / 3", gridRow: "4 / 5" }}>
-          {displayedUser.gender}
-        </p>
-
-        <p
+          <Chip label="性別" size="small" />
+          <span style={{ fontSize: "3dvh" }}>{displayedUser.gender}</span>
+        </div>
+        <div
           style={{
-            fontSize: "1.76dvh",
-            gridColumn: "1 / 4",
-            gridRow: "5 / 8",
-            alignSelf: "start",
+            display: "flex",
+            alignItems: "center",
+            gap: "1.1dvh",
           }}
         >
-          {displayedUser.intro}
-        </p>
+          <Chip label="学年" size="small" />
+          <span style={{ fontSize: "3dvh" }}> {displayedUser.grade}</span>
+        </div>
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            gap: "1.1dvh",
+          }}
+        >
+          <Chip
+            label="自己紹介"
+            size="small"
+            sx={{
+              fontSize: "0.5rem",
+            }}
+          />
+          <span style={{ fontSize: "1.76dvh" }}>{displayedUser.intro}</span>
+        </div>
       </div>
       <div>
         <ThreeSixtyIcon
