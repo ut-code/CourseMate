@@ -94,113 +94,105 @@ const CardFront = ({ displayedUser }: CardProps) => {
         flexDirection: "column",
         backgroundColor: "#F7FCFF",
         border: "2px solid #3596C6",
-        padding: "10px",
+        padding: "20px 20px 10px 20px",
         height: "100%",
+        gap: "2dvh",
         overflow: "hidden",
       }}
     >
       <div
         style={{
-          padding: "10px",
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          gap: "2dvh",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr",
+          alignItems: "center",
+          height: "30%",
         }}
       >
-        <div
+        <UserAvatar
+          pictureUrl={displayedUser.pictureUrl}
+          width="10dvh"
+          height="10dvh"
+        />
+        <p
           style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            alignItems: "center",
-            height: "30%",
+            fontSize: "4vh",
+            fontWeight: "bold",
+            gridColumn: "2 / 4",
+            margin: "1.1dvh",
           }}
         >
-          <UserAvatar
-            pictureUrl={displayedUser.pictureUrl}
-            width="10dvh"
-            height="10dvh"
-          />
-          <p
-            style={{
-              fontSize: "4vh",
-              fontWeight: "bold",
-              gridColumn: "2 / 4",
-              margin: "1.1dvh",
-            }}
-          >
-            {displayedUser.name}
-          </p>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1.1dvh",
-          }}
-        >
-          <Chip label="学部" size="small" />
-          <span
-            style={{
-              fontSize: "3dvh",
-            }}
-          >
-            {displayedUser.faculty}
-          </span>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1.1dvh",
-          }}
-        >
-          <Chip label="学科" size="small" />
-          <span
-            style={{
-              fontSize: "1.76dvh",
-            }}
-          >
-            {displayedUser.department}
-          </span>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1.1dvh",
-          }}
-        >
-          <Chip label="性別" size="small" />
-          <span style={{ fontSize: "3dvh" }}>{displayedUser.gender}</span>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1.1dvh",
-          }}
-        >
-          <Chip label="学年" size="small" />
-          <span style={{ fontSize: "3dvh" }}> {displayedUser.grade}</span>
-        </div>
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            gap: "1.1dvh",
-          }}
-        >
-          <Chip
-            label="自己紹介"
-            size="small"
-            sx={{
-              fontSize: "0.5rem",
-            }}
-          />
-          <span style={{ fontSize: "1.76dvh" }}>{displayedUser.intro}</span>
-        </div>
+          {displayedUser.name}
+        </p>
       </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "1.1dvh",
+        }}
+      >
+        <Chip label="学部" size="small" />
+        <span
+          style={{
+            fontSize: "3dvh",
+          }}
+        >
+          {displayedUser.faculty}
+        </span>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "1.1dvh",
+        }}
+      >
+        <Chip label="学科" size="small" />
+        <span
+          style={{
+            fontSize: "1.76dvh",
+          }}
+        >
+          {displayedUser.department}
+        </span>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "1.1dvh",
+        }}
+      >
+        <Chip label="性別" size="small" />
+        <span style={{ fontSize: "3dvh" }}>{displayedUser.gender}</span>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "1.1dvh",
+        }}
+      >
+        <Chip label="学年" size="small" />
+        <span style={{ fontSize: "3dvh" }}> {displayedUser.grade}</span>
+      </div>
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          gap: "1.1dvh",
+        }}
+      >
+        <Chip
+          label="自己紹介"
+          size="small"
+          sx={{
+            fontSize: "0.5rem",
+          }}
+        />
+        <span style={{ fontSize: "1.76dvh" }}>{displayedUser.intro}</span>
+      </div>
+
       <div>
         <ThreeSixtyIcon
           style={{ fontSize: "3.08dvh", display: "block", margin: "auto" }}
