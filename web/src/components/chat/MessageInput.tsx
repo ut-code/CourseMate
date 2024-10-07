@@ -12,16 +12,16 @@ type Props = {
 const crossRoomMessageState = new Map<number, string>();
 
 export function MessageInput({ send, room }: Props) {
-  const [message, setMessage] = useState<string>("");
+  const [message, _setMessage] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   function handleSetMessage(m: string) {
-    setMessage(m);
+    _setMessage(m);
     crossRoomMessageState.set(room.friendId, m);
   }
 
   useEffect(() => {
-    setMessage(crossRoomMessageState.get(room.friendId) || "");
+    _setMessage(crossRoomMessageState.get(room.friendId) || "");
   }, [room.friendId]);
 
   function handleSubmit(e: React.FormEvent) {
