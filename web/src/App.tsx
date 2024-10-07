@@ -154,7 +154,10 @@ export default function App() {
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <SnackbarProvider>
+        <SnackbarProvider
+          autoHideDuration={2000}
+          anchorOrigin={{ horizontal: "right", vertical: "top" }}
+        >
           <RouterProvider router={router} />
         </SnackbarProvider>
       </ThemeProvider>
