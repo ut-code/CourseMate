@@ -27,7 +27,7 @@ export function RoomWindow() {
   const {
     state: { data: myId },
   } = useMyID();
-  const { state, reload, write } = useMessages(room.friendId);
+  const { state, reload } = useMessages(room.friendId);
   const [messages, setMessages] = useState(state.data);
 
   useEffect(() => {
@@ -38,25 +38,20 @@ export function RoomWindow() {
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState<string>("");
 
-  async function sendDMMessage(to: UserID, msg: SendMessage): Promise<void> {
-    const message = await chat.sendDM(to, msg);
-    appendLocalMessage(message);
-  }
-
-  //メッセージの追加
-  // TODO: make a better UX with better responsibility (using something like SWR)
   const appendLocalMessage = useCallback(
-    (m: Message) => {
-      setMessages((curr) => {
-        const next = curr ? [...curr, m] : [m];
-        write(next);
-        return next;
-      });
-    },
-    [write],
+    (_: SendMessage) => reload(),
+    [reload],
   );
   const updateLocalMessage = useCallback((_: Message) => reload(), [reload]);
   const deleteLocalMessage = useCallback((_: MessageID) => reload(), [reload]);
+
+  const sendMessage = useCallback(
+    async (to: UserID, m: SendMessage) => {
+      chat.sendDM(to, m);
+      appendLocalMessage(m);
+    },
+    [appendLocalMessage],
+  );
 
   useEffect(() => {
     async function registerSocket() {
@@ -288,7 +283,7 @@ export function RoomWindow() {
           padding: "0px",
         }}
       >
-        <MessageInput send={sendDMMessage} room={room} />
+        <MessageInput send={sendMessage} room={room} />
       </Box>
     </>
   );
