@@ -26,6 +26,10 @@ export default function Settings() {
           <ListItemText primary="あなたのカード" />
         </ListItemButton>
         <Divider />
+        <ListItemButton onClick={() => navigate("/tutorial")}>
+          <ListItemText primary="CourseMateの使い方" />
+        </ListItemButton>
+        <Divider />
         <ListItemButton onClick={() => navigate("/settings/contact")}>
           <ListItemText primary="お問い合わせ" />
         </ListItemButton>

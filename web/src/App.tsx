@@ -23,6 +23,7 @@ import DeleteAccount from "./routes/tabs/settings/deleteAccount";
 import Disclaimer from "./routes/tabs/settings/disclaimer";
 import Profile from "./routes/tabs/settings/profile";
 import Settings from "./routes/tabs/settings/settings";
+import Tutorial from "./routes/tutorial";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -153,6 +154,10 @@ export default function App() {
     {
       path: "/faq",
       element: <FAQ />,
+    },
+    {
+      path: "/tutorial",
+      element: <Tutorial />,
     },
     {
       path: "*",

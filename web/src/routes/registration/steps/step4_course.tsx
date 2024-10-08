@@ -37,7 +37,7 @@ export default function Step4() {
         }}
       >
         <span />
-        <Button onClick={() => navigate("/home")} variant="contained">
+        <Button onClick={() => navigate("/tutorial")} variant="contained">
           次へ
         </Button>
       </Box>
