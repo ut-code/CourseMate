@@ -57,35 +57,45 @@ export function RoomWindow() {
   );
   const updateLocalMessage = useCallback((_: Message) => reload(), [reload]);
   const deleteLocalMessage = useCallback((_: MessageID) => reload(), [reload]);
+  const isListenerRegistered = useRef(false);
 
   useEffect(() => {
     async function registerSocket() {
       const idToken = await getIdToken();
       socket.emit("register", idToken);
-      socket.on("newMessage", async (msg: Message) => {
-        if (msg.creator === room.friendId) {
-          appendLocalMessage(msg);
-        } else {
-          const creator = await user.get(msg.creator);
-          if (creator == null) return;
-          enqueueSnackbar(
-            `${creator.name}さんからのメッセージ : ${msg.content}`,
-            {
-              variant: "info",
-            },
-          );
-        }
-      });
-      socket.on("updateMessage", async (msg: Message) => {
-        if (msg.creator === room.friendId) {
-          updateLocalMessage(msg);
-        }
-      });
-      socket.on("deleteMessage", async (msgId: number) => {
-        deleteLocalMessage(msgId);
-      });
+
+      if (!isListenerRegistered.current) {
+        socket.on("newMessage", async (msg: Message) => {
+          if (msg.creator === room.friendId) {
+            appendLocalMessage(msg);
+          } else {
+            const creator = await user.get(msg.creator);
+            if (creator == null) return;
+            enqueueSnackbar(
+              `${creator.name}さんからのメッセージ : ${msg.content}`,
+              {
+                variant: "info",
+              },
+            );
+          }
+        });
+
+        socket.on("updateMessage", async (msg: Message) => {
+          if (msg.creator === room.friendId) {
+            updateLocalMessage(msg);
+          }
+        });
+
+        socket.on("deleteMessage", async (msgId: number) => {
+          deleteLocalMessage(msgId);
+        });
+
+        isListenerRegistered.current = true;
+      }
     }
+
     registerSocket();
+
     // Clean up
     return () => {
       socket.off("newMessage");
