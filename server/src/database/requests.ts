@@ -184,13 +184,13 @@ export async function getMatchedUser(userId: UserID): Promise<Result<User[]>> {
   }
 }
 
-export async function autoMatch(userId: UserID, opponentId: UserID) {
+export async function autoMatch(userId: UserID) {
   try {
     const result = await prisma.relationship.create({
       data: {
         status: "MATCHED",
         sendingUserId: userId,
-        receivingUserId: opponentId,
+        receivingUserId: 0, //Keepメモ
       },
     });
 

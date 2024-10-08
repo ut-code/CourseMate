@@ -26,8 +26,8 @@ export async function accept(senderId: UserID) {
   return data;
 }
 
-export async function autoMatch(opponentID: UserID) {
-  const res = await credFetch("POST", endpoints.autoMatch(opponentID));
+export async function autoMatch() {
+  const res = await credFetch("POST", endpoints.autoMatch());
   const data = await res.text();
   return data;
 }

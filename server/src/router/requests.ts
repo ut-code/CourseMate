@@ -86,15 +86,12 @@ router.put("/reject/:opponentId", async (req: Request, res: Response) => {
 });
 
 //オートマッチ(メモ帳、運営等に使用)
-router.post("/autoMatch/:opponentId", async (req: Request, res: Response) => {
-  const opponentId = safeParseInt(req.params.opponentId);
-  if (!opponentId.ok) return res.status(400).send("bad param encoding");
-
+router.post("/autoMatch", async (req: Request, res: Response) => {
   const requesterId = await safeGetUserId(req);
   if (!requesterId.ok) return res.status(401).send("auth error");
 
   try {
-    await autoMatch(requesterId.value as UserID, opponentId.value as UserID);
+    await autoMatch(requesterId.value as UserID);
     res.status(204).send();
   } catch (error) {
     console.error("Error rejecting match request:", error);

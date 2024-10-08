@@ -12,7 +12,7 @@ import Confirmation from "./steps/step3_confirmation";
 import Step4 from "./steps/step4_course";
 
 function matchWithMemo() {
-  request.autoMatch(0);
+  request.autoMatch();
 }
 
 function Registration() {

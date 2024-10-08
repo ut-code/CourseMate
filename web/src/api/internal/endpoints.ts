@@ -280,8 +280,8 @@ export const rejectRequest = (opponentId: UserID) => {
   return `${origin}/requests/reject/${opponentId}`;
 };
 
-export const autoMatch = (opponentId: UserID) => {
-  return `${origin}/requests/autoMatch/${opponentId}`;
+export const autoMatch = () => {
+  return `${origin}/requests/autoMatch/`;
 };
 
 /**
