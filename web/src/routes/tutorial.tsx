@@ -33,7 +33,7 @@ const tutorialSteps = [
     imgPath: "/tutorial-5.png",
   },
   {
-    label: "実際にCourseMateを使ってみよう！",
+    label: "実際にCourseMateを使ってみよう！下のボタンをクリック！",
     imgPath: "/tutorial-6.png",
   },
 ];
@@ -103,6 +103,7 @@ export default function Tutorial() {
             variant="contained"
             color="primary"
             onClick={() => navigate("/home")}
+            sx={{ width: "100%" }}
           >
             ホーム画面へ
           </Button>
