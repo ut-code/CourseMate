@@ -7,6 +7,7 @@ import request from "../../api/request";
 import shadows from "@mui/material/styles/shadows";
 import { motion, useAnimation } from "framer-motion";
 import { useMyID, useRecommended } from "../../api/user";
+import { Card } from "../../components/Card";
 import { DraggableCard } from "../../components/DraggableCard";
 import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
@@ -15,6 +16,7 @@ export default function Home() {
 
   const [nth, setNth] = useState<number>(0);
   const displayedUser = recommended?.[nth];
+  const nextUser = recommended?.[nth + 1];
   const controls = useAnimation();
   const [clickedButton, setClickedButton] = useState<string>("");
   const {
@@ -93,15 +95,29 @@ export default function Home() {
           alignItems="center"
           height="100%"
         >
-          <motion.div animate={controls}>
-            <DraggableCard
-              displayedUser={displayedUser}
-              comparisonUserId={myId ? myId : undefined}
-              onSwipeLeft={reject}
-              onSwipeRight={accept}
-              clickedButton={clickedButton}
-            />
-          </motion.div>
+          <Box style={{ position: "relative" }}>
+            {nextUser ? (
+              <Box
+                style={{
+                  position: "absolute",
+                  top: "0",
+                  left: "0",
+                  zIndex: -1,
+                }}
+              >
+                <Card displayedUser={nextUser} />
+              </Box>
+            ) : null}
+            <motion.div animate={controls}>
+              <DraggableCard
+                displayedUser={displayedUser}
+                comparisonUserId={myId ? myId : undefined}
+                onSwipeLeft={reject}
+                onSwipeRight={accept}
+                clickedButton={clickedButton}
+              />
+            </motion.div>
+          </Box>
           <div
             style={{
               display: "flex",
