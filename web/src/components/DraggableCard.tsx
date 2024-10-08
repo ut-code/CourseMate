@@ -109,18 +109,7 @@ export const DraggableCard = ({
               </Typography>
             </Box>
           </div>
-        ) : (
-          <div
-            style={{
-              position: "absolute",
-              zIndex: 2,
-              backgroundColor: "rgba(0, 0, 0, 0)",
-              width: "min(40dvh, 87.5vw)",
-              height: "70dvh",
-              pointerEvents: "none",
-            }}
-          />
-        )}
+        ) : null}
       </div>
     );
   };
