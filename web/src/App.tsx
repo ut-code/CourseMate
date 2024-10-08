@@ -10,6 +10,7 @@ import { RoomWindow } from "./components/chat/RoomWindow";
 import { NavigateByAuthState } from "./components/common/NavigateByAuthState";
 import EditCourses from "./routes/editCourses";
 import EditProfile from "./routes/editProfile";
+import FAQ from "./routes/faq";
 import Login from "./routes/login";
 import RegistrationPage from "./routes/registration/index";
 import Root from "./routes/root";
@@ -18,6 +19,7 @@ import { Friends } from "./routes/tabs/friends";
 import Home from "./routes/tabs/home";
 import AboutUs from "./routes/tabs/settings/aboutUs";
 import Contact from "./routes/tabs/settings/contact";
+import DeleteAccount from "./routes/tabs/settings/deleteAccount";
 import Disclaimer from "./routes/tabs/settings/disclaimer";
 import Profile from "./routes/tabs/settings/profile";
 import Settings from "./routes/tabs/settings/settings";
@@ -95,6 +97,14 @@ export default function App() {
           ),
         },
         {
+          path: "settings/delete",
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <DeleteAccount />
+            </NavigateByAuthState>
+          ),
+        },
+        {
           path: "chat",
           element: (
             <NavigateByAuthState type="toLoginForUnauthenticated">
@@ -141,6 +151,10 @@ export default function App() {
       element: <RegistrationPage />,
     },
     {
+      path: "/faq",
+      element: <FAQ />,
+    },
+    {
       path: "*",
       element: (
         <p>
@@ -154,7 +168,10 @@ export default function App() {
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <SnackbarProvider>
+        <SnackbarProvider
+          autoHideDuration={2000}
+          anchorOrigin={{ horizontal: "right", vertical: "top" }}
+        >
           <RouterProvider router={router} />
         </SnackbarProvider>
       </ThemeProvider>

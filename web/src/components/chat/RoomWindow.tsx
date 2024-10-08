@@ -102,8 +102,7 @@ export function RoomWindow() {
 
   //画面スクロール
   const scrollDiv = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    state.data;
+  const scrollToBottom = useCallback(() => {
     if (scrollDiv.current) {
       const element = scrollDiv.current;
       element.scrollTo({
@@ -111,7 +110,11 @@ export function RoomWindow() {
         behavior: "instant",
       });
     }
-  }, [state.data]);
+  }, []);
+  useEffect(() => {
+    messages;
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
 
   const startEditing = useCallback(
     (messageId: number, currentContent: string) => {
@@ -244,7 +247,9 @@ export function RoomWindow() {
                       border: 1,
                     }}
                   >
-                    <Typography sx={{ wordBreak: "break-word" }}>
+                    <Typography
+                      sx={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                    >
                       {m.content}
                     </Typography>
                     {m.creator === myId && (

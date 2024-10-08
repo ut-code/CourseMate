@@ -1,34 +1,19 @@
-import { ArrowBack, GitHub, Language } from "@mui/icons-material";
+import { GitHub, Language } from "@mui/icons-material";
 import XIcon from "@mui/icons-material/X";
-import { Box, IconButton, Link, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Box, Link, Typography } from "@mui/material";
+import TopNavigation from "./components/TopNavigation";
 
 export default function AboutUs() {
-  const navigate = useNavigate();
-
   return (
     <Box
       sx={{
-        padding: "20px",
+        padding: "8px",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        textAlign: "center",
         position: "relative",
       }}
     >
-      <IconButton
-        sx={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-        }}
-        onClick={() => navigate("/settings")}
-      >
-        <ArrowBack />
-      </IconButton>
-
+      <TopNavigation title="About Us" />
       <Box
         sx={{
           width: "100%",
@@ -36,14 +21,6 @@ export default function AboutUs() {
           padding: "30px",
         }}
       >
-        <Typography
-          variant="h5"
-          component="h3"
-          gutterBottom
-          sx={{ fontWeight: "bold", mb: "24px" }}
-        >
-          About Us
-        </Typography>
         <Typography
           variant="h6"
           gutterBottom

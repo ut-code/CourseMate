@@ -34,7 +34,6 @@ type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   - fix this function s.t. this function can take query params as arg and encode it
   - fix the implementation s.t. it pass tokens in Request-Header (don't forget to fix server/firebase/auth/lib)
 */
-
 export async function credFetch(
   method: RequestMethod,
   path: string,

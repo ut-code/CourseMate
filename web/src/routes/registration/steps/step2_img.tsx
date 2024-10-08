@@ -1,12 +1,8 @@
-import { Box, Button, Modal, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
-import { useEffect, useState } from "react";
-import { uploadImage } from "../../../api/image";
-import { MAX_IMAGE_SIZE } from "../../../api/internal/fetch-func";
-import {
-  PhotoPreview,
-  PhotoPreviewButton,
-} from "../../../components/config/PhotoPreview";
+import { useCallback, useState } from "react";
+import PhotoModal from "../../../components/config/PhotoModal";
+import { PhotoPreviewButton } from "../../../components/config/PhotoPreview";
 import UserAvatar from "../../../components/human/avatar";
 import type { BackProp, StepProps } from "../common";
 
@@ -20,85 +16,27 @@ export default function Step2({
   back,
   caller,
 }: StepProps<Step2Data> & BackProp) {
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [file, setFile] = useState<File | null>(null);
   const [url, setURL] = useState<string>(prev?.pictureUrl ?? "");
+  const notify = useCallback((message: string) => {
+    enqueueSnackbar(message, {
+      variant: "error",
+    });
+  }, []);
 
   async function next() {
-    try {
-      if (!url) throw new Error("画像は入力必須です");
-      const data = {
-        pictureUrl: url,
-      };
-
-      onSave(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        let errorMessages: string;
-        try {
-          const parsedError = JSON.parse(error.message);
-          if (Array.isArray(parsedError)) {
-            errorMessages = parsedError.map((err) => err.message).join(", ");
-          } else {
-            errorMessages = error.message;
-          }
-        } catch {
-          errorMessages = error.message;
-        }
-
-        // エラーメッセージをセット
-        setErrorMessage(errorMessages);
-      } else {
-        console.log("unknown error:", error);
-        setErrorMessage("入力に誤りがあります。");
-      }
+    if (!url) {
+      notify("画像は必須です");
+      return;
     }
-  }
-  async function select() {
-    try {
-      if (!file) throw new Error("画像は入力必須です");
-      try {
-        if (file.size >= MAX_IMAGE_SIZE) {
-          enqueueSnackbar("画像が大きすぎます", {
-            variant: "error",
-            autoHideDuration: 2000,
-          });
-          return;
-        }
-        const url = await uploadImage(file);
-        setURL(url);
-      } catch {
-        enqueueSnackbar("画像のアップロードに失敗しました", {
-          variant: "error",
-        });
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        let errorMessages: string;
-        try {
-          const parsedError = JSON.parse(error.message);
-          if (Array.isArray(parsedError)) {
-            errorMessages = parsedError.map((err) => err.message).join(", ");
-          } else {
-            errorMessages = error.message;
-          }
-        } catch {
-          errorMessages = error.message;
-        }
+    const data = {
+      pictureUrl: url,
+    };
 
-        // エラーメッセージをセット
-        setErrorMessage(errorMessages);
-      } else {
-        console.log("unknown error:", error);
-        setErrorMessage("入力に誤りがあります。");
-      }
-    }
+    onSave(data);
   }
 
   const [open, setOpen] = useState<boolean>(false);
-  useEffect(() => {
-    console.log("open: ", open);
-  }, [open]);
+
   return (
     <>
       <Box m={2} display={"flex"} flexDirection={"column"} gap={2}>
@@ -107,42 +45,15 @@ export default function Step2({
         </Typography>
 
         <div style={{ textAlign: "center", marginTop: "15vh" }}>
-          <Modal
-            id="MODAL"
-            open={true}
-            sx={{
-              visibility: open ? "visible" : "hidden",
-              Margin: "auto",
-              alignItems: "center",
-              justifyContent: "center",
-              display: "flex",
-            }}
-          >
-            <Box
-              style={{
-                backgroundColor: "white",
-                width: "90%",
-                height: "auto",
-                padding: "20px",
-              }}
-            >
-              <PhotoPreview
-                prev={prev?.pictureUrl}
-                onCrop={(f) => {
-                  setFile(f);
-                }}
-              />
-              <Button
-                sx={{ float: "right", marginRight: "30px" }}
-                onClick={() => {
-                  select();
-                  setOpen(false);
-                }}
-              >
-                切り取り
-              </Button>
-            </Box>
-          </Modal>
+          <PhotoModal
+            open={open}
+            prevUrl={prev?.pictureUrl}
+            closeFunc={() => setOpen(false)}
+            afterUpload={(url) => setURL(url)}
+            onError={(err) =>
+              notify(err?.message ?? "画像のアップロードに失敗しました")
+            }
+          />
           <div
             style={{
               textAlign: "center",
@@ -158,11 +69,6 @@ export default function Step2({
                 onSelect={() => setOpen(true)}
               />
             </div>
-            {errorMessage && (
-              <Box color="red" mb={2}>
-                {errorMessage}
-              </Box>
-            )}
           </div>
         </div>
       </Box>

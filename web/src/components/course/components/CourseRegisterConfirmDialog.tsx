@@ -9,8 +9,8 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { addMyCourse, getMyCoursesOverlapWith } from "../../api/course";
-import type { Course } from "../../common/types";
+import { addMyCourse, getMyCoursesOverlapWith } from "../../../api/course";
+import type { Course } from "../../../common/types";
 
 export default function CourseRegisterConfirmDialog({
   open,
@@ -27,11 +27,18 @@ export default function CourseRegisterConfirmDialog({
 }) {
   const [overlapCourses, setOverlapCourses] = useState<Course[]>([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     if (!course) return;
+
+    setIsLoading(true);
+    setOverlapCourses([]);
+
     (async () => {
       const courses = await getMyCoursesOverlapWith(course.id);
       setOverlapCourses(courses);
+      setIsLoading(false);
     })();
   }, [course]);
 
@@ -48,16 +55,22 @@ export default function CourseRegisterConfirmDialog({
               {`追加: ${course.name} (${course.teacher})`}
             </Alert>
           )}
-          <Alert color="error" icon={false} severity="info" sx={{ mt: 1 }}>
-            {`削除: ${
-              overlapCourses
-                .map(
-                  (overlapCourse) =>
-                    `${overlapCourse.name} (${overlapCourse.teacher})`,
-                )
-                .join("・") || "なし"
-            }`}
-          </Alert>
+          {isLoading ? (
+            <Alert color="info" icon={false} severity="info" sx={{ mt: 1 }}>
+              読み込み中...
+            </Alert>
+          ) : (
+            <Alert color="error" icon={false} severity="info" sx={{ mt: 1 }}>
+              {`削除: ${
+                overlapCourses
+                  .map(
+                    (overlapCourse) =>
+                      `${overlapCourse.name} (${overlapCourse.teacher})`,
+                  )
+                  .join("・") || "なし"
+              }`}
+            </Alert>
+          )}
         </Box>
       </DialogContent>
       <DialogActions>

@@ -5,9 +5,8 @@ import { useCallback, useEffect, useState } from "react";
 import request from "../../api/request";
 
 import shadows from "@mui/material/styles/shadows";
-import { set } from "date-fns";
 import { motion, useAnimation } from "framer-motion";
-import { useRecommended } from "../../api/user";
+import { useMyID, useRecommended } from "../../api/user";
 import { DraggableCard } from "../../components/DraggableCard";
 import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
@@ -18,6 +17,9 @@ export default function Home() {
   const displayedUser = recommended?.[nth];
   const controls = useAnimation();
   const [clickedButton, setClickedButton] = useState<string>("");
+  const {
+    state: { data: myId },
+  } = useMyID();
 
   const reject = useCallback(() => {
     if (!displayedUser) return;
@@ -87,12 +89,14 @@ export default function Home() {
         <Box
           display="flex"
           flexDirection="column"
+          justifyContent="space-evenly"
           alignItems="center"
           height="100%"
         >
           <motion.div animate={controls}>
             <DraggableCard
               displayedUser={displayedUser}
+              comparisonUserId={myId ? myId : undefined}
               onSwipeLeft={reject}
               onSwipeRight={accept}
               clickedButton={clickedButton}
@@ -104,8 +108,7 @@ export default function Home() {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-around",
-              width: "100%",
-              height: "100%",
+              width: "min(100%, 46dvh)",
               marginBottom: "10px",
             }}
           >
@@ -137,16 +140,16 @@ const RoundButton = ({ onclick, icon }: RoundButtonProps) => {
 
 const ButtonStyle = {
   borderRadius: "50%",
-  width: "15vw",
-  height: "15vw",
+  width: "7dvh",
+  height: "7dvh",
   boxShadow: shadows[10],
   backgroundColor: "white",
 };
 
 const CloseIconStyled = () => {
-  return <CloseIcon style={{ color: "grey", fontSize: "10vw" }} />;
+  return <CloseIcon style={{ color: "grey", fontSize: "4.5dvh" }} />;
 };
 
 const FavoriteIconStyled = () => {
-  return <FavoriteIcon style={{ color: "red", fontSize: "10vw" }} />;
+  return <FavoriteIcon style={{ color: "red", fontSize: "4.5dvh" }} />;
 };

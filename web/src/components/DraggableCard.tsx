@@ -3,13 +3,14 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Box, Typography } from "@mui/material";
 import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { useCallback, useState } from "react";
-import type { User } from "../common/types";
+import type { User, UserID } from "../common/types";
 import { Card } from "./Card";
 
 const SWIPE_THRESHOLD = 30;
 
 interface DraggableCardProps {
   displayedUser: User;
+  comparisonUserId?: UserID;
   onSwipeRight: () => void;
   onSwipeLeft: () => void;
   clickedButton: string;
@@ -17,6 +18,7 @@ interface DraggableCardProps {
 
 export const DraggableCard = ({
   displayedUser,
+  comparisonUserId,
   onSwipeRight,
   onSwipeLeft,
   clickedButton,
@@ -53,7 +55,7 @@ export const DraggableCard = ({
               position: "absolute",
               zIndex: 2,
               backgroundColor: "rgba(255, 0, 0, 0.3)",
-              width: "85vw",
+              width: "min(40dvh, 87.5vw)",
               height: "70dvh",
               pointerEvents: "none",
               display: "flex",
@@ -68,10 +70,10 @@ export const DraggableCard = ({
               flexDirection={"column"}
               borderRadius={"50%"}
               bgcolor={"white"}
-              width={"35vw"}
-              height={"35vw"}
+              width={"16dvh"}
+              height={"16dvh"}
             >
-              <FavoriteIcon style={{ color: "red", fontSize: "10vw" }} />
+              <FavoriteIcon style={{ color: "red", fontSize: "4.5dvh" }} />
               <Typography variant="h5" component="h1" mb={1}>
                 いいね！
               </Typography>
@@ -83,7 +85,7 @@ export const DraggableCard = ({
               position: "absolute",
               zIndex: 2,
               backgroundColor: "rgba(0, 0, 0, 0.3)",
-              width: "85vw",
+              width: "min(40dvh, 87.5vw)",
               height: "70dvh",
               pointerEvents: "none",
               display: "flex",
@@ -98,16 +100,27 @@ export const DraggableCard = ({
               flexDirection={"column"}
               borderRadius={"50%"}
               bgcolor={"white"}
-              width={"35vw"}
-              height={"35vw"}
+              width={"16dvh"}
+              height={"16dvh"}
             >
-              <CloseIcon style={{ color: "black", fontSize: "10vw" }} />
+              <CloseIcon style={{ color: "black", fontSize: "4.5dvh" }} />
               <Typography variant="h5" component="h1" mb={1}>
                 スキップ
               </Typography>
             </Box>
           </div>
-        ) : null}
+        ) : (
+          <div
+            style={{
+              position: "absolute",
+              zIndex: 2,
+              backgroundColor: "rgba(0, 0, 0, 0)",
+              width: "min(40dvh, 87.5vw)",
+              height: "70dvh",
+              pointerEvents: "none",
+            }}
+          />
+        )}
       </div>
     );
   };
@@ -143,7 +156,10 @@ export const DraggableCard = ({
           whileTap={{ scale: 0.95 }}
         >
           <CardOverlay />
-          <Card displayedUser={displayedUser} />
+          <Card
+            displayedUser={displayedUser}
+            comparisonUserId={comparisonUserId}
+          />
         </motion.div>
       </section>
     </div>
