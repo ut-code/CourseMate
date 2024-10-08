@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import request from "../../api/request";
 import type { Step1User } from "../../common/zod/types";
 import Header from "../../components/Header";
 import { register } from "./functions";
@@ -9,6 +10,10 @@ import Step1 from "./steps/step1_profile";
 import Step2, { type Step2Data } from "./steps/step2_img";
 import Confirmation from "./steps/step3_confirmation";
 import Step4 from "./steps/step4_course";
+
+function matchWithMemo() {
+  request.autoMatch(0);
+}
 
 function Registration() {
   const { enqueueSnackbar } = useSnackbar();
@@ -55,6 +60,7 @@ function Registration() {
             };
             try {
               await register(concat, { enqueueSnackbar, navigate });
+              matchWithMemo();
               setStep(4);
             } catch (error) {
               enqueueSnackbar("サインアップに失敗しました", {
