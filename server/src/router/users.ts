@@ -150,7 +150,10 @@ router.delete("/me", async (req, res) => {
   if (!id.ok) return res.status(401).send("auth error");
 
   const deleted = await deleteUser(id.value);
-  if (!deleted.ok) return res.status(500).send();
+  if (!deleted.ok) {
+    console.error(deleted.error);
+    return res.status(500).send();
+  }
   res.status(204).send();
 });
 
