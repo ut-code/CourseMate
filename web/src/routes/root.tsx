@@ -33,22 +33,20 @@ const paths = [
 
 export default function Root() {
   const location = useLocation();
-  // what the f*ck is value, everything is either a value or a stmt huh?
-  // (at least this variable is not a stmt)
-  const [value, setValue] = useState(0);
+  const [tabIndex, setTabIndex] = useState(0);
 
-  //TODO 元々はどこでリロードしてもheaderがhomeになっていた。それを解消するために以下のコードを追加した。しかし、微妙だと思うので、より良い方法を求む。
+  //TODO: この処理の遅さが気になる場合は、Header は 各コンポーネントから呼ぶことにしてもよい
   useEffect(() => {
-    const currentPath = location.pathname;
+    const currentPath = `/${location.pathname.split("/")[1]}`;
     const currentIndex = paths.indexOf(currentPath);
     if (currentIndex !== -1) {
-      setValue(currentIndex);
+      setTabIndex(currentIndex);
     }
   }, [location.pathname]);
 
   return (
     <>
-      <Header title={labels[value]} />
+      <Header title={labels[tabIndex]} />
       <Box
         sx={{
           position: "absolute",
@@ -64,9 +62,9 @@ export default function Root() {
       <Box sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
         <BottomNavigation
           showLabels
-          value={value}
+          value={tabIndex}
           onChange={(_event, newValue) => {
-            setValue(newValue);
+            setTabIndex(newValue);
           }}
           sx={{
             width: "100%",
@@ -81,7 +79,9 @@ export default function Root() {
             label="Home"
             icon={
               <HomeIcon
-                sx={{ color: value === 0 ? "primary.main" : "secondary.main" }}
+                sx={{
+                  color: tabIndex === 0 ? "primary.main" : "secondary.main",
+                }}
               />
             }
           />
@@ -91,7 +91,9 @@ export default function Root() {
             label="Friends"
             icon={
               <PeopleIcon
-                sx={{ color: value === 1 ? "primary.main" : "secondary.main" }}
+                sx={{
+                  color: tabIndex === 1 ? "primary.main" : "secondary.main",
+                }}
               />
             }
           />
@@ -101,7 +103,9 @@ export default function Root() {
             label="Chat"
             icon={
               <ChatIcon
-                sx={{ color: value === 2 ? "primary.main" : "secondary.main" }}
+                sx={{
+                  color: tabIndex === 2 ? "primary.main" : "secondary.main",
+                }}
               />
             }
           />
@@ -111,7 +115,9 @@ export default function Root() {
             label="Settings"
             icon={
               <SettingsIcon
-                sx={{ color: value === 3 ? "primary.main" : "secondary.main" }}
+                sx={{
+                  color: tabIndex === 3 ? "primary.main" : "secondary.main",
+                }}
               />
             }
           />
