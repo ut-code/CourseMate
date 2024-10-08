@@ -1,13 +1,17 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Navigation, Pagination } from "swiper/modules";
-import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useState } from "react";
+import Header from "../components/Header";
 
 const tutorialSteps = [
+  {
+    label: "コースメイトの使い方",
+    imgPath: "/course-mate-icon.svg",
+  },
   {
     label: "気になる人に「いいね」を送ろう！",
     imgPath: "/tutorial-1.png",
@@ -29,21 +33,13 @@ const tutorialSteps = [
     imgPath: "/tutorial-5.png",
   },
   {
-    label: "チュートリアル完了！",
+    label: "実際にCourseMateを使ってみよう！",
+    imgPath: "/tutorial-6.png",
   },
 ];
 
 export default function Tutorial() {
   const navigate = useNavigate();
-  const [isLastSlide, setIsLastSlide] = useState(false);
-
-  const handleSlideChange = (swiper: SwiperClass) => {
-    if (swiper.activeIndex === tutorialSteps.length - 1) {
-      setIsLastSlide(true);
-    } else {
-      setIsLastSlide(false);
-    }
-  };
 
   return (
     <Box
@@ -51,9 +47,15 @@ export default function Tutorial() {
         padding: "20px",
         display: "flex",
         flexDirection: "column",
+        position: "absolute",
+        top: "56px",
+        bottom: 0,
+        left: 0,
+        right: 0,
         overflowY: "auto",
       }}
     >
+      <Header title="チュートリアル/Tutorial" />
       <Box
         sx={{
           textAlign: "left",
@@ -65,7 +67,6 @@ export default function Tutorial() {
           slidesPerView={1}
           navigation
           pagination={{ clickable: true }}
-          onSlideChange={handleSlideChange}
           style={{
             paddingBottom: "60px",
           }}
@@ -96,18 +97,16 @@ export default function Tutorial() {
               </Box>
             </SwiperSlide>
           ))}
-          {isLastSlide && (
-            <Box sx={{ textAlign: "center", mt: "20px" }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate("/home")}
-              >
-                ホーム画面へ
-              </Button>
-            </Box>
-          )}
         </Swiper>
+        <Box sx={{ textAlign: "center" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate("/home")}
+          >
+            ホーム画面へ
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

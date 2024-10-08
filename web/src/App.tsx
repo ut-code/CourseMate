@@ -137,14 +137,6 @@ export default function App() {
             </NavigateByAuthState>
           ),
         },
-        {
-          path: "/tutorial",
-          element: (
-            <NavigateByAuthState type="toLoginForUnauthenticated">
-              <Tutorial />
-            </NavigateByAuthState>
-          ),
-        },
       ],
     },
     {
@@ -162,6 +154,10 @@ export default function App() {
     {
       path: "/faq",
       element: <FAQ />,
+    },
+    {
+      path: "/tutorial",
+      element: <Tutorial />,
     },
     {
       path: "*",

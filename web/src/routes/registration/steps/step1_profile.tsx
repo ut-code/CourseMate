@@ -80,6 +80,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               label="名前"
+              autoComplete="off"
             />
           </FormControl>
           <FormControl fullWidth>
