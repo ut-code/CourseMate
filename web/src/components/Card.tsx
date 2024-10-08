@@ -167,13 +167,23 @@ const CardFront = ({ displayedUser }: CardProps) => {
       >
         <Chip label="学科" size="small" />
         <p
-          style={{
-            margin: 0,
-            fontSize: "1.76dvh",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
-          }}
+          style={
+            displayedUser.department.length <= 7
+              ? {
+                  margin: 0,
+                  fontSize: "3dvh",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }
+              : {
+                  margin: 0,
+                  fontSize: "1.76dvh",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }
+          }
         >
           {displayedUser.department}
         </p>
