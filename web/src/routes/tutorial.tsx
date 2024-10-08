@@ -9,7 +9,7 @@ import Header from "../components/Header";
 
 const tutorialSteps = [
   {
-    label: "コースメイトの使い方",
+    label: "CourseMateの使い方",
     imgPath: "/course-mate-icon.svg",
   },
   {
