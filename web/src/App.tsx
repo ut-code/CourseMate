@@ -22,6 +22,7 @@ import Contact from "./routes/tabs/settings/contact";
 import Disclaimer from "./routes/tabs/settings/disclaimer";
 import Profile from "./routes/tabs/settings/profile";
 import Settings from "./routes/tabs/settings/settings";
+import Tutorial from "./routes/tutorial";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -124,6 +125,14 @@ export default function App() {
           element: (
             <NavigateByAuthState type="toLoginForUnauthenticated">
               <EditCourses />
+            </NavigateByAuthState>
+          ),
+        },
+        {
+          path: "/tutorial",
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <Tutorial />
             </NavigateByAuthState>
           ),
         },
