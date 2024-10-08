@@ -13,6 +13,7 @@ export default function TopNavigation({ title }: { title: string }) {
       sx={{
         display: "flex",
         alignItems: "center",
+        height: "min(56px, 7vh)",
       }}
     >
       <IconButton
