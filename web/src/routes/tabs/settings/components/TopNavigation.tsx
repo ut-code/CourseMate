@@ -25,8 +25,13 @@ export default function TopNavigation({ title }: { title: string }) {
       <Typography
         variant="h5"
         component="h1"
-        ml={1}
-        sx={{ fontWeight: "bold" }}
+        sx={{
+          fontWeight: "bold",
+          // タイトルを中央に寄せる。矢印が左にしかないため。
+          position: "absolute",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
       >
         {title}
       </Typography>
