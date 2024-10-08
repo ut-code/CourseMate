@@ -13,7 +13,8 @@ export default function TopNavigation({ title }: { title: string }) {
       sx={{
         display: "flex",
         alignItems: "center",
-        height: "min(56px, 7vh)",
+        // 主に profile ページ向け。calc(画面縦幅 - カード縦幅 - ヘッダー幅 - ボトムナビ幅 - ページの py - 編集ボタンの高さ)。
+        height: "min(56px, calc(100dvh - 70dvh - 56px - 56px - 16px - 36px))",
       }}
     >
       <IconButton
