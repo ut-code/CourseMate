@@ -155,12 +155,12 @@ export default function EditProfile() {
     setDepartmentError("");
     setIntroError("");
     const data: UpdateUser = {
-      name: input.name ?? name,
+      name: (input.name ?? name).trim(),
       gender: input.gender ?? gender,
       grade: input.grade ?? grade,
       faculty: input.faculty ?? faculty,
       department: input.department ?? department,
-      intro: input.intro ?? intro,
+      intro: (input.intro ?? intro).trim(),
       pictureUrl: input.pictureUrl ?? pictureUrl,
     };
     const result = UpdateUserSchema.safeParse(data);
