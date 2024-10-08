@@ -7,6 +7,11 @@ export async function send(receiverId: UserID) {
   return res.text();
 }
 
+export async function cancel(receiverId: UserID) {
+  const res = await credFetch("PUT", endpoints.cancelRequest(receiverId));
+  return await res.text();
+}
+
 //相手からのリクエストを拒否する
 export async function reject(opponentID: UserID) {
   const res = await credFetch("PUT", endpoints.rejectRequest(opponentID));

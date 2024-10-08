@@ -1,7 +1,7 @@
 import { getAuth } from "firebase/auth";
 import type { EnqueueSnackbar } from "notistack";
 import type { NavigateFunction } from "react-router-dom";
-import userAPI from "../../api/user";
+import * as userAPI from "../../api/user";
 import type { GUID, User } from "../../common/types";
 import type { UpdateUser } from "../../common/types";
 

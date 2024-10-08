@@ -29,7 +29,6 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
         maxWidth: "500px",
         height: "50px",
         marginTop: "10vh",
-        borderRadius: "25px", // 楕円にするための設定
         fontSize: "18px",
       }}
       onClick={() => {
@@ -70,7 +69,7 @@ export function PhotoPreview({ prev, onCrop }: Props) {
   const [originalFile, setOriginalFile] = useState<File>();
   const [croppedFile, setCroppedFile] = useState<File | null>(null);
 
-  // returns true if it's OK to open.
+  // returns true if it's OK to open modal.
   const onSelectImage = useCallback(
     (event: ChangeEvent<HTMLInputElement>): boolean => {
       if (!event.target.files || event.target.files.length <= 0) {

@@ -21,9 +21,13 @@ export default function Settings() {
         justifyContent: "flex-start",
       }}
     >
-      <List sx={{ width: "100%", maxWidth: "500px" }}>
+      <List sx={{ width: "100%" }}>
         <ListItemButton onClick={() => navigate("/settings/profile")}>
           <ListItemText primary="あなたのカード" />
+        </ListItemButton>
+        <Divider />
+        <ListItemButton onClick={() => navigate("/tutorial")}>
+          <ListItemText primary="CourseMateの使い方" />
         </ListItemButton>
         <Divider />
         <ListItemButton onClick={() => navigate("/settings/contact")}>
@@ -31,11 +35,15 @@ export default function Settings() {
         </ListItemButton>
         <Divider />
         <ListItemButton onClick={() => navigate("/settings/aboutUs")}>
-          <ListItemText primary="私たちのサークルについて" />
+          <ListItemText primary="About Us" />
         </ListItemButton>
         <Divider />
         <ListItemButton onClick={() => navigate("/settings/disclaimer")}>
           <ListItemText primary="免責事項" />
+        </ListItemButton>
+        <Divider />
+        <ListItemButton onClick={() => navigate("/settings/delete")}>
+          <ListItemText primary="アカウント削除" />
         </ListItemButton>
         <Divider />
         <LogOutButton />

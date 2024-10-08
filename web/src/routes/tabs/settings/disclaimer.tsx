@@ -1,34 +1,56 @@
-import { ArrowBack } from "@mui/icons-material";
-import { Box, IconButton, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Box, Typography } from "@mui/material";
+import TopNavigation from "./components/TopNavigation";
 
 export default function Disclaimer() {
-  const navigate = useNavigate();
   return (
     <Box
       sx={{
-        padding: "20px",
+        padding: "8px",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "flex-start",
-        textAlign: "center",
       }}
     >
-      <IconButton
-        sx={{ position: "absolute", top: "20px", left: "20px" }}
-        onClick={() => navigate(-1)} // 1つ前のページに戻る
+      <TopNavigation title="免責事項" />
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: "600px",
+          padding: "30px",
+          textAlign: "left",
+        }}
       >
-        <ArrowBack />
-      </IconButton>
-      <Typography variant="h4" component="h1" gutterBottom>
-        免責事項
-      </Typography>
-      <Typography variant="body1" paragraph>
-        本サービスと東京大学の関係 本サービスは
-        ut.code();によって運営されており、東京大学は一切運営に関与していません。本サービスは使用を東大生に限定したサービスであり、ECCSアカウントのみでログインできます。本サービスで利用されているデータの一切はut.code();
-        が保有するサーバーに保存されています。
-      </Typography>
+        <Typography
+          variant="body1"
+          paragraph
+          sx={{ lineHeight: 1.8, mb: "16px" }}
+        >
+          本サービスはut.code();によって運営されており、東京大学は運営に関与しておりません。本サービスは東大生のみを対象としており、ECCSアカウントによるログインが必須です。
+        </Typography>
+
+        <Typography
+          variant="body1"
+          paragraph
+          sx={{ lineHeight: 1.8, mb: "16px" }}
+        >
+          本サービスの機能の利用に伴ういかなるトラブルや損害について、ut.code();は一切の責任を負いかねます。利用者の自己責任においてご利用ください。
+        </Typography>
+
+        <Typography
+          variant="body1"
+          paragraph
+          sx={{ lineHeight: 1.8, mb: "16px" }}
+        >
+          本サービスで収集した個人情報は、サインインおよびサービス提供の目的にのみ使用され、他の目的には使用されません。
+        </Typography>
+
+        <Typography
+          variant="body1"
+          paragraph
+          sx={{ lineHeight: 1.8, mb: "16px" }}
+        >
+          本サービスを通じて他の利用者と接触した際のトラブルや、マッチングを通じて生じた問題等に関しても、ut.code();は責任を負いません。ご理解とご協力をお願いいたします。
+        </Typography>
+      </Box>
     </Box>
   );
 }

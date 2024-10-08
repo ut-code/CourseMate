@@ -1,15 +1,17 @@
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
-import { useState } from "react";
-import type { User } from "../common/types";
-import CoursesTable from "./course/CoursesTable";
+import { Chip } from "@mui/material";
+import { useEffect, useState } from "react";
+import type { User, UserID } from "../common/types";
+import NonEditableCoursesTable from "./course/NonEditableCoursesTable";
 import UserAvatar from "./human/avatar";
 
 interface CardProps {
   displayedUser: User;
+  comparisonUserId?: UserID;
   onFlip?: (isBack: boolean) => void;
 }
 
-export function Card({ displayedUser, onFlip }: CardProps) {
+export function Card({ displayedUser, comparisonUserId, onFlip }: CardProps) {
   const [isDisplayingBack, setIsDisplayingBack] = useState(false);
 
   const handleRotate = () => {
@@ -17,18 +19,35 @@ export function Card({ displayedUser, onFlip }: CardProps) {
     if (onFlip) onFlip(!isDisplayingBack);
   };
 
+  // biome-ignore lint: FIXME! 本来はuseEffectではなくスワイプのイベントで実装するべき
+  useEffect(() => {
+    const card = document.getElementById("card");
+
+    if (card) {
+      card.style.transition = "none";
+      setIsDisplayingBack(false);
+
+      requestAnimationFrame(() => {
+        if (card) {
+          card.style.transition = "transform 600ms";
+        }
+      });
+    }
+  }, [displayedUser]);
+
   return (
     // biome-ignore lint: this cannot just be fixed rn FIXME!
     <div
       style={{
         perspective: "1000px",
-        width: "70vw",
-        height: "70vh",
+        width: "min(40dvh, 87.5vw)",
+        height: "70dvh",
         position: "relative",
       }}
       onClick={handleRotate}
     >
       <div
+        id="card"
         style={{
           position: "absolute",
           width: "100%",
@@ -57,7 +76,10 @@ export function Card({ displayedUser, onFlip }: CardProps) {
             transform: "rotateY(180deg)",
           }}
         >
-          <CardBack displayedUser={displayedUser} />
+          <CardBack
+            displayedUser={displayedUser}
+            comparisonUserId={comparisonUserId}
+          />
         </div>
       </div>
     </div>
@@ -68,99 +90,167 @@ const CardFront = ({ displayedUser }: CardProps) => {
   return (
     <div
       style={{
+        display: "flex",
+        flexDirection: "column",
         backgroundColor: "#F7FCFF",
         border: "2px solid #3596C6",
-        padding: "10px",
+        padding: "20px 20px 10px 20px",
         height: "100%",
+        gap: "2dvh",
         overflow: "hidden",
+        justifyContent: "space-between",
       }}
     >
       <div
         style={{
-          padding: "10px",
           display: "grid",
           gridTemplateColumns: "1fr 1fr 1fr",
-          gridTemplateRows: "30% 10% 10% 10% 10% 10% 20%",
           alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
+          height: "30%",
         }}
       >
         <UserAvatar
-          pictureUrl={displayedUser?.pictureUrl}
-          width="10vh"
-          height="10vh"
+          pictureUrl={displayedUser.pictureUrl}
+          width="10dvh"
+          height="10dvh"
         />
-        {displayedUser?.name && (
-          <p
-            style={{
-              fontSize: "5vmin",
-              fontWeight: "bold",
-              gridColumn: "2 / 4",
-              gridRow: "1 / 2",
-              margin: "10px",
-              marginRight: "0",
-            }}
-          >
-            {displayedUser?.name}
-          </p>
-        )}
-
-        {displayedUser?.department && (
-          <p
-            style={{
-              fontSize: "4vmin",
-              gridColumn: "1 / 4",
-              gridRow: "3 / 4",
-            }}
-          >
-            {displayedUser.department}
-          </p>
-        )}
-        <p
+        <div
           style={{
-            fontSize: "5vmin",
-            gridColumn: "1 / 3",
-            gridRow: "2 / 3",
-          }}
-        >
-          {`${displayedUser.faculty}`}
-        </p>
-        <p
-          style={{
-            fontSize: "5vmin",
+            display: "flex",
             gridColumn: "2 / 4",
-            gridRow: "4 / 5",
+            marginLeft: "1dvh",
+            justifyContent: "center",
           }}
         >
-          {displayedUser?.grade}
-        </p>
-        <p style={{ fontSize: "5vmin", gridColumn: "1 / 3", gridRow: "4 / 5" }}>
-          {displayedUser.gender}
-        </p>
-        {displayedUser?.intro && (
-          <p
+          <span
             style={{
-              fontSize: "4vmin",
-              gridColumn: "1 / 4",
-              gridRow: "5 / 8",
-              alignSelf: "start",
+              fontSize: "3.4vh",
+              fontWeight: "bold",
+              margin: "0 auto",
             }}
           >
-            {displayedUser.intro}
-          </p>
-        )}
+            {displayedUser.name}
+          </span>
+        </div>
       </div>
-      <div style={{ position: "absolute", bottom: "0", right: "0", left: "0" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
+          alignItems: "center",
+          gap: "1.5dvh",
+        }}
+      >
+        <Chip
+          label="学部"
+          size="small"
+          sx={{
+            gridColumn: "1 / 2",
+          }}
+        />
+        <p
+          style={{
+            margin: 0,
+            fontSize: "3dvh",
+          }}
+        >
+          {displayedUser.faculty}
+        </p>
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
+          alignItems: "center",
+          gap: "1.5dvh",
+        }}
+      >
+        <Chip label="学科" size="small" />
+        <p
+          style={
+            displayedUser.department.length <= 7
+              ? {
+                  margin: 0,
+                  fontSize: "3dvh",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }
+              : {
+                  margin: 0,
+                  fontSize: "1.76dvh",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }
+          }
+        >
+          {displayedUser.department}
+        </p>
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
+          alignItems: "center",
+          gap: "1.5dvh",
+        }}
+      >
+        <Chip label="性別" size="small" />
+        <p style={{ margin: 0, fontSize: "3dvh" }}>{displayedUser.gender}</p>
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
+          alignItems: "center",
+          gap: "1.5dvh",
+        }}
+      >
+        <Chip label="学年" size="small" />
+        <p style={{ margin: 0, fontSize: "3dvh" }}> {displayedUser.grade}</p>
+      </div>
+      <div
+        style={{
+          flex: 1,
+          display: "grid",
+          gridTemplateColumns: "1fr 5fr",
+          gap: "1.5dvh",
+          maxHeight: "32%", // WebKitLineClamp の フォールバックとして
+        }}
+      >
+        <Chip
+          label="自己紹介"
+          size="small"
+          sx={{
+            fontSize: "0.45rem",
+          }}
+        />
+        <p
+          style={{
+            margin: 0,
+            fontSize: "1.76dvh",
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 8,
+            lineClamp: 8,
+            textOverflow: "ellipsis",
+          }}
+        >
+          {displayedUser.intro}
+        </p>
+      </div>
+      <div>
         <ThreeSixtyIcon
-          style={{ fontSize: "7vmin", display: "block", margin: "auto" }}
+          style={{ fontSize: "3.08dvh", display: "block", margin: "auto" }}
         />
       </div>
     </div>
   );
 };
 
-const CardBack = ({ displayedUser }: CardProps) => {
+const CardBack = ({ displayedUser, comparisonUserId }: CardProps) => {
   return (
     <div
       style={{
@@ -178,10 +268,13 @@ const CardBack = ({ displayedUser }: CardProps) => {
           {displayedUser?.name}
         </p>
       </div>
-      <CoursesTable userId={displayedUser.id} />
+      <NonEditableCoursesTable
+        userId={displayedUser.id}
+        comparisonUserId={comparisonUserId}
+      />
       <div>
         <ThreeSixtyIcon
-          style={{ fontSize: "7vmin", display: "block", margin: "auto" }}
+          style={{ fontSize: "3.08dvh", display: "block", margin: "auto" }}
         />
       </div>
     </div>

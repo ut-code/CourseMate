@@ -1,38 +1,42 @@
-import { ArrowBack } from "@mui/icons-material";
-import { Box, Button, IconButton, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Box, Button, Typography } from "@mui/material";
+import TopNavigation from "./components/TopNavigation";
 
 export default function Contact() {
-  const navigate = useNavigate();
-
   return (
     <Box
       sx={{
-        padding: "20px",
+        padding: "8px",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "flex-start",
-        textAlign: "center",
       }}
     >
-      <IconButton
-        sx={{ position: "absolute", top: "20px", left: "20px" }}
-        onClick={() => navigate(-1)} // 1つ前のページに戻る
+      <TopNavigation title="お問い合わせ" />
+      <Box
+        sx={{
+          width: "100%",
+          padding: "30px",
+          textAlign: "left",
+        }}
       >
-        <ArrowBack />
-      </IconButton>
-      <Typography variant="h6" component="h2" sx={{ marginTop: "20px" }}>
-        お問い合わせ
-      </Typography>
-      <Button
-        variant="contained"
-        href="https://forms.gle/WvFTbsJoHjGp9Qt88"
-        target="_blank"
-        sx={{ marginTop: "10px" }}
-      >
-        ご意見・バグ報告をする
-      </Button>
+        <Typography sx={{ mb: "16px", lineHeight: "1.8" }}>
+          ご利用いただきありがとうございます。サービスに関するご意見やバグ報告がございましたら、以下のリンクからお問い合わせください。皆様のフィードバックは、サービスの改善に役立てさせていただきます。
+        </Typography>
+
+        <Button
+          variant="contained"
+          href="https://forms.gle/WvFTbsJoHjGp9Qt88"
+          target="_blank"
+          sx={{
+            textAlign: "center",
+            display: "block",
+            marginTop: "20px",
+            padding: "12px",
+            fontSize: "16px",
+          }}
+        >
+          ご意見・バグ報告をする
+        </Button>
+      </Box>
     </Box>
   );
 }

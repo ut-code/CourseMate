@@ -1,123 +1,135 @@
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Box, Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import request from "../../api/request";
-import user from "../../api/user";
-import type { User } from "../../common/types";
-import { useCurrentUserId } from "../../hooks/useCurrentUser";
 
 import shadows from "@mui/material/styles/shadows";
+import { motion, useAnimation } from "framer-motion";
+import { useMyID, useRecommended } from "../../api/user";
+import { Card } from "../../components/Card";
 import { DraggableCard } from "../../components/DraggableCard";
 import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
-const getBackgroundColor = (x: number) => {
-  const maxVal = 300; // 255より大きくして原色や黒にならないようにする
-  const normalizedValue = Math.max(-maxVal, Math.min(maxVal, x / 2));
-
-  // xが0に近いと白、正の方向に進むと緑、負の方向に進むと赤
-  if (normalizedValue === 0) {
-    return `rgb(${maxVal}, ${maxVal}, ${maxVal})`; // 白
-  }
-  if (normalizedValue > 0) {
-    const redValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
-    return `rgb(${maxVal}, ${maxVal - redValue}, ${maxVal - redValue})`; // 赤
-  }
-  const grayValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
-  return `rgb(${maxVal - grayValue}, ${maxVal - grayValue}, ${
-    maxVal - grayValue
-  })`; // 灰色
-};
-
 export default function Home() {
-  const [users, setUsers] = useState<User[] | null>(null);
-  const [skippedUsers, setSkippedUsers] = useState<User[] | null>(null);
-  const [displayedUser, setDisplayedUser] = useState<User | null>(null);
-  const { currentUserId, loading } = useCurrentUserId();
-  const [isAllUsersLiked, setIsAllUsersLiked] = useState(false);
+  const { data: recommended, error } = useRecommended();
 
-  useEffect(() => {
-    (async () => {
-      if (loading || !currentUserId) return;
-      const matched = await user.matched();
-      const users = await user.except(currentUserId);
-      const unmatched = users.filter(
-        (user) => !matched.some((matchedUser) => matchedUser.id === user.id),
-      );
-      setUsers(unmatched);
-    })().catch(console.error);
-  }, [currentUserId, loading]);
+  const [nth, setNth] = useState<number>(0);
+  const displayedUser = recommended?.[nth];
+  const nextUser = recommended?.[nth + 1];
+  const controls = useAnimation();
+  const [clickedButton, setClickedButton] = useState<string>("");
+  const {
+    state: { data: myId },
+  } = useMyID();
 
-  useEffect(() => {
-    if (users) {
-      const randomIndex = Math.floor(Math.random() * users.length);
-      setDisplayedUser(users[randomIndex]);
-    }
-  }, [users]);
-
-  const handleReject = (): void => {
-    if (!users || !displayedUser) return;
-    const newUsers = users.filter((user) => user.id !== displayedUser.id);
-    const newSkippedUsers = skippedUsers
-      ? [...skippedUsers, displayedUser]
-      : [displayedUser];
-    setSkippedUsers(newSkippedUsers);
-    setUsers(newUsers);
-    if (newUsers.length === 0) {
-      setUsers(newSkippedUsers);
-      setSkippedUsers([]);
-    }
-  };
-
-  const handleAccept = (): void => {
+  const reject = useCallback(() => {
     if (!displayedUser) return;
-    request.send(displayedUser.id).catch((err: unknown) => {
-      console.error("Error liking user:", err);
-    });
-    if (!users) return;
-    const newUsers = users.filter((user) => user.id !== displayedUser.id);
-    setUsers(newUsers);
-    if (newUsers.length === 0) {
-      if (skippedUsers) {
-        setUsers(skippedUsers);
-        setSkippedUsers(null);
-      } else {
-        setIsAllUsersLiked(true);
-      }
+    recommended?.push(displayedUser);
+    setNth((n) => n + 1);
+  }, [displayedUser, recommended?.push /* ew */]);
+
+  const accept = useCallback(async () => {
+    setNth((n) => n + 1);
+    if (displayedUser?.id) request.send(displayedUser.id);
+  }, [displayedUser?.id]);
+
+  const onClickCross = useCallback(() => {
+    setClickedButton("cross");
+    controls
+      .start({
+        x: [0, -1000],
+        transition: { duration: 0.5, times: [0, 1], delay: 0.2 },
+      })
+      .then(() => {
+        reject();
+        setClickedButton("");
+        controls.set({ x: 0 });
+      });
+  }, [controls, reject]);
+
+  const onClickHeart = useCallback(() => {
+    setClickedButton("heart");
+    controls
+      .start({
+        x: [0, 1000],
+        transition: { duration: 0.5, times: [0, 1], delay: 0.2 },
+      })
+      .then(() => {
+        accept();
+        setClickedButton("");
+        controls.set({ x: 0 });
+      });
+  }, [controls, accept]);
+
+  useEffect(() => {
+    if (!displayedUser) {
+      setNth(0);
     }
-  };
+  }, [displayedUser]);
 
-  const [dragValue, setDragValue] = useState(0); // x方向の値を保存
-
-  const handleDrag = (dragProgress: number) => {
-    setDragValue(dragProgress);
-  };
-
-  if (isAllUsersLiked) {
+  if (recommended == null) {
+    return <FullScreenCircularProgress />;
+  }
+  if (displayedUser == null) {
     return <div>全員にいいねを送りました！</div>;
+  }
+  if (error) {
+    return <div>Something went wrong: {error.message}</div>;
   }
 
   return (
-    <div style={{ backgroundColor: getBackgroundColor(dragValue) }}>
+    <div
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
       {displayedUser ? (
-        <Box display="flex" flexDirection="column" alignItems="center">
-          <DraggableCard
-            displayedUser={displayedUser}
-            onSwipeLeft={handleReject}
-            onSwipeRight={handleAccept}
-            onDrag={handleDrag}
-          />
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="space-evenly"
+          alignItems="center"
+          height="100%"
+        >
+          <Box style={{ position: "relative" }}>
+            {nextUser ? (
+              <Box
+                style={{
+                  position: "absolute",
+                  top: "0",
+                  left: "0",
+                  zIndex: -1,
+                }}
+              >
+                <Card displayedUser={nextUser} />
+              </Box>
+            ) : null}
+            <motion.div animate={controls}>
+              <DraggableCard
+                displayedUser={displayedUser}
+                comparisonUserId={myId ? myId : undefined}
+                onSwipeLeft={reject}
+                onSwipeRight={accept}
+                clickedButton={clickedButton}
+              />
+            </motion.div>
+          </Box>
           <div
             style={{
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-around",
-              width: "50%",
+              width: "min(100%, 46dvh)",
+              marginBottom: "10px",
             }}
           >
-            <RoundButton onclick={handleReject} icon={<CloseIconStyled />} />
-            <RoundButton onclick={handleAccept} icon={<FavoriteIconStyled />} />
+            <RoundButton onclick={onClickCross} icon={<CloseIconStyled />} />
+            <RoundButton onclick={onClickHeart} icon={<FavoriteIconStyled />} />
           </div>
         </Box>
       ) : (
@@ -144,17 +156,16 @@ const RoundButton = ({ onclick, icon }: RoundButtonProps) => {
 
 const ButtonStyle = {
   borderRadius: "50%",
-  width: "7vw",
-  height: "auto",
-  margin: "10px",
+  width: "7dvh",
+  height: "7dvh",
   boxShadow: shadows[10],
   backgroundColor: "white",
 };
 
 const CloseIconStyled = () => {
-  return <CloseIcon style={{ color: "grey", fontSize: "5vw" }} />;
+  return <CloseIcon style={{ color: "grey", fontSize: "4.5dvh" }} />;
 };
 
 const FavoriteIconStyled = () => {
-  return <FavoriteIcon style={{ color: "red", fontSize: "5vw" }} />;
+  return <FavoriteIcon style={{ color: "red", fontSize: "4.5dvh" }} />;
 };
