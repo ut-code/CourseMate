@@ -32,7 +32,7 @@ export default function Profile() {
     <>
       <Box
         sx={{
-          padding: "20px",
+          padding: "8px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -41,7 +41,7 @@ export default function Profile() {
         }}
       >
         <IconButton
-          sx={{ position: "absolute", top: "20px", left: "20px", zIndex: 10 }}
+          sx={{ position: "absolute", top: "8px", left: "20px", zIndex: 10 }}
           onClick={() => {
             navigate("/settings");
           }}
@@ -52,9 +52,7 @@ export default function Profile() {
           sx={{
             width: "100%",
             maxWidth: "600px",
-            paddingTop: "30px",
-            paddingRight: "30px",
-            paddingLeft: "30px",
+            padding: "8px 8px 0px 8px",
             position: "relative",
           }}
         >
@@ -69,8 +67,8 @@ export default function Profile() {
           <Box
             sx={{
               position: "absolute",
-              top: "16px",
-              right: "16px",
+              top: "0px",
+              right: "32px",
             }}
           >
             <IconButton

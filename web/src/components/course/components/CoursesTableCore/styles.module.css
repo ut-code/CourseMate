@@ -38,7 +38,7 @@
   vertical-align: top;
 }
 
-.table > tbody > tr > td > span {
+.table > tbody > tr > td > div {
   width: 100%;
   height: 100%;
   padding: 0 0.1rem;
@@ -47,7 +47,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 0.5rem;
+  font-size: 1dvh;
   vertical-align: top;
 }
 
