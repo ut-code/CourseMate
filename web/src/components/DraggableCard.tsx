@@ -13,7 +13,7 @@ interface DraggableCardProps {
   comparisonUserId?: UserID;
   onSwipeRight: () => void;
   onSwipeLeft: () => void;
-  onDrag?: (X: number) => void;
+  clickedButton: string;
 }
 
 export const DraggableCard = ({
@@ -21,6 +21,7 @@ export const DraggableCard = ({
   comparisonUserId,
   onSwipeRight,
   onSwipeLeft,
+  clickedButton,
 }: DraggableCardProps) => {
   const dragX = useMotionValue(0);
   const dragY = useMotionValue(0);
@@ -48,7 +49,7 @@ export const DraggableCard = ({
   const CardOverlay = () => {
     return (
       <div>
-        {dragProgress > SWIPE_THRESHOLD ? (
+        {dragProgress > SWIPE_THRESHOLD || clickedButton === "heart" ? (
           <div
             style={{
               position: "absolute",
@@ -78,7 +79,7 @@ export const DraggableCard = ({
               </Typography>
             </Box>
           </div>
-        ) : dragProgress < -SWIPE_THRESHOLD ? (
+        ) : dragProgress < -SWIPE_THRESHOLD || clickedButton === "cross" ? (
           <div
             style={{
               position: "absolute",
@@ -108,18 +109,7 @@ export const DraggableCard = ({
               </Typography>
             </Box>
           </div>
-        ) : (
-          <div
-            style={{
-              position: "absolute",
-              zIndex: 2,
-              backgroundColor: "rgba(0, 0, 0, 0)",
-              width: "min(40dvh, 87.5vw)",
-              height: "70dvh",
-              pointerEvents: "none",
-            }}
-          />
-        )}
+        ) : null}
       </div>
     );
   };

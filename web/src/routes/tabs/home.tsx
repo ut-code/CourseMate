@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import request from "../../api/request";
 
 import shadows from "@mui/material/styles/shadows";
+import { motion, useAnimation } from "framer-motion";
 import { useMyID, useRecommended } from "../../api/user";
 import { DraggableCard } from "../../components/DraggableCard";
 import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
@@ -14,6 +15,8 @@ export default function Home() {
 
   const [nth, setNth] = useState<number>(0);
   const displayedUser = recommended?.[nth];
+  const controls = useAnimation();
+  const [clickedButton, setClickedButton] = useState<string>("");
   const {
     state: { data: myId },
   } = useMyID();
@@ -28,6 +31,34 @@ export default function Home() {
     setNth((n) => n + 1);
     if (displayedUser?.id) request.send(displayedUser.id);
   }, [displayedUser?.id]);
+
+  const onClickCross = useCallback(() => {
+    setClickedButton("cross");
+    controls
+      .start({
+        x: [0, -1000],
+        transition: { duration: 0.5, times: [0, 1], delay: 0.2 },
+      })
+      .then(() => {
+        reject();
+        setClickedButton("");
+        controls.set({ x: 0 });
+      });
+  }, [controls, reject]);
+
+  const onClickHeart = useCallback(() => {
+    setClickedButton("heart");
+    controls
+      .start({
+        x: [0, 1000],
+        transition: { duration: 0.5, times: [0, 1], delay: 0.2 },
+      })
+      .then(() => {
+        accept();
+        setClickedButton("");
+        controls.set({ x: 0 });
+      });
+  }, [controls, accept]);
 
   useEffect(() => {
     if (!displayedUser) {
@@ -62,12 +93,15 @@ export default function Home() {
           alignItems="center"
           height="100%"
         >
-          <DraggableCard
-            displayedUser={displayedUser}
-            comparisonUserId={myId ? myId : undefined}
-            onSwipeLeft={reject}
-            onSwipeRight={accept}
-          />
+          <motion.div animate={controls}>
+            <DraggableCard
+              displayedUser={displayedUser}
+              comparisonUserId={myId ? myId : undefined}
+              onSwipeLeft={reject}
+              onSwipeRight={accept}
+              clickedButton={clickedButton}
+            />
+          </motion.div>
           <div
             style={{
               display: "flex",
@@ -78,8 +112,8 @@ export default function Home() {
               marginBottom: "10px",
             }}
           >
-            <RoundButton onclick={reject} icon={<CloseIconStyled />} />
-            <RoundButton onclick={accept} icon={<FavoriteIconStyled />} />
+            <RoundButton onclick={onClickCross} icon={<CloseIconStyled />} />
+            <RoundButton onclick={onClickHeart} icon={<FavoriteIconStyled />} />
           </div>
         </Box>
       ) : (
