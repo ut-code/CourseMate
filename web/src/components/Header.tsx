@@ -30,7 +30,7 @@ export default function Header(props: Props) {
           >
             {title}
           </Typography>
-          <IconButton onClick={() => navigate("./faq")} sx={{ zIndex: "100" }}>
+          <IconButton onClick={() => navigate("/faq")} sx={{ zIndex: "100" }}>
             <InfoOutlinedIcon />
           </IconButton>
         </Toolbar>

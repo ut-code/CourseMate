@@ -19,7 +19,6 @@ const labels = [
   "編集/Edit",
   "編集/Edit",
   "チュートリアル/Tutorial",
-  "よくある質問/FAQ",
 ];
 const paths = [
   "/home",
@@ -33,7 +32,6 @@ const paths = [
   "/edit/profile",
   "/edit/courses",
   "/tutorial",
-  "/faq",
 ];
 
 export default function Root() {
