@@ -1,7 +1,6 @@
 import { ArrowBack } from "@mui/icons-material";
 import { Box, IconButton, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/Header";
 
 export default function FAQ() {
   const navigate = useNavigate();
@@ -20,7 +19,6 @@ export default function FAQ() {
         overflowY: "auto",
       }}
     >
-      <Header title="よくある質問/FAQ" />
       <IconButton
         sx={{ position: "absolute", top: "20px", left: "20px" }}
         onClick={() => navigate(-1)}

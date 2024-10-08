@@ -6,7 +6,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useState } from "react";
-import Header from "../components/Header";
 
 const tutorialSteps = [
   {
@@ -55,7 +54,6 @@ export default function Tutorial() {
         overflowY: "auto",
       }}
     >
-      <Header title="チュートリアル/Tutorial" />
       <Box
         sx={{
           textAlign: "left",
