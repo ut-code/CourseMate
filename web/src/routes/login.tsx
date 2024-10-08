@@ -46,10 +46,6 @@ export default function Login() {
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
 
-  if (loading) {
-    return <FullScreenCircularProgress />;
-  }
-
   async function logInByGoogle() {
     try {
       setLoading(true);
@@ -110,6 +106,10 @@ export default function Login() {
       });
       setLoading(false);
     }
+  }
+
+  if (loading) {
+    return <FullScreenCircularProgress />;
   }
 
   return (
