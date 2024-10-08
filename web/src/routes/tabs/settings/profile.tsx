@@ -1,12 +1,12 @@
-import { ArrowBack } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAboutMe } from "../../../api/user";
 ("../../../api/user");
 import { Card } from "../../../components/Card";
 import FullScreenCircularProgress from "../../../components/common/FullScreenCircularProgress";
+import TopNavigation from "./components/TopNavigation";
 
 export default function Profile() {
   const { state } = useAboutMe();
@@ -32,55 +32,42 @@ export default function Profile() {
     <>
       <Box
         sx={{
-          padding: "8px",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
+          padding: "8px",
         }}
       >
-        <IconButton
-          sx={{ position: "absolute", top: "8px", left: "20px", zIndex: 10 }}
-          onClick={() => {
-            navigate("/settings");
-          }}
-        >
-          <ArrowBack />
-        </IconButton>
+        <TopNavigation title="あなたのカード" />
         <Box
           sx={{
-            width: "100%",
-            maxWidth: "600px",
-            padding: "8px 8px 0px 8px",
-            position: "relative",
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Typography
-            variant="h5"
-            component="h3"
-            gutterBottom
-            sx={{ fontWeight: "bold" }}
-          >
-            あなたのカード
-          </Typography>
           <Box
             sx={{
-              position: "absolute",
-              top: "0px",
-              right: "32px",
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
             }}
           >
-            <IconButton
+            <Button
               onClick={() => navigate(back ? "/edit/courses" : "/edit/profile")}
+              startIcon={<EditIcon />}
+              sx={{
+                paddingRight: "0px",
+                // (画面幅 - カード幅) / 2 - profile の padding
+                marginRight:
+                  "calc(calc(calc(100vw - min(40dvh, 87.5vw)) / 2) - 8px)",
+              }}
             >
-              <EditIcon sx={{ color: "#039BE5" }} fontSize="large" />
-            </IconButton>
+              編集する
+            </Button>
           </Box>
+          <Card displayedUser={data} onFlip={(back) => setBack(back)} />
         </Box>
-      </Box>
-      <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-        <Card displayedUser={data} onFlip={(back) => setBack(back)} />
       </Box>
     </>
   );
