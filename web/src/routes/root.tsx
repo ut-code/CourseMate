@@ -15,6 +15,7 @@ const labels = [
   "設定/Settings",
   "設定/Settings",
   "設定/Settings",
+  "設定/Settings",
   "編集/Edit",
   "編集/Edit",
 ];
@@ -27,6 +28,7 @@ const paths = [
   "/settings/contact",
   "/settings/aboutUs",
   "/settings/disclaim",
+  "/settings/delete",
   "/edit/profile",
   "/edit/courses",
 ];
