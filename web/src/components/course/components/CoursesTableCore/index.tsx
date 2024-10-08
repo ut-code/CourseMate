@@ -138,8 +138,32 @@ function Cell({
 }) {
   const content = (
     <>
-      <span>{courseName ? truncateStr(courseName ?? "", 16) : ""}</span>
-      <span>{teacherName ? truncateStr(teacherName ?? "", 6) : ""}</span>
+      <p
+        style={{
+          margin: 0,
+          overflow: "hidden",
+          display: "-webkit-box",
+          WebkitBoxOrient: "vertical",
+          WebkitLineClamp: 2,
+          lineClamp: 2,
+          textOverflow: "ellipsis",
+        }}
+      >
+        {courseName ? truncateStr(courseName ?? "", 16) : ""}
+      </p>
+      <p
+        style={{
+          margin: 0,
+          overflow: "hidden",
+          display: "-webkit-box",
+          WebkitBoxOrient: "vertical",
+          WebkitLineClamp: 2,
+          lineClamp: 2,
+          textOverflow: "ellipsis",
+        }}
+      >
+        {teacherName ? truncateStr(teacherName ?? "", 6) : ""}
+      </p>
     </>
   );
 
@@ -160,7 +184,7 @@ function Cell({
           {content}
         </button>
       ) : (
-        <span
+        <div
           className={
             isOverlapping
               ? styles.overlapped
@@ -170,7 +194,7 @@ function Cell({
           }
         >
           {content}
-        </span>
+        </div>
       )}
     </td>
   );

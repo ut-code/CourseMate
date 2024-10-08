@@ -19,6 +19,7 @@ import { Friends } from "./routes/tabs/friends";
 import Home from "./routes/tabs/home";
 import AboutUs from "./routes/tabs/settings/aboutUs";
 import Contact from "./routes/tabs/settings/contact";
+import DeleteAccount from "./routes/tabs/settings/deleteAccount";
 import Disclaimer from "./routes/tabs/settings/disclaimer";
 import Profile from "./routes/tabs/settings/profile";
 import Settings from "./routes/tabs/settings/settings";
@@ -93,6 +94,14 @@ export default function App() {
           element: (
             <NavigateByAuthState type="toLoginForUnauthenticated">
               <Disclaimer />
+            </NavigateByAuthState>
+          ),
+        },
+        {
+          path: "settings/delete",
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <DeleteAccount />
             </NavigateByAuthState>
           ),
         },

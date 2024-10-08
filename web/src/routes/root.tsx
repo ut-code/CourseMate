@@ -29,6 +29,7 @@ const paths = [
   "/settings/contact",
   "/settings/aboutUs",
   "/settings/disclaim",
+  "/settings/delete",
   "/edit/profile",
   "/edit/courses",
   "/tutorial",
@@ -53,7 +54,10 @@ export default function Root() {
       <Box
         sx={{
           position: "absolute",
-          top: "56px",
+          top: {
+            xs: "56px",
+            sm: "64px",
+          },
           bottom: "56px",
           left: 0,
           right: 0,

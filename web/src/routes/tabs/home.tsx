@@ -58,6 +58,7 @@ export default function Home() {
         <Box
           display="flex"
           flexDirection="column"
+          justifyContent="space-evenly"
           alignItems="center"
           height="100%"
         >
@@ -73,8 +74,7 @@ export default function Home() {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-around",
-              width: "100%",
-              height: "100%",
+              width: "min(100%, 46dvh)",
               marginBottom: "10px",
             }}
           >
@@ -106,16 +106,16 @@ const RoundButton = ({ onclick, icon }: RoundButtonProps) => {
 
 const ButtonStyle = {
   borderRadius: "50%",
-  width: "15vw",
-  height: "15vw",
+  width: "7dvh",
+  height: "7dvh",
   boxShadow: shadows[10],
   backgroundColor: "white",
 };
 
 const CloseIconStyled = () => {
-  return <CloseIcon style={{ color: "grey", fontSize: "10vw" }} />;
+  return <CloseIcon style={{ color: "grey", fontSize: "4.5dvh" }} />;
 };
 
 const FavoriteIconStyled = () => {
-  return <FavoriteIcon style={{ color: "red", fontSize: "10vw" }} />;
+  return <FavoriteIcon style={{ color: "red", fontSize: "4.5dvh" }} />;
 };
