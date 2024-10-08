@@ -11,19 +11,23 @@ import Header from "../components/Header";
 const tutorialSteps = [
   {
     label: "気になった人に「いいね」を送ろう！",
-    imgPath: "/images/home.png",
+    imgPath: "/tutorial-1.png",
   },
   {
-    label: "相手からのリクエストを承認してマッチング！",
-    imgPath: "/images/matching1.png",
+    label: "相手からのリクエストが来たら...",
+    imgPath: "/tutorial-2.png",
+  },
+  {
+    label: "リクエストを承認して、マッチング！",
+    imgPath: "/tutorial-3.png",
   },
   {
     label: "マッチングした人とチャットをして、仲を深めよう！",
-    imgPath: "/images/chat.png",
+    imgPath: "/tutorial-4.png",
   },
   {
-    label: "魅力的なカードを作ってね！",
-    imgPath: "/images/edit.png",
+    label: "カードを編集して、より魅力的なカードを作ろう！",
+    imgPath: "/tutorial-5.png",
   },
 ];
 
