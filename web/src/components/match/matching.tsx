@@ -37,12 +37,7 @@ export default function Matchings() {
           {data?.map((matchedUser) =>
             matchedUser.id === 0 ? (
               //メモ帳
-              <HumanListItem
-                key={matchedUser.id}
-                id={matchedUser.id}
-                name={matchedUser.name}
-                pictureUrl={matchedUser.pictureUrl}
-              />
+              <div key={0} />
             ) : (
               <HumanListItem
                 key={matchedUser.id}
