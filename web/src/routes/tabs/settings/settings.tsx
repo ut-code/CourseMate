@@ -6,7 +6,6 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import DeleteAccountButton from "../../../components/DeleteAccountButton";
 import LogOutButton from "../../../components/LogOutButton";
 
 export default function Settings() {
@@ -39,9 +38,11 @@ export default function Settings() {
           <ListItemText primary="免責事項" />
         </ListItemButton>
         <Divider />
-        <LogOutButton />
+        <ListItemButton onClick={() => navigate("/settings/delete")}>
+          <ListItemText primary="アカウント削除" />
+        </ListItemButton>
         <Divider />
-        <DeleteAccountButton />
+        <LogOutButton />
         <Divider />
       </List>
     </Box>
