@@ -16,9 +16,9 @@ const provider = new GoogleAuthProvider();
 
 async function signInWithGoogle() {
   try {
-    // provider.setCustomParameters({
-    //   hd: "g.ecc.u-tokyo.ac.jp",
-    // });
+    provider.setCustomParameters({
+      hd: "g.ecc.u-tokyo.ac.jp",
+    });
     const result = await signInWithPopup(auth, provider);
     const credential = GoogleAuthProvider.credentialFromResult(result);
 
