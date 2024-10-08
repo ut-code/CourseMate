@@ -29,46 +29,44 @@ export default function Profile() {
   }
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        padding: "8px",
+      }}
+    >
+      <TopNavigation title="あなたのカード" />
       <Box
         sx={{
+          flex: 1,
           display: "flex",
           flexDirection: "column",
-          padding: "8px",
+          alignItems: "center",
         }}
       >
-        <TopNavigation title="あなたのカード" />
         <Box
           sx={{
-            flex: 1,
+            width: "100%",
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            justifyContent: "flex-end",
           }}
         >
-          <Box
+          <Button
+            onClick={() => navigate(back ? "/edit/courses" : "/edit/profile")}
+            startIcon={<EditIcon />}
             sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "flex-end",
+              paddingRight: "0px",
+              // (画面幅 - カード幅) / 2 - profile の padding
+              marginRight:
+                "calc(calc(calc(100vw - min(40dvh, 87.5vw)) / 2) - 8px)",
             }}
           >
-            <Button
-              onClick={() => navigate(back ? "/edit/courses" : "/edit/profile")}
-              startIcon={<EditIcon />}
-              sx={{
-                paddingRight: "0px",
-                // (画面幅 - カード幅) / 2 - profile の padding
-                marginRight:
-                  "calc(calc(calc(100vw - min(40dvh, 87.5vw)) / 2) - 8px)",
-              }}
-            >
-              編集する
-            </Button>
-          </Box>
-          <Card displayedUser={data} onFlip={(back) => setBack(back)} />
+            編集する
+          </Button>
         </Box>
+        <Card displayedUser={data} onFlip={(back) => setBack(back)} />
       </Box>
-    </>
+    </Box>
   );
 }
