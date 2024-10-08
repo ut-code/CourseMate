@@ -32,6 +32,9 @@ export default function TopNavigation({ title }: { title: string }) {
           position: "absolute",
           left: "50%",
           transform: "translateX(-50%)",
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
         }}
       >
         {title}
