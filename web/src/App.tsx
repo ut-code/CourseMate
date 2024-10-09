@@ -19,9 +19,11 @@ import { Friends } from "./routes/tabs/friends";
 import Home from "./routes/tabs/home";
 import AboutUs from "./routes/tabs/settings/aboutUs";
 import Contact from "./routes/tabs/settings/contact";
+import DeleteAccount from "./routes/tabs/settings/deleteAccount";
 import Disclaimer from "./routes/tabs/settings/disclaimer";
 import Profile from "./routes/tabs/settings/profile";
 import Settings from "./routes/tabs/settings/settings";
+import Tutorial from "./routes/tutorial";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -96,6 +98,14 @@ export default function App() {
           ),
         },
         {
+          path: "settings/delete",
+          element: (
+            <NavigateByAuthState type="toLoginForUnauthenticated">
+              <DeleteAccount />
+            </NavigateByAuthState>
+          ),
+        },
+        {
           path: "chat",
           element: (
             <NavigateByAuthState type="toLoginForUnauthenticated">
@@ -144,6 +154,10 @@ export default function App() {
     {
       path: "/faq",
       element: <FAQ />,
+    },
+    {
+      path: "/tutorial",
+      element: <Tutorial />,
     },
     {
       path: "*",

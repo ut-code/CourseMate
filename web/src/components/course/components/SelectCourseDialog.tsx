@@ -69,21 +69,35 @@ export default function SelectCourseDialog({
       </DialogTitle>
       <DialogContent>
         <>
-          <Box display="flex" alignItems="center" sx={{ width: "100%" }}>
-            <Typography variant="body1">
-              現在の授業: {currentEdit?.course?.name ?? "-"}
-            </Typography>
-            <IconButton
-              aria-label="delete"
-              onClick={async () => {
-                if (!currentEdit?.course?.id) return;
+          <Box>
+            <Box px={1} pb={2}>
+              <Typography variant="caption">現在の授業</Typography>
+              {currentEdit?.course ? (
+                <Box display="flex" alignItems="center" sx={{ width: "100%" }}>
+                  <Box flex={1}>
+                    <Typography variant="body1">
+                      {currentEdit?.course?.name ?? "-"}
+                    </Typography>
+                    <Typography variant="body2">{`${currentEdit?.course?.teacher ?? "-"} / ${
+                      currentEdit?.course?.id ?? "-"
+                    }`}</Typography>
+                  </Box>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={async () => {
+                      if (!currentEdit?.course?.id) return;
 
-                setNewCourse(currentEdit.course);
-                setIsDeleteConfirmDialogOpen(true);
-              }}
-            >
-              <DeleteIcon />
-            </IconButton>
+                      setNewCourse(currentEdit.course);
+                      setIsDeleteConfirmDialogOpen(true);
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
+              ) : (
+                <Typography>未登録</Typography>
+              )}
+            </Box>
           </Box>
           <TextField
             onChange={(e) => {
@@ -111,7 +125,10 @@ export default function SelectCourseDialog({
                         setIsConfirmDialogOpen(true);
                       }}
                     >
-                      {`${course.name}(${course.teacher})`}
+                      <Box>
+                        <Typography>{course.name}</Typography>
+                        <Typography variant="caption">{`${course.teacher} / ${course.id}`}</Typography>
+                      </Box>
                     </ListItemButton>
                   </ListItem>
                 ))}

@@ -15,6 +15,7 @@ const labels = [
   "設定/Settings",
   "設定/Settings",
   "設定/Settings",
+  "設定/Settings",
   "編集/Edit",
   "編集/Edit",
 ];
@@ -27,6 +28,7 @@ const paths = [
   "/settings/contact",
   "/settings/aboutUs",
   "/settings/disclaim",
+  "/settings/delete",
   "/edit/profile",
   "/edit/courses",
 ];
@@ -50,7 +52,10 @@ export default function Root() {
       <Box
         sx={{
           position: "absolute",
-          top: "56px",
+          top: {
+            xs: "56px",
+            sm: "64px",
+          },
           bottom: "56px",
           left: 0,
           right: 0,
