@@ -7,16 +7,23 @@ import request from "../../api/request";
 import shadows from "@mui/material/styles/shadows";
 import { motion, useAnimation } from "framer-motion";
 import { useMyID, useRecommended } from "../../api/user";
+import type { User } from "../../common/types";
 import { Card } from "../../components/Card";
 import { DraggableCard } from "../../components/DraggableCard";
 import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
 export default function Home() {
-  const { data: recommended, error } = useRecommended();
+  const { data, loading, error } = useRecommended();
+  const [_, rerender] = useState({});
+  const [recommended, setRecommended] = useState<Queue<User>>(
+    () => new Queue([]),
+  );
+  useEffect(() => {
+    if (data) setRecommended(new Queue(data));
+  }, [data]);
 
-  const [nth, setNth] = useState<number>(0);
-  const displayedUser = recommended?.[nth];
-  const nextUser = recommended?.[nth + 1];
+  const displayedUser = recommended.peek(1);
+  const nextUser = recommended.peek(2);
   const controls = useAnimation();
   const [clickedButton, setClickedButton] = useState<string>("");
   const {
@@ -24,15 +31,18 @@ export default function Home() {
   } = useMyID();
 
   const reject = useCallback(() => {
-    if (!displayedUser) return;
-    recommended?.push(displayedUser);
-    setNth((n) => n + 1);
-  }, [displayedUser, recommended?.push /* ew */]);
+    const current = recommended.pop();
+    if (!current) return;
+    recommended.push(current);
+    rerender({});
+  }, [recommended]);
 
   const accept = useCallback(async () => {
-    setNth((n) => n + 1);
-    if (displayedUser?.id) request.send(displayedUser.id);
-  }, [displayedUser?.id]);
+    const current = recommended.pop();
+    if (!current) return;
+    request.send(current.id);
+    rerender({});
+  }, [recommended]);
 
   const onClickCross = useCallback(() => {
     setClickedButton("cross");
@@ -62,13 +72,7 @@ export default function Home() {
       });
   }, [controls, accept]);
 
-  useEffect(() => {
-    if (!displayedUser) {
-      setNth(0);
-    }
-  }, [displayedUser]);
-
-  if (recommended == null) {
+  if (recommended == null || loading) {
     return <FullScreenCircularProgress />;
   }
   if (displayedUser == null) {
@@ -169,3 +173,23 @@ const CloseIconStyled = () => {
 const FavoriteIconStyled = () => {
   return <FavoriteIcon style={{ color: "red", fontSize: "4.5dvh" }} />;
 };
+
+class Queue<T> {
+  private store: T[];
+  constructor(initial: T[]) {
+    this.store = initial;
+  }
+  push(top: T): void {
+    this.store.push(top);
+  }
+  // peek(1) to peek the next elem to be popped, peek(2) peeks the second next element to be popped.
+  peek(nth: number): T | undefined {
+    return this.store[nth - 1];
+  }
+  pop(): T | undefined {
+    return this.store.shift();
+    // yes, I know what you want to say, it has O(n) time complexity.
+    // it doesn't really matter if there is only like 100 people in home queue at most.
+    // if you really care about performance, why don't you go and limit the amount of people to fetch? that probably has significantly more impact to the performance.
+  }
+}
