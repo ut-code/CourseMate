@@ -9,16 +9,11 @@ type Props = {
 
 // https://medium.com/@abhishekmicosoft/handling-img-fallback-307653b2f30
 export function ImageFallback({ width, height, url, fallback }: Props) {
-  const [ok, setOK] = useState<boolean>(true);
-  useEffect(() => {
-    url;
-    setOK(true);
-  }, [url]);
   const URL = url?.startsWith("/")
     ? `${import.meta.env.VITE_API_ENDPOINT}${url}`
     : url;
 
-  return ok ? (
+  return (
     <object
       data={URL}
       type="image/webp"
@@ -40,7 +35,5 @@ export function ImageFallback({ width, height, url, fallback }: Props) {
         alt=""
       />
     </object>
-  ) : (
-    <>{fallback}</>
   );
 }
