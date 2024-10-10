@@ -177,7 +177,7 @@ export function RoomWindow() {
           overflowY: "auto",
         }}
       >
-        {messages ? (
+        {messages && messages.length > 0 ? (
           <Box
             sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}
             ref={scrollDiv}
