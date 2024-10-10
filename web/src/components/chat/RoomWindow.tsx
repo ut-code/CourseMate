@@ -203,6 +203,11 @@ export function RoomWindow() {
                     <TextField
                       value={editedContent}
                       onChange={(e) => setEditedContent(e.target.value)}
+                      onKeyDown={(e) => {
+                        if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                          commitEdit(editingMessageId, editedContent);
+                        }
+                      }}
                       fullWidth
                       variant="outlined"
                       multiline
