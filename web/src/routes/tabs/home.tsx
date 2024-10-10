@@ -105,11 +105,12 @@ export default function Home() {
                   zIndex: -1,
                 }}
               >
-                <Card displayedUser={nextUser} />
+                <Card key={displayedUser.id} displayedUser={nextUser} />
               </Box>
             ) : null}
             <motion.div animate={controls}>
               <DraggableCard
+                key={displayedUser.id}
                 displayedUser={displayedUser}
                 comparisonUserId={myId ? myId : undefined}
                 onSwipeLeft={reject}
