@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 type Props = {
   url?: string;
   fallback: React.ReactElement;
@@ -8,7 +6,7 @@ type Props = {
 };
 
 // https://medium.com/@abhishekmicosoft/handling-img-fallback-307653b2f30
-export function ImageFallback({ width, height, url, fallback }: Props) {
+export function ImageFallback({ width, height, url }: Props) {
   const URL = url?.startsWith("/")
     ? `${import.meta.env.VITE_API_ENDPOINT}${url}`
     : url;
