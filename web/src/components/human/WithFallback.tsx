@@ -18,7 +18,6 @@ export function AvatarWithFallback({ width, height, url }: Props) {
           sx={{ width: `${width}`, height: `${height}`, objectFit: "cover" }}
         />
       }
-      alt=""
     />
   );
 }

@@ -5,11 +5,10 @@ type Props = {
   fallback: React.ReactElement;
   width: string;
   height: string;
-  alt: string;
 };
 
 // https://medium.com/@abhishekmicosoft/handling-img-fallback-307653b2f30
-export function ImageFallback({ width, height, url, fallback, alt }: Props) {
+export function ImageFallback({ width, height, url, fallback }: Props) {
   const [ok, setOK] = useState<boolean>(true);
   useEffect(() => {
     url;
@@ -20,8 +19,11 @@ export function ImageFallback({ width, height, url, fallback, alt }: Props) {
     : url;
 
   return ok ? (
-    <img
-      src={URL}
+    <object
+      data={URL}
+      type="image/webp"
+      width={width} // there probably prevent style shaking
+      height={height}
       style={{
         width,
         height,
@@ -29,12 +31,15 @@ export function ImageFallback({ width, height, url, fallback, alt }: Props) {
         borderRadius: "50%",
         pointerEvents: "none",
       }}
-      onError={() => {
-        console.log("failed to fetch image data of:", URL);
-        setOK(false);
-      }}
-      alt={alt}
-    />
+    >
+      <img
+        src="/avatar-fallback.webp"
+        width={width}
+        height={height}
+        style={{ width, height }}
+        alt=""
+      />
+    </object>
   ) : (
     <>{fallback}</>
   );
