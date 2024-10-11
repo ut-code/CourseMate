@@ -34,6 +34,10 @@ export default function Settings() {
           <ListItemText primary="お問い合わせ" />
         </ListItemButton>
         <Divider />
+        <ListItemButton onClick={() => navigate("/faq")}>
+          <ListItemText primary="よくある質問" />
+        </ListItemButton>
+        <Divider />
         <ListItemButton onClick={() => navigate("/settings/aboutUs")}>
           <ListItemText primary="About Us" />
         </ListItemButton>
