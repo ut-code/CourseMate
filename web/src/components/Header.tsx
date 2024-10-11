@@ -21,7 +21,13 @@ export default function Header(props: Props) {
       >
         <Toolbar>
           <Box sx={{ marginRight: "8px" }}>
-            <CourseMateIcon width="28px" height="28px" />
+            <IconButton
+              onClick={() => {
+                navigate("/home");
+              }}
+            >
+              <CourseMateIcon width="28px" height="28px" />
+            </IconButton>
           </Box>
           <Typography
             variant="h6"
