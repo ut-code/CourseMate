@@ -1,29 +1,29 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import type { User } from "firebase/auth";
 import type { IDToken } from "../../common/types";
+import { app } from "../config";
 
 export class ErrUnauthorized extends Error {}
 
-export async function getIdToken(): Promise<IDToken> {
-  const auth = getAuth();
-  const user = await new Promise<User>((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
-      if (user != null) {
-        resolve(user);
-        unsubscribe();
-      } else {
-        console.error("getIdToken: user is null");
-      }
-    });
-  });
+let user: User;
+let token: string;
 
-  if (user == null) {
-    throw new Error(
-      "Client Error: firebase/auth/lib.ts: current user not found",
-    );
+const auth = getAuth(app);
+onAuthStateChanged(auth, async (u: User | null) => {
+  if (u != null) {
+    user = u;
+    token = await user.getIdToken();
   }
+});
 
-  return await user.getIdToken(true);
+async function refreshToken() {
+  token = await user.getIdToken(true);
+}
+
+export async function getIdToken(): Promise<IDToken> {
+  if (token) return token;
+  await refreshToken();
+  return token;
 }
 
 type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -48,9 +48,11 @@ export async function credFetch(
     };
   }
 
-  const res = await fetch(`${path}?token=${idToken}`, init);
+  let res = await fetch(`${path}?token=${idToken}`, init);
+  if (res.status === 401) {
+    await refreshToken();
+    res = await fetch(`${path}?token=${idToken}`);
+  }
 
-  // if (res.status === 401) throw new ErrUnauthorized();
-  // if (!res.ok) throw new Error("response was not ok");
   return res;
 }
