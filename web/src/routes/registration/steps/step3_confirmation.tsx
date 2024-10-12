@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import type { Step1User } from "../../../common/zod/types";
 import UserAvatar from "../../../components/human/avatar";
 import type { BackProp, StepProps } from "../common";
@@ -29,52 +29,54 @@ export default function Confirmation({
     throw new Error("don't skip the steps");
   }
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        margin: "20px",
-      }}
-    >
-      <CardFront UserInfo={{ ...Step1Data, ...Step2Data }} />
+    <>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          margin: "20px",
         }}
       >
-        <p>この内容で登録しますか？</p>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <Button
-            onClick={back}
-            style={{
-              marginLeft: "auto", // 右に寄せるために margin-left を使用
-              width: "100px",
-              height: "44.5px",
-              borderRadius: "25px",
-              boxShadow: "0px 6px 8px rgba(0, 0, 0, 0.15)", // ホバー時の影
-            }}
-          >
-            前へ
-          </Button>
-          <Button
-            onClick={() => onSave()}
-            style={{
-              marginLeft: "auto", // 右に寄せるために margin-left を使用
-              width: "100px",
-              height: "44.5px",
-              backgroundColor: "#039BE5",
-              color: "white",
-              borderRadius: "25px",
-            }}
-          >
-            次へ
-          </Button>
+        <Typography variant="h6" component="h1" mb={2}>
+          確認
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <CardFront UserInfo={{ ...Step1Data, ...Step2Data }} />
+        </Box>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <p>この内容で登録しますか？</p>
         </div>
       </div>
-    </div>
+      <Box
+        p={3}
+        sx={{
+          position: "fixed",
+          display: "flex",
+          justifyContent: "space-between",
+          bottom: 0,
+          width: "100%",
+        }}
+      >
+        <Button onClick={back} variant="text">
+          前へ
+        </Button>
+        <Button onClick={() => onSave()} variant="contained">
+          次へ
+        </Button>
+      </Box>
+    </>
   );
 }
 

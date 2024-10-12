@@ -4,6 +4,7 @@ import type { UserID } from "../common/types";
 import { safeParseInt } from "../common/lib/result/safeParseInt";
 import {
   approveRequest,
+  cancelRequest,
   rejectRequest,
   sendRequest,
 } from "../database/requests";
@@ -11,27 +12,6 @@ import { safeGetUserId } from "../firebase/auth/db";
 // import { Relationship } from "@prisma/client"; // ... not used?
 
 const router = express.Router();
-
-// I'm pretty sure that this is not used, but I'm not confident enough to delete this
-// 特定のユーザ同士が送信・受信したマッチリクエストの取得
-// router.get("/id/:matchId", async (req: Request, res: Response) => {
-//   const { senderId, receiverId } = req.query;
-//   if (!senderId && !receiverId) {
-//     return res
-//       .status(400)
-//       .json({ error: "SenderID or ReceiverID is required" });
-//   }
-//   try {
-//     const requests: Relationship[] = await getRequestsByUserId({
-//       senderId: senderId ? parseInt(senderId as string) : undefined,
-//       receiverId: receiverId ? parseInt(receiverId as string) : undefined,
-//     });
-//     res.status(200).json(requests);
-//   } catch (error) {
-//     console.error("Error fetching requests:", error);
-//     res.status(500).json({ error: "Failed to fetch requests" });
-//   }
-// });
 
 // リクエストの送信
 router.put("/send/:receiverId", async (req: Request, res: Response) => {
@@ -67,6 +47,23 @@ router.put("/accept/:senderId", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error approving match request:", error);
     res.status(500).json({ error: "Failed to approve match request" });
+  }
+});
+
+router.put("/cancel/:opponentId", async (req: Request, res: Response) => {
+  const opponentId = safeParseInt(req.params.opponentId);
+  if (!opponentId.ok) return res.status(400).send("bad param encoding");
+
+  const requesterId = await safeGetUserId(req);
+  if (!requesterId.ok) return res.status(401).send("auth error");
+
+  const result = await cancelRequest(requesterId.value, opponentId.value);
+
+  switch (result.ok) {
+    case true:
+      return res.status(204).send();
+    case false:
+      return res.status(500).send();
   }
 });
 

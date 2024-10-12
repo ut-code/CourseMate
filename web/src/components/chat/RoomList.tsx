@@ -1,15 +1,16 @@
 import { Box, List, Typography } from "@mui/material";
-import type { DMOverview, RoomOverview } from "../../common/types";
+import { useNavigate } from "react-router-dom";
+import type { RoomOverview } from "../../common/types";
 import { HumanListItem } from "../human/humanListItem";
 
 type RoomListProps = {
   roomsData: RoomOverview[] | null;
-  activeRoom: DMOverview | null;
-  setActiveRoom: (room: DMOverview) => void;
 };
 
 export function RoomList(props: RoomListProps) {
-  const { roomsData, activeRoom, setActiveRoom } = props;
+  const { roomsData } = props;
+  const navigate = useNavigate();
+
   return (
     <List disablePadding>
       <p
@@ -31,12 +32,9 @@ export function RoomList(props: RoomListProps) {
           return (
             <Box
               key={room.friendId}
-              onClick={() => setActiveRoom(room)}
-              sx={{
-                backgroundColor:
-                  activeRoom?.friendId === room.friendId
-                    ? "gainsboro"
-                    : "white",
+              onClick={() => {
+                // `state`を使って`room`データを渡す
+                navigate(`./${room.friendId}`, { state: { room } });
               }}
             >
               <HumanListItem
@@ -44,6 +42,7 @@ export function RoomList(props: RoomListProps) {
                 id={room.friendId}
                 name={room.name}
                 pictureUrl={room.thumbnail}
+                rollUpName={true}
                 lastMessage={room.lastMsg?.content}
               />
             </Box>

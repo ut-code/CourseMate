@@ -6,7 +6,6 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
-  Modal,
   Select,
   TextField,
   Typography,
@@ -15,25 +14,20 @@ import type { SelectChangeEvent } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import hooks from "../api/hooks";
-import { uploadImage } from "../api/image";
-import { MAX_IMAGE_SIZE } from "../api/internal/fetch-func";
-import { update } from "../api/user";
+import { update, useAboutMe } from "../api/user";
 import type { UpdateUser } from "../common/types";
 import { UpdateUserSchema } from "../common/zod/schemas";
 import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
 import { useAlert } from "../components/common/alert/AlertProvider";
-import {
-  PhotoPreview,
-  PhotoPreviewButton,
-} from "../components/config/PhotoPreview";
+import PhotoModal from "../components/config/PhotoModal";
+import { PhotoPreviewButton } from "../components/config/PhotoPreview";
 import UserAvatar from "../components/human/avatar";
 import { facultiesAndDepartments } from "./registration/data";
 
 export default function EditProfile() {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
-  const { state } = hooks.useMe();
+  const { state } = useAboutMe();
   const data = state.data;
   const error = state.current === "error" ? state.error : null;
   const loading = state.current === "loading";
@@ -60,7 +54,6 @@ export default function EditProfile() {
   const [isEditingIntro, setIsEditingIntro] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [file, setFile] = useState<File>();
 
   const [nameError, setNameError] = useState<string>("");
   const [genderError, setGenderError] = useState<string>("");
@@ -87,50 +80,22 @@ export default function EditProfile() {
     }
   }, [data]);
 
-  async function onSelect() {
+  function afterPhotoUpload(result: string) {
     try {
-      if (!file) throw new Error("画像は入力必須です");
-      if (file.size >= MAX_IMAGE_SIZE) {
-        enqueueSnackbar("ファイルサイズが大きすぎます", {
-          variant: "error",
-          autoHideDuration: 2000,
-        });
-        return;
-      }
-      const url = await uploadImage(file);
-      console.log("new URL:", url);
-      try {
-        setPictureUrl(url);
-        handleSave({ pictureUrl: url });
-      } catch (error) {
-        if (error instanceof Error) {
-          let errorMessages: string;
-          try {
-            const parsedError = JSON.parse(error.message);
-            if (Array.isArray(parsedError)) {
-              errorMessages = parsedError.map((err) => err.message).join(", ");
-            } else {
-              errorMessages = error.message;
-            }
-          } catch {
-            errorMessages = error.message;
-          }
-
-          // エラーメッセージをセット
-          setErrorMessage(errorMessages);
-        } else {
-          console.log("unknown error:", error);
-          setErrorMessage("入力に誤りがあります。");
-        }
-      }
-    } catch (e) {
-      console.error(e);
-      enqueueSnackbar("画像のアップロードに失敗しました", {
-        variant: "error",
-      });
+      setPictureUrl(result);
+      handleSave({ pictureUrl: result });
+    } catch (err) {
+      console.error(err);
+      // probably a network error
+      onPhotoError(new Error("画像の更新に失敗しました"));
     }
   }
 
+  function onPhotoError(err: Error) {
+    enqueueSnackbar({
+      message: err?.message ?? "画像の更新に失敗しました",
+    });
+  }
   const [open, setOpen] = useState<boolean>(false);
 
   function hasUnsavedChangesOrErrors() {
@@ -190,12 +155,12 @@ export default function EditProfile() {
     setDepartmentError("");
     setIntroError("");
     const data: UpdateUser = {
-      name: input.name ?? name,
+      name: (input.name ?? name).trim(),
       gender: input.gender ?? gender,
       grade: input.grade ?? grade,
       faculty: input.faculty ?? faculty,
       department: input.department ?? department,
-      intro: input.intro ?? intro,
+      intro: (input.intro ?? intro).trim(),
       pictureUrl: input.pictureUrl ?? pictureUrl,
     };
     const result = UpdateUserSchema.safeParse(data);
@@ -274,6 +239,7 @@ export default function EditProfile() {
                 fullWidth
                 error={!!nameError}
                 helperText={nameError}
+                autoComplete="off"
               />
               <IconButton
                 onClick={() => {
@@ -477,6 +443,7 @@ export default function EditProfile() {
                 label="自己紹介"
                 disabled={!isEditingIntro}
                 fullWidth
+                autoComplete="off"
                 error={!!introError} // エラースタイル適用
                 helperText={introError} // エラーメッセージを表示
               />
@@ -507,51 +474,6 @@ export default function EditProfile() {
           )}
 
           <div style={{ textAlign: "center", marginTop: "20px" }}>
-            <Modal
-              id="MODAL"
-              open={true}
-              sx={{
-                visibility: open ? "visible" : "hidden",
-                Margin: "auto",
-                alignItems: "center",
-                justifyContent: "center",
-                display: "flex",
-              }}
-            >
-              <Box
-                style={{
-                  backgroundColor: "white",
-                  width: "90%",
-                  height: "auto",
-                  padding: "20px",
-                }}
-              >
-                <PhotoPreview
-                  prev={pictureUrl}
-                  onCrop={(f) => {
-                    setFile(f);
-                  }}
-                />
-                <Button
-                  sx={{ float: "right", marginRight: "30px" }}
-                  variant="contained"
-                  onClick={async () => {
-                    await onSelect();
-                    setOpen(false);
-                  }}
-                >
-                  切り取って保存
-                </Button>
-                <Button
-                  sx={{ float: "right", marginRight: "30px" }}
-                  onClick={async () => {
-                    setOpen(false);
-                  }}
-                >
-                  キャンセル
-                </Button>
-              </Box>
-            </Modal>
             <div style={{ textAlign: "left" }}>
               <Typography variant="h6" component="h1">
                 プロフィール画像
@@ -576,6 +498,12 @@ export default function EditProfile() {
               <PhotoPreviewButton
                 text="写真を選択"
                 onSelect={() => setOpen(true)}
+              />
+              <PhotoModal
+                open={open}
+                closeFunc={() => setOpen(false)}
+                afterUpload={afterPhotoUpload}
+                onError={onPhotoError}
               />
             </div>
           </div>
@@ -604,6 +532,7 @@ export default function EditProfile() {
                 borderRadius: "25px",
                 width: "35vw",
                 boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                minHeight: "61px",
               }}
             >
               授業編集へ

@@ -90,6 +90,27 @@ export async function rejectRequest(
   }
 }
 
+export async function cancelRequest(
+  senderId: UserID,
+  receiverId: UserID,
+): Promise<Result<void>> {
+  try {
+    return prisma.relationship
+      .delete({
+        where: {
+          sendingUserId_receivingUserId: {
+            sendingUserId: senderId,
+            receivingUserId: receiverId,
+          },
+        },
+      })
+      .then(() => Ok(undefined))
+      .catch((err) => Err(err));
+  } catch (err) {
+    return Err(err);
+  }
+}
+
 //ユーザーへのリクエストを探す 俺をリクエストしているのは誰だ
 export async function getPendingRequestsToUser(
   userId: UserID,

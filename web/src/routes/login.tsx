@@ -2,12 +2,15 @@ import { Box, Button, Link, Typography } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-import user, { getByGUID } from "../api/user";
+import * as user from "../api/user";
+import { getByGUID } from "../api/user";
 import type { GUID } from "../common/types";
 import Header from "../components/Header";
 import { auth } from "../firebase/config";
 import "../styles/login.css";
+import { useState } from "react";
 import { CourseMateIcon } from "../components/common/CourseMateIcon";
+import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
 
 const provider = new GoogleAuthProvider();
 
@@ -41,9 +44,11 @@ async function signInWithGoogle() {
 export default function Login() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false);
 
   async function logInByGoogle() {
     try {
+      setLoading(true);
       await signInWithGoogle();
       if (auth.currentUser === null) {
         throw new Error("ログインに失敗しました");
@@ -72,11 +77,13 @@ export default function Login() {
       enqueueSnackbar("Google アカウントでのログインに失敗しました", {
         variant: "error",
       });
+      setLoading(false);
     }
   }
 
   async function singUpByGoogle() {
     try {
+      setLoading(true);
       const guid = await signInWithGoogle();
       if (!guid) {
         throw new Error("no guid");
@@ -97,7 +104,12 @@ export default function Login() {
       enqueueSnackbar("Google アカウントでのサインアップに失敗しました", {
         variant: "error",
       });
+      setLoading(false);
     }
+  }
+
+  if (loading) {
+    return <FullScreenCircularProgress />;
   }
 
   return (
