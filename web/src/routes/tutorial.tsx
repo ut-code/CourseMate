@@ -42,62 +42,75 @@ export default function Tutorial() {
   const navigate = useNavigate();
 
   return (
-    <Box
-      sx={{
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        position: "absolute",
-        top: "56px",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        overflowY: "auto",
-      }}
-    >
+    <>
       <Header title="チュートリアル/Tutorial" />
       <Box
         sx={{
-          textAlign: "left",
+          position: "absolute",
+          top: {
+            xs: "56px",
+            sm: "64px",
+          },
+          bottom: 0,
+          left: 0,
+          right: 0,
+          px: 1,
+          py: 2,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <Swiper
-          modules={[Navigation, Pagination]}
-          spaceBetween={50}
-          slidesPerView={1}
-          navigation
-          pagination={{ clickable: true }}
-          style={{
-            paddingBottom: "60px",
+        <Box
+          sx={{
+            flex: 1,
+            padding: "8px",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          {tutorialSteps.map((step) => (
-            <SwiperSlide key={step.imgPath}>
-              <Box sx={{ textAlign: "center", mb: "24px" }}>
-                <Typography
-                  variant="h6"
-                  component="h1"
-                  gutterBottom
-                  sx={{ fontWeight: "bold", mb: "16px" }}
-                >
-                  {step.label}
-                </Typography>
-                <img
-                  src={step.imgPath}
-                  alt={step.label}
-                  style={{
-                    display: "block",
-                    width: "60vw",
-                    height: "calc(60vw·*·(667·/·375))",
-                    maxWidth: 400,
-                    overflow: "hidden",
-                    margin: "auto",
+          <Swiper
+            modules={[Navigation, Pagination]}
+            spaceBetween={50}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            style={{
+              margin: "auto 0",
+            }}
+          >
+            {tutorialSteps.map((step) => (
+              <SwiperSlide key={step.imgPath}>
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    mb: "24px",
+                    height: "100%",
                   }}
-                />
-              </Box>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+                >
+                  <Typography
+                    variant="h6"
+                    component="h1"
+                    gutterBottom
+                    sx={{ fontWeight: "bold", mb: "16px" }}
+                  >
+                    {step.label}
+                  </Typography>
+                  <img
+                    src={step.imgPath}
+                    alt={step.label}
+                    style={{
+                      display: "block",
+                      width: "auto",
+                      height: "50vh",
+                      overflow: "hidden",
+                      margin: "auto",
+                    }}
+                  />
+                </Box>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </Box>
         <Box sx={{ textAlign: "center" }}>
           <Button
             variant="contained"
@@ -109,6 +122,6 @@ export default function Tutorial() {
           </Button>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }
