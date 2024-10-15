@@ -28,6 +28,7 @@
             gnumake
             bun
             biome
+            go_1_23
           ];
           shellHook = ''
             export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.stdenv.cc.cc.lib}/lib
