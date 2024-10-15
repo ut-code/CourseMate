@@ -15,7 +15,11 @@
     "qiita",
     "safify",
     "supabase",
-    "swiper"
+    "swiper",
+    "gocolly",
+    "goquery",
+    "kouki",
+    "Puerkito"
   ],
   "dictionaries": [
     "softwareTerms",
@@ -39,6 +43,7 @@
     "**/bun.lockb",
     "**/*.svg",
     "**/migration.sql",
-    "**/data.json"
+    "**/data.json",
+    "**/go.*"
   ]
 }

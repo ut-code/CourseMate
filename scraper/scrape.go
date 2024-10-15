@@ -36,21 +36,21 @@ func init() {
 	logger = logging.New()
 }
 
-// urls: [faculity name] => search url template
+// urls: [faculty name] => search url template
 func scrapeAll(urls map[string]string) Result {
 	var result Result
 
 	var total = len(urls)
 	var curr = 0
 
-	for facl, url := range urls {
+	for faculty, url := range urls {
 		// intentionally not multi threading
-		lects := scrape(url)
+		lectures := scrape(url)
 		result = append(result, Entry{
-			Faculty: facl,
-			Courses: lects,
+			Faculty: faculty,
+			Courses: lectures,
 		})
-		logger.Notify(fmt.Sprint("Done faculty", facl, ":", curr, "out of", total))
+		logger.Notify(fmt.Sprint("Done faculty", faculty, ":", curr, "out of", total))
 	}
 
 	return result
