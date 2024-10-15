@@ -1,6 +1,8 @@
 [package]
-name = "scraper"
+name = "course-mate-scraper"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+reqwest = "0.12.8"
+scraper = "0.20.0"

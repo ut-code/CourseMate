@@ -16,10 +16,7 @@
     "safify",
     "supabase",
     "swiper",
-    "gocolly",
-    "goquery",
-    "kouki",
-    "Puerkito"
+    "reqwest"
   ],
   "dictionaries": [
     "softwareTerms",
@@ -44,6 +41,6 @@
     "**/*.svg",
     "**/migration.sql",
     "**/data.json",
-    "**/go.*"
+    "**/Cargo.*"
   ]
 }
