@@ -38,19 +38,22 @@ func init() {
 
 // urls: [faculty name] => search url template
 func scrapeAll(urls map[string]string) Result {
+	logger.Notify("Starting...")
+
 	var result Result
 
 	var total = len(urls)
 	var curr = 0
 
 	for faculty, url := range urls {
+		logger.Notify(fmt.Sprint("-----------------------------Starting faculty-----------------------------", faculty, ":", curr, "out of", total))
 		// intentionally not multi threading
 		lectures := scrape(url)
 		result = append(result, Entry{
 			Faculty: faculty,
 			Courses: lectures,
 		})
-		logger.Notify(fmt.Sprint("Done faculty", faculty, ":", curr, "out of", total))
+		logger.Notify(fmt.Sprint("-----------------------------Done faculty-----------------------------", faculty, ":", curr, "out of", total))
 	}
 
 	return result
@@ -85,11 +88,11 @@ func scrape(url_template string) (courses []Course) {
 
 		pagerWG.Add(1)
 		go func() {
+			defer pagerWG.Done()
 			err := collector.Visit(url)
 			if err != nil && !errors.Is(err, colly.ErrAlreadyVisited) {
 				log.Fatalln("error while visiting collector: ", err)
 			}
-			pagerWG.Done()
 		}()
 	})
 

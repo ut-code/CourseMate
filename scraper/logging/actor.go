@@ -17,7 +17,9 @@ type Logger struct {
 
 func New() Logger {
 	l := Logger{
-		steps: make(chan string, 10),
+		count:  0,
+		steps:  make(chan string, 10),
+		notify: make(chan string, 10),
 	}
 	go l.listen()
 	return l
