@@ -15,14 +15,14 @@ JSON のスキーマ:
 ```json file=kouki.json
 [
   {
-    faculity: "学部の名前",
-    courses: [
+    "faculty": "学部の名前",
+    "courses": [
       {
-        name: "授業の名前",
-        teacher: "教授の名前",
-        semester: "セメスター",
-        period: "時限 (例: 水曜4限)",
-        code: "授業コード"
+        "name": "授業の名前",
+        "teacher": "教授の名前",
+        "semester": "セメスター",
+        "period": "時限 (例: 水曜4限)",
+        "code": "授業コード"
       }
     ]
   }
