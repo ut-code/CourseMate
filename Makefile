@@ -95,16 +95,16 @@ spell-check:
 # Sync (install/update packages, generate prisma, etc)
 
 sync-web:
-	cd web; bun install
+	cd web; bun install --frozen-lockfile
 	# copy .env.sample -> .env only if .env is not there
 
 sync-server:
-	cd server; bun install
+	cd server; bun install --frozen-lockfile
 	cd server; bunx prisma generate
 	# copy .env.sample -> .env only if .env is not there
 
 sync-root:
-	bun install
+	bun install --frozen-lockfile
 
 
 # Static checks
