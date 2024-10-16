@@ -19,3 +19,7 @@ cargo run
 faculty_idが学科のIDです。
 urls.rsのUrlsに学部の名前とその url の tuple を追加してください。
 すでに全ての学科のIDが入っているので、特に追加するような状況にならない限りは変更する必要はありません。
+
+### Extending code
+
+コード中に .unwrap() が多くあると思います。これは意図的です。

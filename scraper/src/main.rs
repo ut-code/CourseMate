@@ -3,6 +3,7 @@ mod parser;
 mod types;
 mod urls;
 
+use lazy_static::lazy_static;
 use std::time::Duration;
 use tokio::fs;
 
@@ -54,18 +55,22 @@ async fn main() {
         .expect("failed to write to file");
 }
 
+lazy_static! {
+    static ref DETAIL_BUTTONS: Selector =
+        Selector::parse(".catalog-search-result-card-header-detail-link")
+            .expect("invalid selector");
+}
 const BASE_URL: &str = "https://catalog.he.u-tokyo.ac.jp/";
+
 async fn page_index_pages(base_url: &str) -> Vec<String> {
     let mut urls: Vec<String> = Vec::new();
     for key in 0.. {
         let html = scrape(&format!("{}{}", base_url, key)).await;
-        let selector = Selector::parse(".catalog-search-result-card-header-detail-link")
-            .expect("invalid selector");
-        if html.select(&selector).next().is_none() {
+        if html.select(&DETAIL_BUTTONS).next().is_none() {
             break;
         }
         urls.extend(
-            html.select(&selector)
+            html.select(&DETAIL_BUTTONS)
                 .map(|elem| BASE_URL.to_owned() + elem.attr("href").unwrap()),
         );
     }
