@@ -16,7 +16,8 @@
     "safify",
     "supabase",
     "swiper",
-    "reqwest"
+    "reqwest",
+    "chrono"
   ],
   "dictionaries": [
     "softwareTerms",
@@ -41,6 +42,7 @@
     "**/*.svg",
     "**/migration.sql",
     "**/data.json",
-    "**/Cargo.*"
+    "**/Cargo.*",
+    "scraper/target"
   ]
 }

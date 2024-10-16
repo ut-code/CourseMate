@@ -1,2 +1,4 @@
-/.colly.cache
-scraper
+/target
+.cache/*
+!.cache/.gitignore
+
