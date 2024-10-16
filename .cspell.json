@@ -15,7 +15,9 @@
     "qiita",
     "safify",
     "supabase",
-    "swiper"
+    "swiper",
+    "reqwest",
+    "chrono"
   ],
   "dictionaries": [
     "softwareTerms",
@@ -39,6 +41,8 @@
     "**/bun.lockb",
     "**/*.svg",
     "**/migration.sql",
-    "**/data.json"
+    "**/data.json",
+    "**/Cargo.*",
+    "scraper/target"
   ]
 }

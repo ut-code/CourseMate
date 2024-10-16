@@ -1,0 +1,5 @@
+/target
+.cache/*
+!.cache/.gitignore
+/data.json
+
