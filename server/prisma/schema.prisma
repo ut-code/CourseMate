@@ -39,7 +39,7 @@ model User {
   enrollments    Enrollment[]
   sendingUsers   Relationship[] @relation("sending") // 自分がマッチリクエストを送ったユーザー
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
-  Interest       Interest[]
+  interests      Interest[]
 }
 
 // プロフィールの画像。
@@ -49,9 +49,10 @@ model Avatar {
 }
 
 model InterestSubject {
-  id       Int        @id
+  id       Int        @id @default(autoincrement())
   name     String
   group    String // such as Computer Science | name = ML
+  @@unique([name, group])
   Interest Interest[] // ignore this
 }
 
