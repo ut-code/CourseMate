@@ -14,6 +14,7 @@ import type {
   InitRoomSchema,
   InitSharedRoomSchema,
   InitUserSchema,
+  InterestSubjectSchema,
   IntroLongSchema,
   IntroShortSchema,
   MessageIDSchema,
@@ -45,6 +46,7 @@ export type Name = z.infer<typeof NameSchema>;
 export type PictureUrl = z.infer<typeof PictureUrlSchema>;
 export type Gender = z.infer<typeof GenderSchema>;
 export type RelationshipStatus = z.infer<typeof RelationshipStatusSchema>;
+export type InterestSubject = z.infer<typeof InterestSubjectSchema>;
 export type User = z.infer<typeof UserSchema>;
 export type InitUser = z.infer<typeof InitUserSchema>;
 export type UpdateUser = z.infer<typeof UpdateUserSchema>;
