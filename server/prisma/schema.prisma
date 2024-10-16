@@ -52,6 +52,7 @@ model InterestSubject {
   id       Int        @id @default(autoincrement())
   name     String
   group    String // such as Computer Science | name = ML
+
   @@unique([name, group])
   Interest Interest[] // ignore this
 }

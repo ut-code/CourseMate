@@ -18,17 +18,17 @@ export const subjects: Array<{
     subjects: [[5, "Lean4"]],
   },
 ];
-export const interest: [number, number][] = [
-  [101, 1],
-  [102, 1],
-  [103, 1],
-  [101, 2],
-  [101, 3],
-  [102, 2],
-  [102, 4],
-  [103, 3],
-  [103, 4],
-] as const;
+export const interest = [
+  { userId: 101, subjectId: 1 },
+  { userId: 102, subjectId: 1 },
+  { userId: 103, subjectId: 1 },
+  { userId: 101, subjectId: 2 },
+  { userId: 101, subjectId: 3 },
+  { userId: 102, subjectId: 2 },
+  { userId: 102, subjectId: 4 },
+  { userId: 103, subjectId: 3 },
+  { userId: 103, subjectId: 4 },
+];
 
 export const users = [
   {

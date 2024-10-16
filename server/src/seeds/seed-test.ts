@@ -32,11 +32,13 @@ async function main() {
   );
 
   await Promise.all(
-    interest.map(async ([userId, subjectId]) => {
+    interest.map(async (interest) => {
       await prisma.interest.upsert({
-        where: { userId_subjectId: { userId, subjectId } },
-        update: {},
-        create: { userId, subjectId },
+        where: {
+          userId_subjectId: interest,
+        },
+        update: interest,
+        create: interest,
       });
     }),
   );
@@ -80,8 +82,6 @@ async function main() {
     });
   });
   await Promise.all(promises);
-
-  await Promise.all(async());
 }
 
 await main()
