@@ -1,14 +1,21 @@
 import { prisma } from "../database/client";
-import { courses, enrollments, slots, subjects, users } from "./test-data/data";
+import {
+  courses,
+  enrollments,
+  interest,
+  slots,
+  subjects,
+  users,
+} from "./test-data/data";
 
 async function main() {
   await Promise.all(
     subjects.map(async ({ group, subjects }) => {
-      for (const name of subjects) {
+      for (const [id, name] of subjects) {
         await prisma.interestSubject.upsert({
-          where: { name_group: { name, group } },
-          update: {},
-          create: { name, group },
+          where: { id },
+          update: { name, group },
+          create: { id, name, group },
         });
       }
     }),
@@ -20,6 +27,16 @@ async function main() {
         where: { id: user.id },
         update: {},
         create: user,
+      });
+    }),
+  );
+
+  await Promise.all(
+    interest.map(async ([userId, subjectId]) => {
+      await prisma.interest.upsert({
+        where: { userId_subjectId: { userId, subjectId } },
+        update: {},
+        create: { userId, subjectId },
       });
     }),
   );
@@ -63,6 +80,8 @@ async function main() {
     });
   });
   await Promise.all(promises);
+
+  await Promise.all(async());
 }
 
 await main()

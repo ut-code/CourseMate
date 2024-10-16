@@ -1,15 +1,34 @@
 import type { Day } from "../../common/types";
 
-export const subjects = [
+export const subjects: Array<{
+  group: string;
+  subjects: Array<[number, string]>;
+}> = [
   {
     group: "Computer Science",
-    subjects: ["機械学習", "CPU アーキテクチャ", "型システム", "分散処理"],
+    subjects: [
+      [1, "型システム"],
+      [2, "機械学習"],
+      [3, "CPU アーキテクチャ"],
+      [4, "分散処理"],
+    ] as const,
   },
   {
     group: "Math",
-    subjects: ["Lean4"],
+    subjects: [[5, "Lean4"]],
   },
 ];
+export const interest: [number, number][] = [
+  [101, 1],
+  [102, 1],
+  [103, 1],
+  [101, 2],
+  [101, 3],
+  [102, 2],
+  [102, 4],
+  [103, 3],
+  [103, 4],
+] as const;
 
 export const users = [
   {
