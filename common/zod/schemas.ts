@@ -48,7 +48,6 @@ export const UserSchema = z.object({
   department: z.string().min(1, { message: "学科を入力して下さい" }), // same
   intro: z.string().max(150, { message: "自己紹介文は150文字以下です" }),
   pictureUrl: z.string(),
-  interests: z.array(z.number()),
 });
 
 export const RelationshipStatusSchema = z.union([
