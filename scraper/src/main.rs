@@ -1,7 +1,8 @@
 mod io;
 mod parser;
-pub mod types;
+mod types;
 mod urls;
+
 use std::time::Duration;
 use tokio::fs;
 
