@@ -32,6 +32,12 @@ export const IntroLongSchema = z
   // .min(2, { message: "自己紹介文は2文字以上です" })
   .max(225, { message: "自己紹介文は225文字以下です" });
 
+export const InterestSubjectSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  group: z.string(),
+});
+
 export const UserSchema = z.object({
   id: UserIDSchema,
   guid: GUIDSchema,
@@ -42,6 +48,7 @@ export const UserSchema = z.object({
   department: z.string().min(1, { message: "学科を入力して下さい" }), // same
   intro: z.string().max(150, { message: "自己紹介文は150文字以下です" }),
   pictureUrl: z.string(),
+  interests: z.array(z.number()),
 });
 
 export const RelationshipStatusSchema = z.union([
