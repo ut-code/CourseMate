@@ -1,4 +1,5 @@
 mod io;
+mod logger;
 mod parser;
 mod types;
 mod urls;
@@ -25,54 +26,42 @@ async fn main() {
     let _ = fs::DirBuilder::new().create(CACHE_DIR).await;
     let _ = fs::File::create(CACHE_GITKEEP).await;
 
-    let start_ms = chrono::Local::now().timestamp_millis();
-    let start_sec = chrono::Local::now().timestamp();
-    let start_min = chrono::Local::now().timestamp() / 60;
-
     let mut file = fs::File::create(RESULT_FILE)
         .await
         .expect("Failed to create file");
     file.write_all("[".as_bytes()).await.unwrap();
 
-    let mut count = 0;
     let total = URLS.len();
+    let mut logger = logger::Logger::new(total);
     for (faculty_name, base_url) in URLS {
-        let courses = page_index_pages(base_url)
-            .await
-            .into_iter()
-            .map(|content_page_url| async {
-                let html = scrape(&content_page_url).await;
-                parser::parse_course_info(html)
-                    .context(content_page_url)
-                    .unwrap()
-            });
-        let courses = futures::future::join_all(courses)
-            .await
-            .into_iter()
-            .collect::<Vec<_>>();
-
-        let now_ms = chrono::Local::now().timestamp_millis();
-        let now_sec = chrono::Local::now().timestamp();
-        let now_min = now_sec / 60;
-        count += 1;
-        println!(
-            "[log] faculty {faculty_name} done. ({count} / {total}) timestamp: {}ms / {}sec / {}min",
-            now_ms - start_ms,
-            now_sec - start_sec,
-            now_min - start_min
-        );
-
+        let courses = get_courses_of(base_url).await;
+        logger.done(faculty_name);
         let result = Entry {
             name: faculty_name.to_owned(),
             courses,
         };
-        io::write_to(&mut file, result)
-            .await
-            .expect("Failed to write to file");
+        io::write_to(&mut file, result).await.unwrap();
         file.write_all(",".as_bytes()).await.unwrap();
     }
 
     file.write_all("]".as_bytes()).await.unwrap();
+    logger.close().unwrap();
+}
+
+async fn get_courses_of(base_url: &str) -> Vec<Course> {
+    let courses = page_index_pages(base_url)
+        .await
+        .into_iter()
+        .map(|content_page_url| async {
+            let html = scrape(&content_page_url).await;
+            parser::parse_course_info(html)
+                .context(content_page_url)
+                .unwrap()
+        });
+    futures::future::join_all(courses)
+        .await
+        .into_iter()
+        .collect::<Vec<_>>()
 }
 
 lazy_static! {
