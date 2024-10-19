@@ -44,5 +44,10 @@ fn select_all(html: &Html, selector: &Selector, nth: usize) -> anyhow::Result<St
             "Couldn't find matching element for selector {:?}",
             selector,
         ))
-        .map(|val| val.text().collect::<Vec<_>>().join(" "))
+        .map(|val| {
+            val.text()
+                .map(|text| text.trim())
+                .collect::<Vec<_>>()
+                .join(" ")
+        })
 }
