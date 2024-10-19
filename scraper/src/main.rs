@@ -5,7 +5,7 @@ mod urls;
 
 use lazy_static::lazy_static;
 use std::time::Duration;
-use tokio::fs;
+use tokio::{fs, io::AsyncWriteExt};
 
 use anyhow::Context;
 use tokio::time::sleep;
@@ -32,6 +32,8 @@ async fn main() {
     let mut file = fs::File::create(RESULT_FILE)
         .await
         .expect("Failed to create file");
+    file.write_all("[".as_bytes()).await.unwrap();
+
     let mut count = 0;
     let total = URLS.len();
     for (faculty_name, base_url) in URLS {
@@ -67,7 +69,10 @@ async fn main() {
         io::write_to(&mut file, result)
             .await
             .expect("Failed to write to file");
+        file.write_all(",".as_bytes()).await.unwrap();
     }
+
+    file.write_all("]".as_bytes()).await.unwrap();
 }
 
 lazy_static! {
