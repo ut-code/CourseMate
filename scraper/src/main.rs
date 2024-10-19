@@ -14,18 +14,24 @@ use types::*;
 use scraper::{Html, Selector};
 use urls::URLS;
 
+const RESULT_FILE: &str = "./data.json";
+const CACHE_DIR: &str = "./.cache";
+const CACHE_GITKEEP: &str = "./.cache/.gitkeep";
+
 #[tokio::main(flavor = "multi_thread", worker_threads = 16)]
 async fn main() {
     println!("[log] starting...");
 
-    let _ = fs::DirBuilder::new().create("./.cache").await;
-    let _ = fs::File::create("./.cache/.gitkeep").await;
+    let _ = fs::DirBuilder::new().create(CACHE_DIR).await;
+    let _ = fs::File::create(CACHE_GITKEEP).await;
 
     let start_ms = chrono::Local::now().timestamp_millis();
     let start_sec = chrono::Local::now().timestamp();
     let start_min = chrono::Local::now().timestamp() / 60;
 
-    let mut result: Vec<Entry> = Vec::new();
+    let mut file = fs::File::create(RESULT_FILE)
+        .await
+        .expect("Failed to create file");
     let mut count = 0;
     let total = URLS.len();
     for (faculty_name, base_url) in URLS {
@@ -54,15 +60,14 @@ async fn main() {
             now_min - start_min
         );
 
-        result.push(Entry {
+        let result = Entry {
             name: faculty_name.to_owned(),
             courses,
-        });
+        };
+        io::write_to(&mut file, result)
+            .await
+            .expect("Failed to write to file");
     }
-
-    io::write_file("./data.json", result)
-        .await
-        .expect("failed to write to file");
 }
 
 lazy_static! {

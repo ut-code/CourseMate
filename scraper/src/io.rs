@@ -1,14 +1,12 @@
 use crate::types::*;
 use anyhow::ensure;
 use sha2::{Digest, Sha256};
+use tokio::fs;
 use tokio::io::AsyncWriteExt;
 
-pub async fn write_file(name: &str, result: Vec<Entry>) -> anyhow::Result<()> {
-    let mut file = tokio::fs::File::create(name)
-        .await
-        .expect("Failed to create file");
-    file.write_all(serde_json::to_string(&result)?.as_bytes())
-        .await?;
+pub async fn write_to(file: &mut fs::File, content: Entry) -> anyhow::Result<()> {
+    let s = serde_json::to_string(&content)?;
+    file.write_all(s.as_bytes()).await?;
     Ok(())
 }
 
