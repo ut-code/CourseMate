@@ -21,7 +21,10 @@ async fn main() {
     let _ = fs::DirBuilder::new().create("./.cache").await;
     let _ = fs::File::create("./.cache/.gitkeep").await;
 
-    let start = chrono::Local::now().timestamp_millis();
+    let start_ms = chrono::Local::now().timestamp_millis();
+    let start_sec = chrono::Local::now().timestamp();
+    let start_min = chrono::Local::now().timestamp() / 60;
+
     let mut result: Vec<Entry> = Vec::new();
     let mut count = 0;
     let total = URLS.len();
@@ -40,11 +43,15 @@ async fn main() {
             .into_iter()
             .collect::<Vec<_>>();
 
-        let now = chrono::Local::now().timestamp_millis();
+        let now_ms = chrono::Local::now().timestamp_millis();
+        let now_sec = chrono::Local::now().timestamp();
+        let now_min = now_sec / 60;
         count += 1;
         println!(
-            "[log] faculty {faculty_name} done. ({count} / {total}) timestamp: {}ms",
-            now - start
+            "[log] faculty {faculty_name} done. ({count} / {total}) timestamp: {}ms / {}sec / {}min",
+            now_ms - start_ms,
+            now_sec - start_sec,
+            now_min - start_min
         );
 
         result.push(Entry {
