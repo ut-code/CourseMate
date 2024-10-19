@@ -26,16 +26,19 @@ async fn main() {
     let mut count = 0;
     let total = URLS.len();
     for (faculty_name, base_url) in URLS {
-        let courses = futures::future::join_all(page_index_pages(base_url).await.into_iter().map(
-            |url| async {
-                let result = scrape(&url).await;
-                (url, result)
-            },
-        ))
-        .await
-        .into_iter()
-        .map(|(url, html)| parser::parse_course_info(html).context(url).unwrap())
-        .collect::<Vec<_>>();
+        let courses = page_index_pages(base_url)
+            .await
+            .into_iter()
+            .map(|content_page_url| async {
+                let html = scrape(&content_page_url).await;
+                parser::parse_course_info(html)
+                    .context(content_page_url)
+                    .unwrap()
+            });
+        let courses = futures::future::join_all(courses)
+            .await
+            .into_iter()
+            .collect::<Vec<_>>();
 
         let now = chrono::Local::now().timestamp_millis();
         count += 1;

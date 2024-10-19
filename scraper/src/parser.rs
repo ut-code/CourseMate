@@ -21,7 +21,7 @@ pub fn parse_course_info(html: Html) -> anyhow::Result<Course> {
     Ok(Course {
         name: select(&html, &NAME_SELECTOR, 1)?,
         teacher: select(&html, &TEACHER_SELECTOR, 1)?,
-        semester: select(&html, &SEMESTER_SELECTOR, 1)?,
+        semester: select_all(&html, &SEMESTER_SELECTOR, 1)?,
         period: select(&html, &PERIOD_SELECTOR, 1)?,
         code: select(&html, &CODE_SELECTOR, 1)?,
     })
@@ -35,4 +35,14 @@ fn select(html: &Html, selector: &Selector, nth: usize) -> anyhow::Result<String
             selector,
         ))
         .map(|val| val.text().next().unwrap().trim().to_owned())
+}
+
+fn select_all(html: &Html, selector: &Selector, nth: usize) -> anyhow::Result<String> {
+    html.select(selector)
+        .nth(nth)
+        .ok_or(anyhow!(
+            "Couldn't find matching element for selector {:?}",
+            selector,
+        ))
+        .map(|val| val.text().collect::<Vec<_>>().join(" "))
 }
