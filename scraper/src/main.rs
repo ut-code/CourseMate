@@ -14,7 +14,7 @@ use types::*;
 use scraper::{Html, Selector};
 use urls::URLS;
 
-#[tokio::main]
+#[tokio::main(flavor = "multi_thread", worker_threads = 16)]
 async fn main() {
     println!("[log] starting...");
 
