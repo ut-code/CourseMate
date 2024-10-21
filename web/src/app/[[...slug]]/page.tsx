@@ -2,7 +2,10 @@ import "../../index.css";
 import { ClientOnly } from "./client";
 
 export function generateStaticParams() {
-  return [{ slug: [""] }];
+  return [
+    { slug: [] }, // Root path ("/")
+    { slug: ["login"] }, // "/login"
+  ];
 }
 
 export default function Page() {
