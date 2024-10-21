@@ -7,7 +7,7 @@ export function CourseMateIcon(props: Props) {
   const { width, height } = props;
   return (
     <img
-      src="../../../public/course-mate-icon.svg"
+      src="/course-mate-icon.svg"
       alt="アイコン"
       style={{
         width: width,
