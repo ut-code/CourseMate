@@ -38,13 +38,13 @@ export default function EditCourses() {
       {loading ? (
         <FullScreenCircularProgress />
       ) : error ? (
-        <p>Error: {error.message}</p>
+        <div>Error: {error.message}</div>
       ) : data ? (
         <>
           <EditableCoursesTable userId={data.id} />
         </>
       ) : (
-        <p>データがありません。</p>
+        <div>データがありません。</div>
       )}
 
       <Box

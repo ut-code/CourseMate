@@ -31,10 +31,10 @@ export default function App() {
       path: "/",
       element: <Root />,
       errorElement: (
-        <p>
+        <div>
           Sorry, an unexpected error has occurred.{" "}
           <Link href="/home">Go Back</Link>
-        </p>
+        </div>
       ),
       children: [
         {
@@ -162,9 +162,9 @@ export default function App() {
     {
       path: "*",
       element: (
-        <p>
+        <div>
           お探しのリンクは見つかりませんでした。 <Link href="/home">戻る</Link>
-        </p>
+        </div>
       ),
     },
   ]);

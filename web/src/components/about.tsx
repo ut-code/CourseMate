@@ -15,27 +15,27 @@ export function About() {
         ご意見・バグ報告など
       </Button>
       <h2>About Us</h2>
-      <p>
+      <div>
         ut.code();
         は、2019年設立の東京大学のソフトウェアエンジニアリングコミュニティです。
-      </p>
-      <p>
-        <p>
+      </div>
+      <div>
+        <div>
           <Link href="https://utcode.net" target="_blank">
             <Language /> ウェブサイト
           </Link>
-        </p>
-        <p>
+        </div>
+        <div>
           <Link href="https://github.com/ut-code" target="_blank">
             <GitHub /> ut.code(); の GitHub
           </Link>
-        </p>
-        <p>
+        </div>
+        <div>
           <Link href="https://x.com/utokyo_code" target="_blank">
             <XIcon /> X (旧 Twitter)
           </Link>
-        </p>
-      </p>
+        </div>
+      </div>
     </>
   );
 }

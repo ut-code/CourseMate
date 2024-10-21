@@ -138,7 +138,7 @@ function Cell({
 }) {
   const content = (
     <>
-      <p
+      <div
         style={{
           margin: 0,
           overflow: "hidden",
@@ -150,8 +150,8 @@ function Cell({
         }}
       >
         {courseName ? truncateStr(courseName ?? "", 16) : ""}
-      </p>
-      <p
+      </div>
+      <div
         style={{
           margin: 0,
           overflow: "hidden",
@@ -163,7 +163,7 @@ function Cell({
         }}
       >
         {teacherName ? truncateStr(teacherName ?? "", 6) : ""}
-      </p>
+      </div>
     </>
   );
 
