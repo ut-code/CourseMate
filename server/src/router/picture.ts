@@ -4,15 +4,17 @@ import * as storage from "../database/picture";
 import { safeGetGUID } from "../firebase/auth/lib";
 import { compressImage } from "../functions/img/compress";
 
-// TODO: truncate file at frontend s.t. even the largest file won't trigger the limit
 const parseLargeBuffer = bodyParser.raw({
   type: "image/png",
-  // TODO: block large files (larger than 1mb? idk)
   limit: "5mb",
 });
 const router = express.Router();
 
-router.get("/:guid", async (req, res) => {
+/* General Pictures in chat */
+
+/* Profile Pictures */
+
+router.get("/profile/:guid", async (req, res) => {
   const guid = req.params.guid;
   const result = await storage.get(guid);
   switch (result.ok) {
@@ -23,7 +25,7 @@ router.get("/:guid", async (req, res) => {
   }
 });
 
-router.post("/", parseLargeBuffer, async (req, res) => {
+router.post("/profile", parseLargeBuffer, async (req, res) => {
   const guid = await safeGetGUID(req);
   if (!guid.ok) return res.status(401).send();
 

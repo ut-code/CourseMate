@@ -17,7 +17,7 @@ export async function set(guid: GUID, buf: Buffer): Promise<Result<string>> {
     })
     .then(() => {
       // ?update=${date} is necessary to let the browsers properly cache the image.
-      const pictureUrl = `/picture/${guid}?update=${new Date().getTime()}`;
+      const pictureUrl = `/picture/profile/${guid}?update=${new Date().getTime()}`;
       return Ok(pictureUrl);
     })
     .catch((err) => {

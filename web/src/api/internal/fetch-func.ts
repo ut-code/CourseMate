@@ -26,13 +26,16 @@ export async function uploadImage(file: File): Promise<URL> {
   if (file.size >= MAX_IMAGE_SIZE) {
     throw new Error("画像のアップロードに失敗しました: 画像が大きすぎます");
   }
-  const res = await fetch(`${endpoints.picture}?token=${await getIdToken()}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "image/png",
+  const res = await fetch(
+    `${endpoints.profilePicture}?token=${await getIdToken()}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "image/png",
+      },
+      body: file,
     },
-    body: file,
-  });
+  );
   if (res.status !== 201)
     throw new Error(
       `Unexpected status code: expected 201, but got ${res.status}`,

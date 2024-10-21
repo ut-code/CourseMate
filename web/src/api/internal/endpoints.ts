@@ -359,12 +359,13 @@ export const message = (messageId: MessageID) =>
 /**
  * GET: get profile picture of URL (this is usually hard-encoded in pictureURL so this variable is barely used)
  */
-export const pictureOf = (guid: GUID) => `${origin}/picture/${guid}`;
+export const profilePictureOf = (guid: GUID) =>
+  `${origin}/picture/profile/${guid}`;
 
 /**
  * POST: update my profile picture.
  */
-export const picture = `${origin}/picture`;
+export const profilePicture = `${origin}/picture/profile`;
 
 export default {
   user,
@@ -393,6 +394,6 @@ export default {
   message,
   coursesMine,
   coursesMineOverlaps,
-  pictureOf,
-  picture,
+  profilePictureOf,
+  profilePicture,
 };
