@@ -45,9 +45,9 @@ test: dev-db
 
 prepare-deploy-web: copy-common
 	cd web; bun install; bun run build
-prepare-deploy-server: copy-common sync-server generate-sql build-server
+prepare-deploy-server: copy-common sync-server generate-sql
 deploy-server:
-	make serve-server
+	cd server; bun src/main.ts
 
 docker: copy-common
 	@# deferring `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
