@@ -8,7 +8,7 @@ https://catalog.he.u-tokyo.ac.jp/result にある授業情報を取得するス�
 
 ```bash
 cd /path/to/this/dir
-cargo run
+cargo run --release
 ```
 
 ## Maintaining
