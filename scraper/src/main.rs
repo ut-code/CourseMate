@@ -19,7 +19,7 @@ const RESULT_FILE: &str = "./data.json";
 const CACHE_DIR: &str = "./.cache";
 const CACHE_GITKEEP: &str = "./.cache/.gitkeep";
 
-#[tokio::main(flavor = "multi_thread", worker_threads = 16)]
+#[tokio::main(flavor = "multi_thread")]
 async fn main() {
     println!("[log] starting...");
 

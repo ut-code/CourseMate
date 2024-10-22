@@ -33,6 +33,7 @@
   ],
   "ignorePaths": [
     "flake.*",
+    "nix/*",
     "**/.git/**",
     "**/node_modules/**",
     "server/target/**",
@@ -43,6 +44,7 @@
     "**/migration.sql",
     "**/data.json",
     "**/Cargo.*",
-    "scraper/target"
+    "scraper/target",
+    "**/rust-toolchain.toml"
   ]
 }
