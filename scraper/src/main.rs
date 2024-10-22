@@ -17,14 +17,12 @@ use urls::URLS;
 
 const RESULT_FILE: &str = "./data.json";
 const CACHE_DIR: &str = "./.cache";
-const CACHE_GITKEEP: &str = "./.cache/.gitkeep";
 
 #[tokio::main(flavor = "multi_thread")]
 async fn main() {
     println!("[log] starting...");
 
     let _ = fs::DirBuilder::new().create(CACHE_DIR).await;
-    let _ = fs::File::create(CACHE_GITKEEP).await;
 
     let mut file = fs::File::create(RESULT_FILE)
         .await
