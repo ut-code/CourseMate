@@ -19,6 +19,7 @@ jobs:
         with:
           path: |
             ~/.cargo/
+            ~/.rustup/
             scraper/target
           key: cargo-cache-${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
       - uses: actions-rust-lang/setup-rust-toolchain@v1
