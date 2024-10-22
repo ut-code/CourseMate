@@ -47,7 +47,7 @@ prepare-deploy-web: copy-common
 	cd web; bun install; bun run build
 prepare-deploy-server: copy-common sync-server generate-sql build-server
 deploy-server:
-	cd server; bun src/target/index.js
+	make serve-server
 
 docker: copy-common
 	@# deferring `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
