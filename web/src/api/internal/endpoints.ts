@@ -357,6 +357,11 @@ export const message = (messageId: MessageID) =>
   `${origin}/chat/messages/id/${messageId}`;
 
 /**
+ * POST: send picture.
+ */
+export const sendPictureTo = (friendId: UserID) =>
+  `${origin}/picture/to/${friendId}`;
+/**
  * GET: get profile picture of URL (this is usually hard-encoded in pictureURL so this variable is barely used)
  */
 export const profilePictureOf = (guid: GUID) =>

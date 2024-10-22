@@ -43,7 +43,11 @@ export function RoomList(props: RoomListProps) {
                 name={room.name}
                 pictureUrl={room.thumbnail}
                 rollUpName={true}
-                lastMessage={room.lastMsg?.content}
+                lastMessage={
+                  room.lastMsg?.isPicture
+                    ? "画像を送信しました"
+                    : room.lastMsg?.content
+                }
               />
             </Box>
           );

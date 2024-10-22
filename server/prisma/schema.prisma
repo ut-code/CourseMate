@@ -41,10 +41,15 @@ model User {
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
 }
 
-// プロフィールの画像。
 model Avatar {
   guid String @id
   data Bytes
+}
+
+model Picture {
+  hash     String @id
+  data     Bytes
+  key      String // password
 }
 
 // enum Gender {
@@ -102,8 +107,6 @@ enum MatchingStatus {
   REJECTED
 }
 
-// TODO: lazy load MessageLog s.t. it doesn't need to be loaded on Overview query.
-// https://www.prisma.io/docs/orm/prisma-client/queries/select-fields
 model SharedRoom {
   id        Int       @id @default(autoincrement())
   thumbnail String // URL to thumbnail picture
@@ -114,10 +117,11 @@ model SharedRoom {
 
 model Message {
   id           Int           @id @default(autoincrement())
-  creator      Int // refers to UserId
+  creator      Int           // refers to UserId
   createdAt    DateTime      @default(now()) // @readonly
   edited       Boolean       @default(false)
   content      String
+  isPicture    Boolean // iff the message is a picture. if true, then content is a url of picture.
   relation     Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId   Int?
   sharedRoom   SharedRoom?   @relation(fields: [sharedRoomId], references: [id], onDelete: Cascade)
