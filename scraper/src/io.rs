@@ -17,8 +17,8 @@ pub async fn request(url: &str) -> anyhow::Result<String> {
 
     let hash = Sha256::digest(url.as_bytes());
     let path = format!("{CACHE_DIR}/{:x}", hash);
-    if let Ok(content) = fs::read(&path).await {
-        if let Ok(text) = String::from_utf8(content) {
+    if let Ok(bytes) = fs::read(&path).await {
+        if let Ok(text) = String::from_utf8(bytes) {
             return Ok(text);
         }
     }
