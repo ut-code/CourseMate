@@ -29,6 +29,27 @@ export function RoomList(props: RoomListProps) {
       </p>
       {roomsData?.map((room) => {
         if (room.isDM) {
+          if (room.friendId === 0) {
+            //Keepメモ
+            return (
+              <Box
+                key={room.friendId}
+                onClick={() => {
+                  // `state`を使って`room`データを渡す
+                  navigate("./memo", { state: { room } });
+                }}
+              >
+                <HumanListItem
+                  key={room.friendId}
+                  id={room.friendId}
+                  name={room.name}
+                  pictureUrl={room.thumbnail}
+                  rollUpName={true}
+                  lastMessage={room.lastMsg?.content}
+                />
+              </Box>
+            );
+          }
           return (
             <Box
               key={room.friendId}
