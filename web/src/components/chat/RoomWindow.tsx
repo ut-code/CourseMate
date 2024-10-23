@@ -177,7 +177,7 @@ export function RoomWindow() {
           overflowY: "auto",
         }}
       >
-        {messages ? (
+        {messages && messages.length > 0 ? (
           <Box
             sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}
             ref={scrollDiv}
@@ -203,6 +203,11 @@ export function RoomWindow() {
                     <TextField
                       value={editedContent}
                       onChange={(e) => setEditedContent(e.target.value)}
+                      onKeyDown={(e) => {
+                        if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                          commitEdit(editingMessageId, editedContent);
+                        }
+                      }}
                       fullWidth
                       variant="outlined"
                       multiline

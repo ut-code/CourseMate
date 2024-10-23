@@ -20,7 +20,6 @@ export default function Step2({
   const notify = useCallback((message: string) => {
     enqueueSnackbar(message, {
       variant: "error",
-      autoHideDuration: 2000,
     });
   }, []);
 
