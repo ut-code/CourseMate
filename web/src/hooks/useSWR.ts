@@ -1,3 +1,4 @@
+import { parse, stringify } from "devalue";
 import { useCallback, useEffect, useState } from "react";
 import type { ZodSchema } from "zod";
 
@@ -74,13 +75,14 @@ export function useSWR<T>(
         console.error(
           `useSWR: Schema Parse Error | in incoming data | at schema ${CACHE_KEY} | Error: ${result.error.message}`,
         );
+        console.log("data:", data);
       }
       setState({
         data: data,
         current: "success",
         error: null,
       });
-      localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+      localStorage.setItem(CACHE_KEY, stringify(data));
     } catch (e) {
       setState({
         data: null,
@@ -92,7 +94,7 @@ export function useSWR<T>(
 
   const write = useCallback(
     (data: T) => {
-      localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+      localStorage.setItem(CACHE_KEY, stringify(data));
     },
     [CACHE_KEY],
   );
@@ -115,12 +117,16 @@ function loadOldData<T>(
   const oldData = localStorage.getItem(CACHE_KEY);
   if (oldData) {
     try {
-      const data = JSON.parse(oldData);
-      const parse = schema.safeParse(data);
-      if (!parse.success)
+      const data = parse(oldData);
+      const parsed = schema.safeParse(data);
+      if (!parsed.success) {
         console.error(
-          `useSWR: zodParseError | in stale data | at schema ${CACHE_KEY} | ${parse.error}`,
+          `useSWR: zodParseError | in stale data | at schema ${CACHE_KEY} | ${parsed.error}`,
         );
+        console.log("data:", data);
+        // because loading old data isn't critical to the application and wrong stale data may cause several problems,
+        throw "";
+      }
       return {
         current: "stale",
         data,
