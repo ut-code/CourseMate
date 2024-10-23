@@ -10,6 +10,6 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignore": ["bun.lockb", "server/target", "data.json"]
+    "ignore": ["bun.lockb", "server/target", "data.json", "scraper/target"]
   }
 }

@@ -15,7 +15,9 @@
     "qiita",
     "safify",
     "supabase",
-    "swiper"
+    "swiper",
+    "reqwest",
+    "chrono"
   ],
   "dictionaries": [
     "softwareTerms",
@@ -31,6 +33,7 @@
   ],
   "ignorePaths": [
     "flake.*",
+    "nix/*",
     "**/.git/**",
     "**/node_modules/**",
     "server/target/**",
@@ -39,6 +42,9 @@
     "**/bun.lockb",
     "**/*.svg",
     "**/migration.sql",
-    "**/data.json"
+    "**/data.json",
+    "**/Cargo.*",
+    "scraper/target",
+    "**/rust-toolchain.toml"
   ]
 }
