@@ -16,7 +16,8 @@ test("get all users", async () => {
   expect(result.code).toBe(200);
   expect(result.body).toSatisfy((s) => s.length === 3);
   expect(result.body).toSatisfy(
-    (s) => typeof s !== "string" && s[0].name === "田中太郎",
+    (s) =>
+      typeof s !== "string" && s.some((person) => person.name === "田中太郎"),
   );
 });
 

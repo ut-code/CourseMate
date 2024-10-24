@@ -11,7 +11,7 @@
     "prisma-generate-sql": "bunx dotenv -e .env.dev -- prisma generate --sql"
   },
   "prisma": {
-    "seed": "bun src/seeds/seed.ts"
+    "seed": "bun src/seeds/seed-test.ts"
   },
   "keywords": [],
   "author": "",
