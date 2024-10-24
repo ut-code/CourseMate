@@ -13,7 +13,7 @@ export function RoomList(props: RoomListProps) {
 
   return (
     <List disablePadding>
-      <p
+      <div
         style={{
           marginLeft: "40px",
           marginRight: "40px",
@@ -26,7 +26,7 @@ export function RoomList(props: RoomListProps) {
             リクエストを送りましょう！
           </>
         )}
-      </p>
+      </div>
       {roomsData?.map((room) => {
         if (room.isDM) {
           return (

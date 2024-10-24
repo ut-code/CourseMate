@@ -56,7 +56,7 @@ export default function Confirmation({
             alignItems: "center",
           }}
         >
-          <p>この内容で登録しますか？</p>
+          <div>この内容で登録しますか？</div>
         </div>
       </div>
       <Box
@@ -107,14 +107,16 @@ function CardFront({ UserInfo }: { UserInfo: UserInfoProp }) {
             height="auto"
           />
         </div>
-        <p style={{ fontSize: "4vw", fontWeight: "bold" }}>{UserInfo?.name}</p>
+        <div style={{ fontSize: "4vw", fontWeight: "bold" }}>
+          {UserInfo?.name}
+        </div>
       </div>
       <div style={{ padding: "10px" }}>
-        {UserInfo?.grade && <p>学年： {UserInfo.grade}</p>}
-        {UserInfo?.faculty && <p>学部： {UserInfo.faculty}</p>}
-        {UserInfo?.department && <p>学科： {UserInfo.department}</p>}
-        {UserInfo?.gender && <p>性別： {UserInfo?.gender}</p>}
-        {UserInfo?.intro && <p>自己紹介: {UserInfo.intro}</p>}
+        {UserInfo?.grade && <div>学年： {UserInfo.grade}</div>}
+        {UserInfo?.faculty && <div>学部： {UserInfo.faculty}</div>}
+        {UserInfo?.department && <div>学科： {UserInfo.department}</div>}
+        {UserInfo?.gender && <div>性別： {UserInfo?.gender}</div>}
+        {UserInfo?.intro && <div>自己紹介: {UserInfo.intro}</div>}
       </div>
     </div>
   );

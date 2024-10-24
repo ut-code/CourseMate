@@ -16,9 +16,9 @@ const app = express();
 // https://expressjs.com/ja/api.html#app.settings.table  の query parser を参照。
 app.set("query parser", "simple");
 
-const port = 3000;
+const port = 3001;
 const allowedOrigins = [
-  process.env.SERVER_ORIGIN ?? "http://localhost:3000", // delete this fallback when you think everyone has updated their .env
+  process.env.SERVER_ORIGIN ?? "http://localhost:3001", // delete this fallback when you think everyone has updated their .env
   process.env.WEB_ORIGIN,
   process.env.MOBILE_ORIGIN,
   process.env.WEB_ORIGIN_BUILD,

@@ -148,14 +148,14 @@ const CardFront = ({ displayedUser }: CardProps) => {
             gridColumn: "1 / 2",
           }}
         />
-        <p
+        <div
           style={{
             margin: 0,
             fontSize: "3dvh",
           }}
         >
           {displayedUser.faculty}
-        </p>
+        </div>
       </div>
       <div
         style={{
@@ -166,7 +166,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
         }}
       >
         <Chip label="学科" size="small" />
-        <p
+        <div
           style={
             displayedUser.department.length <= 7
               ? {
@@ -186,7 +186,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
           }
         >
           {displayedUser.department}
-        </p>
+        </div>
       </div>
       <div
         style={{
@@ -197,7 +197,9 @@ const CardFront = ({ displayedUser }: CardProps) => {
         }}
       >
         <Chip label="性別" size="small" />
-        <p style={{ margin: 0, fontSize: "3dvh" }}>{displayedUser.gender}</p>
+        <div style={{ margin: 0, fontSize: "3dvh" }}>
+          {displayedUser.gender}
+        </div>
       </div>
       <div
         style={{
@@ -208,7 +210,10 @@ const CardFront = ({ displayedUser }: CardProps) => {
         }}
       >
         <Chip label="学年" size="small" />
-        <p style={{ margin: 0, fontSize: "3dvh" }}> {displayedUser.grade}</p>
+        <div style={{ margin: 0, fontSize: "3dvh" }}>
+          {" "}
+          {displayedUser.grade}
+        </div>
       </div>
       <div
         style={{
@@ -226,7 +231,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
             fontSize: "0.45rem",
           }}
         />
-        <p
+        <div
           style={{
             margin: 0,
             fontSize: "1.76dvh",
@@ -239,7 +244,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
           }}
         >
           {displayedUser.intro}
-        </p>
+        </div>
       </div>
       <div>
         <ThreeSixtyIcon
@@ -264,9 +269,9 @@ const CardBack = ({ displayedUser, comparisonUserId }: CardProps) => {
       }}
     >
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <p style={{ fontSize: "1rem", fontWeight: "bold" }}>
+        <div style={{ fontSize: "1rem", fontWeight: "bold" }}>
           {displayedUser?.name}
-        </p>
+        </div>
       </div>
       <NonEditableCoursesTable
         userId={displayedUser.id}

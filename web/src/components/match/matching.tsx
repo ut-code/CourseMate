@@ -14,7 +14,7 @@ export default function Matchings() {
 
   return (
     <Box>
-      <p
+      <div
         style={{
           marginLeft: "40px",
           marginRight: "40px",
@@ -27,11 +27,11 @@ export default function Matchings() {
             リクエストを送りましょう！
           </>
         )}
-      </p>
+      </div>
       {current === "loading" ? (
         <FullScreenCircularProgress />
       ) : error ? (
-        <p>Error: {error.message}</p>
+        <div>Error: {error.message}</div>
       ) : (
         <List>
           {data?.map((matchedUser) => (

@@ -14,7 +14,7 @@ export default function Step4() {
         {state.current === "loading" ? (
           <FullScreenCircularProgress />
         ) : state.current === "error" ? (
-          <p>Error: {state.error.message}</p>
+          <div>Error: {state.error.message}</div>
         ) : (
           <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
             <Typography variant="h6" component="h1">

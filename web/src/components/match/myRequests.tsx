@@ -12,7 +12,7 @@ export default function MyReq() {
 
   return (
     <Box>
-      <p
+      <div
         style={{
           marginLeft: "40px",
         }}
@@ -20,11 +20,11 @@ export default function MyReq() {
         {state.data && state.data.length > 0
           ? "以下のリクエストを送信しました！"
           : "リクエストを送信しましょう！"}
-      </p>
+      </div>
       {state.current === "loading" ? (
         <FullScreenCircularProgress />
       ) : state.error ? (
-        <p>Error: {state.error.message}</p>
+        <div>Error: {state.error.message}</div>
       ) : (
         <List>
           {state.data?.map((receivingUser) => (

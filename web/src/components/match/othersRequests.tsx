@@ -15,7 +15,7 @@ export default function OthersReq() {
 
   return (
     <Box>
-      <p
+      <div
         style={{
           marginLeft: "40px",
         }}
@@ -23,11 +23,11 @@ export default function OthersReq() {
         {data && data.length > 0
           ? "以下のリクエストを受け取りました！"
           : "リクエストは受け取っていません。"}
-      </p>
+      </div>
       {loading ? (
         <FullScreenCircularProgress />
       ) : error ? (
-        <p>Error: {error.message}</p>
+        <div>Error: {error.message}</div>
       ) : (
         <List>
           {data?.map((sendingUser) => (

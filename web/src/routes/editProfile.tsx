@@ -223,7 +223,7 @@ export default function EditProfile() {
       {loading ? (
         <FullScreenCircularProgress />
       ) : error ? (
-        <p>Error: {error.message}</p>
+        <div>Error: {error.message}</div>
       ) : data ? (
         <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
           <Typography variant="h6" component="h1">
@@ -540,7 +540,7 @@ export default function EditProfile() {
           </Box>
         </Box>
       ) : (
-        <p>データがありません。</p>
+        <div>データがありません。</div>
       )}
     </Box>
   );
