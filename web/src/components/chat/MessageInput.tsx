@@ -1,17 +1,20 @@
+import ImageIcon from "@mui/icons-material/Image";
 import SendIcon from "@mui/icons-material/Send";
 import { Box, IconButton, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { sendImageTo } from "../../api/image";
 import type { DMOverview, SendMessage, UserID } from "../../common/types";
 import { parseContent } from "../../common/zod/methods";
 
 type Props = {
   send: (to: UserID, m: SendMessage) => void;
+  reload: () => void;
   room: DMOverview;
 };
 
 const crossRoomMessageState = new Map<number, string>();
 
-export function MessageInput({ send, room }: Props) {
+export function MessageInput({ reload, send, room }: Props) {
   const [message, _setMessage] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
@@ -61,6 +64,22 @@ export function MessageInput({ send, room }: Props) {
     <Box sx={{ padding: "0px" }}>
       <form onSubmit={submit}>
         <Stack direction="row" spacing={1} alignItems="center" margin={2}>
+          <label>
+            <ImageIcon />
+            <input
+              type="file"
+              hidden
+              accept="svg,png,jpg,jpeg,webp,avif"
+              onChange={async (ev) => {
+                if (!ev.target.files) return;
+                for (const file of ev.target.files) {
+                  // this non-concurrent await is intentional. without this, the images will be sent unordered.
+                  await sendImageTo(room.friendId, file).catch(console.error);
+                  reload();
+                }
+              }}
+            />
+          </label>
           <TextField
             name="message"
             placeholder="メッセージを入力"

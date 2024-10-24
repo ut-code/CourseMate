@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import * as chat from "../../api/chat/chat";
 import { useMessages } from "../../api/chat/hooks";
+import { origin as apiOrigin } from "../../api/internal/endpoints";
 import * as user from "../../api/user";
 import { useMyID } from "../../api/user";
 import type {
@@ -182,108 +183,123 @@ export function RoomWindow() {
             sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}
             ref={scrollDiv}
           >
-            {messages.map((m) => (
-              <Box
-                key={m.id}
-                sx={{
-                  display: "flex",
-                  justifyContent:
-                    m.creator === myId ? "flex-end" : "flex-start",
-                  marginBottom: 1,
-                }}
-              >
-                {editingMessageId === m.id ? (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      width: "60%",
-                    }}
-                  >
-                    <TextField
-                      value={editedContent}
-                      onChange={(e) => setEditedContent(e.target.value)}
-                      onKeyDown={(e) => {
-                        if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                          commitEdit(editingMessageId, editedContent);
-                        }
-                      }}
-                      fullWidth
-                      variant="outlined"
-                      multiline
-                      rows={3}
-                    />
+            {messages.map((m) =>
+              m.isPicture ? (
+                <img
+                  height="300px"
+                  width="300px"
+                  style={{
+                    maxHeight: "300px",
+                    maxWidth: "300px",
+                    float: m.creator === myId ? "right" : "left",
+                  }}
+                  key={m.id}
+                  alt=""
+                  src={apiOrigin + m.content}
+                />
+              ) : (
+                <Box
+                  key={m.id}
+                  sx={{
+                    display: "flex",
+                    justifyContent:
+                      m.creator === myId ? "flex-end" : "flex-start",
+                    marginBottom: 1,
+                  }}
+                >
+                  {editingMessageId === m.id ? (
                     <Box
                       sx={{
                         display: "flex",
-                        gap: 1,
-                        marginTop: 1,
-                        justifyContent: "space-evenly",
+                        flexDirection: "column",
+                        width: "60%",
                       }}
                     >
-                      <Button
-                        variant="contained"
-                        onClick={() =>
-                          commitEdit(editingMessageId, editedContent)
-                        }
-                        sx={{ minWidth: 100 }}
-                      >
-                        保存
-                      </Button>
-                      <Button
+                      <TextField
+                        value={editedContent}
+                        onChange={(e) => setEditedContent(e.target.value)}
+                        onKeyDown={(e) => {
+                          if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                            commitEdit(editingMessageId, editedContent);
+                          }
+                        }}
+                        fullWidth
                         variant="outlined"
-                        onClick={cancelEdit}
-                        sx={{ minWidth: 100 }}
-                      >
-                        キャンセル
-                      </Button>
-                    </Box>
-                  </Box>
-                ) : (
-                  <Paper
-                    sx={{
-                      display: "flex",
-                      maxWidth: "60%",
-                      padding: 1,
-                      borderRadius: 2,
-                      backgroundColor:
-                        m.creator === myId ? "secondary.main" : "#FFF",
-                      boxShadow: 1,
-                      border: 1,
-                    }}
-                  >
-                    <Typography
-                      sx={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-                    >
-                      {m.content}
-                    </Typography>
-                    {m.creator === myId && (
-                      <Dots
-                        actions={[
-                          {
-                            label: "編集",
-                            onClick: () => startEditing(m.id, m.content),
-                            alert: false,
-                          },
-                          {
-                            label: "削除",
-                            color: "red",
-                            onClick: () => deleteMessage(m.id, room.friendId),
-                            alert: true,
-                            messages: {
-                              buttonMessage: "削除",
-                              AlertMessage: "本当に削除しますか？",
-                              subAlertMessage: "この操作は取り消せません。",
-                              yesMessage: "削除",
-                            },
-                          },
-                        ]}
+                        multiline
+                        rows={3}
                       />
-                    )}
-                  </Paper>
-                )}
-              </Box>
-            ))}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 1,
+                          marginTop: 1,
+                          justifyContent: "space-evenly",
+                        }}
+                      >
+                        <Button
+                          variant="contained"
+                          onClick={() =>
+                            commitEdit(editingMessageId, editedContent)
+                          }
+                          sx={{ minWidth: 100 }}
+                        >
+                          保存
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          onClick={cancelEdit}
+                          sx={{ minWidth: 100 }}
+                        >
+                          キャンセル
+                        </Button>
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Paper
+                      sx={{
+                        display: "flex",
+                        maxWidth: "60%",
+                        padding: 1,
+                        borderRadius: 2,
+                        backgroundColor:
+                          m.creator === myId ? "secondary.main" : "#FFF",
+                        boxShadow: 1,
+                        border: 1,
+                      }}
+                    >
+                      <Typography
+                        sx={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                      >
+                        {m.content}
+                      </Typography>
+                      {m.creator === myId && (
+                        <Dots
+                          actions={[
+                            {
+                              label: "編集",
+                              onClick: () => startEditing(m.id, m.content),
+                              alert: false,
+                            },
+                            {
+                              label: "削除",
+                              color: "red",
+                              onClick: () => deleteMessage(m.id, room.friendId),
+                              alert: true,
+                              messages: {
+                                buttonMessage: "削除",
+                                AlertMessage: "本当に削除しますか？",
+                                subAlertMessage: "この操作は取り消せません。",
+                                yesMessage: "削除",
+                              },
+                            },
+                          ]}
+                        />
+                      )}
+                    </Paper>
+                  )}
+                </Box>
+              ),
+            )}
           </Box>
         ) : (
           <Typography>最初のメッセージを送ってみましょう！</Typography>
@@ -298,7 +314,7 @@ export function RoomWindow() {
           padding: "0px",
         }}
       >
-        <MessageInput send={sendDMMessage} room={room} />
+        <MessageInput reload={reload} send={sendDMMessage} room={room} />
       </Box>
     </>
   );

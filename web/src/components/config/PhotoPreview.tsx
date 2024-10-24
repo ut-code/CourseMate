@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { uploadImage } from "../../api/image";
+import { uploadAvatar } from "../../api/image";
 import { ImageCropper } from "../ImageCropper";
 import { photo } from "../data/photo-preview";
 
@@ -89,7 +89,7 @@ export function PhotoPreview({ prev, onCrop }: Props) {
 
   useEffect(() => {
     if (!croppedFile) return;
-    photo.upload = async () => await uploadImage(croppedFile);
+    photo.upload = async () => await uploadAvatar(croppedFile);
     if (onCrop) {
       onCrop(croppedFile);
     }
