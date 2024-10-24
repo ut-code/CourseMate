@@ -8,13 +8,13 @@ AS overlap FROM "User" recv
 WHERE recv.id <> $1
 
 AND NOT EXISTS (
-    SELECT * FROM "Relationship" rel
+    SELECT 1 FROM "Relationship" rel
     WHERE rel."sendingUserId" IN ($1, recv.id) AND rel."receivingUserId" IN ($1, recv.id)
-    AND status = 'MATCHED'
+    AND (status = 'MATCHED' OR status = 'REJECTED')
 )
 
 AND NOT EXISTS (
-    SELECT * FROM  "Relationship" rel_pd
+    SELECT 1 FROM  "Relationship" rel_pd
     WHERE rel_pd."sendingUserId" = $1 AND rel_pd."receivingUserId" = recv.id
     AND status = 'PENDING'
 )
