@@ -1,10 +1,10 @@
+# yaml-language-server: $schema=https://render.com/schema/render.yaml.json
 services:
   - name: CourseMate API Server
     type: web
     plan: free
     runtime: node
     repo: github.com/ut-code/CourseMate
-    branch: release
     buildCommand: make prepare-deploy-server
     startCommand: make deploy-server
     envVars:
@@ -22,7 +22,6 @@ services:
     plan: free
     runtime: static
     repo: github.com/ut-code/CourseMate
-    branch: release
     buildCommand: make prepare-deploy-web
     staticPublishPath: web/dist
     routes:
