@@ -1,27 +1,16 @@
-import { ArrowBack } from "@mui/icons-material";
-import { Box, IconButton, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Box, Typography } from "@mui/material";
+import TopNavigation from "./components/TopNavigation";
 
 export default function Disclaimer() {
-  const navigate = useNavigate();
-
   return (
     <Box
       sx={{
-        padding: "20px",
+        padding: "8px",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
       }}
     >
-      <IconButton
-        sx={{ position: "absolute", top: "20px", left: "20px" }}
-        onClick={() => navigate("/settings")}
-      >
-        <ArrowBack />
-      </IconButton>
-
+      <TopNavigation title="免責事項" />
       <Box
         sx={{
           width: "100%",
@@ -30,15 +19,6 @@ export default function Disclaimer() {
           textAlign: "left",
         }}
       >
-        <Typography
-          variant="h5"
-          component="h1"
-          gutterBottom
-          sx={{ fontWeight: "bold", mb: "24px", textAlign: "center" }}
-        >
-          免責事項
-        </Typography>
-
         <Typography
           variant="body1"
           paragraph

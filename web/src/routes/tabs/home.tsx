@@ -1,11 +1,13 @@
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Box, Button, CircularProgress } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import request from "../../api/request";
 
 import shadows from "@mui/material/styles/shadows";
-import { useRecommended } from "../../api/user";
+import { motion, useAnimation } from "framer-motion";
+import { useMyID, useRecommended } from "../../api/user";
+import { Card } from "../../components/Card";
 import { DraggableCard } from "../../components/DraggableCard";
 import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 
@@ -14,11 +16,12 @@ export default function Home() {
 
   const [nth, setNth] = useState<number>(0);
   const displayedUser = recommended?.[nth];
-
-  const [dragValue, setDragValue] = useState(0); // x方向の値を保存
-  const handleDrag = useCallback((dragProgress: number) => {
-    setDragValue(dragProgress);
-  }, []);
+  const nextUser = recommended?.[nth + 1];
+  const controls = useAnimation();
+  const [clickedButton, setClickedButton] = useState<string>("");
+  const {
+    state: { data: myId },
+  } = useMyID();
 
   const reject = useCallback(() => {
     if (!displayedUser) return;
@@ -31,6 +34,34 @@ export default function Home() {
     if (displayedUser?.id) request.send(displayedUser.id);
   }, [displayedUser?.id]);
 
+  const onClickCross = useCallback(() => {
+    setClickedButton("cross");
+    controls
+      .start({
+        x: [0, -1000],
+        transition: { duration: 0.5, times: [0, 1], delay: 0.2 },
+      })
+      .then(() => {
+        reject();
+        setClickedButton("");
+        controls.set({ x: 0 });
+      });
+  }, [controls, reject]);
+
+  const onClickHeart = useCallback(() => {
+    setClickedButton("heart");
+    controls
+      .start({
+        x: [0, 1000],
+        transition: { duration: 0.5, times: [0, 1], delay: 0.2 },
+      })
+      .then(() => {
+        accept();
+        setClickedButton("");
+        controls.set({ x: 0 });
+      });
+  }, [controls, accept]);
+
   useEffect(() => {
     if (!displayedUser) {
       setNth(0);
@@ -38,7 +69,7 @@ export default function Home() {
   }, [displayedUser]);
 
   if (recommended == null) {
-    return <CircularProgress />;
+    return <FullScreenCircularProgress />;
   }
   if (displayedUser == null) {
     return <div>全員にいいねを送りました！</div>;
@@ -50,7 +81,6 @@ export default function Home() {
   return (
     <div
       style={{
-        backgroundColor: getBackgroundColor(dragValue),
         height: "100%",
         display: "flex",
         flexDirection: "column",
@@ -61,28 +91,45 @@ export default function Home() {
         <Box
           display="flex"
           flexDirection="column"
+          justifyContent="space-evenly"
           alignItems="center"
           height="100%"
         >
-          <DraggableCard
-            displayedUser={displayedUser}
-            onSwipeLeft={reject}
-            onSwipeRight={accept}
-            onDrag={handleDrag}
-          />
+          <Box style={{ position: "relative" }}>
+            {nextUser ? (
+              <Box
+                style={{
+                  position: "absolute",
+                  top: "0",
+                  left: "0",
+                  zIndex: -1,
+                }}
+              >
+                <Card displayedUser={nextUser} />
+              </Box>
+            ) : null}
+            <motion.div animate={controls}>
+              <DraggableCard
+                displayedUser={displayedUser}
+                comparisonUserId={myId ? myId : undefined}
+                onSwipeLeft={reject}
+                onSwipeRight={accept}
+                clickedButton={clickedButton}
+              />
+            </motion.div>
+          </Box>
           <div
             style={{
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-around",
-              width: "100%",
-              height: "100%",
+              width: "min(100%, 46dvh)",
               marginBottom: "10px",
             }}
           >
-            <RoundButton onclick={reject} icon={<CloseIconStyled />} />
-            <RoundButton onclick={accept} icon={<FavoriteIconStyled />} />
+            <RoundButton onclick={onClickCross} icon={<CloseIconStyled />} />
+            <RoundButton onclick={onClickHeart} icon={<FavoriteIconStyled />} />
           </div>
         </Box>
       ) : (
@@ -91,24 +138,6 @@ export default function Home() {
     </div>
   );
 }
-
-const getBackgroundColor = (x: number) => {
-  const maxVal = 300; // 255より大きくして原色や黒にならないようにする
-  const normalizedValue = Math.max(-maxVal, Math.min(maxVal, x / 2));
-
-  // xが0に近いと白、正の方向に進むと緑、負の方向に進むと赤
-  if (normalizedValue === 0) {
-    return `rgb(${maxVal}, ${maxVal}, ${maxVal})`; // 白
-  }
-  if (normalizedValue > 0) {
-    const redValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
-    return `rgb(${maxVal}, ${maxVal - redValue}, ${maxVal - redValue})`; // 赤
-  }
-  const grayValue = Math.floor((Math.abs(normalizedValue) / maxVal) * 255);
-  return `rgb(${maxVal - grayValue}, ${maxVal - grayValue}, ${
-    maxVal - grayValue
-  })`; // 灰色
-};
 
 interface RoundButtonProps {
   onclick: () => void;
@@ -127,16 +156,16 @@ const RoundButton = ({ onclick, icon }: RoundButtonProps) => {
 
 const ButtonStyle = {
   borderRadius: "50%",
-  width: "15vw",
-  height: "15vw",
+  width: "7dvh",
+  height: "7dvh",
   boxShadow: shadows[10],
   backgroundColor: "white",
 };
 
 const CloseIconStyled = () => {
-  return <CloseIcon style={{ color: "grey", fontSize: "10vw" }} />;
+  return <CloseIcon style={{ color: "grey", fontSize: "4.5dvh" }} />;
 };
 
 const FavoriteIconStyled = () => {
-  return <FavoriteIcon style={{ color: "red", fontSize: "10vw" }} />;
+  return <FavoriteIcon style={{ color: "red", fontSize: "4.5dvh" }} />;
 };

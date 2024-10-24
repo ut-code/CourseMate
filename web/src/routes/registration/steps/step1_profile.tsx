@@ -28,12 +28,12 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
   async function save() {
     try {
       const data: Step1User = {
-        name,
-        grade,
-        gender,
-        faculty,
-        department,
-        intro,
+        name: name.trim(),
+        grade: grade,
+        gender: gender,
+        faculty: faculty,
+        department: department,
+        intro: intro.trim(),
       };
       parseStep1UserSchema(data);
       onSave(data);
@@ -80,6 +80,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               label="名前"
+              autoComplete="off"
             />
           </FormControl>
           <FormControl fullWidth>

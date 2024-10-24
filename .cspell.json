@@ -2,19 +2,20 @@
   "version": "0.2",
   "language": "en",
   "words": [
-    "supabase",
-    "direnv",
-    "bunx",
-    "qiita",
-    "coursemate",
-    "safify",
-    "notistack",
     "autoincrement",
+    "bunx",
+    "coursemate",
     "datasource",
-    "lockb",
-    "psql",
+    "direnv",
+    "ECCS",
     "isready",
-    "ECCS"
+    "lockb",
+    "notistack",
+    "psql",
+    "qiita",
+    "safify",
+    "supabase",
+    "swiper"
   ],
   "dictionaries": [
     "softwareTerms",
@@ -37,6 +38,7 @@
     "**/package.json",
     "**/bun.lockb",
     "**/*.svg",
-    "**/migration.sql"
+    "**/migration.sql",
+    "**/data.json"
   ]
 }

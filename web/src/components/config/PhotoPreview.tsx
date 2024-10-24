@@ -69,7 +69,7 @@ export function PhotoPreview({ prev, onCrop }: Props) {
   const [originalFile, setOriginalFile] = useState<File>();
   const [croppedFile, setCroppedFile] = useState<File | null>(null);
 
-  // returns true if it's OK to open.
+  // returns true if it's OK to open modal.
   const onSelectImage = useCallback(
     (event: ChangeEvent<HTMLInputElement>): boolean => {
       if (!event.target.files || event.target.files.length <= 0) {
