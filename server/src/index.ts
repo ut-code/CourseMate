@@ -24,7 +24,7 @@ const allowedOrigins = [
   process.env.WEB_ORIGIN_BUILD,
 ];
 export const corsOptions = {
-  origins: allowedOrigins.filter((s) => s != null).filter((s) => s), // ignore empty string too
+  origins: allowedOrigins.filter(Boolean) as string[], // `Boolean` を使って、`undefined` や空文字列を取り除く
   methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
   credentials: true,
 };
