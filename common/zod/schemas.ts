@@ -134,8 +134,8 @@ export const SharedRoomOverviewSchema = z.object({
 });
 
 export const RoomOverviewSchema = z.union([
-  DMOverviewSchema,
   SharedRoomOverviewSchema,
+  DMOverviewSchema,
 ]);
 
 export const DMRoomSchema = z.object({
