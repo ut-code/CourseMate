@@ -14,6 +14,7 @@
     "@fontsource/roboto": "^5.0.13",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.15.20",
+    "devalue": "^5.1.1",
     "firebase": "^10.12.2",
     "framer-motion": "^11.3.23",
     "next": "^14.2.15",

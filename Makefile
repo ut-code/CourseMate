@@ -45,10 +45,9 @@ test: dev-db
 
 prepare-deploy-web: copy-common
 	cd web; bun install; bun run build
-prepare-deploy-server: copy-common
-	cd server; bun install; npx prisma generate;
+prepare-deploy-server: copy-common sync-server generate-sql
 deploy-server:
-	cd server; bun src/index.ts
+	cd server; bun src/main.ts
 
 docker: copy-common
 	@# deferring `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
@@ -95,16 +94,16 @@ spell-check:
 # Sync (install/update packages, generate prisma, etc)
 
 sync-web:
-	cd web; bun install
+	cd web; bun install --frozen-lockfile
 	# copy .env.sample -> .env only if .env is not there
 
 sync-server:
-	cd server; bun install
+	cd server; bun install --frozen-lockfile
 	cd server; bunx prisma generate
 	# copy .env.sample -> .env only if .env is not there
 
 sync-root:
-	bun install
+	bun install --frozen-lockfile
 
 
 # Static checks
