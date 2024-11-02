@@ -13,12 +13,15 @@ import { CourseMateIcon } from "../components/common/CourseMateIcon";
 import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
 
 const provider = new GoogleAuthProvider();
+const ALLOW_ANY_MAIL_ADDR = import.meta.env.VITE_ALLOW_ANY_MAIL_ADDR === "true";
 
 async function signInWithGoogle() {
   try {
-    provider.setCustomParameters({
-      hd: "g.ecc.u-tokyo.ac.jp",
-    });
+    if (!ALLOW_ANY_MAIL_ADDR) {
+      provider.setCustomParameters({
+        hd: "g.ecc.u-tokyo.ac.jp",
+      });
+    }
     const result = await signInWithPopup(auth, provider);
     const credential = GoogleAuthProvider.credentialFromResult(result);
 
@@ -29,7 +32,10 @@ async function signInWithGoogle() {
     const user = result.user;
     const email = user.email;
 
-    if (!email || !email.endsWith("@g.ecc.u-tokyo.ac.jp")) {
+    if (
+      !ALLOW_ANY_MAIL_ADDR &&
+      (!email || !email.endsWith("@g.ecc.u-tokyo.ac.jp"))
+    ) {
       throw new Error(
         "Unauthorized domain. Access is restricted to g.ecc.u-tokyo.ac.jp domain.",
       );
