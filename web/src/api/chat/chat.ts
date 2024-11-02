@@ -54,7 +54,16 @@ export async function updateMessage(
 export async function overview(): Promise<RoomOverview[]> {
   const res = await credFetch("GET", endpoints.roomOverview);
   if (res.status === 401) throw new ErrUnauthorized();
-  return await res.json();
+  const json: RoomOverview[] = await res.json();
+
+  if (!Array.isArray(json)) return json;
+
+  for (const room of json) {
+    if (!room.lastMsg) continue;
+    room.lastMsg.createdAt = new Date(room.lastMsg.createdAt);
+  }
+
+  return json;
 }
 
 //// DM関連 ////
@@ -74,7 +83,6 @@ export async function sendDM(
   return res.json();
 }
 
-// WARNING: don't use this outside of api/
 export async function getDM(friendId: UserID): Promise<DMRoom> {
   const res = await credFetch("GET", endpoints.dmWith(friendId));
   if (res.status === 401) throw new ErrUnauthorized();
@@ -82,7 +90,12 @@ export async function getDM(friendId: UserID): Promise<DMRoom> {
     throw new Error(
       `getDM() failed: expected status code 200, got ${res.status}`,
     );
-  return res.json();
+  const json: DMRoom = await res.json();
+  if (!Array.isArray(json?.messages)) return json;
+  for (const m of json.messages) {
+    m.createdAt = new Date(m.createdAt);
+  }
+  return json;
 }
 
 ////グループチャット関連////
