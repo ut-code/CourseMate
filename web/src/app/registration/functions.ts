@@ -1,18 +1,19 @@
 import { getAuth } from "firebase/auth";
 import type { EnqueueSnackbar } from "notistack";
-import type { NavigateFunction } from "react-router-dom";
 import * as userAPI from "../../api/user";
 import type { GUID, User } from "../../common/types";
 import type { UpdateUser } from "../../common/types";
+import type { useRouter } from "next/navigation";
+type AppRouterInstance = ReturnType<typeof useRouter>;
 
 type Dependencies = {
-  navigate: NavigateFunction;
+  router: AppRouterInstance;
   enqueueSnackbar: EnqueueSnackbar;
 };
 
 export async function register(
   data: UpdateUser,
-  { navigate, enqueueSnackbar }: Dependencies,
+  { router, enqueueSnackbar }: Dependencies,
 ) {
   const user = getAuth().currentUser;
 
@@ -33,7 +34,7 @@ export async function register(
     enqueueSnackbar("アカウント作成に失敗しました", {
       variant: "error",
     });
-    navigate("/", { replace: true });
+    router.replace("/");
   }
 }
 

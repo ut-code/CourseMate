@@ -1,7 +1,9 @@
+"use client";
+
 import { Box, List, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import type { RoomOverview } from "../../common/types";
 import { HumanListItem } from "../human/humanListItem";
+import { useRouter } from "next/navigation";
 
 type RoomListProps = {
   roomsData: RoomOverview[] | null;
@@ -9,7 +11,7 @@ type RoomListProps = {
 
 export function RoomList(props: RoomListProps) {
   const { roomsData } = props;
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <List disablePadding>
@@ -34,7 +36,7 @@ export function RoomList(props: RoomListProps) {
               key={room.friendId}
               onClick={() => {
                 // `state`を使って`room`データを渡す
-                navigate(`./${room.friendId}`, { state: { room } });
+                router.push(`./${room.friendId}`);
               }}
             >
               <HumanListItem

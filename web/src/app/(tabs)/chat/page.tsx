@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
-import { useRoomsOverview } from "../../api/chat/hooks";
-import RoomList from "../../components/chat/RoomList";
-import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
+import { useRoomsOverview } from "~/api/chat/hooks";
+import RoomList from "~/components/chat/RoomList";
+import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 
 export default function Chat() {
   const { state } = useRoomsOverview();

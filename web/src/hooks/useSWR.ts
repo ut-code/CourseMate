@@ -1,3 +1,5 @@
+"use client";
+
 import { parse, stringify } from "devalue";
 import { useCallback, useEffect, useState } from "react";
 import type { ZodSchema } from "zod";
@@ -82,7 +84,7 @@ export function useSWR<T>(
         current: "success",
         error: null,
       });
-      localStorage.setItem(CACHE_KEY, stringify(data));
+      writeData(CACHE_KEY, data);
     } catch (e) {
       setState({
         data: null,
@@ -94,7 +96,7 @@ export function useSWR<T>(
 
   const write = useCallback(
     (data: T) => {
-      localStorage.setItem(CACHE_KEY, stringify(data));
+      writeData(CACHE_KEY, data);
     },
     [CACHE_KEY],
   );
@@ -110,10 +112,22 @@ export function useSWR<T>(
   };
 }
 
+function writeData<T>(CACHE_KEY: string, data: T) {
+  if (!localStorage || !localStorage.setItem)
+    return console.warn("WARNING: localStorage not found");
+  localStorage.setItem(CACHE_KEY, stringify(data));
+}
+
 function loadOldData<T>(
   CACHE_KEY: string,
   schema: ZodSchema<T>,
 ): Loading | Stale<T> {
+  if (!localStorage || !localStorage.getItem)
+    return {
+      current: "loading",
+      data: null,
+      error: null,
+    };
   const oldData = localStorage.getItem(CACHE_KEY);
   if (oldData) {
     try {

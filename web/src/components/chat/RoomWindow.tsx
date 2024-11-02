@@ -1,7 +1,6 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
 import * as chat from "../../api/chat/chat";
 import { useMessages } from "../../api/chat/hooks";
 import * as user from "../../api/user";
@@ -21,8 +20,7 @@ import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
 export function RoomWindow() {
-  const { state: locationState } = useLocation();
-  const { room } = locationState as { room: DMOverview }; // `room`データを抽出
+  const { room } = { room: {} } as { room: DMOverview }; // TODO: fix this
 
   const {
     state: { data: myId },

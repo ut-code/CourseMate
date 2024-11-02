@@ -1,6 +1,6 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { type ReactNode, useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { userExists } from "../../api/internal/endpoints";
 import FullScreenCircularProgress from "./FullScreenCircularProgress";
 
@@ -17,6 +17,7 @@ export function NavigateByAuthState({
   type: "toLoginForUnauthenticated" | "toHomeForAuthenticated";
   children: ReactNode;
 }) {
+  const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -35,8 +36,13 @@ export function NavigateByAuthState({
     return <FullScreenCircularProgress />;
   }
 
-  if (type === "toHomeForAuthenticated") {
-    return isAuthenticated ? <Navigate to="/home" /> : children;
+  if (type === "toHomeForAuthenticated" && isAuthenticated) {
+    router.push("/home");
+    return <></>;
   }
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  if (type !== "toHomeForAuthenticated" && !isAuthenticated) {
+    router.push("/login");
+    return <></>;
+  }
+  return children;
 }

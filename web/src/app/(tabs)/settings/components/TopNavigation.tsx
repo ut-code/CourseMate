@@ -1,12 +1,12 @@
 import { ArrowBack } from "@mui/icons-material";
 import { Box, IconButton, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 /**
  * Settings の子ページから Setting に戻るナビゲーションを提供
  */
 export default function TopNavigation({ title }: { title: string }) {
-  const navigate = useNavigate();
+  const router = useRouter();
   return (
     <Box
       py={1}
@@ -19,7 +19,7 @@ export default function TopNavigation({ title }: { title: string }) {
     >
       <IconButton
         onClick={() => {
-          navigate("/settings");
+          router.push("/settings");
         }}
       >
         <ArrowBack />

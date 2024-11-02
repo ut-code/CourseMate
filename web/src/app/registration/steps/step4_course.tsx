@@ -1,12 +1,12 @@
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useNavigate } from "react-router-dom";
 import { useMyID } from "../../../api/user";
 import FullScreenCircularProgress from "../../../components/common/FullScreenCircularProgress";
 import EditableCoursesTable from "../../../components/course/EditableCoursesTable";
+import { useRouter } from "next/navigation";
 
 export default function Step4() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { state } = useMyID();
   return (
     <>
@@ -37,7 +37,7 @@ export default function Step4() {
         }}
       >
         <span />
-        <Button onClick={() => navigate("/tutorial")} variant="contained">
+        <Button onClick={() => router.push("/tutorial")} variant="contained">
           次へ
         </Button>
       </Box>

@@ -1,16 +1,17 @@
+"use client";
 import { Box, Button, Link, Typography } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
-import * as user from "../api/user";
-import { getByGUID } from "../api/user";
-import type { GUID } from "../common/types";
-import Header from "../components/Header";
-import { auth } from "../firebase/config";
-import "../styles/login.css";
+import * as user from "~/api/user";
+import { getByGUID } from "~/api/user";
+import type { GUID } from "~/common/types";
+import Header from "~/components/Header";
+import { auth } from "~/firebase/config";
+import "~/styles/login.css";
 import { useState } from "react";
-import { CourseMateIcon } from "../components/common/CourseMateIcon";
-import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
+import { CourseMateIcon } from "~/components/common/CourseMateIcon";
+import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
+import { useRouter } from "next/navigation";
 
 const provider = new GoogleAuthProvider();
 
@@ -42,7 +43,7 @@ async function signInWithGoogle() {
 }
 
 export default function Login() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
 
@@ -60,7 +61,7 @@ export default function Login() {
           "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
           { variant: "info" },
         );
-        navigate("/signup");
+        router.push("/signup");
       } else if (response.status >= 500) {
         enqueueSnackbar(
           "サーバーエラーが発生しました。しばらくしてから再度お試しください。",
@@ -70,7 +71,7 @@ export default function Login() {
         enqueueSnackbar(`こんにちは、${response.data.name} さん！`, {
           variant: "success",
         });
-        navigate("/home");
+        router.push("/home");
       }
     } catch (error) {
       console.error(error);
@@ -94,10 +95,10 @@ export default function Login() {
         enqueueSnackbar("この Google アカウントはすでに登録されています", {
           variant: "error",
         });
-        navigate("/login");
+        router.push("/login");
       } else {
         enqueueSnackbar("新規登録を開始します", { variant: "info" });
-        navigate("/signup");
+        router.push("/signup");
       }
     } catch (e) {
       console.error(e);

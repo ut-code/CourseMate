@@ -2,12 +2,12 @@ import { ArrowBack } from "@mui/icons-material";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { deleteAccount } from "../../../api/user";
 import { useAlert } from "../../../components/common/alert/AlertProvider";
+import { useRouter } from "next/navigation";
 
 export default function DeleteAccount() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { showAlert } = useAlert();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -26,11 +26,11 @@ export default function DeleteAccount() {
             variant: "error",
           });
         } finally {
-          navigate("/login");
+          router.push("/login");
         }
       },
     });
-  }, [showAlert, enqueueSnackbar, navigate]);
+  }, [showAlert, enqueueSnackbar, router.push]);
 
   return (
     <Box
@@ -44,7 +44,7 @@ export default function DeleteAccount() {
     >
       <IconButton
         sx={{ position: "absolute", top: "20px", left: "20px" }}
-        onClick={() => navigate("/settings")}
+        onClick={() => router.push("/settings")}
       >
         <ArrowBack />
       </IconButton>

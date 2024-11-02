@@ -2,13 +2,13 @@ import { ListItemButton, ListItemText } from "@mui/material";
 import { signOut } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/config";
 import { useAlert } from "./common/alert/AlertProvider";
+import { useRouter } from "next/navigation";
 
 export default function LogOutButton() {
   const { showAlert } = useAlert();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
   const signOutUser = useCallback(async () => {
@@ -19,9 +19,9 @@ export default function LogOutButton() {
       console.error(error);
       enqueueSnackbar("ログアウトに失敗しました", { variant: "error" });
     } finally {
-      navigate("/login");
+      router.push("/login");
     }
-  }, [navigate, enqueueSnackbar]);
+  }, [router.push, enqueueSnackbar]);
 
   const onClick = useCallback(() => {
     showAlert({

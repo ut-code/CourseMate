@@ -13,7 +13,7 @@ import {
 import type { SelectChangeEvent } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { update, useAboutMe } from "../api/user";
 import type { UpdateUser } from "../common/types";
 import { UpdateUserSchema } from "../common/zod/schemas";
@@ -25,7 +25,7 @@ import UserAvatar from "../components/human/avatar";
 import { facultiesAndDepartments } from "./registration/data";
 
 export default function EditProfile() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { showAlert } = useAlert();
   const { state } = useAboutMe();
   const data = state.data;
@@ -123,11 +123,11 @@ export default function EditProfile() {
         subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
         yesMessage: "移動",
         clickYes: () => {
-          navigate("/edit/courses");
+          router.push("/edit/courses");
         },
       });
     } else {
-      navigate("/edit/courses");
+      router.push("/edit/courses");
     }
   }
 
@@ -138,11 +138,11 @@ export default function EditProfile() {
         subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
         yesMessage: "移動",
         clickYes: () => {
-          navigate("/settings/profile");
+          router.push("/settings/profile");
         },
       });
     } else {
-      navigate("/settings/profile");
+      router.push("/settings/profile");
     }
   }
 

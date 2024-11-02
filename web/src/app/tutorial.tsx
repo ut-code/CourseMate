@@ -1,11 +1,11 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Header from "../components/Header";
+import { useRouter } from "next/navigation";
 
 const tutorialSteps = [
   {
@@ -39,7 +39,7 @@ const tutorialSteps = [
 ];
 
 export default function Tutorial() {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <Box
@@ -102,7 +102,7 @@ export default function Tutorial() {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => navigate("/home")}
+            onClick={() => router.push("/home")}
             sx={{ width: "100%" }}
           >
             ホーム画面へ

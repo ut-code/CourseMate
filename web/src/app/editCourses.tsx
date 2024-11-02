@@ -1,11 +1,11 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { useAboutMe } from "../api/user";
 import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
 import EditableCoursesTable from "../components/course/EditableCoursesTable";
+import { useRouter } from "next/navigation";
 
 export default function EditCourses() {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const { state } = useAboutMe();
   const data = state.data;
@@ -13,11 +13,11 @@ export default function EditCourses() {
   const error = state.current === "error" ? state.error : null;
 
   function handleBack() {
-    navigate("/settings/profile");
+    router.push("/settings/profile");
   }
 
   function handleGoToProfile() {
-    navigate("/edit/profile");
+    router.push("/edit/profile");
   }
 
   return (

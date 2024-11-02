@@ -1,7 +1,9 @@
+"use client";
+
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { CourseMateIcon } from "./common/CourseMateIcon";
+import { useRouter } from "next/navigation";
 
 type Props = {
   title: string;
@@ -9,7 +11,7 @@ type Props = {
 
 export default function Header(props: Props) {
   const { title } = props;
-  const navigate = useNavigate();
+  const router = useRouter();
   return (
     <>
       <AppBar
@@ -23,7 +25,7 @@ export default function Header(props: Props) {
           <Box sx={{ marginRight: "8px" }}>
             <IconButton
               onClick={() => {
-                navigate("/home");
+                router.push("/home");
               }}
             >
               <CourseMateIcon width="28px" height="28px" />
@@ -36,7 +38,10 @@ export default function Header(props: Props) {
           >
             {title}
           </Typography>
-          <IconButton onClick={() => navigate("/faq")} sx={{ zIndex: "100" }}>
+          <IconButton
+            onClick={() => router.push("/faq")}
+            sx={{ zIndex: "100" }}
+          >
             <InfoOutlinedIcon />
           </IconButton>
         </Toolbar>
