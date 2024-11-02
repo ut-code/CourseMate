@@ -59,3 +59,18 @@ make docker
 # または
 make docker-watch
 ```
+
+## Deploy
+
+web:
+```sh
+VITE_ALLOW_ANY_MAIL_ADDR=true # optional
+make prepare-deploy-web`
+# serve ./web/dist
+```
+
+server:
+```sh
+make prepare-deploy-server
+make deploy-server
+```
