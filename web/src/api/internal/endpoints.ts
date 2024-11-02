@@ -1,8 +1,8 @@
 import type { CourseID, Day, GUID } from "../../common/types";
 import type { MessageID, ShareRoomID } from "../../common/types";
 
-export const origin: string | null = import.meta.env.VITE_API_ENDPOINT;
-if (!origin) throw new Error("import.meta.env.VITE_API_ENDPOINT not found!");
+export const origin: string | null = process.env.NEXT_PUBLIC_API_ENDPOINT ?? "";
+if (!origin) throw new Error("process.env.NEXT_PUBLIC_API_ENDPOINT not found!");
 
 // TODO: de-export this and use one from /common
 export type UserID = number;

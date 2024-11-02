@@ -13,7 +13,8 @@ import { CourseMateIcon } from "../components/common/CourseMateIcon";
 import FullScreenCircularProgress from "../components/common/FullScreenCircularProgress";
 
 const provider = new GoogleAuthProvider();
-const ALLOW_ANY_MAIL_ADDR = import.meta.env.VITE_ALLOW_ANY_MAIL_ADDR === "true";
+const ALLOW_ANY_MAIL_ADDR =
+  process.env.NEXT_PUBLIC_ALLOW_ANY_MAIL_ADDR === "true";
 
 async function signInWithGoogle() {
   try {
