@@ -1,7 +1,7 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useAboutMe } from "../../../api/user";
 ("../../../api/user");
 import { Card } from "../../../components/Card";

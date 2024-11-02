@@ -1,14 +1,15 @@
+"use client";
 import { Box } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import type { Step1User } from "../../common/zod/types";
-import Header from "../../components/Header";
+import type { Step1User } from "~/common/zod/types";
+import Header from "~/components/Header";
 import { register } from "./functions";
 import Step1 from "./steps/step1_profile";
 import Step2, { type Step2Data } from "./steps/step2_img";
 import Confirmation from "./steps/step3_confirmation";
 import Step4 from "./steps/step4_course";
-import { useRouter } from "next/navigation";
 
 function Registration() {
   const { enqueueSnackbar } = useSnackbar();

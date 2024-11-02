@@ -1,10 +1,10 @@
 import { ArrowBack } from "@mui/icons-material";
 import { Box, Button, IconButton, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useCallback } from "react";
 import { deleteAccount } from "../../../api/user";
 import { useAlert } from "../../../components/common/alert/AlertProvider";
-import { useRouter } from "next/navigation";
 
 export default function DeleteAccount() {
   const router = useRouter();

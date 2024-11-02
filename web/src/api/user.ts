@@ -4,7 +4,7 @@ import { parseUser } from "../common/zod/methods.ts";
 import { UserIDSchema, UserSchema } from "../common/zod/schemas.ts";
 import { credFetch } from "../firebase/auth/lib.ts";
 import { useAuthorizedData } from "../hooks/useData.ts";
-import { type Hook, useSWR } from "../hooks/useSWR.ts";
+import { type Hook, useSWR__ } from "../hooks/useSWR.ts";
 import endpoints from "./internal/endpoints.ts";
 import type { Hook as UseHook } from "./share/types.ts";
 
@@ -15,13 +15,13 @@ export function useRecommended(): UseHook<User[]> {
   return useAuthorizedData<User[]>(url);
 }
 export function useMatched(): Hook<User[]> {
-  return useSWR("users::matched", matched, UserListSchema);
+  return useSWR__("users::matched", matched, UserListSchema);
 }
 export function usePendingToMe(): Hook<User[]> {
-  return useSWR("users::pending::to-me", pendingToMe, UserListSchema);
+  return useSWR__("users::pending::to-me", pendingToMe, UserListSchema);
 }
 export function usePendingFromMe(): Hook<User[]> {
-  return useSWR("users::pending::from-me", pendingFromMe, UserListSchema);
+  return useSWR__("users::pending::from-me", pendingFromMe, UserListSchema);
 }
 
 async function matched(): Promise<User[]> {
@@ -39,7 +39,7 @@ async function pendingFromMe(): Promise<User[]> {
 
 // 自身のユーザー情報を取得する
 export function useAboutMe(): Hook<User> {
-  return useSWR("users::aboutMe", aboutMe, UserSchema);
+  return useSWR__("users::aboutMe", aboutMe, UserSchema);
 }
 
 async function aboutMe(): Promise<User> {
@@ -49,7 +49,7 @@ async function aboutMe(): Promise<User> {
 
 // 自身のユーザーIDを取得する
 export function useMyID(): Hook<UserID> {
-  return useSWR("users::myId", getMyId, UserIDSchema);
+  return useSWR__("users::myId", getMyId, UserIDSchema);
 }
 async function getMyId(): Promise<UserID> {
   const me = await aboutMe();

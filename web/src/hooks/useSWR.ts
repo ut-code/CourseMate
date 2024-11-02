@@ -1,5 +1,3 @@
-"use client";
-
 import { parse, stringify } from "devalue";
 import { useCallback, useEffect, useState } from "react";
 import type { ZodSchema } from "zod";
@@ -44,16 +42,21 @@ const SWR_PREFIX = "CourseMate::useSWR::";
  cacheKey **MUST** be unique in all the codebase, otherwise the cache will interfere each other.
  (I recommend using URL Path, friend's name + unique prefix, or randomly generate static string.)
  **/
-export function useSWR<T>(
+export function useSWR__<T>(
   cacheKey: string,
   fetcher: () => Promise<T>,
   schema: Zod.Schema<T>,
 ): Hook<T> {
   const CACHE_KEY = SWR_PREFIX + cacheKey;
 
-  const [state, setState] = useState<State<T>>(() =>
-    loadOldData(CACHE_KEY, schema),
-  );
+  const [state, setState] = useState<State<T>>({
+    current: "loading",
+    data: null,
+    error: null,
+  });
+  useEffect(() => {
+    setState(loadOldData(CACHE_KEY, schema));
+  }, [CACHE_KEY, schema]);
 
   const reload = useCallback(async () => {
     setState((state) =>

@@ -1,9 +1,9 @@
 import { Box, Button, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useState } from "react";
-import PhotoModal from "../../../components/config/PhotoModal";
-import { PhotoPreviewButton } from "../../../components/config/PhotoPreview";
-import UserAvatar from "../../../components/human/avatar";
+import PhotoModal from "~/components/config/PhotoModal";
+import { PhotoPreviewButton } from "~/components/config/PhotoPreview";
+import UserAvatar from "~/components/human/avatar";
 import type { BackProp, StepProps } from "../common";
 
 export type Step2Data = {

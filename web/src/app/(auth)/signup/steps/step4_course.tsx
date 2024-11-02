@@ -1,9 +1,9 @@
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { useRouter } from "next/navigation";
 import { useMyID } from "../../../api/user";
 import FullScreenCircularProgress from "../../../components/common/FullScreenCircularProgress";
 import EditableCoursesTable from "../../../components/course/EditableCoursesTable";
-import { useRouter } from "next/navigation";
 
 export default function Step4() {
   const router = useRouter();

@@ -11,8 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
-import { parseStep1UserSchema } from "../../../common/zod/methods";
-import type { Step1User } from "../../../common/zod/types";
+import { parseStep1UserSchema } from "~/common/zod/methods";
+import type { Step1User } from "~/common/zod/types";
 import type { StepProps } from "../common";
 import { facultiesAndDepartments } from "../data";
 

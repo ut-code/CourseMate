@@ -1,3 +1,4 @@
+"use client";
 import { Typography } from "@mui/material";
 import { useRoomsOverview } from "~/api/chat/hooks";
 import RoomList from "~/components/chat/RoomList";
