@@ -1,6 +1,5 @@
 /target
 /data.json
-.cache/*
-!.cache/.gitignore
+.cache
 /course-mate-scraper
 
