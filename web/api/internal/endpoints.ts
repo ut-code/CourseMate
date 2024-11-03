@@ -1,5 +1,5 @@
-import type { CourseID, Day, GUID } from "../../common/types";
-import type { MessageID, ShareRoomID } from "../../common/types";
+import type { CourseID, Day, GUID } from "../../../common/types";
+import type { MessageID, ShareRoomID } from "../../../common/types";
 
 export const origin: string | null = process.env.NEXT_PUBLIC_API_ENDPOINT ?? "";
 if (!origin) throw new Error("process.env.NEXT_PUBLIC_API_ENDPOINT not found!");

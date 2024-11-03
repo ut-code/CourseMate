@@ -29,7 +29,10 @@
     "./src",
     "./dist/types/**/*.ts",
     "./next-env.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "common",
+    "app",
+    "components"
   ],
   "exclude": ["./node_modules"]
 }

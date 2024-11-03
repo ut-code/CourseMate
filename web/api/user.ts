@@ -1,7 +1,7 @@
 import { z } from "zod";
-import type { GUID, UpdateUser, User, UserID } from "../common/types";
-import { parseUser } from "../common/zod/methods.ts";
-import { UserIDSchema, UserSchema } from "../common/zod/schemas.ts";
+import type { GUID, UpdateUser, User, UserID } from "../../common/types.ts";
+import { parseUser } from "../../common/zod/methods.ts";
+import { UserIDSchema, UserSchema } from "../../common/zod/schemas.ts";
 import { credFetch } from "../firebase/auth/lib.ts";
 import { type Hook, useCustomizedSWR } from "../hooks/useCustomizedSWR.ts";
 import { useAuthorizedData } from "../hooks/useData.ts";

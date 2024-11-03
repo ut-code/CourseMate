@@ -1,8 +1,8 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
+import type { GUID, User } from "../../../common/types";
 import * as userAPI from "../../api/user";
-import type { GUID, User } from "../../common/types";
 
 const AuthContext = createContext<User | null | undefined>(undefined);
 

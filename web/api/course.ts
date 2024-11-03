@@ -1,4 +1,4 @@
-import type { Course, CourseID, Day } from "../common/types";
+import type { Course, CourseID, Day } from "../../common/types";
 import { credFetch } from "../firebase/auth/lib";
 import endpoints from "./internal/endpoints";
 

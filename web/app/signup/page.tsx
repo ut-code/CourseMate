@@ -5,7 +5,7 @@ import { useSnackbar } from "notistack";
 import { useState } from "react";
 
 import { useRouter } from "next/navigation";
-import type { Step1User } from "../../common/zod/types";
+import type { Step1User } from "../../../common/zod/types";
 import Header from "../../components/Header";
 import { register } from "./functions";
 import Step1 from "./steps/step1_profile";

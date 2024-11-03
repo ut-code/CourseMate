@@ -38,18 +38,16 @@ export function NavigateByAuthState({
     return <FullScreenCircularProgress />;
   }
 
-  // TODO: stop this feature for development temporarily
-  return children;
-  // if (type === "toHomeForAuthenticated") {
-  //   if (isAuthenticated) {
-  //     router.push("/home");
-  //   } else {
-  //     return children;
-  //   }
-  // } else {
-  //   if (isAuthenticated) {
-  //     return children;
-  //   }
-  //   router.push("/login");
-  // }
+  if (type === "toHomeForAuthenticated") {
+    if (isAuthenticated) {
+      router.push("/home");
+    } else {
+      return children;
+    }
+  } else {
+    if (isAuthenticated) {
+      return children;
+    }
+    router.push("/login");
+  }
 }

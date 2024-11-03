@@ -9,7 +9,7 @@ import type {
   SharedRoom,
   UpdateRoom,
   UserID,
-} from "../../common/types";
+} from "../../../common/types";
 import { ErrUnauthorized, credFetch } from "../../firebase/auth/lib";
 import endpoints from "../internal/endpoints";
 
