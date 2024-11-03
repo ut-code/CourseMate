@@ -9,6 +9,7 @@ import request from "../../api/request";
 import shadows from "@mui/material/styles/shadows";
 import { motion, useAnimation } from "framer-motion";
 import { useMyID, useRecommended } from "../../api/user";
+import BottomBar from "../../components/BottomBar";
 import { Card } from "../../components/Card";
 import { DraggableCard } from "../../components/DraggableCard";
 import Header from "../../components/Header";
@@ -145,6 +146,7 @@ export default function Home() {
           <FullScreenCircularProgress />
         )}
       </div>
+      <BottomBar activeTab="0_home" />
     </NavigateByAuthState>
   );
 }

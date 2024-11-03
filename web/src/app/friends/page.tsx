@@ -2,6 +2,7 @@
 
 import { Box, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
+import BottomBar from "../../components/BottomBar";
 import Header from "../../components/Header";
 import { NavigateByAuthState } from "../../components/common/NavigateByAuthState";
 import Matchings from "../../components/match/matching";
@@ -45,6 +46,7 @@ export default function Friends() {
           {open === 0 ? <Matchings /> : open === 1 ? <Requests /> : null}
         </TabPanel>
       </Box>
+      <BottomBar activeTab="1_friends" />
     </NavigateByAuthState>
   );
 }

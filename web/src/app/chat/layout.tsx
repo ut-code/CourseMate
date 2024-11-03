@@ -2,14 +2,14 @@ import { Box } from "@mui/material";
 import BottomBar from "../../components/BottomBar";
 import Header from "../../components/Header";
 
-export default function SettingsPageLayout({
+export default function ChatPageLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <>
-      <Header title="設定/Settings" />
+      <Header title="チャット/Chat" />
       <Box
         sx={{
           position: "absolute", // TODO: absolute 指定しない
@@ -25,7 +25,7 @@ export default function SettingsPageLayout({
       >
         {children}
       </Box>
-      <BottomBar activeTab="3_settings" />
+      <BottomBar activeTab="2_chat" />
     </>
   );
 }
