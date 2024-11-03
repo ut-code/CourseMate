@@ -7,6 +7,7 @@ on:
 
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL_FOR_PRISMA_SQL_GENERATION }}
+  NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
 jobs:
   build:
     name: Build
