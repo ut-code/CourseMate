@@ -1,7 +1,7 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
 import * as chat from "../../api/chat/chat";
 import { useMessages } from "../../api/chat/hooks";
 import * as user from "../../api/user";
@@ -21,8 +21,16 @@ import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
 export function RoomWindow() {
-  const { state: locationState } = useLocation();
-  const { room } = locationState as { room: DMOverview }; // `room`データを抽出
+  // FIXME:  React Router が使えなくなったので、一時的に room の情報を URL に載せることで状態管理
+  const searchParams = useSearchParams();
+  const roomData = searchParams.get("roomData");
+  const room = roomData
+    ? (JSON.parse(decodeURIComponent(roomData)) as DMOverview)
+    : null;
+
+  if (!room) {
+    return <Typography>部屋が見つかりません。</Typography>;
+  }
 
   const {
     state: { data: myId },
@@ -60,6 +68,7 @@ export function RoomWindow() {
 
   useEffect(() => {
     async function registerSocket() {
+      if (!room) return;
       const idToken = await getIdToken();
       socket.emit("register", idToken);
       socket.on("newMessage", async (msg: Message) => {
@@ -93,7 +102,7 @@ export function RoomWindow() {
       socket.off("deleteMessage");
     };
   }, [
-    room.friendId,
+    room,
     enqueueSnackbar,
     appendLocalMessage,
     updateLocalMessage,

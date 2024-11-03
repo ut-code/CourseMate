@@ -1,6 +1,6 @@
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import Link from "next/link";
 import { CourseMateIcon } from "./common/CourseMateIcon";
 
 type Props = {
@@ -9,7 +9,6 @@ type Props = {
 
 export default function Header(props: Props) {
   const { title } = props;
-  const navigate = useNavigate();
   return (
     <>
       <AppBar
@@ -21,11 +20,7 @@ export default function Header(props: Props) {
       >
         <Toolbar>
           <Box sx={{ marginRight: "8px" }}>
-            <IconButton
-              onClick={() => {
-                navigate("/home");
-              }}
-            >
+            <IconButton LinkComponent={Link} href="/home">
               <CourseMateIcon width="28px" height="28px" />
             </IconButton>
           </Box>
@@ -36,7 +31,7 @@ export default function Header(props: Props) {
           >
             {title}
           </Typography>
-          <IconButton onClick={() => navigate("/faq")} sx={{ zIndex: "100" }}>
+          <IconButton LinkComponent={Link} href="/faq" sx={{ zIndex: "100" }}>
             <InfoOutlinedIcon />
           </IconButton>
         </Toolbar>

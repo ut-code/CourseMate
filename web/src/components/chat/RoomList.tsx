@@ -1,5 +1,7 @@
+"use client";
+
 import { Box, List, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import type { RoomOverview } from "../../common/types";
 import { HumanListItem } from "../human/humanListItem";
 
@@ -9,7 +11,17 @@ type RoomListProps = {
 
 export function RoomList(props: RoomListProps) {
   const { roomsData } = props;
-  const navigate = useNavigate();
+  const router = useRouter();
+
+  /**
+   * FIXME:
+   * React Router が使えなくなったので、一時的に room の情報を URL に載せることで状態管理
+   */
+  const navigateToRoom = (room: Extract<RoomOverview, { isDM: true }>) => {
+    router.push(
+      `./${room.friendId}?roomData=${encodeURIComponent(JSON.stringify(room))}`,
+    );
+  };
 
   return (
     <List disablePadding>
@@ -33,8 +45,7 @@ export function RoomList(props: RoomListProps) {
             <Box
               key={room.friendId}
               onClick={() => {
-                // `state`を使って`room`データを渡す
-                navigate(`./${room.friendId}`, { state: { room } });
+                navigateToRoom(room);
               }}
             >
               <HumanListItem
