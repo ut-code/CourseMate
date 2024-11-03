@@ -2,8 +2,6 @@
 
 import { Box, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import BottomBar from "../../components/BottomBar";
-import Header from "../../components/Header";
 import { NavigateByAuthState } from "../../components/common/NavigateByAuthState";
 import Matchings from "../../components/match/matching";
 import Requests from "../../components/match/requests";
@@ -17,7 +15,6 @@ export default function Friends() {
 
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
-      <Header title="フレンド/Friends" />
       <Box
         sx={{
           width: "100%",
@@ -46,7 +43,6 @@ export default function Friends() {
           {open === 0 ? <Matchings /> : open === 1 ? <Requests /> : null}
         </TabPanel>
       </Box>
-      <BottomBar activeTab="1_friends" />
     </NavigateByAuthState>
   );
 }

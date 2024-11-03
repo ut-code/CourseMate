@@ -52,7 +52,6 @@ export default function RootLayout({
             </React.StrictMode>
           </SnackbarProvider>
         </ThemeProvider>
-        ,
       </body>
     </html>
   );

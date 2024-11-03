@@ -9,10 +9,8 @@ import request from "../../api/request";
 import shadows from "@mui/material/styles/shadows";
 import { motion, useAnimation } from "framer-motion";
 import { useMyID, useRecommended } from "../../api/user";
-import BottomBar from "../../components/BottomBar";
 import { Card } from "../../components/Card";
 import { DraggableCard } from "../../components/DraggableCard";
-import Header from "../../components/Header";
 import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 import { NavigateByAuthState } from "../../components/common/NavigateByAuthState";
 
@@ -85,7 +83,6 @@ export default function Home() {
 
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
-      <Header title="ホーム/Home" />
       <div
         style={{
           height: "100%",
@@ -146,7 +143,6 @@ export default function Home() {
           <FullScreenCircularProgress />
         )}
       </div>
-      <BottomBar activeTab="0_home" />
     </NavigateByAuthState>
   );
 }
