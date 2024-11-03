@@ -19,7 +19,7 @@ export function RoomList(props: RoomListProps) {
    */
   const navigateToRoom = (room: Extract<RoomOverview, { isDM: true }>) => {
     router.push(
-      `./${room.friendId}?roomData=${encodeURIComponent(JSON.stringify(room))}`,
+      `./?friendId=${room.friendId}&roomData=${encodeURIComponent(JSON.stringify(room))}`,
     );
   };
 

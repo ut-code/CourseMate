@@ -25,5 +25,6 @@ dist-ssr
 
 .next
 next-env.d.ts
+out
 
 /common

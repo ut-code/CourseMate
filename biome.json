@@ -17,6 +17,7 @@
       "scraper/target",
       ".next",
       "next-env.d.ts",
+      "out",
       "package-lock.json"
     ]
   }
