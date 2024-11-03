@@ -11,6 +11,7 @@ import { motion, useAnimation } from "framer-motion";
 import { useMyID, useRecommended } from "../../api/user";
 import { Card } from "../../components/Card";
 import { DraggableCard } from "../../components/DraggableCard";
+import Header from "../../components/Header";
 import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
 import { NavigateByAuthState } from "../../components/common/NavigateByAuthState";
 
@@ -83,6 +84,7 @@ export default function Home() {
 
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
+      <Header title="ホーム/Home" />
       <div
         style={{
           height: "100%",
