@@ -3,6 +3,11 @@
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { SnackbarProvider } from "notistack";
 import React from "react";
+import "./index.css";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 import BanLandscape from "../components/BanLandscape";
 import { AlertProvider } from "../components/common/alert/AlertProvider";
 import { ModalProvider } from "../components/common/modal/ModalProvider";
