@@ -84,7 +84,10 @@ export function useCustomizedSWR<T>(
         current: "success",
         error: null,
       });
-      localStorage.setItem(CACHE_KEY, stringify(data));
+      // FIXME: クライアント側である (window オブジェクトが存在する) ことを保証しないと Next.js のエラーが出るため回避している
+      if (typeof window !== "undefined") {
+        localStorage.setItem(CACHE_KEY, stringify(data));
+      }
     } catch (e) {
       setState({
         data: null,
@@ -96,7 +99,10 @@ export function useCustomizedSWR<T>(
 
   const write = useCallback(
     (data: T) => {
-      localStorage.setItem(CACHE_KEY, stringify(data));
+      // FIXME: クライアント側である (window オブジェクトが存在する) ことを保証しないと Next.js のエラーが出るため回避している
+      if (typeof window !== "undefined") {
+        localStorage.setItem(CACHE_KEY, stringify(data));
+      }
     },
     [CACHE_KEY],
   );
@@ -116,7 +122,9 @@ function loadOldData<T>(
   CACHE_KEY: string,
   schema: ZodSchema<T>,
 ): Loading | Stale<T> {
-  const oldData = localStorage.getItem(CACHE_KEY);
+  // FIXME: クライアント側である (window オブジェクトが存在する) ことを保証しないと Next.js のエラーが出るため回避している
+  const oldData =
+    typeof window !== "undefined" ? localStorage.getItem(CACHE_KEY) : null;
   if (oldData) {
     try {
       const data = parse(oldData);
