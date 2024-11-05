@@ -45,6 +45,7 @@
     "**/data.json",
     "**/Cargo.*",
     "scraper/target",
-    "**/rust-toolchain.toml"
+    "**/rust-toolchain.toml",
+    "web/out"
   ]
 }

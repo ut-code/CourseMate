@@ -166,7 +166,7 @@ copy-common-to-server:
 	@ if [ -d server/src/common ]; then rm -r server/src/common; fi
 	@ cp -r common server/src/common
 copy-common-to-web:
-	@ if [ -d web/src/common ]; then rm -r web/src/common; fi
-	@ cp -r common web/src/common
+	@ if [ -d web/common ]; then rm -r web/common; fi
+	@ cp -r common web/common
 
 .PHONY: test

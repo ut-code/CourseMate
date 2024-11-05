@@ -23,5 +23,6 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": ["biome check --write"]
-  }
+  },
+  "trustedDependencies": ["@biomejs/biome"]
 }
