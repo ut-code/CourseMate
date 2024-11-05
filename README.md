@@ -64,7 +64,7 @@ make docker-watch
 
 web:
 ```sh
-VITE_ALLOW_ANY_MAIL_ADDR=true # optional
+NEXT_PUBLIC_ALLOW_ANY_MAIL_ADDR=true # optional
 make prepare-deploy-web`
 # serve ./web/dist
 ```
