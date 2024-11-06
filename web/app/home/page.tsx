@@ -4,15 +4,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Box, Button } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import request from "../../api/request";
+import request from "~/api/request";
 
 import shadows from "@mui/material/styles/shadows";
 import { motion, useAnimation } from "framer-motion";
-import { useMyID, useRecommended } from "../../api/user";
-import { Card } from "../../components/Card";
-import { DraggableCard } from "../../components/DraggableCard";
-import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
-import { NavigateByAuthState } from "../../components/common/NavigateByAuthState";
+import { useMyID, useRecommended } from "~/api/user";
+import { Card } from "~/components/Card";
+import { DraggableCard } from "~/components/DraggableCard";
+import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
+import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 
 export default function Home() {
   const { data: recommended, error } = useRecommended();

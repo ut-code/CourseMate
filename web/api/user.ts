@@ -1,10 +1,10 @@
 import { z } from "zod";
-import type { GUID, UpdateUser, User, UserID } from "../../common/types.ts";
-import { parseUser } from "../../common/zod/methods.ts";
-import { UserIDSchema, UserSchema } from "../../common/zod/schemas.ts";
-import { credFetch } from "../firebase/auth/lib.ts";
-import { type Hook, useCustomizedSWR } from "../hooks/useCustomizedSWR.ts";
-import { useAuthorizedData } from "../hooks/useData.ts";
+import type { GUID, UpdateUser, User, UserID } from "~/common/types.ts";
+import { parseUser } from "~/common/zod/methods.ts";
+import { UserIDSchema, UserSchema } from "~/common/zod/schemas.ts";
+import { credFetch } from "~/firebase/auth/lib.ts";
+import { type Hook, useCustomizedSWR } from "~/hooks/useCustomizedSWR.ts";
+import { useAuthorizedData } from "~/hooks/useData.ts";
 import endpoints from "./internal/endpoints.ts";
 import type { Hook as UseHook } from "./share/types.ts";
 

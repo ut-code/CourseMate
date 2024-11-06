@@ -1,8 +1,8 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Box, Button, Typography } from "@mui/material";
 import Link from "next/link";
-import type { DMOverview } from "../../common/types";
-import UserAvatar from "../human/avatar";
+import type { DMOverview } from "~/common/types";
+import UserAvatar from "~/human/avatar";
 type Props = {
   room: DMOverview;
 };

@@ -1,9 +1,9 @@
 import { getAuth } from "firebase/auth";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import type { EnqueueSnackbar } from "notistack";
-import * as userAPI from "../../api/user";
-import type { GUID, User } from "../../common/types";
-import type { UpdateUser } from "../../common/types";
+import * as userAPI from "~/api/user";
+import type { GUID, User } from "~/common/types";
+import type { UpdateUser } from "~/common/types";
 
 type Dependencies = {
   router: AppRouterInstance;

@@ -2,10 +2,10 @@
 
 import { Box, Button, Typography } from "@mui/material";
 import Link from "next/link";
-import { useAboutMe } from "../../../api/user";
-import FullScreenCircularProgress from "../../../components/common/FullScreenCircularProgress";
-import { NavigateByAuthState } from "../../../components/common/NavigateByAuthState";
-import EditableCoursesTable from "../../../components/course/EditableCoursesTable";
+import { useAboutMe } from "~/api/user";
+import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
+import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
+import EditableCoursesTable from "~/components/course/EditableCoursesTable";
 
 export default function EditCourses() {
   const { state } = useAboutMe();

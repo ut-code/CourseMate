@@ -4,11 +4,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Typography } from "@mui/material";
 import Link from "next/link";
 import { useState } from "react";
-import { useAboutMe } from "../../../api/user";
-import { Card } from "../../../components/Card";
-import FullScreenCircularProgress from "../../../components/common/FullScreenCircularProgress";
-import { NavigateByAuthState } from "../../../components/common/NavigateByAuthState";
-import TopNavigation from "../../../components/common/TopNavigation";
+import { useAboutMe } from "~/api/user";
+import { Card } from "~/components/Card";
+import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
+import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
+import TopNavigation from "~/components/common/TopNavigation";
 
 export default function SettingsProfile() {
   const { state } = useAboutMe();

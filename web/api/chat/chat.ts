@@ -9,13 +9,13 @@ import type {
   SharedRoom,
   UpdateRoom,
   UserID,
-} from "../../../common/types";
-import { ErrUnauthorized, credFetch } from "../../firebase/auth/lib";
-import endpoints from "../internal/endpoints";
+} from "~/common/types";
+import { ErrUnauthorized, credFetch } from "~/firebase/auth/lib";
+import endpoints from "~/internal/endpoints";
 
 /* TODO
-import { UserID } from "../common/types";
-import type { User } from "../common/types";
+import { UserID } from "~/common/types";
+import type { User } from "~/common/types";
 */
 
 //// DM グループチャット 共通////

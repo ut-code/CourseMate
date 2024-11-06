@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
-import type { Step1User } from "../../../../common/zod/types";
-import type { BackProp, StepProps } from "../../../app/signup/common";
-import UserAvatar from "../../../components/human/avatar";
+import type { Step1User } from "~/common/zod/types";
+import type { BackProp, StepProps } from "~/app/signup/common";
+import UserAvatar from "~/components/human/avatar";
 import type { Step2Data } from "./step2_img";
 
 interface UserInfoProp {
