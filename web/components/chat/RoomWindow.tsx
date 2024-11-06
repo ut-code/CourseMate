@@ -15,8 +15,8 @@ import type {
 } from "~/common/types";
 import type { Content } from "~/common/zod/types";
 import { getIdToken } from "~/firebase/auth/lib";
-import Dots from "~/common/Dots";
-import { socket } from "~/data/socket";
+import Dots from "../common/Dots";
+import { socket } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 

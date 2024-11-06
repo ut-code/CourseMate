@@ -1,5 +1,5 @@
 import { Avatar } from "@mui/material";
-import { ImageFallback } from "~/ImageFallback";
+import { ImageFallback } from "../ImageFallback";
 
 type Props = {
   width: string;

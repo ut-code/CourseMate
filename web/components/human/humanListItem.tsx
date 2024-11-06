@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import UserAvatar from "./avatar";
 
-import Dots from "~/common/Dots";
+import Dots from "../common/Dots";
 
 type HumanListItemProps = {
   id: number;

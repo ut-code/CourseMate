@@ -3,7 +3,7 @@ import { styled } from "@mui/system";
 import { type ReactNode, createContext, useContext, useState } from "react";
 import { useMyID } from "~/api/user";
 import type { User } from "~/common/types";
-import { Card } from "~/Card";
+import { Card } from "../../Card";
 
 const Overlay = styled(Box)({
   position: "fixed",

@@ -11,7 +11,7 @@ import type {
   UserID,
 } from "~/common/types";
 import { ErrUnauthorized, credFetch } from "~/firebase/auth/lib";
-import endpoints from "~/internal/endpoints";
+import endpoints from "../internal/endpoints";
 
 /* TODO
 import { UserID } from "~/common/types";

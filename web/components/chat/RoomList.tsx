@@ -3,7 +3,7 @@
 import { Box, List, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import type { RoomOverview } from "~/common/types";
-import { HumanListItem } from "~/human/humanListItem";
+import { HumanListItem } from "../human/humanListItem";
 
 type RoomListProps = {
   roomsData: RoomOverview[] | null;

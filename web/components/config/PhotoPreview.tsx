@@ -7,8 +7,8 @@ import {
   useState,
 } from "react";
 import { uploadImage } from "~/api/image";
-import { ImageCropper } from "~/ImageCropper";
-import { photo } from "~/data/photo-preview";
+import { ImageCropper } from "../ImageCropper";
+import { photo } from "../data/photo-preview";
 
 type ButtonProps = {
   text?: string;
