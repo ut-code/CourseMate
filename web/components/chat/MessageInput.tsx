@@ -1,8 +1,8 @@
 import SendIcon from "@mui/icons-material/Send";
 import { Box, IconButton, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import type { DMOverview, SendMessage, UserID } from "../../common/types";
-import { parseContent } from "../../common/zod/methods";
+import type { DMOverview, SendMessage, UserID } from "~/common/types";
+import { parseContent } from "~/common/zod/methods";
 
 type Props = {
   send: (to: UserID, m: SendMessage) => void;

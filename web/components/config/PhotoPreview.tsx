@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { uploadImage } from "../../api/image";
+import { uploadImage } from "~/api/image";
 import { ImageCropper } from "../ImageCropper";
 import { photo } from "../data/photo-preview";
 

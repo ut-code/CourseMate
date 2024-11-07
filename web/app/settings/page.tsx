@@ -6,8 +6,8 @@ import {
   ListItemText,
 } from "@mui/material";
 import Link from "next/link";
-import LogOutButton from "../../components/LogOutButton";
-import { NavigateByAuthState } from "../../components/common/NavigateByAuthState";
+import LogOutButton from "~/components/LogOutButton";
+import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 
 export default function Settings() {
   return (

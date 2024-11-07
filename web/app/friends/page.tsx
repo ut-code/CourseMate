@@ -2,9 +2,9 @@
 
 import { Box, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import { NavigateByAuthState } from "../../components/common/NavigateByAuthState";
-import Matchings from "../../components/match/matching";
-import Requests from "../../components/match/requests";
+import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
+import Matchings from "~/components/match/matching";
+import Requests from "~/components/match/requests";
 
 export default function Friends() {
   const [open, setOpen] = useState(0);

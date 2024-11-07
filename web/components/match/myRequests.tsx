@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { List } from "@mui/material";
-import * as request from "../../api/request";
-import { usePendingFromMe } from "../../api/user";
+import * as request from "~/api/request";
+import { usePendingFromMe } from "~/api/user";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
 import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";

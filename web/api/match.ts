@@ -1,4 +1,4 @@
-import { credFetch } from "../firebase/auth/lib";
+import { credFetch } from "~/firebase/auth/lib";
 import endpoints from "./internal/endpoints";
 import type { UserID } from "./internal/endpoints";
 
