@@ -1,4 +1,4 @@
-import { credFetch } from "../firebase/auth/lib";
+import { credFetch } from "~/firebase/auth/lib";
 import endpoints, { type UserID } from "./internal/endpoints";
 
 //指定したユーザにリクエストを送る

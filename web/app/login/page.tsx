@@ -4,16 +4,16 @@ import { Box, Button, Link, Typography } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
-import * as user from "../../api/user";
-import { getByGUID } from "../../api/user";
-import type { GUID } from "../../common/types";
-import Header from "../../components/Header";
-import { auth } from "../../firebase/config";
+import * as user from "~/api/user";
+import { getByGUID } from "~/api/user";
+import type { GUID } from "~/common/types";
+import Header from "~/components/Header";
+import { auth } from "~/firebase/config";
 import "./style.css";
 import { useState } from "react";
-import { CourseMateIcon } from "../../components/common/CourseMateIcon";
-import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
-import { NavigateByAuthState } from "../../components/common/NavigateByAuthState";
+import { CourseMateIcon } from "~/components/common/CourseMateIcon";
+import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
+import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 
 const provider = new GoogleAuthProvider();
 const ALLOW_ANY_MAIL_ADDR =

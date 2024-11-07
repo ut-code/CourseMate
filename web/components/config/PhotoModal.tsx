@@ -1,6 +1,6 @@
 import { Box, Button, Modal } from "@mui/material";
 import { useState } from "react";
-import { MAX_IMAGE_SIZE, uploadImage } from "../../api/internal/fetch-func";
+import { MAX_IMAGE_SIZE, uploadImage } from "~/api/internal/fetch-func";
 import { PhotoPreview } from "./PhotoPreview";
 
 async function upload(

@@ -7,37 +7,36 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Link from "next/link";
-import Header from "../../components/Header";
+import Header from "~/components/Header";
 
-// TODO: 画像表示の参照を直す
 const tutorialSteps = [
   {
     label: "CourseMateの使い方",
-    imgPath: "../../../public/course-mate-icon.svg",
+    imgPath: "/course-mate-icon.svg",
   },
   {
     label: "気になる人に「いいね」を送ろう！",
-    imgPath: "../../public/tutorial-1.png",
+    imgPath: "/tutorial-1.png",
   },
   {
     label: "リクエストが来たら...",
-    imgPath: "../../public/tutorial-2.png",
+    imgPath: "/tutorial-2.png",
   },
   {
     label: "承認して、マッチング！",
-    imgPath: "../../public/tutorial-3.png",
+    imgPath: "/tutorial-3.png",
   },
   {
     label: "チャットを使って仲良くなろう！",
-    imgPath: "../../public/tutorial-4.png",
+    imgPath: "/tutorial-4.png",
   },
   {
     label: "魅力的なカードを作ってね！",
-    imgPath: "../../public/tutorial-5.png",
+    imgPath: "/tutorial-5.png",
   },
   {
     label: "実際にCourseMateを使ってみよう！下のボタンをクリック！",
-    imgPath: "../../public/tutorial-6.png",
+    imgPath: "/tutorial-6.png",
   },
 ];
 

@@ -3,7 +3,7 @@
 import { ArrowBack } from "@mui/icons-material";
 import { Box, IconButton, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
-import Header from "../../components/Header";
+import Header from "~/components/Header";
 
 export default function FAQ() {
   const router = useRouter();

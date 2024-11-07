@@ -5,7 +5,7 @@ import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useCallback } from "react";
-import { auth } from "../firebase/config";
+import { auth } from "~/firebase/config";
 import { useAlert } from "./common/alert/AlertProvider";
 
 export default function LogOutButton() {

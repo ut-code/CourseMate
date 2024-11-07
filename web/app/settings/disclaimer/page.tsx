@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
-import { NavigateByAuthState } from "../../../components/common/NavigateByAuthState";
-import TopNavigation from "../../../components/common/TopNavigation";
+import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
+import TopNavigation from "~/components/common/TopNavigation";
 
 export default function Disclaimer() {
   return (

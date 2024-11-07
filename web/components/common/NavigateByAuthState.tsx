@@ -3,7 +3,7 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
-import { userExists } from "../../api/internal/endpoints";
+import { userExists } from "~/api/internal/endpoints";
 import FullScreenCircularProgress from "./FullScreenCircularProgress";
 
 /**

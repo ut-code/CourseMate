@@ -2,19 +2,19 @@ import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
-import * as chat from "../../api/chat/chat";
-import { useMessages } from "../../api/chat/hooks";
-import * as user from "../../api/user";
-import { useMyID } from "../../api/user";
+import * as chat from "~/api/chat/chat";
+import { useMessages } from "~/api/chat/hooks";
+import * as user from "~/api/user";
+import { useMyID } from "~/api/user";
 import type {
   DMOverview,
   Message,
   MessageID,
   SendMessage,
   UserID,
-} from "../../common/types";
-import type { Content } from "../../common/zod/types";
-import { getIdToken } from "../../firebase/auth/lib";
+} from "~/common/types";
+import type { Content } from "~/common/zod/types";
+import { getIdToken } from "~/firebase/auth/lib";
 import Dots from "../common/Dots";
 import { socket } from "../data/socket";
 import { MessageInput } from "./MessageInput";
