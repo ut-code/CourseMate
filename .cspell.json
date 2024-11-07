@@ -4,7 +4,9 @@
   "words": [
     "autoincrement",
     "bunx",
+    "chrono",
     "coursemate",
+    "daisyui",
     "datasource",
     "direnv",
     "ECCS",
@@ -13,11 +15,10 @@
     "notistack",
     "psql",
     "qiita",
+    "reqwest",
     "safify",
     "supabase",
-    "swiper",
-    "reqwest",
-    "chrono"
+    "swiper"
   ],
   "dictionaries": [
     "softwareTerms",
