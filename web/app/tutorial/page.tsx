@@ -9,7 +9,6 @@ import "swiper/css/pagination";
 import Link from "next/link";
 import Header from "~/components/Header";
 
-// TODO: 画像表示の参照を直す
 const tutorialSteps = [
   {
     label: "CourseMateの使い方",

@@ -6,8 +6,6 @@ setup:
 	if [ ! `command -v bun` ]; then echo 'ERR: Bun is required!'; exit 1; fi
 	make sync
 	bunx husky
-	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
-	cd server; if [ ! -f .env.dev ]; then cp ./.env.sample ./.env.dev ; fi
 	@echo "auto setup is done. now do:"
 	@echo "- edit server/.env.dev"
 	@echo "- edit web/.env"
