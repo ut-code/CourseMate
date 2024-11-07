@@ -1,6 +1,6 @@
 import { Box, List } from "@mui/material";
-import { deleteMatch } from "../../api/match";
-import { useMatched } from "../../api/user";
+import { deleteMatch } from "~/api/match";
+import { useMatched } from "~/api/user";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
 import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";

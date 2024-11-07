@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import courseApi from "../../../api/course";
-import type { Course, Day, UserID } from "../../../common/types";
-import FullScreenCircularProgress from "../../common/FullScreenCircularProgress";
+import courseApi from "~/api/course";
+import type { Course, Day, UserID } from "~/common/types";
+import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import CoursesTableCore from "../components/CoursesTableCore";
 import SelectCourseDialog from "../components/SelectCourseDialog";
 

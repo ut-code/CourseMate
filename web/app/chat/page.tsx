@@ -3,11 +3,11 @@
 import { Typography } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { useRoomsOverview } from "../../api/chat/hooks";
-import RoomList from "../../components/chat/RoomList";
-import { RoomWindow } from "../../components/chat/RoomWindow";
-import FullScreenCircularProgress from "../../components/common/FullScreenCircularProgress";
-import { NavigateByAuthState } from "../../components/common/NavigateByAuthState";
+import { useRoomsOverview } from "~/api/chat/hooks";
+import RoomList from "~/components/chat/RoomList";
+import { RoomWindow } from "~/components/chat/RoomWindow";
+import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
+import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 
 function ChatListContent() {
   const searchParams = useSearchParams();

@@ -1,8 +1,8 @@
 import { GitHub, Language } from "@mui/icons-material";
 import XIcon from "@mui/icons-material/X";
 import { Box, Link, Typography } from "@mui/material";
-import { NavigateByAuthState } from "../../../components/common/NavigateByAuthState";
-import TopNavigation from "../../../components/common/TopNavigation";
+import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
+import TopNavigation from "~/components/common/TopNavigation";
 
 export default function AboutUs() {
   return (
