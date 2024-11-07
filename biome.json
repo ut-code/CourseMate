@@ -4,6 +4,13 @@
     "indentStyle": "space",
     "indentWidth": 2
   },
+  "linter": {
+    "rules": {
+      "nursery": {
+        "useSortedClasses": "warn"
+      }
+    }
+  },
   "vcs": {
     "enabled": true,
     "clientKind": "git",
