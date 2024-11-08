@@ -3,6 +3,7 @@ import express from "express";
 import csrf from "./lib/cross-origin/block-unknown-origin";
 import cors from "./lib/cross-origin/multi-origin-cors";
 import { initializeSocket } from "./lib/socket/socket";
+import { allUrlMustBeValid, panic } from "./lib/utils";
 import chatRoutes from "./router/chat";
 import coursesRoutes from "./router/courses";
 import matchesRoutes from "./router/matches";
@@ -17,14 +18,15 @@ const app = express();
 app.set("query parser", "simple");
 
 const port = 3000;
-const allowedOrigins = [
-  process.env.SERVER_ORIGIN ?? "http://localhost:3000", // delete this fallback when you think everyone has updated their .env
-  process.env.WEB_ORIGIN,
-  process.env.MOBILE_ORIGIN,
-  process.env.WEB_ORIGIN_BUILD,
-];
+const allowedOrigins = (
+  process.env.CORS_ALLOW_ORIGINS || panic("env CORS_ALLOW_ORIGINS is missing")
+)
+  .split(",")
+  .filter((s) => s); // ignore empty string (trailing comma?)
+allUrlMustBeValid(allowedOrigins);
+
 export const corsOptions = {
-  origins: allowedOrigins.filter((s) => s != null).filter((s) => s), // ignore empty string too
+  origins: allowedOrigins,
   methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
   credentials: true,
 };
