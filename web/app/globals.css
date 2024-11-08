@@ -7,3 +7,7 @@
   max-width: 450px;
   max-height: 450px;
 }
+
+.cm-li-btn {
+  @apply no-animation w-full justify-start rounded-none border-none bg-white px-4 py-2 text-left font-normal text-base hover:bg-zinc-100 focus:bg-zinc-300;
+}
