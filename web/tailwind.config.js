@@ -18,6 +18,7 @@ export default {
           "base-100": "#ffffff",
 
           "--rounded-btn": "0.25rem",
+          "--rounded-box": "0.25rem",
         },
       },
     ],
