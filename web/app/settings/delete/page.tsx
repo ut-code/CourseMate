@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowBack } from "@mui/icons-material";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
@@ -73,21 +73,15 @@ export default function DeleteAccount() {
           アカウントを削除した場合、マッチングやチャットに関する情報の一切が削除されます。
         </Typography>
 
-        <Button
-          variant="contained"
-          color="error" // Red color for the button
-          sx={{
-            margin: "0 auto",
-            textAlign: "center",
-            display: "block",
-            marginTop: "20px",
-            padding: "12px",
-            fontSize: "16px",
-          }}
-          onClick={onClick}
-        >
-          アカウントを削除する
-        </Button>
+        <div className="text-center">
+          <button
+            type="button"
+            className="btn bg-red-500 text-white hover:bg-red-700"
+            onClick={onClick}
+          >
+            アカウントを削除する
+          </button>
+        </div>
       </Box>
     </Box>
   );

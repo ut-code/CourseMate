@@ -3,7 +3,6 @@
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
-  Button,
   FormControl,
   IconButton,
   InputLabel,
@@ -519,28 +518,20 @@ export default function EditProfile() {
                 marginTop: "40px",
               }}
             >
-              <Button
+              <button
+                type="button"
+                className="btn w-[35vh] rounded-full shadow-gray-400 shadow-md"
                 onClick={handleBack}
-                style={{
-                  borderRadius: "25px",
-                  width: "35vw",
-                  boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                }}
               >
                 設定画面に戻る
-              </Button>
-              <Button
-                variant="contained"
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary w-[35vh] rounded-full shadow-gray-400 shadow-md"
                 onClick={handleGoToCourses}
-                style={{
-                  borderRadius: "25px",
-                  width: "35vw",
-                  boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                  minHeight: "61px",
-                }}
               >
                 授業編集へ
-              </Button>
+              </button>
             </Box>
           </Box>
         ) : (

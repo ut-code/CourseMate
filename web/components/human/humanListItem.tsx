@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   ListItem,
   ListItemAvatar,
   Stack,
@@ -53,22 +52,43 @@ export function HumanListItem(props: HumanListItemProps) {
       key={id.toString()}
       secondaryAction={
         <Stack direction="row" spacing={1}>
-          {onAccept && <Button onClick={() => onAccept(id)}>承認</Button>}
-          {onReject && <Button onClick={() => onReject(id)}>拒否</Button>}
-          {onCancel && <Button onClick={() => onCancel(id)}>キャンセル</Button>}
+          {onAccept && (
+            <button
+              type="button"
+              onClick={() => onAccept(id)}
+              className="btn border-primary bg-white text-primary"
+            >
+              承認
+            </button>
+          )}
+          {onReject && (
+            <button
+              type="button"
+              onClick={() => onReject(id)}
+              className="btn border-primary bg-white text-primary"
+            >
+              拒否
+            </button>
+          )}
+          {onCancel && (
+            <button
+              type="button"
+              onClick={() => onCancel(id)}
+              className="btn border-primary bg-white text-primary"
+            >
+              キャンセル
+            </button>
+          )}
         </Stack>
       }
       sx={{
         pr: 2,
       }}
     >
-      <Button
+      <button
+        type="button"
         onClick={handleOpenClick}
-        sx={{
-          width: "100%",
-          justifyContent: "flex-start",
-          textTransform: "none",
-        }}
+        className="w-full items-center justify-start"
       >
         <ListItemAvatar sx={{ marginLeft: "8px" }}>
           <UserAvatar pictureUrl={pictureUrl} width="50px" height="50px" />
@@ -103,7 +123,7 @@ export function HumanListItem(props: HumanListItemProps) {
             </Typography>
           )}
         </Box>
-      </Button>
+      </button>
       {hasDots && (
         <Box
           sx={{

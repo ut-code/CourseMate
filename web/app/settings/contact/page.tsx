@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 import TopNavigation from "~/components/common/TopNavigation";
 
@@ -23,21 +23,14 @@ export default function Contact() {
           <Typography sx={{ mb: "16px", lineHeight: "1.8" }}>
             ご利用いただきありがとうございます。サービスに関するご意見やバグ報告がございましたら、以下のリンクからお問い合わせください。皆様のフィードバックは、サービスの改善に役立てさせていただきます。
           </Typography>
-
-          <Button
-            variant="contained"
+          <a
             href="https://forms.gle/WvFTbsJoHjGp9Qt88"
             target="_blank"
-            sx={{
-              textAlign: "center",
-              display: "block",
-              marginTop: "20px",
-              padding: "12px",
-              fontSize: "16px",
-            }}
+            rel="noreferrer"
+            className="btn btn-primary mt-5 w-full"
           >
             ご意見・バグ報告をする
-          </Button>
+          </a>
         </Box>
       </Box>
     </NavigateByAuthState>

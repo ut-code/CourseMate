@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import Link from "next/link";
 import { useMyID } from "~/api/user";
@@ -36,9 +36,9 @@ export default function Step4() {
         }}
       >
         <span />
-        <Button LinkComponent={Link} href="/tutorial" variant="contained">
+        <Link href="/tutorial" className="btn btn-primary">
           次へ
-        </Button>
+        </Link>
       </Box>
     </>
   );

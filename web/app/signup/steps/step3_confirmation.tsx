@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import type { BackProp, StepProps } from "~/app/signup/common";
 import type { Step1User } from "~/common/zod/types";
 import UserAvatar from "~/components/human/avatar";
@@ -69,12 +69,16 @@ export default function Confirmation({
           width: "100%",
         }}
       >
-        <Button onClick={back} variant="text">
+        <button type="button" onClick={back} className="btn">
           前へ
-        </Button>
-        <Button onClick={() => onSave()} variant="contained">
+        </button>
+        <button
+          type="button"
+          onClick={() => onSave()}
+          className="btn btn-primary"
+        >
           次へ
-        </Button>
+        </button>
       </Box>
     </>
   );

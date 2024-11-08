@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Link from "next/link";
 import { useAboutMe } from "~/api/user";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
@@ -48,29 +48,12 @@ export default function EditCourses() {
             marginTop: "20px",
           }}
         >
-          <Button
-            LinkComponent={Link}
-            href="/settings/profile"
-            style={{
-              borderRadius: "25px",
-              width: "35vw",
-              boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-            }}
-          >
+          <Link href="/settings/profile" className="btn">
             設定画面に戻る
-          </Button>
-          <Button
-            LinkComponent={Link}
-            href="/edit/profile"
-            variant="contained"
-            style={{
-              borderRadius: "25px",
-              width: "35vw",
-              boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-            }}
-          >
+          </Link>
+          <Link href="/edit/profile" className="btn btn-primary">
             プロフィール編集へ
-          </Button>
+          </Link>
         </Box>
       </Box>
     </NavigateByAuthState>
