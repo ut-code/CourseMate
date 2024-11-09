@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Step1User } from "~/common/zod/types";
 import Header from "~/components/Header";
+import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 import { register } from "./functions";
 import Step1 from "./steps/step1_profile";
 import Step2, { type Step2Data } from "./steps/step2_img";
@@ -76,18 +77,20 @@ function Registration() {
 }
 export default function RegistrationPage() {
   return (
-    <Box
-      sx={{
-        position: "absolute",
-        top: "56px",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        overflowY: "auto",
-      }}
-    >
-      <Header title="登録/Register" />
-      <Registration />
-    </Box>
+    <NavigateByAuthState type="toHomeForAuthenticated">
+      <Box
+        sx={{
+          position: "absolute",
+          top: "56px",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          overflowY: "auto",
+        }}
+      >
+        <Header title="登録/Register" />
+        <Registration />
+      </Box>
+    </NavigateByAuthState>
   );
 }
