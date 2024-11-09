@@ -1,12 +1,10 @@
 "use client";
 
-import { ArrowBack } from "@mui/icons-material";
-import { Box, IconButton, Typography } from "@mui/material";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useCallback } from "react";
 import { deleteAccount } from "~/api/user";
+import TopNavigation from "~/components/common/TopNavigation";
 import { useAlert } from "~/components/common/alert/AlertProvider";
 
 export default function DeleteAccount() {
@@ -36,43 +34,12 @@ export default function DeleteAccount() {
   }, [showAlert, enqueueSnackbar, router.push]);
 
   return (
-    <Box
-      sx={{
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <IconButton
-        LinkComponent={Link}
-        sx={{ position: "absolute", top: "20px", left: "20px" }}
-        href="/settings"
-      >
-        <ArrowBack />
-      </IconButton>
-
-      <Box
-        sx={{
-          width: "100%",
-          padding: "30px",
-          textAlign: "left",
-        }}
-      >
-        <Typography
-          variant="h5"
-          component="h2"
-          gutterBottom
-          sx={{ fontWeight: "bold", mb: "24px", textAlign: "center" }}
-        >
-          アカウント削除
-        </Typography>
-
-        <Typography sx={{ mb: "16px", lineHeight: "1.8", color: "red" }}>
+    <div className="flex flex-col p-2">
+      <TopNavigation title="アカウント削除" />
+      <div className="w-full p-8 text-left">
+        <p className="mb-4 text-red-500 leading-7">
           アカウントを削除した場合、マッチングやチャットに関する情報の一切が削除されます。
-        </Typography>
-
+        </p>
         <div className="text-center">
           <button
             type="button"
@@ -82,7 +49,7 @@ export default function DeleteAccount() {
             アカウントを削除する
           </button>
         </div>
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 }

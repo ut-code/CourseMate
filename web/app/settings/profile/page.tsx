@@ -1,9 +1,8 @@
 "use client";
 
-import EditIcon from "@mui/icons-material/Edit";
-import { Box, Button, Typography } from "@mui/material";
 import Link from "next/link";
 import { useState } from "react";
+import { MdEdit } from "react-icons/md";
 import { useAboutMe } from "~/api/user";
 import { Card } from "~/components/Card";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
@@ -22,50 +21,30 @@ export default function SettingsProfile() {
       {loading ? (
         <FullScreenCircularProgress />
       ) : error ? (
-        <Typography color="error">Error: {error.message}</Typography>
+        <p className="text-error">エラーが発生しました。{error.message}</p>
       ) : !data ? (
-        <Typography>データがありません。</Typography>
+        <p>データがありません。</p>
       ) : (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "8px",
-          }}
-        >
+        <div className="flex flex-col p-2">
           <TopNavigation title="あなたのカード" />
-          <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            >
-              <Button
-                LinkComponent={Link}
+          <div className="flex flex-1 flex-col items-center">
+            <div className="flex w-full justify-end">
+              <Link
+                className="btn btn-sm flex items-center border-none bg-white px-1 text-primary shadow-none"
                 href={back ? "/edit/courses" : "/edit/profile"}
-                startIcon={<EditIcon />}
-                sx={{
-                  paddingRight: "0px",
+                style={{
                   // (画面幅 - カード幅) / 2 - profile の padding
                   marginRight:
                     "calc(calc(calc(100vw - min(40dvh, 87.5vw)) / 2) - 8px)",
                 }}
               >
+                <MdEdit className="text-lg" />
                 編集する
-              </Button>
-            </Box>
+              </Link>
+            </div>
             <Card displayedUser={data} onFlip={(back) => setBack(back)} />
-          </Box>
-        </Box>
+          </div>
+        </div>
       )}
     </NavigateByAuthState>
   );
