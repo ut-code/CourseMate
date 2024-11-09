@@ -7,7 +7,6 @@ import { useRoomsOverview } from "~/api/chat/hooks";
 import RoomList from "~/components/chat/RoomList";
 import { RoomWindow } from "~/components/chat/RoomWindow";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
-import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 
 function ChatListContent() {
   const searchParams = useSearchParams();
@@ -32,10 +31,8 @@ function ChatListContent() {
 
 export default function Chat() {
   return (
-    <NavigateByAuthState type="toLoginForUnauthenticated">
-      <Suspense fallback={<FullScreenCircularProgress />}>
-        <ChatListContent />
-      </Suspense>
-    </NavigateByAuthState>
+    <Suspense fallback={<FullScreenCircularProgress />}>
+      <ChatListContent />
+    </Suspense>
   );
 }
