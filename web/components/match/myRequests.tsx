@@ -1,6 +1,4 @@
 "use client";
-import { Box } from "@mui/material";
-import { List } from "@mui/material";
 import * as request from "~/api/request";
 import { usePendingFromMe } from "~/api/user";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
@@ -12,7 +10,7 @@ export default function MyReq() {
   const { openModal } = useModal();
 
   return (
-    <Box>
+    <div>
       <p
         style={{
           marginLeft: "40px",
@@ -27,7 +25,7 @@ export default function MyReq() {
       ) : state.error ? (
         <p>Error: {state.error.message}</p>
       ) : (
-        <List>
+        <ul>
           {state.data?.map((receivingUser) => (
             <HumanListItem
               key={receivingUser.id}
@@ -40,8 +38,8 @@ export default function MyReq() {
               }}
             />
           ))}
-        </List>
+        </ul>
       )}
-    </Box>
+    </div>
   );
 }

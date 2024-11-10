@@ -1,5 +1,4 @@
 "use client";
-import { Box, List } from "@mui/material";
 import request from "~/api/request";
 import { usePendingToMe } from "~/api/user";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
@@ -15,7 +14,7 @@ export default function OthersReq() {
   const { openModal } = useModal();
 
   return (
-    <Box>
+    <div>
       <p
         style={{
           marginLeft: "40px",
@@ -30,7 +29,7 @@ export default function OthersReq() {
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (
-        <List>
+        <ul>
           {data?.map((sendingUser) => (
             <HumanListItem
               key={sendingUser.id}
@@ -42,8 +41,8 @@ export default function OthersReq() {
               onReject={() => request.reject(sendingUser.id).then(reload)}
             />
           ))}
-        </List>
+        </ul>
       )}
-    </Box>
+    </div>
   );
 }

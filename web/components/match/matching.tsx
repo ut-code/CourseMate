@@ -1,5 +1,4 @@
 "use client";
-import { Box, List } from "@mui/material";
 import { deleteMatch } from "~/api/match";
 import { useMatched } from "~/api/user";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
@@ -14,7 +13,7 @@ export default function Matchings() {
   const { openModal } = useModal();
 
   return (
-    <Box>
+    <div>
       <p
         style={{
           marginLeft: "40px",
@@ -34,7 +33,7 @@ export default function Matchings() {
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (
-        <List>
+        <ul>
           {data?.map((matchedUser) => (
             <HumanListItem
               key={matchedUser.id}
@@ -46,8 +45,8 @@ export default function Matchings() {
               hasDots
             />
           ))}
-        </List>
+        </ul>
       )}
-    </Box>
+    </div>
   );
 }
