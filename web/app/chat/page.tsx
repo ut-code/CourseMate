@@ -8,6 +8,14 @@ import RoomList from "~/components/chat/RoomList";
 import { RoomWindow } from "~/components/chat/RoomWindow";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 
+export default function Chat() {
+  return (
+    <Suspense fallback={<FullScreenCircularProgress />}>
+      <ChatListContent />
+    </Suspense>
+  );
+}
+
 function ChatListContent() {
   const searchParams = useSearchParams();
 
@@ -26,13 +34,5 @@ function ChatListContent() {
     <Typography color="error">Error: {state.error.message}</Typography>
   ) : (
     <RoomList roomsData={state.data} />
-  );
-}
-
-export default function Chat() {
-  return (
-    <Suspense fallback={<FullScreenCircularProgress />}>
-      <ChatListContent />
-    </Suspense>
   );
 }
