@@ -8,7 +8,7 @@ export default function HomePageLayout({
 }) {
   return (
     <>
-      <Header title="ホーム/Home" />
+      <Header title="検索/Search" />
       <div className="absolute top-14 right-0 bottom-14 left-0 overflow-y-auto sm:top-16">
         {children}
       </div>
