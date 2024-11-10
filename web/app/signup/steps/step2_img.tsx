@@ -38,7 +38,7 @@ export default function Step2({
 
   return (
     <>
-      <div m={2} display={"flex"} flexDirection={"column"} gap={2}>
+      <div className="m-2 flex flex-col g-2">
         <h1 className="text-xl">アイコンを設定</h1>
 
         <div style={{ textAlign: "center", marginTop: "15vh" }}>
