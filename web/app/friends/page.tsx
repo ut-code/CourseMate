@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Tab, Tabs } from "@mui/material";
+import { Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 import Matchings from "~/components/match/matching";
@@ -15,34 +15,17 @@ export default function Friends() {
 
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
-      <Box
-        sx={{
-          width: "100%",
-          borderBottom: 1,
-          borderColor: "divider",
-          position: "fixed",
-          backgroundColor: "white",
-          zIndex: 500,
-        }}
-      >
+      <div className="fixed z-50 w-full border-gray-200 border-b-[1px] bg-white">
         <Tabs value={open} onChange={handleChange} variant="fullWidth">
           <Tab label="マッチ中" {...a11yProps(0)} sx={{ width: "50%" }} />
           <Tab label="リクエスト" {...a11yProps(1)} sx={{ width: "50%" }} />
         </Tabs>
-      </Box>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "36px",
-          left: 0,
-          right: 0,
-          overflowY: "auto",
-        }}
-      >
+      </div>
+      <div className="absolute top-9 right-0 left-0 overflow-y-auto">
         <TabPanel open={open}>
           {open === 0 ? <Matchings /> : open === 1 ? <Requests /> : null}
         </TabPanel>
-      </Box>
+      </div>
     </NavigateByAuthState>
   );
 }
@@ -60,7 +43,7 @@ function TabPanel({
       id={`tabpanel-${open}`}
       aria-labelledby={`tab-${open}`}
     >
-      <Box>{children}</Box>
+      <div>{children}</div>
     </div>
   );
 }

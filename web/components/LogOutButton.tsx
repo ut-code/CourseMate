@@ -1,6 +1,5 @@
 "use client";
 
-import { ListItemButton, ListItemText } from "@mui/material";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
@@ -36,8 +35,12 @@ export default function LogOutButton() {
   }, [showAlert, signOutUser]);
 
   return (
-    <ListItemButton onClick={onClick}>
-      <ListItemText primary="ログアウト" sx={{ color: "indianred" }} />
-    </ListItemButton>
+    <button
+      type="button"
+      onClick={onClick}
+      className="btn cm-li-btn text-[#cd5c5c]"
+    >
+      ログアウト
+    </button>
   );
 }

@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import {
   Box,
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -164,9 +163,9 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
         }}
       >
         <span />
-        <Button onClick={save} variant="contained">
+        <button type="button" onClick={save} className="btn btn-primary">
           {caller === "registration" ? "次へ" : "保存"}
-        </Button>
+        </button>
       </Box>
     </>
   );

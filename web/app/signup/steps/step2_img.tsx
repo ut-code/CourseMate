@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import type { BackProp, StepProps } from "~/app/signup/common";
@@ -82,12 +82,12 @@ export default function Step2({
           width: "100%",
         }}
       >
-        <Button onClick={back} variant="text">
+        <button type="button" onClick={back} className="btn">
           前へ
-        </Button>
-        <Button onClick={next} variant="contained">
+        </button>
+        <button type="button" onClick={next} className="btn btn-primary">
           {caller === "registration" ? "次へ" : "保存"}
-        </Button>
+        </button>
       </Box>
     </>
   );

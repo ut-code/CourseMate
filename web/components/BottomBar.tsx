@@ -58,7 +58,7 @@ export default function BottomBar(props: Props) {
             <ChatIcon
               sx={{
                 color:
-                  activeTab === "2_chat" ? "#primary.main" : "secondary.main",
+                  activeTab === "2_chat" ? "primary.main" : "secondary.main",
               }}
             />
           }

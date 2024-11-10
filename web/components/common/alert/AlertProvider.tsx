@@ -1,13 +1,5 @@
 "use client";
 
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
 import { type ReactNode, createContext, useContext, useState } from "react";
 
 export type Alert = {
@@ -49,27 +41,34 @@ export const AlertProvider = ({ children }: AlertProviderProps) => {
     <AlertContext.Provider value={{ showAlert }}>
       {children}
       {alertProps && (
-        <Dialog
-          open={true}
+        // https://daisyui.com/components/modal/#method-1-using-dialog-element-recommended
+        // TODO: 挙動を修正 (外をクリックしたり ESC を押したときに閉じるようにする)
+        <dialog
+          id="alert-dialog"
+          className="modal modal-open"
           onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">
-            {alertProps.AlertMessage}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {alertProps.subAlertMessage}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleYesClick} autoFocus sx={{ color: "red" }}>
-              {alertProps.yesMessage}
-            </Button>
-            <Button onClick={handleClose}>キャンセル</Button>
-          </DialogActions>
-        </Dialog>
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">{alertProps.AlertMessage}</h3>
+            <p className="py-4">{alertProps.subAlertMessage}</p>
+            <div className="modal-action">
+              <form method="dialog">
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    className="btn text-red-500"
+                    onClick={handleYesClick}
+                  >
+                    {alertProps.yesMessage}
+                  </button>
+                  <button type="button" className="btn" onClick={handleClose}>
+                    キャンセル
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </dialog>
       )}
     </AlertContext.Provider>
   );
