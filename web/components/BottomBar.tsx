@@ -3,6 +3,7 @@ import { MdHome } from "react-icons/md";
 import { MdPeople } from "react-icons/md";
 import { MdChat } from "react-icons/md";
 import { MdSettings } from "react-icons/md";
+import { MdSearch } from "react-icons/md";
 
 type Props = {
   activeTab: "0_home" | "1_friends" | "2_chat" | "3_settings" | "4_search";
@@ -66,7 +67,7 @@ export default function BottomBar(props: Props) {
         label="Search"
         href="/search"
         isActive={activeTab === "4_search"}
-        iconComponent={<MdSettings className="text-2xl" />}
+        iconComponent={<MdSearch className="text-2xl" />}
       />
     </div>
   );
