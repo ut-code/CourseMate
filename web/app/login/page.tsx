@@ -1,6 +1,5 @@
 "use client";
 
-import { Button, Link, Typography } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
@@ -130,13 +129,13 @@ export default function Login() {
           <CourseMateIcon width="200px" height="200px" />
         </div>
         <div className="text-left">
-          <Typography variant="h4">
+          <h1 className="font-semibold text-3xl">
             CourseMateを使って
             <br />
             同じ授業の人と
             <br />
             友達になろう
-          </Typography>
+          </h1>
         </div>
 
         <div className="w-4/5 text-center">
@@ -206,14 +205,13 @@ export default function Login() {
             </div>
           </button>
           <br />
-          <Link
-            component={Button}
+          <button
+            type="button"
             onClick={singUpByGoogle}
-            mt={2}
-            underline="none"
+            className="mt-2 text-blue-600 hover:underline"
           >
             初めての方はこちら
-          </Link>
+          </button>
         </div>
       </div>
     </NavigateByAuthState>
