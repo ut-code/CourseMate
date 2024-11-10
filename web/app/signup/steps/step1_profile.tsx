@@ -1,147 +1,148 @@
-import { type ChangeEvent, useState } from "react";
+import { useEffect } from "react";
 
 import type { StepProps } from "~/app/signup/common";
 import { facultiesAndDepartments } from "~/app/signup/data";
-import { parseStep1UserSchema } from "~/common/zod/methods";
 import type { Step1User } from "~/common/zod/types";
 
-function Label({ children }: { children: string }) {
-  return <span className="text-gray-500 text-sm">{children}</span>;
-}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type FieldError, type SubmitHandler, useForm } from "react-hook-form";
+import { Step1UserSchema } from "~/common/zod/schemas";
 
 const faculties = Object.keys(facultiesAndDepartments);
 export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
-  const [name, setName] = useState(prev?.name ?? "");
-  const [gender, setGender] = useState(prev?.gender ?? "その他");
-  const [grade, setGrade] = useState(prev?.grade ?? "");
-  const [faculty, setFaculty] = useState(prev?.faculty ?? "");
-  const [department, setDepartment] = useState(prev?.department ?? "");
-  const [intro, setIntro] = useState(prev?.intro ?? "");
-  const [errorMessage, setErrorMessage] = useState("");
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    resetField,
+    formState: { errors },
+  } = useForm<Step1User>({
+    resolver: zodResolver(Step1UserSchema),
+    defaultValues: prev,
+  });
+  const onSubmit: SubmitHandler<Step1User> = async (data) => {
+    onSave(data);
+  };
+  const selectedFaculty = watch("faculty");
 
-  async function save() {
-    try {
-      const data: Step1User = {
-        name: name.trim(),
-        grade: grade,
-        gender: gender,
-        faculty: faculty,
-        department: department,
-        intro: intro.trim(),
-      };
-      parseStep1UserSchema(data);
-      onSave(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        let errorMessages: string;
-        try {
-          const parsedError = JSON.parse(error.message);
-          if (Array.isArray(parsedError)) {
-            errorMessages = parsedError.map((err) => err.message).join(", ");
-          } else {
-            errorMessages = error.message;
-          }
-        } catch {
-          errorMessages = error.message;
-        }
-
-        // エラーメッセージをセット
-        setErrorMessage(errorMessages);
-      } else {
-        console.log("unknown error:", error);
-        setErrorMessage("入力に誤りがあります。");
-      }
+  useEffect(() => {
+    if (selectedFaculty) {
+      const defaultDepartment = facultiesAndDepartments[selectedFaculty][0];
+      setValue("department", defaultDepartment);
+    } else {
+      resetField("department");
     }
-  }
-
-  const handleFacultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setFaculty(event.target.value);
-  };
-
-  const handleDepartmentChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setDepartment(event.target.value);
-  };
-
+  }, [selectedFaculty, setValue, resetField]);
   return (
     <>
-      <div className="m-4 mb-8 flex flex-col gap-4 ">
+      <div className="m-4 mb-8 flex flex-col gap-4">
         <h1 className="text-xl">アカウント設定</h1>
         <div className="flex flex-col gap-2">
-          <Label>名前</Label>
-          <input
-            className="input input-bordered w-full"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            autoComplete="off"
-          />
-          <Label>性別</Label>
-          <select
-            className="select select-bordered w-full"
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-          >
-            <option value={"男性"}>男性</option>
-            <option value={"女性"}>女性</option>
-            <option value={"その他"}>その他</option>
-            <option value={"秘密"}>秘密</option>
-          </select>
-          <Label>学年</Label>
-          <select
-            className="select select-bordered w-full"
-            value={grade}
-            onChange={(e) => setGrade(e.target.value)}
-          >
-            <option value={"B1"}>1年生 (B1)</option>
-            <option value={"B2"}>2年生 (B2)</option>
-            <option value={"B3"}>3年生 (B3)</option>
-            <option value={"B4"}>4年生 (B4)</option>
-            <option value={"M1"}>修士1年 (M1)</option>
-            <option value={"M2"}>修士2年 (M2)</option>
-          </select>
-          <Label>学部</Label>
-          <select
-            className="select select-bordered w-full"
-            value={faculty}
-            onChange={handleFacultyChange}
-          >
-            {faculties.map((fac) => (
-              <option key={fac} value={fac}>
-                {fac}
-              </option>
-            ))}
-          </select>
-          <Label>学科 (先に学部を選択して下さい)</Label>
-          <select
-            className="select select-bordered w-full"
-            value={department}
-            onChange={handleDepartmentChange}
-            disabled={!faculty}
-          >
-            {faculty &&
-              facultiesAndDepartments[faculty].map((dep) => (
-                <option key={dep} value={dep}>
-                  {dep}
-                </option>
-              ))}
-          </select>
-          <Label>自己紹介</Label>
-          <textarea
-            className="textarea textarea-bordered w-full"
-            rows={5}
-            placeholder="こんにちは！仲良くして下さい！"
-            onChange={(e) => setIntro(e.target.value)}
-          />
-          {errorMessage && (
-            <div className="mb-4 text-error">{errorMessage}</div>
-          )}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Field fieldName="name" fieldLabel="名前" error={errors?.name}>
+              <input
+                className="input input-bordered w-full"
+                {...register("name")}
+              />
+            </Field>
+            <Field fieldName="gender" fieldLabel="性別" error={errors?.gender}>
+              <select
+                className="select select-bordered w-full"
+                {...register("gender")}
+              >
+                <option value={"男性"}>男性</option>
+                <option value={"女性"}>女性</option>
+                <option value={"その他"}>その他</option>
+                <option value={"秘密"}>秘密</option>
+              </select>
+            </Field>
+            <Field fieldName="grade" fieldLabel="学年" error={errors?.grade}>
+              <select
+                className="select select-bordered w-full"
+                {...register("grade")}
+              >
+                <option value={"B1"}>1年生 (B1)</option>
+                <option value={"B2"}>2年生 (B2)</option>
+                <option value={"B3"}>3年生 (B3)</option>
+                <option value={"B4"}>4年生 (B4)</option>
+                <option value={"M1"}>修士1年 (M1)</option>
+                <option value={"M2"}>修士2年 (M2)</option>
+              </select>
+            </Field>
+            <Field
+              fieldName="faculty"
+              fieldLabel="学部"
+              error={errors?.faculty}
+            >
+              <select
+                className="select select-bordered w-full"
+                {...register("faculty")}
+              >
+                {faculties.map((fac) => (
+                  <option key={fac} value={fac}>
+                    {fac}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field
+              fieldName="department"
+              fieldLabel="学科 (先に学部を選択して下さい)"
+              error={errors?.department}
+            >
+              <select
+                className="select select-bordered w-full"
+                {...register("department")}
+                disabled={!selectedFaculty}
+              >
+                {selectedFaculty &&
+                  facultiesAndDepartments[selectedFaculty].map((dep) => (
+                    <option key={dep} value={dep}>
+                      {dep}
+                    </option>
+                  ))}
+              </select>
+            </Field>
+            <Field
+              fieldName="intro"
+              fieldLabel="自己紹介"
+              error={errors?.intro}
+            >
+              <textarea
+                className="textarea textarea-bordered w-full"
+                rows={5}
+                placeholder="こんにちは！仲良くして下さい！"
+                {...register("intro")}
+              />
+            </Field>
+            <div className="flex justify-end">
+              <button type="submit" className="btn btn-primary">
+                {caller === "registration" ? "次へ" : "保存"}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-      <div className="fixed bottom-5 flex w-full justify-between p-6">
-        <span />
-        <button type="button" onClick={save} className="btn btn-primary">
-          {caller === "registration" ? "次へ" : "保存"}
-        </button>
-      </div>
     </>
+  );
+}
+
+function Field({
+  fieldLabel,
+  children,
+  error,
+}: {
+  fieldName: string;
+  fieldLabel: string;
+  children: React.ReactNode;
+  error: FieldError | undefined;
+}) {
+  return (
+    <div className="my-2">
+      <div className="text-gray-500 text-sm">{fieldLabel}</div>
+      {children}
+      <div className="text-error text-sm">{error?.message}</div>
+    </div>
   );
 }
