@@ -33,25 +33,20 @@ export async function credFetch(
   path: string,
   body?: unknown,
 ): Promise<Response> {
-  try {
-    let idToken = await getIdToken();
-    const init: RequestInit = { method };
-    if (body) {
-      init.body = JSON.stringify(body);
-      init.headers = {
-        "Content-Type": "application/json",
-      };
-    }
-    let res = await fetch(`${path}?token=${idToken}`, init);
-
-    if (res.status === 401) {
-      idToken = await getIdToken();
-      res = await fetch(`${path}?token=${idToken}`, init);
-    }
-
-    return res;
-  } catch (error) {
-    console.error("Error in credFetch function:", error);
-    throw error;
+  let idToken = await getIdToken();
+  const init: RequestInit = { method };
+  if (body) {
+    init.body = JSON.stringify(body);
+    init.headers = {
+      "Content-Type": "application/json",
+    };
   }
+  let res = await fetch(`${path}?token=${idToken}`, init);
+
+  if (res.status === 401) {
+    idToken = await getIdToken();
+    res = await fetch(`${path}?token=${idToken}`, init);
+  }
+
+  return res;
 }
