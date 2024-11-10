@@ -68,13 +68,17 @@ export default function Login() {
       if (response.status === 404) {
         enqueueSnackbar(
           "この Google アカウントは登録されていません。登録画面にリダイレクトしました。",
-          { variant: "info" },
+          {
+            variant: "info",
+          },
         );
         router.push("/signup");
       } else if (response.status >= 500) {
         enqueueSnackbar(
           "サーバーエラーが発生しました。しばらくしてから再度お試しください。",
-          { variant: "error" },
+          {
+            variant: "error",
+          },
         );
       } else if (response.data) {
         enqueueSnackbar(`こんにちは、${response.data.name} さん！`, {

@@ -1,23 +1,12 @@
 "use client";
-
-import EditIcon from "@mui/icons-material/Edit";
-import {
-  Box,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
-import type { SelectChangeEvent } from "@mui/material";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { update, useAboutMe } from "~/api/user";
 import { facultiesAndDepartments } from "~/app/signup/data";
-import type { UpdateUser } from "~/common/types";
+import type { User } from "~/common/types";
 import { UpdateUserSchema } from "~/common/zod/schemas";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import { useAlert } from "~/components/common/alert/AlertProvider";
@@ -25,100 +14,62 @@ import PhotoModal from "~/components/config/PhotoModal";
 import { PhotoPreviewButton } from "~/components/config/PhotoPreview";
 import UserAvatar from "~/components/human/avatar";
 
-export default function EditProfile() {
-  const router = useRouter();
-  const { showAlert } = useAlert();
+const faculties = Object.keys(facultiesAndDepartments);
+
+export default function App() {
   const { state } = useAboutMe();
   const data = state.data;
   const error = state.current === "error" ? state.error : null;
   const loading = state.current === "loading";
+  return loading ? (
+    <FullScreenCircularProgress />
+  ) : error ? (
+    <p>Error: {error.message}</p>
+  ) : data ? (
+    <div className="overflow-y-scroll">
+      <EditProfile defaultValues={data} />
+    </div>
+  ) : (
+    <p>データがありません。</p>
+  );
+}
 
-  const [name, setName] = useState("");
-  const [gender, setGender] = useState("");
-  const [grade, setGrade] = useState("");
-  const [faculty, setFaculty] = useState("");
-  const [department, setDepartment] = useState("");
-  const [intro, setIntro] = useState("");
-  const [pictureUrl, setPictureUrl] = useState("");
-  const [tmpName, setTmpName] = useState("");
-  const [tmpGender, setTmpGender] = useState("");
-  const [tmpGrade, setTmpGrade] = useState("");
-  const [tmpFaculty, setTmpFaculty] = useState("");
-  const [tmpDepartment, setTmpDepartment] = useState("");
-  const [tmpIntro, setTmpIntro] = useState("");
+function EditProfile({ defaultValues }: { defaultValues: User }) {
+  const router = useRouter();
+  const { showAlert } = useAlert();
 
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [isEditingGender, setIsEditingGender] = useState(false);
-  const [isEditingGrade, setIsEditingGrade] = useState(false);
-  const [isEditingFaculty, setIsEditingFaculty] = useState(false);
-  const [isEditingDepartment, setIsEditingDepartment] = useState(false);
-  const [isEditingIntro, setIsEditingIntro] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    defaultValues: defaultValues,
+    reValidateMode: "onChange",
+    resolver: zodResolver(UpdateUserSchema),
+  });
+  async function submit(data: User) {
+    await update(data);
+  }
 
-  const [errorMessage, setErrorMessage] = useState<string>("");
-
-  const [nameError, setNameError] = useState<string>("");
-  const [genderError, setGenderError] = useState<string>("");
-  const [gradeError, setGradeError] = useState<string>("");
-  const [facultyError, setFacultyError] = useState<string>("");
-  const [departmentError, setDepartmentError] = useState<string>("");
-  const [introError, setIntroError] = useState<string>("");
-
-  useEffect(() => {
-    if (data) {
-      setName(data.name);
-      setGender(data.gender);
-      setGrade(data.grade);
-      setFaculty(data.faculty);
-      setDepartment(data.department);
-      setIntro(data.intro);
-      setPictureUrl(data.pictureUrl);
-      setTmpName(data.name);
-      setTmpGender(data.gender);
-      setTmpGrade(data.grade);
-      setTmpFaculty(data.faculty);
-      setTmpDepartment(data.department);
-      setTmpIntro(data.intro);
-    }
-  }, [data]);
+  const [savedData, setSavedData] = useState(defaultValues);
 
   function afterPhotoUpload(result: string) {
     try {
-      setPictureUrl(result);
-      handleSave({ pictureUrl: result });
+      updateData("pictureUrl", result);
     } catch (err) {
       console.error(err);
       // probably a network error
-      onPhotoError(new Error("画像の更新に失敗しました"));
+      enqueueSnackbar({
+        message: "画像の更新に失敗しました",
+      });
     }
   }
 
-  function onPhotoError(err: Error) {
-    enqueueSnackbar({
-      message: err?.message ?? "画像の更新に失敗しました",
-    });
-  }
   const [open, setOpen] = useState<boolean>(false);
 
-  function hasUnsavedChangesOrErrors() {
-    return (
-      isEditingName ||
-      isEditingGender ||
-      isEditingGrade ||
-      isEditingFaculty ||
-      isEditingDepartment ||
-      isEditingIntro ||
-      errorMessage ||
-      nameError ||
-      genderError ||
-      gradeError ||
-      facultyError ||
-      departmentError ||
-      introError
-    );
-  }
-
   function handleGoToCourses() {
-    if (hasUnsavedChangesOrErrors()) {
+    if (Math.random() < 1 /* TODO: has errors or unsaved */) {
       showAlert({
         AlertMessage: "まだ編集中のフィールド、もしくはエラーがあります",
         subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
@@ -133,7 +84,7 @@ export default function EditProfile() {
   }
 
   function handleBack() {
-    if (hasUnsavedChangesOrErrors()) {
+    if (Math.random() < 1 /* todo: has errors on unsaved */) {
       showAlert({
         AlertMessage: "編集中のフィールド、もしくはエラーがあります。",
         subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
@@ -147,394 +98,150 @@ export default function EditProfile() {
     }
   }
 
-  async function handleSave(input: Partial<UpdateUser>) {
-    setErrorMessage("");
-    setNameError("");
-    setGenderError("");
-    setGradeError("");
-    setFacultyError("");
-    setDepartmentError("");
-    setIntroError("");
-    const data: UpdateUser = {
-      name: (input.name ?? name).trim(),
-      gender: input.gender ?? gender,
-      grade: input.grade ?? grade,
-      faculty: input.faculty ?? faculty,
-      department: input.department ?? department,
-      intro: (input.intro ?? intro).trim(),
-      pictureUrl: input.pictureUrl ?? pictureUrl,
-    };
-    const result = UpdateUserSchema.safeParse(data);
-    if (!result.success) {
-      result.error.errors.map((err) => {
-        switch (err.path[0]) {
-          case "name":
-            setNameError(err.message);
-            break;
-          case "gender":
-            setGenderError(err.message);
-            break;
-          case "grade":
-            setGradeError(err.message);
-            break;
-          case "faculty":
-            setFacultyError(err.message);
-            break;
-          case "department":
-            setDepartmentError(err.message);
-            break;
-          case "intro":
-            setIntroError(err.message);
-            break;
-          default:
-            setErrorMessage("入力に誤りがあります");
-        }
-      });
-      return;
-    }
-    await update(data);
-  }
-
-  function handleEdit(setter: React.Dispatch<React.SetStateAction<boolean>>) {
-    setTmpName(name);
-    setTmpGender(gender);
-    setTmpGrade(grade);
-    setTmpFaculty(faculty);
-    setTmpDepartment(department);
-    setTmpIntro(intro);
-    setIsEditingName(false);
-    setIsEditingGender(false);
-    setIsEditingGrade(false);
-    setIsEditingFaculty(false);
-    setIsEditingDepartment(false);
-    setIsEditingIntro(false);
-    setter(true);
-  }
-
-  const handleFacultyChange = (event: SelectChangeEvent<string>) => {
-    setTmpFaculty(event.target.value);
-  };
-
-  const handleDepartmentChange = (event: SelectChangeEvent<string>) => {
-    setTmpDepartment(event.target.value);
-  };
-
+  const values = getValues();
   return (
-    <Box sx={{ padding: "20px" }}>
-      {loading ? (
-        <FullScreenCircularProgress />
-      ) : error ? (
-        <p>Error: {error.message}</p>
-      ) : data ? (
-        <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
-          <Typography variant="h6" component="h1">
-            プロフィール編集
-          </Typography>
-          <FormControl>
-            <Box display="flex" alignItems="center">
-              <TextField
-                value={tmpName}
-                onChange={(e) => setTmpName(e.target.value)}
-                label="名前"
-                disabled={!isEditingName}
-                fullWidth
-                error={!!nameError}
-                helperText={nameError}
-                autoComplete="off"
-              />
-              <IconButton
-                onClick={() => {
-                  if (isEditingName) {
-                    setName(tmpName);
-                    handleSave({ name: tmpName });
-                    setIsEditingName(false);
-                  } else {
-                    handleEdit(setIsEditingName);
-                  }
-                }}
-              >
-                {isEditingName ? (
-                  <Typography color={"primary"}>保存</Typography>
-                ) : (
-                  <EditIcon style={{ fontSize: "32px" }} />
-                )}
-              </IconButton>
-            </Box>
-          </FormControl>
+    <div className="mx-2 mt-2 flex h-auto w-[70vw] flex-col gap-2 overflow-y-scroll">
+      <form className="" onSubmit={handleSubmit(submit)}>
+        <h1 className="text-xl">プロフィール編集</h1>
+        <input className="input input-bordered w-full" {...register("name")} />
 
-          <FormControl>
-            <Box display="flex" alignItems="center">
-              <InputLabel>性別</InputLabel>
-              <Select
-                value={tmpGender}
-                label="性別"
-                onChange={(e) => setTmpGender(e.target.value)}
-                disabled={!isEditingGender}
-                fullWidth
-                error={!!genderError} // エラースタイル適用
-              >
-                <MenuItem value={"男性"}>男性</MenuItem>
-                <MenuItem value={"女性"}>女性</MenuItem>
-                <MenuItem value={"その他"}>その他</MenuItem>
-                <MenuItem value={"秘密"}>秘密</MenuItem>
-              </Select>
-              {genderError && (
-                <Typography color="error" variant="caption">
-                  {genderError}
-                </Typography>
-              )}
-              <IconButton
-                onClick={() => {
-                  if (isEditingGender) {
-                    setGender(tmpGender);
-                    handleSave({ gender: tmpGender });
-                    setIsEditingGender(false);
-                  } else {
-                    handleEdit(setIsEditingGender);
-                  }
-                }}
-              >
-                {isEditingGender ? (
-                  <Typography color={"primary"}>保存</Typography>
-                ) : (
-                  <EditIcon style={{ fontSize: "32px" }} />
-                )}
-              </IconButton>
-            </Box>
-          </FormControl>
+        <p className="flex items-center">
+          <label className="w-full">
+            <h1 className="text-xl">性別</h1>
+            <select
+              className="select select-bordered w-full"
+              {...register("gender")}
+            >
+              <option value={"男性"}>男性</option>
+              <option value={"女性"}>女性</option>
+              <option value={"その他"}>その他</option>
+              <option value={"秘密"}>秘密</option>
+            </select>
+            <span className="text-error text-sm">{errors.gender?.message}</span>
+          </label>
+        </p>
 
-          <FormControl>
-            <Box display="flex" alignItems="center">
-              <InputLabel>学年</InputLabel>
-              <Select
-                value={tmpGrade}
-                label="学年"
-                onChange={(e) => setTmpGrade(e.target.value)}
-                disabled={!isEditingGrade}
-                fullWidth
-                error={!!gradeError}
-              >
-                <MenuItem value={"B1"}>1年生 (B1)</MenuItem>
-                <MenuItem value={"B2"}>2年生 (B2)</MenuItem>
-                <MenuItem value={"B3"}>3年生 (B3)</MenuItem>
-                <MenuItem value={"B4"}>4年生 (B4)</MenuItem>
-                <MenuItem value={"M1"}>修士1年 (M1)</MenuItem>
-                <MenuItem value={"M2"}>修士2年 (M2)</MenuItem>
-              </Select>
-              {gradeError && (
-                <Typography color="error" variant="caption">
-                  {gradeError}
-                </Typography>
-              )}
-              <IconButton
-                onClick={() => {
-                  if (isEditingGrade) {
-                    setGrade(tmpGrade);
-                    handleSave({ grade: tmpGrade });
-                    setIsEditingGrade(false);
-                  } else {
-                    handleEdit(setIsEditingGrade);
-                  }
-                }}
-              >
-                {isEditingGrade ? (
-                  <Typography color={"primary"}>保存</Typography>
-                ) : (
-                  <EditIcon style={{ fontSize: "32px" }} />
-                )}
-              </IconButton>
-            </Box>
-          </FormControl>
+        <p className="flex items-center">
+          <label className="w-full">
+            <h1 className="text-xl">学年</h1>
+            <select
+              className="select select-bordered w-full"
+              {...register("grade")}
+            >
+              <option value={"B1"}>1年生 (B1)</option>
+              <option value={"B2"}>2年生 (B2)</option>
+              <option value={"B3"}>3年生 (B3)</option>
+              <option value={"B4"}>4年生 (B4)</option>
+              <option value={"M1"}>修士1年 (M1)</option>
+              <option value={"M2"}>修士2年 (M2)</option>
+            </select>
+            <span className="text-error text-sm">{errors.grade?.message}</span>
+          </label>
+        </p>
 
-          <FormControl>
-            <Box display="flex" alignItems="center">
-              <InputLabel>学部</InputLabel>
-              <Select
-                value={tmpFaculty}
-                label="学部"
-                onChange={handleFacultyChange}
-                disabled={!isEditingFaculty}
-                fullWidth
-                error={!!facultyError}
-              >
-                {Object.keys(facultiesAndDepartments).map((fac) => (
-                  <MenuItem key={fac} value={fac}>
-                    {fac}
-                  </MenuItem>
+        <p className="flex items-center">
+          <label className="w-full">
+            <h1 className="text-xl">学部</h1>
+            <select
+              className="select select-bordered w-full"
+              {...register("faculty")}
+            >
+              {faculties.map((fac) => (
+                <option key={fac}>{fac}</option>
+              ))}
+            </select>
+            <span className="text-error text-sm">
+              {errors.faculty?.message}
+            </span>
+          </label>
+        </p>
+
+        <p className="flex items-center">
+          <label className="w-full">
+            <h1 className="text-xl">学科</h1>
+            <select
+              className="select select-bordered w-full"
+              {...register("department")}
+            >
+              {values.faculty &&
+                facultiesAndDepartments[values.faculty].map((dep) => (
+                  <option key={dep} value={dep}>
+                    {dep}
+                  </option>
                 ))}
-              </Select>
-              {facultyError && (
-                <Typography color="error" variant="caption">
-                  {facultyError}
-                </Typography>
-              )}
+            </select>
+            <span className="text-error text-sm">
+              {errors.department?.message}
+            </span>
+          </label>
+        </p>
 
-              <IconButton
-                onClick={() => {
-                  if (isEditingFaculty) {
-                    setDepartment("");
-                    setFaculty(tmpFaculty);
-                    handleSave({ faculty: tmpFaculty, department: "" });
-                    setIsEditingFaculty(false);
-                  } else {
-                    handleEdit(setIsEditingFaculty);
-                  }
-                }}
-              >
-                {isEditingFaculty ? (
-                  <Typography color={"primary"}>保存</Typography>
-                ) : (
-                  <EditIcon style={{ fontSize: "32px" }} />
-                )}
-              </IconButton>
-            </Box>
-          </FormControl>
+        <p className="flex items-center justify-between">
+          <label className="w-full">
+            <h1 className="text-xl">自己紹介</h1>
+            <textarea
+              className="textarea textarea-bordered w-full"
+              {...register("intro")}
+              rows={3}
+              autoComplete="off"
+            />
+          </label>
+        </p>
 
-          <FormControl>
-            <Box display="flex" alignItems="center">
-              <InputLabel>学科</InputLabel>
-              <Select
-                value={tmpDepartment}
-                onChange={handleDepartmentChange}
-                disabled={!isEditingDepartment || !faculty}
-                label="学科"
-                fullWidth
-                error={!!departmentError} // エラースタイル適用
-              >
-                {faculty &&
-                  facultiesAndDepartments[faculty].map((dep) => (
-                    <MenuItem key={dep} value={dep}>
-                      {dep}
-                    </MenuItem>
-                  ))}
-              </Select>
-              {departmentError && (
-                <Typography color="error" variant="caption">
-                  {departmentError}
-                </Typography>
-              )}
-
-              <IconButton
-                onClick={() => {
-                  if (isEditingDepartment) {
-                    setDepartment(tmpDepartment);
-                    handleSave({ department: tmpDepartment });
-                    setIsEditingDepartment(false);
-                  } else {
-                    handleEdit(setIsEditingDepartment);
-                  }
-                }}
-              >
-                {isEditingDepartment ? (
-                  <Typography color={"primary"}>保存</Typography>
-                ) : (
-                  <EditIcon style={{ fontSize: "32px" }} />
-                )}
-              </IconButton>
-            </Box>
-          </FormControl>
-
-          <FormControl>
-            <Box display="flex" alignItems="center" justifyContent={"space-"}>
-              <TextField
-                multiline
-                minRows={3}
-                value={tmpIntro}
-                onChange={(e) => setTmpIntro(e.target.value)}
-                label="自己紹介"
-                disabled={!isEditingIntro}
-                fullWidth
-                autoComplete="off"
-                error={!!introError} // エラースタイル適用
-                helperText={introError} // エラーメッセージを表示
-              />
-
-              <IconButton
-                onClick={() => {
-                  if (isEditingIntro) {
-                    setIntro(tmpIntro);
-                    handleSave({ intro: tmpIntro });
-                    setIsEditingIntro(false);
-                  } else {
-                    handleEdit(setIsEditingIntro);
-                  }
-                }}
-              >
-                {isEditingIntro ? (
-                  <Typography color={"primary"}>保存</Typography>
-                ) : (
-                  <EditIcon style={{ fontSize: "32px" }} />
-                )}
-              </IconButton>
-            </Box>
-          </FormControl>
-          {errorMessage && (
-            <Box color="red" mb={2}>
-              {errorMessage}
-            </Box>
-          )}
-
-          <div style={{ textAlign: "center", marginTop: "20px" }}>
-            <div style={{ textAlign: "left" }}>
-              <Typography variant="h6" component="h1">
-                プロフィール画像
-              </Typography>
-            </div>
-            <div
-              style={{
-                textAlign: "center",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: "20px",
-              }}
-            >
-              <div style={{ margin: "auto" }}>
-                <UserAvatar
-                  width="300px"
-                  height="300px"
-                  pictureUrl={pictureUrl}
-                />
-              </div>
-              <PhotoPreviewButton
-                text="写真を選択"
-                onSelect={() => setOpen(true)}
-              />
-              <PhotoModal
-                open={open}
-                closeFunc={() => setOpen(false)}
-                afterUpload={afterPhotoUpload}
-                onError={onPhotoError}
-              />
-            </div>
+        <div className="mt-6 text-center">
+          <h1 className="text-xl">プロフィール画像</h1>
+        </div>
+        <div className="mt-6 flex flex-col items-center text-center">
+          <div style={{ margin: "auto" }}>
+            <UserAvatar
+              width="300px"
+              height="300px"
+              pictureUrl={values.pictureUrl}
+            />
           </div>
+          <PhotoPreviewButton
+            text="写真を選択"
+            onSelect={() => setOpen(true)}
+          />
+          <PhotoModal
+            open={open}
+            closeFunc={() => setOpen(false)}
+            afterUpload={afterPhotoUpload}
+            onError={(err) =>
+              enqueueSnackbar({
+                variant: "error",
+                message: err.message,
+              })
+            }
+          />
+          <span className="text-error text-sm">
+            {errors.pictureUrl?.message}
+          </span>
+        </div>
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginTop: "40px",
-            }}
+        <p className="mt-10 flex content-between ">
+          <button
+            type="button"
+            className="btn w-[35vh] rounded-full shadow-gray-400 shadow-md"
+            onClick={handleBack}
           >
-            <button
-              type="button"
-              className="btn w-[35vh] rounded-full shadow-gray-400 shadow-md"
-              onClick={handleBack}
-            >
-              設定画面に戻る
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary w-[35vh] rounded-full shadow-gray-400 shadow-md"
-              onClick={handleGoToCourses}
-            >
-              授業編集へ
-            </button>
-          </Box>
-        </Box>
-      ) : (
-        <p>データがありません。</p>
-      )}
-    </Box>
+            設定画面に戻る
+          </button>
+          <button
+            type="submit"
+            className="btn btn-primary w-[35vh] rounded-full shadow-gray-400 shadow-md"
+          >
+            save!
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary w-[35vh] rounded-full shadow-gray-400 shadow-md"
+            onClick={handleGoToCourses}
+          >
+            授業編集へ
+          </button>
+        </p>
+      </form>
+    </div>
   );
 }
