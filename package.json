@@ -18,7 +18,5 @@
     "cspell": "^8.14.4",
     "zod": "^3.23.8"
   },
-  "trustedDependencies": [
-    "@biomejs/biome"
-  ]
+  "trustedDependencies": ["@biomejs/biome"]
 }
