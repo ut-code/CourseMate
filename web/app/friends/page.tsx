@@ -1,39 +1,46 @@
 "use client";
 
-import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
+import { useState } from "react";
 import Matchings from "~/components/match/matching";
 import Requests from "~/components/match/requests";
 
 export default function Friends() {
-  return (
-    <NavigateByAuthState type="toLoginForUnauthenticated">
-      {/* biome-ignore lint/a11y/useSemanticElements: <explanation> */}
-      <div role="tablist" className="tabs tabs-bordered w-full">
-        <input
-          type="radio"
-          name="my_tabs_1"
-          role="tab"
-          className="tab"
-          aria-label="マッチ中"
-          defaultChecked
-        />
-        {/* biome-ignore lint/a11y/useSemanticElements: <explanation> */}
-        <div role="tabpanel" className="tab-content p-10 ">
-          <Matchings />
-        </div>
+  const [activeTab, setActiveTab] = useState("matching");
 
-        <input
-          type="radio"
-          name="my_tabs_1"
-          role="tab"
-          className="tab"
-          aria-label="リクエスト"
-        />
-        {/* biome-ignore lint/a11y/useSemanticElements: <explanation> */}
-        <div role="tabpanel" className="tab-content p-10">
-          <Requests />
-        </div>
+  return (
+    <div className="w-full">
+      <div className="flex w-full border-gray-200 border-b">
+        <button
+          type="button"
+          className={`relative flex-1 py-2 text-center ${
+            activeTab === "matching" ? "text-blue-600" : "text-gray-600"
+          }`}
+          onClick={() => setActiveTab("matching")}
+        >
+          <span>タブ1</span>
+          {activeTab === "matching" && (
+            <span className="absolute bottom-0 left-0 h-1 w-full bg-blue-500" />
+          )}
+        </button>
+
+        <button
+          type="button"
+          className={`relative flex-1 py-2 text-center ${
+            activeTab === "request" ? "text-blue-600" : "text-gray-600"
+          }`}
+          onClick={() => setActiveTab("request")}
+        >
+          <span>タブ2</span>
+          {activeTab === "request" && (
+            <span className="absolute bottom-0 left-0 h-1 w-full bg-blue-500" />
+          )}
+        </button>
       </div>
-    </NavigateByAuthState>
+
+      {/* コンテンツ部分 */}
+      <div className="mt-4 text-center text-gray-700 text-lg">
+        {activeTab === "matching" ? <Matchings /> : <Requests />}
+      </div>
+    </div>
   );
 }
