@@ -1,12 +1,13 @@
 import ChatIcon from "@mui/icons-material/Chat";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
+import SearchIcon from "@mui/icons-material/Search";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
 import Link from "next/link";
 
 type Props = {
-  activeTab: "0_home" | "1_friends" | "2_chat" | "3_settings";
+  activeTab: "0_home" | "1_friends" | "2_chat" | "3_settings" | "4_search";
 };
 
 export default function BottomBar(props: Props) {
@@ -58,7 +59,7 @@ export default function BottomBar(props: Props) {
             <ChatIcon
               sx={{
                 color:
-                  activeTab === "2_chat" ? "primary.main" : "secondary.main",
+                  activeTab === "2_chat" ? "#primary.main" : "secondary.main",
               }}
             />
           }
@@ -74,6 +75,19 @@ export default function BottomBar(props: Props) {
                   activeTab === "3_settings"
                     ? "primary.main"
                     : "secondary.main",
+              }}
+            />
+          }
+        />
+        <BottomNavigationAction
+          component={Link}
+          href="/search"
+          label="Search"
+          icon={
+            <SearchIcon
+              sx={{
+                color:
+                  activeTab === "4_search" ? "primary.main" : "secondary.main",
               }}
             />
           }
