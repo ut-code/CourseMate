@@ -1,98 +1,67 @@
-import ChatIcon from "@mui/icons-material/Chat";
-import HomeIcon from "@mui/icons-material/Home";
-import PeopleIcon from "@mui/icons-material/People";
-import SearchIcon from "@mui/icons-material/Search";
-import SettingsIcon from "@mui/icons-material/Settings";
-import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
 import Link from "next/link";
+import { MdHome } from "react-icons/md";
+import { MdPeople } from "react-icons/md";
+import { MdChat } from "react-icons/md";
+import { MdSettings } from "react-icons/md";
 
 type Props = {
   activeTab: "0_home" | "1_friends" | "2_chat" | "3_settings" | "4_search";
 };
 
+function BottomBarCell({
+  label,
+  href,
+  iconComponent,
+  isActive,
+}: {
+  label: string;
+  href: string;
+  iconComponent: React.ReactNode;
+  isActive: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`focus:bg-gray-300 ${isActive ? "active text-primary" : "text-secondary"}`}
+    >
+      {iconComponent}
+      <span
+        className={`text-xs ${isActive ? "text-primary" : "text-gray-500"}`}
+      >
+        {label}
+      </span>
+    </Link>
+  );
+}
+
 export default function BottomBar(props: Props) {
   const { activeTab } = props;
   return (
-    <Box sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
-      {/* TODO: 単に Viewer として BottomNavigation を使用しているので Box 等で置き換える */}
-      <BottomNavigation
-        showLabels
-        value={activeTab}
-        sx={{
-          width: "100%",
-          bottom: 0,
-          borderTop: "1px solid",
-          borderColor: "primary.main",
-        }}
-      >
-        <BottomNavigationAction
-          component={Link}
-          href="/home"
-          label="Home"
-          icon={
-            <HomeIcon
-              sx={{
-                color:
-                  activeTab === "0_home" ? "primary.main" : "secondary.main",
-              }}
-            />
-          }
-        />
-        <BottomNavigationAction
-          component={Link}
-          href="/friends"
-          label="Friends"
-          icon={
-            <PeopleIcon
-              sx={{
-                color:
-                  activeTab === "1_friends" ? "primary.main" : "secondary.main",
-              }}
-            />
-          }
-        />
-        <BottomNavigationAction
-          component={Link}
-          href="/chat"
-          label="Chat"
-          icon={
-            <ChatIcon
-              sx={{
-                color:
-                  activeTab === "2_chat" ? "#primary.main" : "secondary.main",
-              }}
-            />
-          }
-        />
-        <BottomNavigationAction
-          component={Link}
-          href="/settings"
-          label="Settings"
-          icon={
-            <SettingsIcon
-              sx={{
-                color:
-                  activeTab === "3_settings"
-                    ? "primary.main"
-                    : "secondary.main",
-              }}
-            />
-          }
-        />
-        <BottomNavigationAction
-          component={Link}
-          href="/search"
-          label="Search"
-          icon={
-            <SearchIcon
-              sx={{
-                color:
-                  activeTab === "4_search" ? "primary.main" : "secondary.main",
-              }}
-            />
-          }
-        />
-      </BottomNavigation>
-    </Box>
+    <div className="btm-nav flex max-h-14 w-full flex-row">
+      <BottomBarCell
+        label="Home"
+        href="/home"
+        isActive={activeTab === "0_home"}
+        iconComponent={<MdHome className="text-2xl" />}
+      />
+      <BottomBarCell
+        label="Friends"
+        href="/friends"
+        isActive={activeTab === "1_friends"}
+        iconComponent={<MdPeople className="text-2xl" />}
+      />
+      <BottomBarCell
+        label="Chat"
+        href="/chat"
+        isActive={activeTab === "2_chat"}
+        iconComponent={<MdChat className="text-2xl" />}
+      />
+      <BottomBarCell
+        label="Settings"
+        href="/settings"
+        isActive={activeTab === "3_settings"}
+        iconComponent={<MdSettings className="text-2xl" />}
+      />
+    </div>
   );
 }
