@@ -1,4 +1,3 @@
-import { Button } from "@mui/material";
 import {
   type ChangeEvent,
   useCallback,
@@ -19,19 +18,12 @@ type ButtonProps = {
 export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
   const inputRef: React.LegacyRef<HTMLInputElement> = useRef(null);
   return (
-    <Button
-      variant="contained"
-      component="label"
-      style={{
-        backgroundColor: "#039BE5",
-        color: "white",
-        width: "70vw",
-        maxWidth: "500px",
-        height: "50px",
-        marginTop: "10vh",
-        fontSize: "18px",
-      }}
+    <label
+      className="btn btn-primary text-white w-[70vw] h-12 mt-[10vh] text-lg font-sans font-normal"
       onClick={() => {
+        if (inputRef.current) inputRef.current.value = "";
+      }}
+      onKeyDown={() => {
         if (inputRef.current) inputRef.current.value = "";
       }}
     >
@@ -49,7 +41,7 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
         accept=".png, .jpeg, .jpg"
         style={{ display: "none" }}
       />
-    </Button>
+    </label>
   );
 }
 

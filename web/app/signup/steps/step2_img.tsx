@@ -1,4 +1,3 @@
-import { Box, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import type { BackProp, StepProps } from "~/app/signup/common";
@@ -39,10 +38,8 @@ export default function Step2({
 
   return (
     <>
-      <Box m={2} display={"flex"} flexDirection={"column"} gap={2}>
-        <Typography variant="h6" component="h1">
-          アイコンを設定
-        </Typography>
+      <div m={2} display={"flex"} flexDirection={"column"} gap={2}>
+        <h1 className="text-xl">アイコンを設定</h1>
 
         <div style={{ textAlign: "center", marginTop: "15vh" }}>
           <PhotoModal
@@ -71,24 +68,15 @@ export default function Step2({
             </div>
           </div>
         </div>
-      </Box>
-      <Box
-        p={3}
-        sx={{
-          position: "fixed",
-          display: "flex",
-          justifyContent: "space-between",
-          bottom: 0,
-          width: "100%",
-        }}
-      >
+      </div>
+      <div className="p-6 fixed flex justify-between bottom-0 w-full">
         <button type="button" onClick={back} className="btn">
           前へ
         </button>
         <button type="button" onClick={next} className="btn btn-primary">
           {caller === "registration" ? "次へ" : "保存"}
         </button>
-      </Box>
+      </div>
     </>
   );
 }

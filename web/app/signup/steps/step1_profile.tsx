@@ -1,20 +1,15 @@
-import { useState } from "react";
+import { type ChangeEvent, useState } from "react";
 
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
-import type { SelectChangeEvent } from "@mui/material";
 import type { StepProps } from "~/app/signup/common";
 import { facultiesAndDepartments } from "~/app/signup/data";
 import { parseStep1UserSchema } from "~/common/zod/methods";
 import type { Step1User } from "~/common/zod/types";
 
+function Label({ children }: { children: string }) {
+  return <span className="text-gray-500 text-sm">{children}</span>;
+}
+
+const faculties = Object.keys(facultiesAndDepartments);
 export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
   const [name, setName] = useState(prev?.name ?? "");
   const [gender, setGender] = useState(prev?.gender ?? "その他");
@@ -59,114 +54,94 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
     }
   }
 
-  const handleFacultyChange = (event: SelectChangeEvent<string>) => {
+  const handleFacultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setFaculty(event.target.value);
   };
 
-  const handleDepartmentChange = (event: SelectChangeEvent<string>) => {
+  const handleDepartmentChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setDepartment(event.target.value);
   };
 
   return (
     <>
-      <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
-        <Typography variant="h6" component="h1">
-          アカウント設定
-        </Typography>
-        <Box flex={1} display="flex" flexDirection="column" gap={2}>
-          <FormControl fullWidth>
-            <TextField
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              label="名前"
-              autoComplete="off"
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel>性別</InputLabel>
-            <Select
-              value={gender}
-              label="性別"
-              onChange={(e) => setGender(e.target.value)}
-            >
-              <MenuItem value={"男性"}>男性</MenuItem>
-              <MenuItem value={"女性"}>女性</MenuItem>
-              <MenuItem value={"その他"}>その他</MenuItem>
-              <MenuItem value={"秘密"}>秘密</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel>学年</InputLabel>
-            <Select
-              value={grade}
-              label="学年"
-              onChange={(e) => setGrade(e.target.value)}
-            >
-              <MenuItem value={"B1"}>1年生 (B1)</MenuItem>
-              <MenuItem value={"B2"}>2年生 (B2)</MenuItem>
-              <MenuItem value={"B3"}>3年生 (B3)</MenuItem>
-              <MenuItem value={"B4"}>4年生 (B4)</MenuItem>
-              <MenuItem value={"M1"}>修士1年 (M1)</MenuItem>
-              <MenuItem value={"M2"}>修士2年 (M2)</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel>学部</InputLabel>
-            <Select value={faculty} label="学部" onChange={handleFacultyChange}>
-              {Object.keys(facultiesAndDepartments).map((fac) => (
-                <MenuItem key={fac} value={fac}>
-                  {fac}
-                </MenuItem>
+      <div className="m-4 mb-8 flex flex-col gap-4 ">
+        <h1 className="text-xl">アカウント設定</h1>
+        <div className="flex flex-col gap-2">
+          <Label>名前</Label>
+          <input
+            className="input input-bordered w-full"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            autoComplete="off"
+          />
+          <Label>性別</Label>
+          <select
+            className="select select-bordered w-full"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+          >
+            <option value={"男性"}>男性</option>
+            <option value={"女性"}>女性</option>
+            <option value={"その他"}>その他</option>
+            <option value={"秘密"}>秘密</option>
+          </select>
+          <Label>学年</Label>
+          <select
+            className="select select-bordered w-full"
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+          >
+            <option value={"B1"}>1年生 (B1)</option>
+            <option value={"B2"}>2年生 (B2)</option>
+            <option value={"B3"}>3年生 (B3)</option>
+            <option value={"B4"}>4年生 (B4)</option>
+            <option value={"M1"}>修士1年 (M1)</option>
+            <option value={"M2"}>修士2年 (M2)</option>
+          </select>
+          <Label>学部</Label>
+          <select
+            className="select select-bordered w-full"
+            value={faculty}
+            onChange={handleFacultyChange}
+          >
+            {faculties.map((fac) => (
+              <option key={fac} value={fac}>
+                {fac}
+              </option>
+            ))}
+          </select>
+          <Label>学科 (先に学部を選択して下さい)</Label>
+          <select
+            className="select select-bordered w-full"
+            value={department}
+            onChange={handleDepartmentChange}
+            disabled={!faculty}
+          >
+            {faculty &&
+              facultiesAndDepartments[faculty].map((dep) => (
+                <option key={dep} value={dep}>
+                  {dep}
+                </option>
               ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel>学科 (先に学部を選択して下さい)</InputLabel>
-            <Select
-              value={department}
-              onChange={handleDepartmentChange}
-              disabled={!faculty}
-              label="学科(先に学部を選択して下さい)"
-            >
-              {faculty &&
-                facultiesAndDepartments[faculty].map((dep) => (
-                  <MenuItem key={dep} value={dep}>
-                    {dep}
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <TextField
-              multiline
-              label="自己紹介"
-              minRows={3}
-              placeholder="こんにちは！仲良くして下さい！"
-              onChange={(e) => setIntro(e.target.value)}
-            />
-          </FormControl>
+          </select>
+          <Label>自己紹介</Label>
+          <textarea
+            className="textarea textarea-bordered w-full"
+            rows={5}
+            placeholder="こんにちは！仲良くして下さい！"
+            onChange={(e) => setIntro(e.target.value)}
+          />
           {errorMessage && (
-            <Box color="red" mb={2}>
-              {errorMessage}
-            </Box>
+            <div className="mb-4 text-error">{errorMessage}</div>
           )}
-        </Box>
-      </Box>
-      <Box
-        p={3}
-        sx={{
-          position: "fixed",
-          display: "flex",
-          justifyContent: "space-between",
-          bottom: 0,
-          width: "100%",
-        }}
-      >
+        </div>
+      </div>
+      <div className="fixed bottom-5 flex w-full justify-between p-6">
         <span />
         <button type="button" onClick={save} className="btn btn-primary">
           {caller === "registration" ? "次へ" : "保存"}
         </button>
-      </Box>
+      </div>
     </>
   );
 }
