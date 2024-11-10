@@ -86,7 +86,7 @@ export function Card({ displayedUser, comparisonUserId, onFlip }: CardProps) {
   );
 }
 
-const CardFront = ({ displayedUser }: CardProps) => {
+export const CardFront = ({ displayedUser }: CardProps) => {
   return (
     <div
       style={{
@@ -250,7 +250,7 @@ const CardFront = ({ displayedUser }: CardProps) => {
   );
 };
 
-const CardBack = ({ displayedUser, comparisonUserId }: CardProps) => {
+export const CardBack = ({ displayedUser, comparisonUserId }: CardProps) => {
   return (
     <div
       style={{
