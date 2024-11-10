@@ -1,3 +1,4 @@
+"use client";
 import { Box, List } from "@mui/material";
 import { deleteMatch } from "~/api/match";
 import { useMatched } from "~/api/user";

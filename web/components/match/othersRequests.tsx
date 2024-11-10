@@ -1,3 +1,4 @@
+"use client";
 import { Box, List } from "@mui/material";
 import request from "~/api/request";
 import { usePendingToMe } from "~/api/user";
