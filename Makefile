@@ -5,7 +5,6 @@ LOCAL_DB := postgres://user:password@localhost:5432/database
 setup: 
 	if [ ! `command -v bun` ]; then echo 'ERR: Bun is required!'; exit 1; fi
 	make sync
-	bunx husky
 	@echo "auto setup is done. now do:"
 	@echo "- edit server/.env.dev"
 	@echo "- edit web/.env"
