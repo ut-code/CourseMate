@@ -36,7 +36,7 @@ test: export DATABASE_URL=$(LOCAL_DB)
 test: export NEVER_LOAD_DOTENV=1
 test: export UNSAFE_SKIP_AUTH=1
 test: export FIREBASE_PROJECT_ID=mock-proj
-test: export CORS_ALLOW_ORIGINS=http://localhost:3000,https://localhost:3001
+test: export CORS_ALLOW_ORIGINS=http://localhost:3000,https://localhost:5173
 test: dev-db
 	cd server/src; ENV_FILE=../.env.dev bun test
 	cd ./test; ENV_FILE=../server/.env.dev bun test
