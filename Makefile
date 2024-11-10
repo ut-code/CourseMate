@@ -17,7 +17,7 @@ setup-ci:
 	make generate-sql
 
 sync: sync-server sync-web sync-root copy-common 
-	lefthook install
+	lefthook install || true
 	@echo '----------------------------------------------------------------------------------------------------------'
 	@echo '| Most work is done. now running prisma-generate-sql (which might fail if .env.dev is not set configured)|'
 	@echo '----------------------------------------------------------------------------------------------------------'
