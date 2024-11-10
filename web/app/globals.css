@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.icon-image-preview {
+  /* TODO: make it flexible */
+  max-width: 450px;
+  max-height: 450px;
+}
+
+.cm-li-btn {
+  @apply no-animation h-auto w-full justify-start rounded-none border-none bg-white px-4 py-4 text-left font-normal text-base shadow-none hover:bg-zinc-100 focus:bg-zinc-300;
+}

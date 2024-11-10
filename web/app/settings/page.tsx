@@ -1,10 +1,3 @@
-import {
-  Box,
-  Divider,
-  List,
-  ListItemButton,
-  ListItemText,
-} from "@mui/material";
 import Link from "next/link";
 import LogOutButton from "~/components/LogOutButton";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
@@ -12,47 +5,56 @@ import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 export default function Settings() {
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "flex-start",
-        }}
-      >
-        <List sx={{ width: "100%" }}>
-          <ListItemButton LinkComponent={Link} href="/settings/profile">
-            <ListItemText primary="あなたのカード" />
-          </ListItemButton>
-          <Divider />
-          <ListItemButton LinkComponent={Link} href="/tutorial">
-            <ListItemText primary="CourseMateの使い方" />
-          </ListItemButton>
-          <Divider />
-          <ListItemButton LinkComponent={Link} href="/settings/contact">
-            <ListItemText primary="お問い合わせ" />
-          </ListItemButton>
-          <Divider />
-          <ListItemButton LinkComponent={Link} href="/faq">
-            <ListItemText primary="よくある質問" />
-          </ListItemButton>
-          <Divider />
-          <ListItemButton LinkComponent={Link} href="/settings/aboutUs">
-            <ListItemText primary="About Us" />
-          </ListItemButton>
-          <Divider />
-          <ListItemButton LinkComponent={Link} href="/settings/disclaimer">
-            <ListItemText primary="免責事項" />
-          </ListItemButton>
-          <Divider />
-          <ListItemButton LinkComponent={Link} href="/settings/delete">
-            <ListItemText primary="アカウント削除" />
-          </ListItemButton>
-          <Divider />
-          <LogOutButton />
-          <Divider />
-        </List>
-      </Box>
+      <div className="flex flex-col items-center justify-start">
+        <ul className="w-full">
+          <li>
+            <Link href="/settings/profile" className="btn cm-li-btn">
+              あなたのカード
+            </Link>
+          </li>
+          <hr />
+          <li>
+            <Link href="/tutorial" className="btn cm-li-btn">
+              CourseMateの使い方
+            </Link>
+          </li>
+          <hr />
+          <li>
+            <Link href="/settings/contact" className="btn cm-li-btn">
+              お問い合わせ
+            </Link>
+          </li>
+          <hr />
+          <li>
+            <Link href="/faq" className="btn cm-li-btn">
+              よくある質問
+            </Link>
+          </li>
+          <hr />
+          <li>
+            <Link href="/settings/aboutUs" className="btn cm-li-btn">
+              About Us
+            </Link>
+          </li>
+          <hr />
+          <li>
+            <Link href="/settings/disclaimer" className="btn cm-li-btn">
+              免責事項
+            </Link>
+          </li>
+          <hr />
+          <li>
+            <Link href="/settings/delete" className="btn cm-li-btn">
+              アカウント削除
+            </Link>
+          </li>
+          <hr />
+          <li>
+            <LogOutButton />
+          </li>
+          <hr />
+        </ul>
+      </div>
     </NavigateByAuthState>
   );
 }

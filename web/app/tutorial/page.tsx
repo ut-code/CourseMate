@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -99,15 +99,9 @@ export default function Tutorial() {
           ))}
         </Swiper>
         <Box sx={{ textAlign: "center" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            LinkComponent={Link}
-            href="/home"
-            sx={{ width: "100%" }}
-          >
+          <Link href="/home" className="btn btn-primary w-full">
             ホーム画面へ
-          </Button>
+          </Link>
         </Box>
       </Box>
     </Box>

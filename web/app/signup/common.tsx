@@ -1,4 +1,3 @@
-import { Button } from "@mui/material";
 export type Caller = "registration" | "configMenu";
 export type StepProps<T> = {
   onSave: (t: T) => void;
@@ -20,17 +19,12 @@ export function NextButton({
   children: string;
 }) {
   return (
-    <Button
-      variant={weak ? "text" : "contained"}
-      sx={{
-        marginLeft: "auto", // 右に寄せるために margin-left を使用
-        width: "100px",
-        height: "44.5px",
-        borderRadius: "25px",
-      }}
+    <button
+      type="button"
+      className={`btn ${weak && "btn-primary"} ml-auto h-11 w-24 rounded-3xl`}
       onClick={onClick}
     >
       {children}
-    </Button>
+    </button>
   );
 }

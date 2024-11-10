@@ -4,20 +4,22 @@
   "words": [
     "autoincrement",
     "bunx",
+    "chrono",
     "coursemate",
+    "daisyui",
     "datasource",
     "direnv",
     "ECCS",
     "isready",
     "lockb",
+    "mytheme",
     "notistack",
     "psql",
     "qiita",
+    "reqwest",
     "safify",
     "supabase",
-    "swiper",
-    "reqwest",
-    "chrono"
+    "swiper"
   ],
   "dictionaries": [
     "softwareTerms",
