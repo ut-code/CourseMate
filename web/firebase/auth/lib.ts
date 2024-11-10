@@ -9,11 +9,16 @@ let user: User;
 let token: string;
 
 const auth = getAuth(app);
-onAuthStateChanged(auth, async (u: User | null) => {
-  if (u != null) {
-    user = u;
-    token = await user.getIdToken();
-  }
+
+// 認証状態の完了を待機するためのPromiseを作成
+const authInitialized = new Promise<void>((resolve) => {
+  onAuthStateChanged(auth, async (u: User | null) => {
+    if (u != null) {
+      user = u;
+      token = await user.getIdToken();
+    }
+    resolve();
+  });
 });
 
 async function refreshToken() {
@@ -21,6 +26,7 @@ async function refreshToken() {
 }
 
 export async function getIdToken(): Promise<IDToken> {
+  await authInitialized;
   if (token) return token;
   await refreshToken();
   return token;
@@ -39,20 +45,27 @@ export async function credFetch(
   path: string,
   body?: unknown,
 ): Promise<Response> {
-  const idToken = await getIdToken();
-  const init: RequestInit = { method };
-  if (body) {
-    init.body = JSON.stringify(body);
-    init.headers = {
-      "Content-Type": "application/json",
-    };
-  }
+  try {
+    const idToken = await getIdToken();
+    const init: RequestInit = { method };
+    if (body) {
+      init.body = JSON.stringify(body);
+      init.headers = {
+        "Content-Type": "application/json",
+      };
+    }
 
-  let res = await fetch(`${path}?token=${idToken}`, init);
-  if (res.status === 401) {
-    await refreshToken();
-    res = await fetch(`${path}?token=${idToken}`);
-  }
+    let res: Response;
+    res = await fetch(`${path}?token=${idToken}`, init);
 
-  return res;
+    if (res.status === 401) {
+      await refreshToken();
+      res = await fetch(`${path}?token=${idToken}`, init);
+    }
+
+    return res;
+  } catch (error) {
+    console.error("Error in credFetch function:", error);
+    throw error;
+  }
 }
