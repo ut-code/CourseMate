@@ -5,31 +5,19 @@ import { app } from "../config";
 
 export class ErrUnauthorized extends Error {}
 
-let user: User;
-let token: string;
-
 const auth = getAuth(app);
 
 // 認証状態の完了を待機するためのPromiseを作成
-const authInitialized = new Promise<void>((resolve) => {
+const token = new Promise<string>((resolve) => {
   onAuthStateChanged(auth, async (u: User | null) => {
     if (u != null) {
-      user = u;
-      token = await user.getIdToken();
+      resolve(await u.getIdToken());
     }
-    resolve();
   });
 });
 
-async function refreshToken() {
-  token = await user.getIdToken(true);
-}
-
 export async function getIdToken(): Promise<IDToken> {
-  await authInitialized;
-  if (token) return token;
-  await refreshToken();
-  return token;
+  return await token;
 }
 
 type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -46,7 +34,7 @@ export async function credFetch(
   body?: unknown,
 ): Promise<Response> {
   try {
-    const idToken = await getIdToken();
+    let idToken = await getIdToken();
     const init: RequestInit = { method };
     if (body) {
       init.body = JSON.stringify(body);
@@ -54,12 +42,10 @@ export async function credFetch(
         "Content-Type": "application/json",
       };
     }
-
-    let res: Response;
-    res = await fetch(`${path}?token=${idToken}`, init);
+    let res = await fetch(`${path}?token=${idToken}`, init);
 
     if (res.status === 401) {
-      await refreshToken();
+      idToken = await getIdToken();
       res = await fetch(`${path}?token=${idToken}`, init);
     }
 
