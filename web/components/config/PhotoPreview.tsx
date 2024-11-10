@@ -19,7 +19,7 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
   const inputRef: React.LegacyRef<HTMLInputElement> = useRef(null);
   return (
     <label
-      className="btn btn-primary text-white w-[70vw] h-12 mt-[10vh] text-lg font-sans font-normal"
+      className="btn btn-primary mt-[10vh] h-12 w-[70vw] font-normal font-sans text-lg text-white"
       onClick={() => {
         if (inputRef.current) inputRef.current.value = "";
       }}

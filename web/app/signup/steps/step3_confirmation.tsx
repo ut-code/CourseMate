@@ -41,7 +41,7 @@ export default function Confirmation({
           <p>この内容で登録しますか？</p>
         </div>
       </div>
-      <div className="p-3 fixed flex justify-between bottom-0 w-full">
+      <div className="fixed bottom-0 flex w-full justify-between p-3">
         <button type="button" onClick={back} className="btn">
           前へ
         </button>
