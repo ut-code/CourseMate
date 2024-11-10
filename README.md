@@ -27,6 +27,7 @@ GNU Make が導入されています。以下は、ユーザーが使うこと�
   - Bun (js)
   - GNU Make
   - nvm (optional)
+  - lefthook
 
 - `make setup` を実行します。
 
