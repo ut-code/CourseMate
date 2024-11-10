@@ -27,6 +27,7 @@
             biome
             pkg-config
             openssl
+            lefthook
           ] ++ [
             rust-pkgs
           ];
