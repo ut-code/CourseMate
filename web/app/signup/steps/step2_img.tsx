@@ -38,9 +38,7 @@ export default function Step2({
 
   return (
     <>
-      <div className="m-2 flex flex-col g-2">
-        <h1 className="text-xl">アイコンを設定</h1>
-
+      <div className="g-2 m-2 flex flex-col">
         <div style={{ textAlign: "center", marginTop: "15vh" }}>
           <PhotoModal
             open={open}
