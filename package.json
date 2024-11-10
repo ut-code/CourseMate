@@ -12,8 +12,6 @@
   "license": "ISC",
   "devDependencies": {
     "@biomejs/biome": "^1.9.1",
-    "husky": "^9.1.4",
-    "lint-staged": "^15.2.10",
     "typescript": "^5.6.2"
   },
   "dependencies": {
@@ -21,8 +19,7 @@
     "cspell": "^8.14.4",
     "zod": "^3.23.8"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,json}": ["biome check --write"]
-  },
-  "trustedDependencies": ["@biomejs/biome"]
+  "trustedDependencies": [
+    "@biomejs/biome"
+  ]
 }
