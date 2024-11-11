@@ -67,7 +67,7 @@ jobs:
           bun-version: latest
 
       - run: make setup-ci
-      - run: make spell-check
+      - run: bunx cspell --quiet .
 
   test:
     name: Bun Test
