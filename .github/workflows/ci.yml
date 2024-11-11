@@ -7,6 +7,14 @@ on:
 
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL_FOR_PRISMA_SQL_GENERATION }}
+  NEXT_PUBLIC_API_ENDPOINT: "sample"
+  NEXT_PUBLIC_FIREBASE_API_KEY: "sample"
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "sample"
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID: "sample"
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: "sample"
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "sample"
+  NEXT_PUBLIC_FIREBASE_APP_ID: "sample"
+  NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: "sample"
 jobs:
   build:
     name: Build
@@ -78,7 +86,7 @@ jobs:
       - uses: actions/setup-node@v3
       - uses: oven-sh/setup-bun@v2
       - run: make prepare-deploy-web
-      - run: test `ls web/dist | wc -l` != 0
+      - run: test `ls web/out | wc -l` != 0
 
   deploy-test-server:
     name: Deploy Test (server)

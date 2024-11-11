@@ -6,8 +6,6 @@ setup:
 	if [ ! `command -v bun` ]; then echo 'ERR: Bun is required!'; exit 1; fi
 	make sync
 	bunx husky
-	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
-	cd server; if [ ! -f .env.dev ]; then cp ./.env.sample ./.env.dev ; fi
 	@echo "auto setup is done. now do:"
 	@echo "- edit server/.env.dev"
 	@echo "- edit web/.env"
@@ -38,6 +36,7 @@ test: export DATABASE_URL=$(LOCAL_DB)
 test: export NEVER_LOAD_DOTENV=1
 test: export UNSAFE_SKIP_AUTH=1
 test: export FIREBASE_PROJECT_ID=mock-proj
+test: export CORS_ALLOW_ORIGINS=http://localhost:3000,https://localhost:5173
 test: dev-db
 	cd server/src; ENV_FILE=../.env.dev bun test
 	cd ./test; ENV_FILE=../server/.env.dev bun test
@@ -45,10 +44,9 @@ test: dev-db
 
 prepare-deploy-web: copy-common
 	cd web; bun install; bun run build
-prepare-deploy-server: copy-common
-	cd server; bun install; npx prisma generate;
+prepare-deploy-server: copy-common sync-server generate-sql
 deploy-server:
-	cd server; bun src/index.ts
+	cd server; bun src/main.ts
 
 docker: copy-common
 	@# deferring `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
@@ -95,16 +93,16 @@ spell-check:
 # Sync (install/update packages, generate prisma, etc)
 
 sync-web:
-	cd web; bun install
+	cd web; bun install --frozen-lockfile
 	# copy .env.sample -> .env only if .env is not there
 
 sync-server:
-	cd server; bun install
+	cd server; bun install --frozen-lockfile
 	cd server; bunx prisma generate
 	# copy .env.sample -> .env only if .env is not there
 
 sync-root:
-	bun install
+	bun install --frozen-lockfile
 
 
 # Static checks
@@ -167,7 +165,7 @@ copy-common-to-server:
 	@ if [ -d server/src/common ]; then rm -r server/src/common; fi
 	@ cp -r common server/src/common
 copy-common-to-web:
-	@ if [ -d web/src/common ]; then rm -r web/src/common; fi
-	@ cp -r common web/src/common
+	@ if [ -d web/common ]; then rm -r web/common; fi
+	@ cp -r common web/common
 
 .PHONY: test

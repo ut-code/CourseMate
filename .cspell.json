@@ -4,15 +4,19 @@
   "words": [
     "autoincrement",
     "bunx",
+    "chrono",
     "coursemate",
+    "daisyui",
     "datasource",
     "direnv",
     "ECCS",
     "isready",
     "lockb",
+    "mytheme",
     "notistack",
     "psql",
     "qiita",
+    "reqwest",
     "safify",
     "supabase",
     "swiper"
@@ -31,6 +35,7 @@
   ],
   "ignorePaths": [
     "flake.*",
+    "nix/*",
     "**/.git/**",
     "**/node_modules/**",
     "server/target/**",
@@ -39,6 +44,10 @@
     "**/bun.lockb",
     "**/*.svg",
     "**/migration.sql",
-    "**/data.json"
+    "**/data.json",
+    "**/Cargo.*",
+    "scraper/target",
+    "**/rust-toolchain.toml",
+    "web/out"
   ]
 }
