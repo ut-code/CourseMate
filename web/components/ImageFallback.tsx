@@ -27,7 +27,7 @@ export function ImageFallback({ width, height, url }: Props) {
       }}
     >
       <img
-        src="/avatar-fallback.webp"
+        src="/avatar.svg"
         width={width}
         height={height}
         style={{ width, height }}
