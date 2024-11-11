@@ -5,9 +5,6 @@ LOCAL_DB := postgres://user:password@localhost:5432/database
 setup: 
 	if [ ! `command -v bun` ]; then echo 'ERR: Bun is required!'; exit 1; fi
 	make sync
-	bunx husky
-	cd web; if [ ! -f .env ]; then cp ./.env.sample ./.env ; fi
-	cd server; if [ ! -f .env.dev ]; then cp ./.env.sample ./.env.dev ; fi
 	@echo "auto setup is done. now do:"
 	@echo "- edit server/.env.dev"
 	@echo "- edit web/.env"
@@ -19,6 +16,7 @@ setup-ci:
 	make generate-sql
 
 sync: sync-server sync-web sync-root copy-common 
+	lefthook install || true
 	@echo '----------------------------------------------------------------------------------------------------------'
 	@echo '| Most work is done. now running prisma-generate-sql (which might fail if .env.dev is not set configured)|'
 	@echo '----------------------------------------------------------------------------------------------------------'
@@ -38,6 +36,7 @@ test: export DATABASE_URL=$(LOCAL_DB)
 test: export NEVER_LOAD_DOTENV=1
 test: export UNSAFE_SKIP_AUTH=1
 test: export FIREBASE_PROJECT_ID=mock-proj
+test: export CORS_ALLOW_ORIGINS=http://localhost:3000,https://localhost:5173
 test: dev-db
 	cd server/src; ENV_FILE=../.env.dev bun test
 	cd ./test; ENV_FILE=../server/.env.dev bun test
@@ -80,16 +79,6 @@ dev-db:
 	@cd server; bunx prisma generate; bunx prisma db push; cd ..
 	@make seed;
 	@echo "Seeding completed."
-
-
-precommit: check-branch lint-staged spell-check
-
-lint-staged:
-	bunx lint-staged
-check-branch:
-	@ if [ "$(git branch --show-current)" == "main" ]; then echo "Cannot make commit on main! aborting..."; exit 1; fi
-spell-check:
-	bunx cspell --quiet .
 
 # Sync (install/update packages, generate prisma, etc)
 
@@ -166,7 +155,7 @@ copy-common-to-server:
 	@ if [ -d server/src/common ]; then rm -r server/src/common; fi
 	@ cp -r common server/src/common
 copy-common-to-web:
-	@ if [ -d web/src/common ]; then rm -r web/src/common; fi
-	@ cp -r common web/src/common
+	@ if [ -d web/common ]; then rm -r web/common; fi
+	@ cp -r common web/common
 
 .PHONY: test
