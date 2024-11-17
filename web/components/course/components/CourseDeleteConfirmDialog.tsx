@@ -1,13 +1,3 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
 import { useEffect, useState } from "react";
 import { deleteMyCourse, getMyCoursesOverlapWith } from "~/api/course";
 import type { Course } from "~/common/types";
@@ -26,7 +16,6 @@ export default function CourseDeleteRegisterConfirmDialog({
   handleCoursesUpdate: (courses: Course[]) => void;
 }) {
   const [overlapCourses, setOverlapCourses] = useState<Course[]>([]);
-
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -43,19 +32,15 @@ export default function CourseDeleteRegisterConfirmDialog({
   }, [course]);
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>削除の確認</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          次の授業を削除します。よろしいですか？
-        </DialogContentText>
-        <Box mt={1}>
+    <div className={`modal ${open ? "modal-open" : ""}`}>
+      <div className="modal-box">
+        <h3 className="font-bold text-lg">削除の確認</h3>
+        <p className="py-4">次の授業を削除します。よろしいですか？</p>
+        <div className="mt-2">
           {isLoading ? (
-            <Alert color="info" icon={false} severity="info" sx={{ mt: 1 }}>
-              読み込み中...
-            </Alert>
+            <div className="alert alert-info">読み込み中...</div>
           ) : (
-            <Alert color="error" icon={false} severity="info" sx={{ mt: 1 }}>
+            <div className="alert alert-error">
               {`削除: ${
                 overlapCourses
                   .map(
@@ -64,26 +49,31 @@ export default function CourseDeleteRegisterConfirmDialog({
                   )
                   .join("・") || "なし"
               }`}
-            </Alert>
+            </div>
           )}
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>キャンセル</Button>
-        {course && (
-          <Button
-            onClick={async () => {
-              const newCourses = await deleteMyCourse(course.id);
-              handleCoursesUpdate(newCourses);
+        </div>
+        <div className="modal-action">
+          {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+          <button className="btn btn-ghost" onClick={onClose}>
+            キャンセル
+          </button>
+          {course && (
+            // biome-ignore lint/a11y/useButtonType: <explanation>
+            <button
+              className="btn btn-primary"
+              onClick={async () => {
+                const newCourses = await deleteMyCourse(course.id);
+                handleCoursesUpdate(newCourses);
 
-              onClose();
-              handleSelectDialogClose();
-            }}
-          >
-            確定
-          </Button>
-        )}
-      </DialogActions>
-    </Dialog>
+                onClose();
+                handleSelectDialogClose();
+              }}
+            >
+              確定
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

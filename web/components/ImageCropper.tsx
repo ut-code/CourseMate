@@ -1,4 +1,3 @@
-import { Slider } from "@mui/material";
 import { useState } from "react";
 import Cropper from "react-easy-crop";
 
@@ -10,6 +9,10 @@ type Props = {
 export function ImageCropper({ sameOriginURL: url, onImageChange }: Props) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+
+  const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setZoom(Number(event.target.value));
+  };
 
   return (
     <>
@@ -39,16 +42,19 @@ export function ImageCropper({ sameOriginURL: url, onImageChange }: Props) {
           }}
         />
       </div>
-      <Slider
-        value={zoom}
-        min={1}
-        max={3}
-        step={0.05}
-        aria-labelledby="Zoom Level"
-        onChange={(_, newVal) => {
-          setZoom(Number(newVal) || 1);
-        }}
-      />
+      <div className="mt-4 flex items-center">
+        <input
+          id="zoom"
+          type="range"
+          className="range range-secondary"
+          min={1}
+          max={3}
+          step={0.05}
+          value={zoom}
+          onChange={handleSliderChange}
+        />
+        <span className="ml-2 text-sm">{zoom.toFixed(2)}</span>
+      </div>
     </>
   );
 }
