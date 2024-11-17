@@ -26,19 +26,15 @@ export default function OthersReq() {
       ) : (
         <ul className="mt-4 space-y-4">
           {data?.map((sendingUser) => (
-            <li
+            <HumanListItem
               key={sendingUser.id}
-              className="rounded-lg bg-base-100 p-4 shadow"
-            >
-              <HumanListItem
-                id={sendingUser.id}
-                name={sendingUser.name}
-                pictureUrl={sendingUser.pictureUrl}
-                onOpen={() => openModal(sendingUser)}
-                onAccept={() => request.accept(sendingUser.id).then(reload)}
-                onReject={() => request.reject(sendingUser.id).then(reload)}
-              />
-            </li>
+              id={sendingUser.id}
+              name={sendingUser.name}
+              pictureUrl={sendingUser.pictureUrl}
+              onOpen={() => openModal(sendingUser)}
+              onAccept={() => request.accept(sendingUser.id).then(reload)}
+              onReject={() => request.reject(sendingUser.id).then(reload)}
+            />
           ))}
         </ul>
       )}
