@@ -15,7 +15,7 @@ setup-ci:
 	make sync
 	make generate-sql
 
-sync: sync-server sync-web sync-root copy-common 
+sync: sync-server sync-web sync-root 
 	lefthook install || true
 	@echo '----------------------------------------------------------------------------------------------------------'
 	@echo '| Most work is done. now running prisma-generate-sql (which might fail if .env.dev is not set configured)|'
@@ -42,17 +42,17 @@ test: dev-db
 	cd ./test; ENV_FILE=../server/.env.dev bun test
 	docker stop postgres
 
-prepare-deploy-web: copy-common
+prepare-deploy-web: 
 	cd web; bun install; bun run build
-prepare-deploy-server: copy-common sync-server generate-sql
+prepare-deploy-server:  sync-server generate-sql
 deploy-server:
 	cd server; bun src/main.ts
 
-docker: copy-common
+docker: 
 	@# deferring `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
 	trap 'docker compose down' EXIT; docker compose up --build
 
-docker-watch: copy-common
+docker-watch: 
 	docker compose up --build --watch
 
 seed:
@@ -117,7 +117,7 @@ format-check:
 	@exit 1
 
 # type checks
-type-check: copy-common
+type-check: 
 	make type-check-server
 	make type-check-web
 
@@ -133,9 +133,9 @@ type-check-web:
 start-all: build-web build-server
 	make serve-all
 
-build-web: copy-common-to-web
+build-web: 
 	cd web; bun run build
-build-server: copy-common-to-server
+build-server: 
 	cd server; bun run build
 
 serve-all:
@@ -145,17 +145,9 @@ serve-web:
 serve-server:
 	cd server; bun run serve 
 
-watch-web: copy-common-to-web
+watch-web: 
 	cd web; bun run dev
-watch-server: copy-common-to-server
+watch-server: 
 	cd server; bun run dev
-
-copy-common: copy-common-to-server copy-common-to-web
-copy-common-to-server:
-	@ if [ -d server/src/common ]; then rm -r server/src/common; fi
-	@ cp -r common server/src/common
-copy-common-to-web:
-	@ if [ -d web/common ]; then rm -r web/common; fi
-	@ cp -r common web/common
 
 .PHONY: test
