@@ -22,7 +22,7 @@ export function Card({ displayedUser, comparisonUserId, onFlip }: CardProps) {
   return (
     <div
       className="perspective-[1000px] relative cursor-pointer"
-      style={{ width: "min(40dvh, 87.5vw)", height: "70vh" }}
+      style={{ width: "min(40dvh, 87.5vw)", height: "70dvh" }}
       onClick={handleRotate}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") handleRotate();
@@ -64,8 +64,8 @@ const CardFront = ({ displayedUser }: CardProps) => {
       <div className="grid h-[30%] grid-cols-3 items-center">
         <UserAvatar
           pictureUrl={displayedUser.pictureUrl}
-          width="10vh"
-          height="10vh"
+          width="10dvh"
+          height="10dvh"
         />
         <div className="col-span-2 ml-2 flex justify-center">
           <span className="font-bold text-4xl">{displayedUser.name}</span>
