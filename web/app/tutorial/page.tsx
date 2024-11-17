@@ -1,6 +1,5 @@
 "use client";
 
-import { Box, Typography } from "@mui/material";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -42,68 +41,36 @@ const tutorialSteps = [
 
 export default function Tutorial() {
   return (
-    <Box
-      sx={{
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        position: "absolute",
-        top: "56px",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        overflowY: "auto",
-      }}
-    >
+    <div className="absolute inset-0 flex flex-col overflow-y-auto px-5 pt-14">
       <Header title="チュートリアル/Tutorial" />
-      <Box
-        sx={{
-          textAlign: "left",
-        }}
-      >
+      <div className="text-left">
         <Swiper
           modules={[Navigation, Pagination]}
           spaceBetween={50}
           slidesPerView={1}
           navigation
           pagination={{ clickable: true }}
-          style={{
-            paddingBottom: "60px",
-          }}
+          className="pb-16"
         >
           {tutorialSteps.map((step) => (
             <SwiperSlide key={step.imgPath}>
-              <Box sx={{ textAlign: "center", mb: "24px" }}>
-                <Typography
-                  variant="h6"
-                  component="h1"
-                  gutterBottom
-                  sx={{ fontWeight: "bold", mb: "16px" }}
-                >
-                  {step.label}
-                </Typography>
+              <div className="mb-6 text-center">
+                <h1 className="mb-4 font-bold text-lg">{step.label}</h1>
                 <img
                   src={step.imgPath}
                   alt={step.label}
-                  style={{
-                    display: "block",
-                    width: "60vw",
-                    height: "calc(60vw·*·(667·/·375))",
-                    maxWidth: 400,
-                    overflow: "hidden",
-                    margin: "auto",
-                  }}
+                  className="mx-auto block h-auto w-[60vw] max-w-[400px]"
                 />
-              </Box>
+              </div>
             </SwiperSlide>
           ))}
         </Swiper>
-        <Box sx={{ textAlign: "center" }}>
+        <div className="text-center">
           <Link href="/home" className="btn btn-primary w-full">
             ホーム画面へ
           </Link>
-        </Box>
-      </Box>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 }

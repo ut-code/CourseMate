@@ -1,8 +1,8 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Box, Button, Typography } from "@mui/material";
 import Link from "next/link";
+import { MdArrowBack } from "react-icons/md";
 import type { DMOverview } from "~/common/types";
 import UserAvatar from "../human/avatar";
+
 type Props = {
   room: DMOverview;
 };
@@ -10,27 +10,20 @@ type Props = {
 export function RoomHeader(props: Props) {
   const { room } = props;
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        padding: "1rem",
-      }}
-    >
-      <Button
-        variant="text"
-        sx={{ color: "black", padding: "0px", margin: "0px", minWidth: "0px" }}
-        LinkComponent={Link}
-        href="/chat"
-      >
-        <ArrowBackIcon />
-      </Button>
-      <Box sx={{ marginLeft: "16px", alignItems: "center", display: "flex" }}>
+    <div className="flex items-center p-4">
+      <Link href="/chat" passHref>
+        <div className="m-0 flex items-center p-0 text-black">
+          <MdArrowBack size={24} />
+        </div>
+      </Link>
+
+      <div className="ml-4 flex items-center">
         <UserAvatar pictureUrl={room.thumbnail} width="30px" height="30px" />
-      </Box>
-      <Box sx={{ marginLeft: "16px" }}>
-        <Typography variant="h6">{room.name}</Typography>
-      </Box>
-    </Box>
+      </div>
+
+      <div className="ml-4">
+        <h6 className="font-semibold text-lg">{room.name}</h6>
+      </div>
+    </div>
   );
 }

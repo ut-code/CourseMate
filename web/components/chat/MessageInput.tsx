@@ -1,6 +1,5 @@
-import SendIcon from "@mui/icons-material/Send";
-import { Box, IconButton, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { MdSend } from "react-icons/md";
 import type { DMOverview, SendMessage, UserID } from "~/common/types";
 import { parseContent } from "~/common/zod/methods";
 
@@ -58,34 +57,30 @@ export function MessageInput({ send, room }: Props) {
   }
 
   return (
-    <Box sx={{ padding: "0px" }}>
+    <div className="p-0">
       <form onSubmit={submit}>
-        <Stack direction="row" spacing={1} alignItems="center" margin={2}>
-          <TextField
+        <div className="flex items-center space-x-2 p-2">
+          <textarea
             name="message"
             placeholder="メッセージを入力"
-            variant="outlined"
-            size="small"
+            className={`textarea textarea-bordered w-full resize-none ${
+              error ? "textarea-error" : ""
+            }`}
             value={message}
-            fullWidth
-            multiline
-            minRows={1}
-            maxRows={3}
+            rows={1}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            error={!!error}
             autoComplete="off"
           />
-          <IconButton type="submit" color="primary">
-            <SendIcon />
-          </IconButton>
-        </Stack>
-        {error && (
-          <Typography color="error" variant="body2" marginLeft={2}>
-            {error}
-          </Typography>
-        )}
+          <button
+            type="submit"
+            className="btn btn-primary btn-circle flex items-center justify-center"
+          >
+            <MdSend />
+          </button>
+        </div>
+        {error && <p className="ml-2 text-red-500 text-sm">{error}</p>}
       </form>
-    </Box>
+    </div>
   );
 }

@@ -1,4 +1,3 @@
-import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -29,7 +28,9 @@ export function RoomWindow() {
     : null;
 
   if (!room) {
-    return <Typography>部屋が見つかりません。</Typography>;
+    return (
+      <div className="text-center text-gray-600">部屋が見つかりません。</div>
+    );
   }
 
   const {
@@ -163,53 +164,22 @@ export function RoomWindow() {
 
   return (
     <>
-      <Box
-        sx={{
-          position: "fixed",
-          width: "100%",
-          zIndex: 500,
-          backgroundColor: "white",
-          top: "56px",
-        }}
-      >
+      <div className="fixed top-14 z-50 w-full bg-white">
         <RoomHeader room={room} />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          position: "absolute",
-          top: "56px",
-          bottom: "56px",
-          left: 0,
-          right: 0,
-          overflowY: "auto",
-        }}
-      >
+      </div>
+      <div className="absolute top-14 right-0 bottom-14 left-0 flex flex-col overflow-y-auto">
         {messages && messages.length > 0 ? (
-          <Box
-            sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}
-            ref={scrollDiv}
-          >
+          <div className="flex-grow overflow-y-auto p-2" ref={scrollDiv}>
             {messages.map((m) => (
-              <Box
+              <div
                 key={m.id}
-                sx={{
-                  display: "flex",
-                  justifyContent:
-                    m.creator === myId ? "flex-end" : "flex-start",
-                  marginBottom: 1,
-                }}
+                className={`mb-2 flex ${
+                  m.creator === myId ? "justify-end" : "justify-start"
+                }`}
               >
                 {editingMessageId === m.id ? (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      width: "60%",
-                    }}
-                  >
-                    <TextField
+                  <div className="flex w-3/5 flex-col">
+                    <textarea
                       value={editedContent}
                       onChange={(e) => setEditedContent(e.target.value)}
                       onKeyDown={(e) => {
@@ -217,55 +187,33 @@ export function RoomWindow() {
                           commitEdit(editingMessageId, editedContent);
                         }
                       }}
-                      fullWidth
-                      variant="outlined"
-                      multiline
-                      rows={3}
+                      className="textarea textarea-bordered h-24 w-full"
                     />
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: 1,
-                        marginTop: 1,
-                        justifyContent: "space-evenly",
-                      }}
-                    >
-                      <Button
-                        variant="contained"
+                    <div className="mt-2 flex justify-evenly gap-2">
+                      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+                      <button
+                        className="btn btn-primary"
                         onClick={() =>
                           commitEdit(editingMessageId, editedContent)
                         }
-                        sx={{ minWidth: 100 }}
                       >
                         保存
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        onClick={cancelEdit}
-                        sx={{ minWidth: 100 }}
-                      >
+                      </button>
+                      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+                      <button className="btn btn-outline" onClick={cancelEdit}>
                         キャンセル
-                      </Button>
-                    </Box>
-                  </Box>
+                      </button>
+                    </div>
+                  </div>
                 ) : (
-                  <Paper
-                    sx={{
-                      display: "flex",
-                      maxWidth: "60%",
-                      padding: 1,
-                      borderRadius: 2,
-                      backgroundColor:
-                        m.creator === myId ? "secondary.main" : "#FFF",
-                      boxShadow: 1,
-                      border: 1,
-                    }}
+                  <div
+                    className={`rounded-xl p-2 shadow ${
+                      m.creator === myId ? "bg-secondary" : "bg-white"
+                    }`}
                   >
-                    <Typography
-                      sx={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-                    >
+                    <p className="whitespace-pre-wrap break-words">
                       {m.content}
-                    </Typography>
+                    </p>
                     {m.creator === myId && (
                       <Dots
                         actions={[
@@ -289,26 +237,20 @@ export function RoomWindow() {
                         ]}
                       />
                     )}
-                  </Paper>
+                  </div>
                 )}
-              </Box>
+              </div>
             ))}
-          </Box>
+          </div>
         ) : (
-          <Typography>最初のメッセージを送ってみましょう！</Typography>
+          <div className="text-center text-gray-500">
+            最初のメッセージを送ってみましょう！
+          </div>
         )}
-      </Box>
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: "52px",
-          width: "100%",
-          backgroundColor: "#fff",
-          padding: "0px",
-        }}
-      >
+      </div>
+      <div className="fixed bottom-0 w-full bg-white p-0">
         <MessageInput send={sendDMMessage} room={room} />
-      </Box>
+      </div>
     </>
   );
 }
