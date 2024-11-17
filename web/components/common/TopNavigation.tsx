@@ -1,40 +1,37 @@
-import { ArrowBack } from "@mui/icons-material";
-import { Box, IconButton, Typography } from "@mui/material";
 import Link from "next/link";
+import { MdOutlineArrowBack } from "react-icons/md";
+
+type TopNavigationProps = {
+  title: string;
+};
 
 /**
  * Settings の子ページから Setting に戻るナビゲーションを提供
  */
-export default function TopNavigation({ title }: { title: string }) {
+export default function TopNavigation({ title }: TopNavigationProps) {
   return (
-    <Box
-      py={1}
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        // 主に profile ページ向け。calc(画面縦幅 - カード縦幅 - ヘッダー幅 - ボトムナビ幅 - ページの py - 編集ボタンの高さ)。
+    <div
+      className="flex items-center py-2"
+      style={{
+        // Main profile-specific styling for dynamic height calculation
         height: "min(56px, calc(100dvh - 70dvh - 56px - 56px - 16px - 36px))",
       }}
     >
-      <IconButton LinkComponent={Link} href="/settings">
-        <ArrowBack />
-      </IconButton>
-      <Typography
-        variant="h5"
-        component="h1"
-        sx={{
-          fontWeight: "bold",
-          // タイトルを中央に寄せる。矢印が左にしかないため。
-          position: "absolute",
-          left: "50%",
-          transform: "translateX(-50%)",
-          overflow: "hidden",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
+      <Link href="/settings" passHref>
+        {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+        <button className="btn btn-ghost btn-circle">
+          <MdOutlineArrowBack size={24} />
+        </button>
+      </Link>
+      <h1
+        className="-translate-x-1/2 absolute left-1/2 transform overflow-hidden text-ellipsis whitespace-nowrap font-bold text-lg"
+        style={{
+          // Center-align the title text due to the left-only arrow
+          maxWidth: "calc(100% - 64px)", // Prevents the title from overflowing the arrow button
         }}
       >
         {title}
-      </Typography>
-    </Box>
+      </h1>
+    </div>
   );
 }
