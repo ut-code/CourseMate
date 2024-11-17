@@ -1,13 +1,13 @@
-import express from "express";
-import { safeParseInt } from "../common/lib/result/safeParseInt";
-import type { MessageID, UserID } from "../common/types";
-import { parseUserID } from "../common/zod/methods";
+import { safeParseInt } from "common/lib/result/safeParseInt";
+import type { MessageID, UserID } from "common/types";
+import { parseUserID } from "common/zod/methods";
 import {
   ContentSchema,
   InitRoomSchema,
   SendMessageSchema,
   SharedRoomSchema,
-} from "../common/zod/schemas";
+} from "common/zod/schemas";
+import express from "express";
 import * as db from "../database/chat";
 import { safeGetUserId } from "../firebase/auth/db";
 import * as core from "../functions/chat";

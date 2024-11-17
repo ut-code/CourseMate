@@ -1,4 +1,4 @@
-import type { Course, CourseID, UserID } from "../common/types";
+import type { Course, CourseID, UserID } from "common/types";
 import { prisma } from "./client";
 import { getCoursesByUserId } from "./courses";
 

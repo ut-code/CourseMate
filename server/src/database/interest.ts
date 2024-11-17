@@ -1,4 +1,4 @@
-import type { InterestSubject, UserID } from "../common/types";
+import type { InterestSubject, UserID } from "common/types";
 import { prisma } from "./client";
 
 export async function all(): Promise<InterestSubject[]> {

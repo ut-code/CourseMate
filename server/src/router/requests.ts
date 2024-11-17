@@ -1,7 +1,7 @@
+import type { UserID } from "common/types";
 import express, { type Request, type Response } from "express";
-import type { UserID } from "../common/types";
 
-import { safeParseInt } from "../common/lib/result/safeParseInt";
+import { safeParseInt } from "common/lib/result/safeParseInt";
 import {
   approveRequest,
   cancelRequest,
