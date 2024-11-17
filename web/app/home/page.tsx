@@ -2,11 +2,8 @@
 
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Box, Button } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import request from "~/api/request";
-
-import shadows from "@mui/material/styles/shadows";
 import { motion, useAnimation } from "framer-motion";
 import { useMyID, useRecommended } from "~/api/user";
 import { Card } from "~/components/Card";
@@ -16,7 +13,6 @@ import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 
 export default function Home() {
   const { data: recommended, error } = useRecommended();
-
   const [nth, setNth] = useState<number>(0);
   const displayedUser = recommended?.[nth];
   const nextUser = recommended?.[nth + 1];
@@ -30,7 +26,7 @@ export default function Home() {
     if (!displayedUser) return;
     recommended?.push(displayedUser);
     setNth((n) => n + 1);
-  }, [displayedUser, recommended?.push /* ew */]);
+  }, [displayedUser, recommended]);
 
   const accept = useCallback(async () => {
     setNth((n) => n + 1);
@@ -83,64 +79,33 @@ export default function Home() {
 
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
-      <div
-        style={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
-        {displayedUser ? (
-          <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-evenly"
-            alignItems="center"
-            height="100%"
-          >
-            <Box style={{ position: "relative" }}>
-              {nextUser ? (
-                <Box
-                  style={{
-                    position: "absolute",
-                    top: "0",
-                    left: "0",
-                    zIndex: -1,
-                  }}
-                >
-                  <Card displayedUser={nextUser} />
-                </Box>
-              ) : null}
-              <motion.div animate={controls}>
+      <div className="h-full flex flex-col justify-center items-center">
+        {displayedUser && (
+          <div className="h-full flex flex-col justify-center items-center">
+           {nextUser && (
+            <div className="relative w-full h-full">
+              <div className="absolute inset-0 z-0 mt-4 transform -translate-x-1/2">
+                <Card displayedUser={nextUser} />
+              </div>
+              <motion.div
+                animate={controls}
+                className="absolute inset-0 z-10 flex justify-center items-center mt-4"
+              >
                 <DraggableCard
                   displayedUser={displayedUser}
-                  comparisonUserId={myId ? myId : undefined}
+                  comparisonUserId={myId || undefined}
                   onSwipeLeft={reject}
                   onSwipeRight={accept}
                   clickedButton={clickedButton}
                 />
               </motion.div>
-            </Box>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-around",
-                width: "min(100%, 46dvh)",
-                marginBottom: "10px",
-              }}
-            >
-              <RoundButton onclick={onClickCross} icon={<CloseIconStyled />} />
-              <RoundButton
-                onclick={onClickHeart}
-                icon={<FavoriteIconStyled />}
-              />
             </div>
-          </Box>
-        ) : (
-          <FullScreenCircularProgress />
+          )}
+            <div className="flex w-full mb-4 mt-4 space-x-8 button-container">
+              <RoundButton onclick={onClickCross} icon={<CloseIconStyled />} />
+              <RoundButton onclick={onClickHeart} icon={<FavoriteIconStyled />} />
+            </div>
+          </div>
         )}
       </div>
     </NavigateByAuthState>
@@ -152,28 +117,16 @@ interface RoundButtonProps {
   icon: JSX.Element;
 }
 
-const RoundButton = ({ onclick, icon }: RoundButtonProps) => {
-  return (
-    <div>
-      <Button onClick={onclick} style={ButtonStyle}>
-        {icon}
-      </Button>
-    </div>
-  );
-};
+const RoundButton = ({ onclick, icon }: RoundButtonProps) => (
+  <button onClick={onclick} className="btn btn-circle shadow-md bg-white">
+    {icon}
+  </button>
+);
 
-const ButtonStyle = {
-  borderRadius: "50%",
-  width: "7dvh",
-  height: "7dvh",
-  boxShadow: shadows[10],
-  backgroundColor: "white",
-};
+const CloseIconStyled = () => (
+  <CloseIcon className="text-gray-500 text-4xl" />
+);
 
-const CloseIconStyled = () => {
-  return <CloseIcon style={{ color: "grey", fontSize: "4.5dvh" }} />;
-};
-
-const FavoriteIconStyled = () => {
-  return <FavoriteIcon style={{ color: "red", fontSize: "4.5dvh" }} />;
-};
+const FavoriteIconStyled = () => (
+  <FavoriteIcon className="text-red-500 text-4xl" />
+);
