@@ -42,9 +42,9 @@ test: dev-db
 	cd ./test; ENV_FILE=../server/.env.dev bun test
 	docker stop postgres
 
-prepare-deploy-web:
+prepare-deploy-web: sync-common
 	cd web; bun install; bun run build
-prepare-deploy-server:  sync-server generate-sql
+prepare-deploy-server: sync-common sync-server generate-sql
 deploy-server:
 	cd server; bun src/main.ts
 
