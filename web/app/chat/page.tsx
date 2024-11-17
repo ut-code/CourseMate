@@ -1,6 +1,5 @@
 "use client";
 
-import { Typography } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useRoomsOverview } from "~/api/chat/hooks";
@@ -31,7 +30,7 @@ function ChatListContent() {
   ) : state.current === "loading" ? (
     <FullScreenCircularProgress />
   ) : state.current === "error" ? (
-    <Typography color="error">Error: {state.error.message}</Typography>
+    <p className="decoration-red">Error: {state.error.message}</p>
   ) : (
     <RoomList roomsData={state.data} />
   );
