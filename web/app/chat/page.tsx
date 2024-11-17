@@ -30,7 +30,7 @@ function ChatListContent() {
   ) : state.current === "loading" ? (
     <FullScreenCircularProgress />
   ) : state.current === "error" ? (
-    <p color="error">Error: {state.error.message}</p>
+    <p className="decoration-red">Error: {state.error.message}</p>
   ) : (
     <RoomList roomsData={state.data} />
   );
