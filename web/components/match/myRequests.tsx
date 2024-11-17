@@ -22,20 +22,16 @@ export default function MyReq() {
       ) : (
         <ul className="mt-4 space-y-4">
           {state.data?.map((receivingUser) => (
-            <li
+            <HumanListItem
               key={receivingUser.id}
-              className="rounded-lg bg-base-100 p-4 shadow"
-            >
-              <HumanListItem
-                id={receivingUser.id}
-                name={receivingUser.name}
-                pictureUrl={receivingUser.pictureUrl}
-                onOpen={() => openModal(receivingUser)}
-                onCancel={(id) => {
-                  request.cancel(id).then(reload);
-                }}
-              />
-            </li>
+              id={receivingUser.id}
+              name={receivingUser.name}
+              pictureUrl={receivingUser.pictureUrl}
+              onOpen={() => openModal(receivingUser)}
+              onCancel={(id) => {
+                request.cancel(id).then(reload);
+              }}
+            />
           ))}
         </ul>
       )}
