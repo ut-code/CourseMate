@@ -10,12 +10,12 @@ setup:
 	@echo "- edit web/.env"
 	@echo "- run make sync"
 
-setup-ci:
-	if [ ${DATABASE_URL} == "" ]; then echo 'Please set DATABASE_URL_FOR_SQL_GENERATION!'; exit 1; fi
+setup-ci: 
+	if [ "" == ${DATABASE_URL} ]; then echo 'Please set DATABASE_URL_FOR_SQL_GENERATION!'; exit 1; fi
 	make sync
 	make generate-sql
 
-sync: sync-server sync-web sync-root 
+sync: sync-server sync-web sync-root sync-common
 	lefthook install || true
 	@echo '----------------------------------------------------------------------------------------------------------'
 	@echo '| Most work is done. now running prisma-generate-sql (which might fail if .env.dev is not set configured)|'
@@ -42,17 +42,17 @@ test: dev-db
 	cd ./test; ENV_FILE=../server/.env.dev bun test
 	docker stop postgres
 
-prepare-deploy-web: 
+prepare-deploy-web:
 	cd web; bun install; bun run build
 prepare-deploy-server:  sync-server generate-sql
 deploy-server:
 	cd server; bun src/main.ts
 
-docker: 
+docker:
 	@# deferring `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
 	trap 'docker compose down' EXIT; docker compose up --build
 
-docker-watch: 
+docker-watch:
 	docker compose up --build --watch
 
 seed:
@@ -93,6 +93,8 @@ sync-server:
 
 sync-root:
 	bun install --frozen-lockfile
+sync-common:
+	cd common; bun install --frozen-lockfile
 
 
 # Static checks
