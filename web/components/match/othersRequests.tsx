@@ -1,4 +1,3 @@
-import { Box, List } from "@mui/material";
 import request from "~/api/request";
 import { usePendingToMe } from "~/api/user";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
@@ -14,12 +13,8 @@ export default function OthersReq() {
   const { openModal } = useModal();
 
   return (
-    <Box>
-      <p
-        style={{
-          marginLeft: "40px",
-        }}
-      >
+    <div className="p-4">
+      <p className="ml-10 text-lg">
         {data && data.length > 0
           ? "以下のリクエストを受け取りました！"
           : "リクエストは受け取っていません。"}
@@ -27,22 +22,26 @@ export default function OthersReq() {
       {loading ? (
         <FullScreenCircularProgress />
       ) : error ? (
-        <p>Error: {error.message}</p>
+        <p className="text-red-500">Error: {error.message}</p>
       ) : (
-        <List>
+        <ul className="mt-4 space-y-4">
           {data?.map((sendingUser) => (
-            <HumanListItem
+            <li
               key={sendingUser.id}
-              id={sendingUser.id}
-              name={sendingUser.name}
-              pictureUrl={sendingUser.pictureUrl}
-              onOpen={() => openModal(sendingUser)}
-              onAccept={() => request.accept(sendingUser.id).then(reload)}
-              onReject={() => request.reject(sendingUser.id).then(reload)}
-            />
+              className="rounded-lg bg-base-100 p-4 shadow"
+            >
+              <HumanListItem
+                id={sendingUser.id}
+                name={sendingUser.name}
+                pictureUrl={sendingUser.pictureUrl}
+                onOpen={() => openModal(sendingUser)}
+                onAccept={() => request.accept(sendingUser.id).then(reload)}
+                onReject={() => request.reject(sendingUser.id).then(reload)}
+              />
+            </li>
           ))}
-        </List>
+        </ul>
       )}
-    </Box>
+    </div>
   );
 }

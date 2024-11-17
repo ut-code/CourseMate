@@ -1,5 +1,3 @@
-import { Box } from "@mui/material";
-import { List } from "@mui/material";
 import * as request from "~/api/request";
 import { usePendingFromMe } from "~/api/user";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
@@ -11,12 +9,8 @@ export default function MyReq() {
   const { openModal } = useModal();
 
   return (
-    <Box>
-      <p
-        style={{
-          marginLeft: "40px",
-        }}
-      >
+    <div className="p-4">
+      <p className="ml-10 text-lg">
         {state.data && state.data.length > 0
           ? "以下のリクエストを送信しました！"
           : "リクエストを送信しましょう！"}
@@ -24,23 +18,27 @@ export default function MyReq() {
       {state.current === "loading" ? (
         <FullScreenCircularProgress />
       ) : state.error ? (
-        <p>Error: {state.error.message}</p>
+        <p className="text-red-500">Error: {state.error.message}</p>
       ) : (
-        <List>
+        <ul className="mt-4 space-y-4">
           {state.data?.map((receivingUser) => (
-            <HumanListItem
+            <li
               key={receivingUser.id}
-              id={receivingUser.id}
-              name={receivingUser.name}
-              pictureUrl={receivingUser.pictureUrl}
-              onOpen={() => openModal(receivingUser)}
-              onCancel={(id) => {
-                request.cancel(id).then(reload);
-              }}
-            />
+              className="rounded-lg bg-base-100 p-4 shadow"
+            >
+              <HumanListItem
+                id={receivingUser.id}
+                name={receivingUser.name}
+                pictureUrl={receivingUser.pictureUrl}
+                onOpen={() => openModal(receivingUser)}
+                onCancel={(id) => {
+                  request.cancel(id).then(reload);
+                }}
+              />
+            </li>
           ))}
-        </List>
+        </ul>
       )}
-    </Box>
+    </div>
   );
 }
