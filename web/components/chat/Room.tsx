@@ -1,5 +1,5 @@
 import { ListItem, Stack, Typography } from "@mui/material";
-import type { DMOverview } from "~/common/types";
+import type { DMOverview } from "common/types";
 import UserAvatar from "../human/avatar";
 
 type Props = {

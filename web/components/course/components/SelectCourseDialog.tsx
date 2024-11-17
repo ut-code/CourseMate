@@ -14,10 +14,10 @@ import {
   Typography,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import { DAY_TO_JAPANESE_MAP } from "common/consts";
+import type { Course, Day } from "common/types";
 import { useEffect, useState } from "react";
 import courseApi from "~/api/course";
-import { DAY_TO_JAPANESE_MAP } from "~/common/consts";
-import type { Course, Day } from "~/common/types";
 import CourseDeleteConfirmDialog from "./CourseDeleteConfirmDialog";
 import CourseRegisterConfirmDialog from "./CourseRegisterConfirmDialog";
 
