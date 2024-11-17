@@ -2,9 +2,9 @@
 
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { motion, useAnimation } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import request from "~/api/request";
-import { motion, useAnimation } from "framer-motion";
 import { useMyID, useRecommended } from "~/api/user";
 import { Card } from "~/components/Card";
 import { DraggableCard } from "~/components/DraggableCard";
@@ -79,31 +79,34 @@ export default function Home() {
 
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
-      <div className="h-full flex flex-col justify-center items-center">
+      <div className="flex h-full flex-col items-center justify-center">
         {displayedUser && (
-          <div className="h-full flex flex-col justify-center items-center">
-           {nextUser && (
-            <div className="relative w-full h-full">
-              <div className="absolute inset-0 z-0 mt-4 transform -translate-x-1/2">
-                <Card displayedUser={nextUser} />
+          <div className="flex h-full flex-col items-center justify-center">
+            {nextUser && (
+              <div className="relative h-full w-full">
+                <div className="-translate-x-1/2 absolute inset-0 z-0 mt-4 transform">
+                  <Card displayedUser={nextUser} />
+                </div>
+                <motion.div
+                  animate={controls}
+                  className="absolute inset-0 z-10 mt-4 flex items-center justify-center"
+                >
+                  <DraggableCard
+                    displayedUser={displayedUser}
+                    comparisonUserId={myId || undefined}
+                    onSwipeLeft={reject}
+                    onSwipeRight={accept}
+                    clickedButton={clickedButton}
+                  />
+                </motion.div>
               </div>
-              <motion.div
-                animate={controls}
-                className="absolute inset-0 z-10 flex justify-center items-center mt-4"
-              >
-                <DraggableCard
-                  displayedUser={displayedUser}
-                  comparisonUserId={myId || undefined}
-                  onSwipeLeft={reject}
-                  onSwipeRight={accept}
-                  clickedButton={clickedButton}
-                />
-              </motion.div>
-            </div>
-          )}
-            <div className="flex w-full mb-4 mt-4 space-x-8 button-container">
+            )}
+            <div className="button-container mt-4 mb-4 flex w-full space-x-8">
               <RoundButton onclick={onClickCross} icon={<CloseIconStyled />} />
-              <RoundButton onclick={onClickHeart} icon={<FavoriteIconStyled />} />
+              <RoundButton
+                onclick={onClickHeart}
+                icon={<FavoriteIconStyled />}
+              />
             </div>
           </div>
         )}
@@ -118,15 +121,17 @@ interface RoundButtonProps {
 }
 
 const RoundButton = ({ onclick, icon }: RoundButtonProps) => (
-  <button onClick={onclick} className="btn btn-circle shadow-md bg-white">
+  <button
+    type="button"
+    onClick={onclick}
+    className="btn btn-circle bg-white shadow-md"
+  >
     {icon}
   </button>
 );
 
-const CloseIconStyled = () => (
-  <CloseIcon className="text-gray-500 text-4xl" />
-);
+const CloseIconStyled = () => <CloseIcon className="text-4xl text-gray-500" />;
 
 const FavoriteIconStyled = () => (
-  <FavoriteIcon className="text-red-500 text-4xl" />
+  <FavoriteIcon className="text-4xl text-red-500" />
 );
