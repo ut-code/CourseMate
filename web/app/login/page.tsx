@@ -1,6 +1,5 @@
 "use client";
 
-import { Box, Button, Link, Typography } from "@mui/material";
 import type { GUID } from "common/types";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -125,34 +124,21 @@ export default function Login() {
   return (
     <NavigateByAuthState type="toHomeForAuthenticated">
       <Header title="CourseMate" />
-      <Box
-        sx={{
-          position: "absolute",
-          top: "56px",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-around",
-        }}
-      >
-        <Box textAlign="center">
+      <div className="absolute top-14 right-0 bottom-0 left-0 flex flex-col items-center justify-around overflow-y-auto">
+        <div className="text-center">
           <CourseMateIcon width="200px" height="200px" />
-        </Box>
-        <Box textAlign="left">
-          <Typography variant="h4">
+        </div>
+        <div className="text-left">
+          <h1 className="font-semibold text-3xl">
             CourseMateを使って
             <br />
             同じ授業の人と
             <br />
             友達になろう
-          </Typography>
-        </Box>
+          </h1>
+        </div>
 
-        <Box sx={{ width: "80%" }} textAlign="center">
+        <div className="w-4/5 text-center">
           <button
             className="gsi-material-button"
             onClick={logInByGoogle}
@@ -219,16 +205,15 @@ export default function Login() {
             </div>
           </button>
           <br />
-          <Link
-            component={Button}
+          <button
+            type="button"
             onClick={singUpByGoogle}
-            mt={2}
-            underline="none"
+            className="mt-2 text-blue-600 hover:underline"
           >
             初めての方はこちら
-          </Link>
-        </Box>
-      </Box>
+          </button>
+        </div>
+      </div>
     </NavigateByAuthState>
   );
 }

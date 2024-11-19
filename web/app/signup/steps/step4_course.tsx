@@ -1,5 +1,3 @@
-import { Typography } from "@mui/material";
-import { Box } from "@mui/system";
 import Link from "next/link";
 import { useMyID } from "~/api/user";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
@@ -9,37 +7,26 @@ export default function Step4() {
   const { state } = useMyID();
   return (
     <>
-      <Box>
+      <div>
         {state.current === "loading" ? (
           <FullScreenCircularProgress />
         ) : state.current === "error" ? (
           <p>Error: {state.error.message}</p>
         ) : (
-          <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
-            <Typography variant="h6" component="h1">
-              授業情報の登録 (スキップ可)
-            </Typography>
-            <Box>
+          <div className="mx-4 mt-4 flex flex-col gap-4">
+            <h1>授業情報の登録 (スキップ可)</h1>
+            <div>
               <EditableCoursesTable userId={state.data} />
-            </Box>
-          </Box>
+            </div>
+          </div>
         )}
-      </Box>
-      <Box
-        p={3}
-        sx={{
-          position: "fixed",
-          display: "flex",
-          justifyContent: "space-between",
-          bottom: 0,
-          width: "100%",
-        }}
-      >
+      </div>
+      <div className="b-0 fixed flex w-full justify-between p-6">
         <span />
         <Link href="/tutorial" className="btn btn-primary">
           次へ
         </Link>
-      </Box>
+      </div>
     </>
   );
 }
