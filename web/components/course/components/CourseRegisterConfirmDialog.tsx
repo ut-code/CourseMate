@@ -1,13 +1,3 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
 import type { Course } from "common/types";
 import { useEffect, useState } from "react";
 import { addMyCourse, getMyCoursesOverlapWith } from "~/api/course";
