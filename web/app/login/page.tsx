@@ -1,11 +1,11 @@
 "use client";
 
+import type { GUID } from "common/types";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import * as user from "~/api/user";
 import { getByGUID } from "~/api/user";
-import type { GUID } from "~/common/types";
 import Header from "~/components/Header";
 import { auth } from "~/firebase/config";
 import "./style.css";

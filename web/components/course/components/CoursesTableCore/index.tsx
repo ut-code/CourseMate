@@ -1,6 +1,6 @@
+import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "common/consts";
+import type { Course, Day } from "common/types";
 import { useCallback, useEffect, useState } from "react";
-import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "~/common/consts";
-import type { Course, Day } from "~/common/types";
 import { truncateStr } from "./lib";
 import styles from "./styles.module.css";
 

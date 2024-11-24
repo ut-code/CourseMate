@@ -1,5 +1,5 @@
-import { Err, Ok, type Result } from "../common/lib/result";
-import type { Relationship, UserID } from "../common/types";
+import { Err, Ok, type Result } from "common/lib/result";
+import type { Relationship, UserID } from "common/types";
 import asyncMap from "../lib/async/map";
 import { prisma } from "./client";
 

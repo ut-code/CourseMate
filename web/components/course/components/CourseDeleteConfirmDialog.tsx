@@ -1,6 +1,6 @@
+import type { Course } from "common/types";
 import { useEffect, useState } from "react";
 import { deleteMyCourse, getMyCoursesOverlapWith } from "~/api/course";
-import type { Course } from "~/common/types";
 
 export default function CourseDeleteRegisterConfirmDialog({
   open,

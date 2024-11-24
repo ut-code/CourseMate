@@ -3,8 +3,8 @@
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 
+import type { Step1User } from "common/zod/types";
 import { useRouter } from "next/navigation";
-import type { Step1User } from "~/common/zod/types";
 import Header from "~/components/Header";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 import { register } from "./functions";

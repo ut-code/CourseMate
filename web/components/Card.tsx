@@ -1,7 +1,7 @@
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
 import { Chip } from "@mui/material";
+import type { User, UserID } from "common/types";
 import { useState } from "react";
-import type { User, UserID } from "~/common/types";
 import NonEditableCoursesTable from "./course/NonEditableCoursesTable";
 import UserAvatar from "./human/avatar";
 
