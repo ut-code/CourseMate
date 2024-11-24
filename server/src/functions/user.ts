@@ -1,5 +1,5 @@
-import { Result } from "../common/lib/result";
-import type { GUID, User, UserID } from "../common/types";
+import { Result } from "common/lib/result";
+import type { GUID, User, UserID } from "common/types";
 import { getMatchedUser } from "../database/requests";
 import * as db from "../database/users";
 import * as http from "./share/http";

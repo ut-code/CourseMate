@@ -1,7 +1,7 @@
+import type { DMOverview, SendMessage, UserID } from "common/types";
+import { parseContent } from "common/zod/methods";
 import { useEffect, useState } from "react";
 import { MdSend } from "react-icons/md";
-import type { DMOverview, SendMessage, UserID } from "~/common/types";
-import { parseContent } from "~/common/zod/methods";
 
 type Props = {
   send: (to: UserID, m: SendMessage) => void;

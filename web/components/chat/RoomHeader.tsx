@@ -1,6 +1,6 @@
+import type { DMOverview } from "common/types";
 import Link from "next/link";
 import { MdArrowBack } from "react-icons/md";
-import type { DMOverview } from "~/common/types";
 import UserAvatar from "../human/avatar";
 
 type Props = {

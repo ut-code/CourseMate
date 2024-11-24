@@ -1,5 +1,5 @@
-import { Err, Ok, type Result } from "../common/lib/result";
-import type { GUID, UpdateUser, User, UserID } from "../common/types";
+import { Err, Ok, type Result } from "common/lib/result";
+import type { GUID, UpdateUser, User, UserID } from "common/types";
 import { prisma } from "./client";
 
 // ユーザーの作成

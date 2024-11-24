@@ -1,6 +1,6 @@
+import type { User } from "common/types";
 import { type ReactNode, createContext, useContext, useState } from "react";
 import { useMyID } from "~/api/user";
-import type { User } from "~/common/types";
 import { Card } from "../../Card";
 
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);

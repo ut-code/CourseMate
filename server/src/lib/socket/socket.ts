@@ -1,7 +1,7 @@
 import type { Server } from "node:http";
+import type { Message, UserID } from "common/types";
 import type { CorsOptions } from "cors";
 import { type Socket, Server as SocketIOServer } from "socket.io";
-import type { Message, UserID } from "../../common/types";
 import { getUserIdFromToken } from "../../firebase/auth/db";
 
 const users = new Map<UserID, Socket>();
