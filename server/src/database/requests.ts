@@ -184,20 +184,18 @@ export async function getMatchedUser(userId: UserID): Promise<Result<User[]>> {
   }
 }
 
-export async function autoMatch(userId: UserID) {
+export async function matchWithMemo(userId: UserID) {
   try {
     const result = await prisma.relationship.create({
       data: {
         status: "MATCHED",
         sendingUserId: userId,
-        receivingUserId: 0, //Keepメモ
+        receivingUserId: 0, //KeepメモのUserId
       },
     });
 
-    console.log("New relationship record created:", result);
     return result;
   } catch (error) {
-    console.error("Error creating new relationship:", error);
-    throw new Error("Failed to create a new match.");
+    return Err(error);
   }
 }

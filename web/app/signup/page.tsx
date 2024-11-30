@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import type { Step1User } from "common/zod/types";
 import { useRouter } from "next/navigation";
-import request from "~/api/request";
 import Header from "~/components/Header";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 import { register } from "./functions";
@@ -13,10 +12,6 @@ import Step1 from "./steps/step1_profile";
 import Step2, { type Step2Data } from "./steps/step2_img";
 import Confirmation from "./steps/step3_confirmation";
 import Step4 from "./steps/step4_course";
-
-function matchWithMemo() {
-  request.autoMatch();
-}
 
 function Registration() {
   const { enqueueSnackbar } = useSnackbar();
@@ -63,7 +58,6 @@ function Registration() {
             };
             try {
               await register(concat, { enqueueSnackbar, router });
-              matchWithMemo();
               setStep(4);
             } catch (error) {
               enqueueSnackbar("サインアップに失敗しました", {

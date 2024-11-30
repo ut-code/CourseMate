@@ -280,10 +280,6 @@ export const rejectRequest = (opponentId: UserID) => {
   return `${origin}/requests/reject/${opponentId}`;
 };
 
-export const autoMatch = () => {
-  return `${origin}/requests/autoMatch/`;
-};
-
 /**
  * []実装済み
  * GET -> get personalized room overviews.
@@ -385,7 +381,6 @@ export default {
   sendRequest,
   acceptRequest,
   rejectRequest,
-  autoMatch,
   cancelRequest,
   coursesUserId,
   coursesDayPeriod,
