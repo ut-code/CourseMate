@@ -7,7 +7,7 @@ pre-commit:
   commands:
     biome:
       glob: "*"
-      run: biome check --write --no-errors-on-unmatched --files-ignore-unknown=true -- {staged_files}
+      run: bunx biome check --write --no-errors-on-unmatched --files-ignore-unknown=true -- {staged_files}
       stage_fixed: true
     prevent-commit-on-main:
       run: if [ "$(git branch --show-current)" == "main" ]; then echo "Cannot make commit on main! aborting..."; exit 1; fi
