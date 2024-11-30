@@ -89,9 +89,7 @@ export async function getDM(friendId: UserID): Promise<
     thumbnail: string;
   }
 > {
-  console.log("リクエスト先", endpoints.dmWith(friendId));
   const res = await credFetch("GET", endpoints.dmWith(friendId));
-  console.log("いい");
   if (res.status === 401) throw new ErrUnauthorized();
   if (res.status !== 200)
     throw new Error(

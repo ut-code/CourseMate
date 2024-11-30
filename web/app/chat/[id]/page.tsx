@@ -5,7 +5,6 @@ import { RoomWindow } from "~/components/chat/RoomWindow";
 
 export default function Page({ params }: { params: { id: string } }) {
   const id = Number.parseInt(params.id);
-  console.log("IDだよ", id);
   const [room, setRoom] = useState<
     | ({
         id: number;

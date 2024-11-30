@@ -13,7 +13,6 @@ export function RoomList(props: RoomListProps) {
   const { roomsData } = props;
   const router = useRouter();
   const navigateToRoom = (room: Extract<RoomOverview, { isDM: true }>) => {
-    console.log(room.friendId);
     router.push(`/chat/${room.friendId}`);
   };
 
