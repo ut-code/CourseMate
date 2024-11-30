@@ -19,7 +19,8 @@
     "reqwest",
     "safify",
     "supabase",
-    "swiper"
+    "swiper",
+    "lefthook"
   ],
   "dictionaries": [
     "softwareTerms",

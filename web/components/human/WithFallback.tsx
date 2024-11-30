@@ -1,4 +1,3 @@
-import { Avatar } from "@mui/material";
 import { ImageFallback } from "../ImageFallback";
 
 type Props = {
@@ -14,11 +13,15 @@ export function AvatarWithFallback({ width, height, url }: Props) {
       height={height}
       url={url}
       fallback={
-        <Avatar
-          sx={{ width: `${width}`, height: `${height}`, objectFit: "cover" }}
+        <div
+          className="flex items-center justify-center overflow-hidden rounded-full bg-gray-200"
+          style={{
+            width: width,
+            height: height,
+            objectFit: "cover",
+          }}
         />
       }
-      alt=""
     />
   );
 }

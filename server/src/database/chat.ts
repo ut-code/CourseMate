@@ -1,5 +1,5 @@
-import { Err, Ok, type Result } from "../common/lib/result";
-import type { UserID } from "../common/types";
+import { Err, Ok, type Result } from "common/lib/result";
+import type { UserID } from "common/types";
 import type {
   DMOverview,
   DMRoom,
@@ -11,7 +11,7 @@ import type {
   ShareRoomID,
   SharedRoom,
   SharedRoomOverview,
-} from "../common/types";
+} from "common/types";
 import { prisma } from "./client";
 import { getRelation } from "./matches";
 import { getMatchedUser } from "./requests";

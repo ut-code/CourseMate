@@ -1,4 +1,4 @@
-import type { Course, Day, UserID } from "../common/types";
+import type { Course, Day, UserID } from "common/types";
 import { prisma } from "./client";
 
 export async function getCourseByCourseId(

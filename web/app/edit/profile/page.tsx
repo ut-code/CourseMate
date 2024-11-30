@@ -12,13 +12,13 @@ import {
   Typography,
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
+import type { UpdateUser } from "common/types";
+import { UpdateUserSchema } from "common/zod/schemas";
 import { useRouter } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { update, useAboutMe } from "~/api/user";
 import { facultiesAndDepartments } from "~/app/signup/data";
-import type { UpdateUser } from "~/common/types";
-import { UpdateUserSchema } from "~/common/zod/schemas";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import { useAlert } from "~/components/common/alert/AlertProvider";
 import PhotoModal from "~/components/config/PhotoModal";

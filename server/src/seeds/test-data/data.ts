@@ -1,4 +1,4 @@
-import type { Day } from "../../common/types";
+import type { Day } from "common/types";
 
 export const subjects: Array<{
   group: string;

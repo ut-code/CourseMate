@@ -1,5 +1,5 @@
+import type { Step1User } from "common/zod/types";
 import type { BackProp, StepProps } from "~/app/signup/common";
-import type { Step1User } from "~/common/zod/types";
 import { CardFront } from "~/components/Card.tsx";
 import type { Step2Data } from "./step2_img";
 

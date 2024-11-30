@@ -1,28 +1,27 @@
-import SendIcon from "@mui/icons-material/Send";
-import { Box, IconButton, Stack, TextField, Typography } from "@mui/material";
+import type { SendMessage, UserID } from "common/types";
+import { parseContent } from "common/zod/methods";
 import { useEffect, useState } from "react";
-import type { DMOverview, SendMessage, UserID } from "~/common/types";
-import { parseContent } from "~/common/zod/methods";
+import { MdSend } from "react-icons/md";
 
 type Props = {
   send: (to: UserID, m: SendMessage) => void;
-  room: DMOverview;
+  friendId: UserID;
 };
 
 const crossRoomMessageState = new Map<number, string>();
 
-export function MessageInput({ send, room }: Props) {
+export function MessageInput({ send, friendId }: Props) {
   const [message, _setMessage] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   function setMessage(m: string) {
     _setMessage(m);
-    crossRoomMessageState.set(room.friendId, m);
+    crossRoomMessageState.set(friendId, m);
   }
 
   useEffect(() => {
-    _setMessage(crossRoomMessageState.get(room.friendId) || "");
-  }, [room.friendId]);
+    _setMessage(crossRoomMessageState.get(friendId) || "");
+  }, [friendId]);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,7 +34,7 @@ export function MessageInput({ send, room }: Props) {
     }
 
     if (message.trim()) {
-      send(room.friendId, { content: message });
+      send(friendId, { content: message });
       setMessage("");
     }
   }
@@ -51,41 +50,37 @@ export function MessageInput({ send, room }: Props) {
         return;
       }
       if (message.trim()) {
-        send(room.friendId, { content: message });
+        send(friendId, { content: message });
         setMessage("");
       }
     }
   }
 
   return (
-    <Box sx={{ padding: "0px" }}>
+    <div className="p-0">
       <form onSubmit={submit}>
-        <Stack direction="row" spacing={1} alignItems="center" margin={2}>
-          <TextField
+        <div className="flex items-center space-x-2 p-2">
+          <textarea
             name="message"
             placeholder="メッセージを入力"
-            variant="outlined"
-            size="small"
+            className={`textarea textarea-bordered w-full resize-none ${
+              error ? "textarea-error" : ""
+            }`}
             value={message}
-            fullWidth
-            multiline
-            minRows={1}
-            maxRows={3}
+            rows={1}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            error={!!error}
             autoComplete="off"
           />
-          <IconButton type="submit" color="primary">
-            <SendIcon />
-          </IconButton>
-        </Stack>
-        {error && (
-          <Typography color="error" variant="body2" marginLeft={2}>
-            {error}
-          </Typography>
-        )}
+          <button
+            type="submit"
+            className="btn btn-primary btn-circle flex items-center justify-center"
+          >
+            <MdSend />
+          </button>
+        </div>
+        {error && <p className="ml-2 text-red-500 text-sm">{error}</p>}
       </form>
-    </Box>
+    </div>
   );
 }

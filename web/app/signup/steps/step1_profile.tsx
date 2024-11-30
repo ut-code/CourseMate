@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 
+import type { Step1User } from "common/zod/types";
 import type { StepProps } from "~/app/signup/common";
 import { facultiesAndDepartments } from "~/app/signup/data";
-import type { Step1User } from "~/common/zod/types";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Step1UserSchema } from "common/zod/schemas";
 import { type FieldError, type SubmitHandler, useForm } from "react-hook-form";
-import { Step1UserSchema } from "~/common/zod/schemas";
 
 const faculties = Object.keys(facultiesAndDepartments);
 export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {

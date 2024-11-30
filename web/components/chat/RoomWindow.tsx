@@ -1,41 +1,48 @@
-import { Box, Button, Paper, TextField, Typography } from "@mui/material";
-import { useSearchParams } from "next/navigation";
+"use client";
+import type { Message, MessageID, SendMessage, UserID } from "common/types";
+import type { Content } from "common/zod/types";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as chat from "~/api/chat/chat";
 import { useMessages } from "~/api/chat/hooks";
 import * as user from "~/api/user";
 import { useMyID } from "~/api/user";
-import type {
-  DMOverview,
-  Message,
-  MessageID,
-  SendMessage,
-  UserID,
-} from "~/common/types";
-import type { Content } from "~/common/zod/types";
 import { getIdToken } from "~/firebase/auth/lib";
 import Dots from "../common/Dots";
 import { socket } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
-export function RoomWindow() {
-  // FIXME:  React Router が使えなくなったので、一時的に room の情報を URL に載せることで状態管理
-  const searchParams = useSearchParams();
-  const roomData = searchParams.get("roomData");
-  const room = roomData
-    ? (JSON.parse(decodeURIComponent(roomData)) as DMOverview)
-    : null;
+type Props = {
+  friendId: UserID;
+  room: {
+    id: number;
+    messages: {
+      id: number;
+      creator: number;
+      createdAt: Date;
+      content: string;
+      edited: boolean;
+    }[];
+    isDM: true;
+  } & {
+    name: string;
+    thumbnail: string;
+  };
+};
+export function RoomWindow(props: Props) {
+  const { friendId, room } = props;
 
   if (!room) {
-    return <Typography>部屋が見つかりません。</Typography>;
+    return (
+      <div className="text-center text-gray-600">部屋が見つかりません。</div>
+    );
   }
 
   const {
     state: { data: myId },
   } = useMyID();
-  const { state, reload, write } = useMessages(room.friendId);
+  const { state, reload, write } = useMessages(friendId);
   const [messages, setMessages] = useState(state.data);
 
   useEffect(() => {
@@ -72,7 +79,7 @@ export function RoomWindow() {
       const idToken = await getIdToken();
       socket.emit("register", idToken);
       socket.on("newMessage", async (msg: Message) => {
-        if (msg.creator === room.friendId) {
+        if (msg.creator === friendId) {
           appendLocalMessage(msg);
         } else {
           const creator = await user.get(msg.creator);
@@ -86,7 +93,7 @@ export function RoomWindow() {
         }
       });
       socket.on("updateMessage", async (msg: Message) => {
-        if (msg.creator === room.friendId) {
+        if (msg.creator === friendId) {
           updateLocalMessage(msg);
         }
       });
@@ -103,6 +110,7 @@ export function RoomWindow() {
     };
   }, [
     room,
+    friendId,
     enqueueSnackbar,
     appendLocalMessage,
     updateLocalMessage,
@@ -141,11 +149,11 @@ export function RoomWindow() {
       const editedMessage = await chat.updateMessage(
         message,
         { content },
-        room.friendId,
+        friendId,
       );
       updateLocalMessage(editedMessage);
     },
-    [updateLocalMessage, room.friendId],
+    [updateLocalMessage, friendId],
   );
 
   const cancelEdit = useCallback(() => {
@@ -163,53 +171,22 @@ export function RoomWindow() {
 
   return (
     <>
-      <Box
-        sx={{
-          position: "fixed",
-          width: "100%",
-          zIndex: 500,
-          backgroundColor: "white",
-          top: "56px",
-        }}
-      >
+      <div className="fixed top-14 z-50 w-full bg-white">
         <RoomHeader room={room} />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          position: "absolute",
-          top: "56px",
-          bottom: "56px",
-          left: 0,
-          right: 0,
-          overflowY: "auto",
-        }}
-      >
+      </div>
+      <div className="absolute top-14 right-0 left-0 flex flex-col overflow-y-auto">
         {messages && messages.length > 0 ? (
-          <Box
-            sx={{ flexGrow: 1, overflowY: "auto", padding: 1 }}
-            ref={scrollDiv}
-          >
+          <div className="flex-grow overflow-y-auto p-2" ref={scrollDiv}>
             {messages.map((m) => (
-              <Box
+              <div
                 key={m.id}
-                sx={{
-                  display: "flex",
-                  justifyContent:
-                    m.creator === myId ? "flex-end" : "flex-start",
-                  marginBottom: 1,
-                }}
+                className={`mb-2 flex ${
+                  m.creator === myId ? "justify-end" : "justify-start"
+                }`}
               >
                 {editingMessageId === m.id ? (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      width: "60%",
-                    }}
-                  >
-                    <TextField
+                  <div className="flex w-3/5 flex-col">
+                    <textarea
                       value={editedContent}
                       onChange={(e) => setEditedContent(e.target.value)}
                       onKeyDown={(e) => {
@@ -217,55 +194,33 @@ export function RoomWindow() {
                           commitEdit(editingMessageId, editedContent);
                         }
                       }}
-                      fullWidth
-                      variant="outlined"
-                      multiline
-                      rows={3}
+                      className="textarea textarea-bordered h-24 w-full"
                     />
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: 1,
-                        marginTop: 1,
-                        justifyContent: "space-evenly",
-                      }}
-                    >
-                      <Button
-                        variant="contained"
+                    <div className="mt-2 flex justify-evenly gap-2">
+                      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+                      <button
+                        className="btn btn-primary"
                         onClick={() =>
                           commitEdit(editingMessageId, editedContent)
                         }
-                        sx={{ minWidth: 100 }}
                       >
                         保存
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        onClick={cancelEdit}
-                        sx={{ minWidth: 100 }}
-                      >
+                      </button>
+                      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+                      <button className="btn btn-outline" onClick={cancelEdit}>
                         キャンセル
-                      </Button>
-                    </Box>
-                  </Box>
+                      </button>
+                    </div>
+                  </div>
                 ) : (
-                  <Paper
-                    sx={{
-                      display: "flex",
-                      maxWidth: "60%",
-                      padding: 1,
-                      borderRadius: 2,
-                      backgroundColor:
-                        m.creator === myId ? "secondary.main" : "#FFF",
-                      boxShadow: 1,
-                      border: 1,
-                    }}
+                  <div
+                    className={`rounded-xl p-2 shadow ${
+                      m.creator === myId ? "bg-secondary" : "bg-white"
+                    }`}
                   >
-                    <Typography
-                      sx={{ wordBreak: "break-word", whiteSpace: "pre-wrap" }}
-                    >
+                    <p className="whitespace-pre-wrap break-words">
                       {m.content}
-                    </Typography>
+                    </p>
                     {m.creator === myId && (
                       <Dots
                         actions={[
@@ -277,7 +232,7 @@ export function RoomWindow() {
                           {
                             label: "削除",
                             color: "red",
-                            onClick: () => deleteMessage(m.id, room.friendId),
+                            onClick: () => deleteMessage(m.id, friendId),
                             alert: true,
                             messages: {
                               buttonMessage: "削除",
@@ -289,26 +244,20 @@ export function RoomWindow() {
                         ]}
                       />
                     )}
-                  </Paper>
+                  </div>
                 )}
-              </Box>
+              </div>
             ))}
-          </Box>
+          </div>
         ) : (
-          <Typography>最初のメッセージを送ってみましょう！</Typography>
+          <div className="text-center text-gray-500">
+            最初のメッセージを送ってみましょう！
+          </div>
         )}
-      </Box>
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: "52px",
-          width: "100%",
-          backgroundColor: "#fff",
-          padding: "0px",
-        }}
-      >
-        <MessageInput send={sendDMMessage} room={room} />
-      </Box>
+      </div>
+      <div className="fixed bottom-12 w-full bg-white p-0">
+        <MessageInput send={sendDMMessage} friendId={friendId} />
+      </div>
     </>
   );
 }
