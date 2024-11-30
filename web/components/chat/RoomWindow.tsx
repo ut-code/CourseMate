@@ -1,12 +1,6 @@
-import type {
-  DMOverview,
-  Message,
-  MessageID,
-  SendMessage,
-  UserID,
-} from "common/types";
+"use client";
+import type { Message, MessageID, SendMessage, UserID } from "common/types";
 import type { Content } from "common/zod/types";
-import { useSearchParams } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as chat from "~/api/chat/chat";
@@ -19,13 +13,25 @@ import { socket } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
-export function RoomWindow() {
-  // FIXME:  React Router が使えなくなったので、一時的に room の情報を URL に載せることで状態管理
-  const searchParams = useSearchParams();
-  const roomData = searchParams.get("roomData");
-  const room = roomData
-    ? (JSON.parse(decodeURIComponent(roomData)) as DMOverview)
-    : null;
+type Props = {
+  friendId: UserID;
+  room: {
+    id: number;
+    messages: {
+      id: number;
+      creator: number;
+      createdAt: Date;
+      content: string;
+      edited: boolean;
+    }[];
+    isDM: true;
+  } & {
+    name: string;
+    thumbnail: string;
+  };
+};
+export function RoomWindow(props: Props) {
+  const { friendId, room } = props;
 
   if (!room) {
     return (
@@ -36,7 +42,7 @@ export function RoomWindow() {
   const {
     state: { data: myId },
   } = useMyID();
-  const { state, reload, write } = useMessages(room.friendId);
+  const { state, reload, write } = useMessages(friendId);
   const [messages, setMessages] = useState(state.data);
 
   useEffect(() => {
@@ -73,7 +79,7 @@ export function RoomWindow() {
       const idToken = await getIdToken();
       socket.emit("register", idToken);
       socket.on("newMessage", async (msg: Message) => {
-        if (msg.creator === room.friendId) {
+        if (msg.creator === friendId) {
           appendLocalMessage(msg);
         } else {
           const creator = await user.get(msg.creator);
@@ -87,7 +93,7 @@ export function RoomWindow() {
         }
       });
       socket.on("updateMessage", async (msg: Message) => {
-        if (msg.creator === room.friendId) {
+        if (msg.creator === friendId) {
           updateLocalMessage(msg);
         }
       });
@@ -104,6 +110,7 @@ export function RoomWindow() {
     };
   }, [
     room,
+    friendId,
     enqueueSnackbar,
     appendLocalMessage,
     updateLocalMessage,
@@ -142,11 +149,11 @@ export function RoomWindow() {
       const editedMessage = await chat.updateMessage(
         message,
         { content },
-        room.friendId,
+        friendId,
       );
       updateLocalMessage(editedMessage);
     },
-    [updateLocalMessage, room.friendId],
+    [updateLocalMessage, friendId],
   );
 
   const cancelEdit = useCallback(() => {
@@ -167,7 +174,7 @@ export function RoomWindow() {
       <div className="fixed top-14 z-50 w-full bg-white">
         <RoomHeader room={room} />
       </div>
-      <div className="absolute top-14 right-0 bottom-14 left-0 flex flex-col overflow-y-auto">
+      <div className="absolute top-14 right-0 left-0 flex flex-col overflow-y-auto">
         {messages && messages.length > 0 ? (
           <div className="flex-grow overflow-y-auto p-2" ref={scrollDiv}>
             {messages.map((m) => (
@@ -225,7 +232,7 @@ export function RoomWindow() {
                           {
                             label: "削除",
                             color: "red",
-                            onClick: () => deleteMessage(m.id, room.friendId),
+                            onClick: () => deleteMessage(m.id, friendId),
                             alert: true,
                             messages: {
                               buttonMessage: "削除",
@@ -248,8 +255,8 @@ export function RoomWindow() {
           </div>
         )}
       </div>
-      <div className="fixed bottom-0 w-full bg-white p-0">
-        <MessageInput send={sendDMMessage} room={room} />
+      <div className="fixed bottom-12 w-full bg-white p-0">
+        <MessageInput send={sendDMMessage} friendId={friendId} />
       </div>
     </>
   );

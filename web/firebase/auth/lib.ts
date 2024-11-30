@@ -17,7 +17,8 @@ const token = new Promise<string>((resolve) => {
 });
 
 export async function getIdToken(): Promise<IDToken> {
-  return await token;
+  const toke = await token;
+  return toke;
 }
 
 type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
