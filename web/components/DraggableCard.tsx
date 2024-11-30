@@ -1,7 +1,7 @@
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Box, Typography } from "@mui/material";
-import type { User, UserID } from "common/types";
+import type { UserID, UserWithCoursesAndSubjects } from "common/types";
 import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { useCallback, useState } from "react";
 import { Card } from "./Card";
@@ -9,7 +9,7 @@ import { Card } from "./Card";
 const SWIPE_THRESHOLD = 30;
 
 interface DraggableCardProps {
-  displayedUser: User;
+  displayedUser: UserWithCoursesAndSubjects;
   comparisonUserId?: UserID;
   onSwipeRight: () => void;
   onSwipeLeft: () => void;
