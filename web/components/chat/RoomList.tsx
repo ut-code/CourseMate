@@ -12,15 +12,9 @@ type RoomListProps = {
 export function RoomList(props: RoomListProps) {
   const { roomsData } = props;
   const router = useRouter();
-
-  /**
-   * FIXME:
-   * React Router が使えなくなったので、一時的に room の情報を URL に載せることで状態管理
-   */
   const navigateToRoom = (room: Extract<RoomOverview, { isDM: true }>) => {
-    router.push(
-      `./?friendId=${room.friendId}&roomData=${encodeURIComponent(JSON.stringify(room))}`,
-    );
+    console.log(room.friendId);
+    router.push(`/chat/${room.friendId}`);
   };
 
   return (
