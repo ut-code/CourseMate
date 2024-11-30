@@ -9,9 +9,7 @@ const auth = getAuth(app);
 
 // 認証状態の完了を待機するためのPromiseを作成
 const token = new Promise<string>((resolve) => {
-  console.log("えうう");
   onAuthStateChanged(auth, async (u: User | null) => {
-    console.log("ユーザ", u);
     if (u != null) {
       resolve(await u.getIdToken());
     }
@@ -20,7 +18,6 @@ const token = new Promise<string>((resolve) => {
 
 export async function getIdToken(): Promise<IDToken> {
   const toke = await token;
-  console.log("トーク", toke);
   return toke;
 }
 
@@ -37,9 +34,7 @@ export async function credFetch(
   path: string,
   body?: unknown,
 ): Promise<Response> {
-  console.log("こんにちは");
   let idToken = await getIdToken();
-  console.log("とくん", idToken);
   const init: RequestInit = { method };
   if (body) {
     init.body = JSON.stringify(body);
@@ -47,7 +42,6 @@ export async function credFetch(
       "Content-Type": "application/json",
     };
   }
-  console.log(`${path}?token=${idToken}`);
   let res = await fetch(`${path}?token=${idToken}`, init);
 
   if (res.status === 401) {
