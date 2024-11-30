@@ -3,6 +3,7 @@
 import { Box, List, Typography } from "@mui/material";
 import type { RoomOverview } from "common/types";
 import { useRouter } from "next/navigation";
+import request from "~/api/request";
 import { HumanListItem } from "../human/humanListItem";
 
 type RoomListProps = {
@@ -34,6 +35,32 @@ export function RoomList(props: RoomListProps) {
       </p>
       {roomsData?.map((room) => {
         if (room.isDM) {
+          if (!room.isFriend) {
+            return (
+              <Box
+                key={room.friendId}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateToRoom(room);
+                }}
+              >
+                <HumanListItem
+                  key={room.friendId}
+                  id={room.friendId}
+                  name={room.name}
+                  pictureUrl={room.thumbnail}
+                  rollUpName={true}
+                  lastMessage={room.lastMsg?.content}
+                  onAccept={() => {
+                    request.accept(room.friendId).then(() => location.reload());
+                  }}
+                  onReject={() => {
+                    request.reject(room.friendId).then(() => location.reload());
+                  }}
+                />
+              </Box>
+            );
+          }
           return (
             <Box
               key={room.friendId}

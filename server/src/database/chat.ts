@@ -14,15 +14,17 @@ import type {
 } from "common/types";
 import { prisma } from "./client";
 import { getRelation } from "./matches";
-import { getMatchedUser } from "./requests";
+import { getMatchedUser, getPendingRequestsToUser } from "./requests";
 
-// ユーザーの参加しているすべての Room の概要 (Overview) の取得
 export async function getOverview(
   user: UserID,
 ): Promise<Result<RoomOverview[]>> {
   try {
     const matched = await getMatchedUser(user);
     if (!matched.ok) return Err(matched.error);
+
+    const requester = await getPendingRequestsToUser(user);
+    if (!requester.ok) return Err(requester.error);
 
     const dm = await Promise.all(
       matched.value.map(async (friend) => {
@@ -32,6 +34,7 @@ export async function getOverview(
           : undefined;
         const overview: DMOverview = {
           isDM: true,
+          isFriend: true,
           friendId: friend.id,
           name: friend.name,
           thumbnail: friend.pictureUrl,
@@ -61,7 +64,22 @@ export async function getOverview(
       };
       return overview;
     });
-    return Ok([...shared, ...dm]);
+
+    // リクエスター (友達申請者) のオーバービュー作成
+    const requesterOverview = requester.value.map((requester) => {
+      const overview: DMOverview = {
+        isDM: true,
+        isFriend: false,
+        friendId: requester.id,
+        name: requester.name,
+        thumbnail: requester.pictureUrl,
+        lastMsg: undefined, // リクエストには最後のメッセージはない
+      };
+      return overview;
+    });
+
+    // すべてのオーバービューを結合
+    return Ok([...shared, ...dm, ...requesterOverview]);
   } catch (e) {
     return Err(e);
   }

@@ -125,6 +125,7 @@ export const SendMessageSchema = z.object({
 
 export const DMOverviewSchema = z.object({
   isDM: z.literal(true),
+  isFriend: z.boolean(),
   friendId: UserIDSchema,
   name: NameSchema,
   thumbnail: z.string(),

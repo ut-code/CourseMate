@@ -68,14 +68,23 @@ export function HumanListItem(props: HumanListItemProps) {
           // biome-ignore lint/a11y/useButtonType: <explanation>
           <button
             className="btn btn-success btn-sm"
-            onClick={() => onAccept(id)}
+            onClick={(e) => {
+              e.stopPropagation(); // クリックイベントの伝播を防止
+              onAccept(id); // IDをonAcceptに渡す
+            }}
           >
             承認
           </button>
         )}
         {onReject && (
           // biome-ignore lint/a11y/useButtonType: <explanation>
-          <button className="btn btn-error btn-sm" onClick={() => onReject(id)}>
+          <button
+            className="btn btn-error btn-sm"
+            onClick={(e) => {
+              e.stopPropagation(); // クリックイベントの伝播を防止
+              onReject(id); // IDをonAcceptに渡す
+            }}
+          >
             拒否
           </button>
         )}
