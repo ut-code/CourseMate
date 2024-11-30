@@ -1,8 +1,14 @@
 "use client";
-
 import { useState } from "react";
-import Matchings from "~/components/match/matching";
-import Requests from "~/components/match/requests";
+
+// https://nextjs.org/docs/messages/react-hydration-error#solution-2-disabling-ssr-on-specific-components
+import dynamic from "next/dynamic";
+const NoSSRMatchings = dynamic(() => import("~/components/match/matching"), {
+  ssr: false,
+});
+const NoSSRRequests = dynamic(() => import("~/components/match/requests"), {
+  ssr: false,
+});
 
 export default function Friends() {
   const [activeTab, setActiveTab] = useState("matching");
@@ -39,7 +45,7 @@ export default function Friends() {
 
       {/* コンテンツ部分 */}
       <div className="mt-4 text-center text-gray-700 text-lg">
-        {activeTab === "matching" ? <Matchings /> : <Requests />}
+        {activeTab === "matching" ? <NoSSRMatchings /> : <NoSSRRequests />}
       </div>
     </div>
   );
