@@ -1,9 +1,9 @@
 "use client";
 
 import CloseIcon from "@mui/icons-material/Close";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import { motion, useAnimation } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
+import { MdThumbUp } from "react-icons/md";
 import request from "~/api/request";
 import { useMyID, useRecommended } from "~/api/user";
 import { Card } from "~/components/Card";
@@ -33,7 +33,7 @@ export default function Home() {
     if (displayedUser?.id) request.send(displayedUser.id);
   }, [displayedUser?.id]);
 
-  const onClickCross = useCallback(() => {
+  const onClickClose = useCallback(() => {
     setClickedButton("cross");
     controls
       .start({
@@ -102,8 +102,8 @@ export default function Home() {
               </div>
             )}
             <div className="button-container mt-4 mb-4 flex w-full justify-center space-x-8">
-              <RoundButton onclick={onClickCross} icon={<CloseIconStyled />} />
-              <RoundButton
+              <CloseButton onclick={onClickClose} icon={<CloseIconStyled />} />
+              <GoodButton
                 onclick={onClickHeart}
                 icon={<FavoriteIconStyled />}
               />
@@ -120,7 +120,16 @@ interface RoundButtonProps {
   icon: JSX.Element;
 }
 
-const RoundButton = ({ onclick, icon }: RoundButtonProps) => (
+const CloseButton = ({ onclick, icon }: RoundButtonProps) => (
+  <button
+    type="button"
+    onClick={onclick}
+    className="btn btn-circle bg-white shadow-md"
+  >
+    {icon}
+  </button>
+);
+const GoodButton = ({ onclick, icon }: RoundButtonProps) => (
   <button
     type="button"
     onClick={onclick}
@@ -133,5 +142,5 @@ const RoundButton = ({ onclick, icon }: RoundButtonProps) => (
 const CloseIconStyled = () => <CloseIcon className="text-4xl text-gray-500" />;
 
 const FavoriteIconStyled = () => (
-  <FavoriteIcon className="text-4xl text-red-500" />
+  <MdThumbUp className="text-3xl text-primary" />
 );
