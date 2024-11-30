@@ -1,6 +1,6 @@
+import { safeParseInt } from "common/lib/result/safeParseInt";
+import type { UserID } from "common/types";
 import express, { type Request, type Response } from "express";
-import { safeParseInt } from "../common/lib/result/safeParseInt";
-import type { UserID } from "../common/types";
 import { deleteMatch, getMatchesByUserId } from "../database/matches";
 import { safeGetUserId } from "../firebase/auth/db";
 

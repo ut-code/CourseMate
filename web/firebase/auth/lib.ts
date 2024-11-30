@@ -1,6 +1,6 @@
+import type { IDToken } from "common/types";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import type { User } from "firebase/auth";
-import type { IDToken } from "~/common/types";
 import { app } from "../config";
 
 export class ErrUnauthorized extends Error {}
