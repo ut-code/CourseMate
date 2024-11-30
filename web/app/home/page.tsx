@@ -101,7 +101,7 @@ export default function Home() {
                 </motion.div>
               </div>
             )}
-            <div className="button-container mt-4 mb-4 flex w-full space-x-8 justify-center">
+            <div className="button-container mt-4 mb-4 flex w-full justify-center space-x-8">
               <RoundButton onclick={onClickCross} icon={<CloseIconStyled />} />
               <RoundButton
                 onclick={onClickHeart}
