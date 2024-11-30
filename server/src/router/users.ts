@@ -1,11 +1,11 @@
-import express, { type Request, type Response } from "express";
-import type { GUID, UpdateUser } from "../common/types";
-import type { User } from "../common/types";
+import type { GUID, UpdateUser } from "common/types";
+import type { User } from "common/types";
 import {
   GUIDSchema,
   InitUserSchema,
   UpdateUserSchema,
-} from "../common/zod/schemas";
+} from "common/zod/schemas";
+import express, { type Request, type Response } from "express";
 import {
   getPendingRequestsFromUser,
   getPendingRequestsToUser,

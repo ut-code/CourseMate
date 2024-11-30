@@ -13,13 +13,8 @@ export default function Matchings() {
   const { openModal } = useModal();
 
   return (
-    <div>
-      <p
-        style={{
-          marginLeft: "40px",
-          marginRight: "40px",
-        }}
-      >
+    <div className="p-4">
+      <p className="mr-10 ml-10 text-lg">
         {data && data.length === 0 && (
           <>
             誰ともマッチングしていません。
@@ -31,9 +26,9 @@ export default function Matchings() {
       {current === "loading" ? (
         <FullScreenCircularProgress />
       ) : error ? (
-        <p>Error: {error.message}</p>
+        <p className="text-red-500">Error: {error.message}</p>
       ) : (
-        <ul>
+        <ul className="mt-4 space-y-4">
           {data?.map((matchedUser) => (
             <HumanListItem
               key={matchedUser.id}

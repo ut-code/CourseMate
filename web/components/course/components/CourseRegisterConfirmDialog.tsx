@@ -1,16 +1,6 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
+import type { Course } from "common/types";
 import { useEffect, useState } from "react";
 import { addMyCourse, getMyCoursesOverlapWith } from "~/api/course";
-import type { Course } from "~/common/types";
 
 export default function CourseRegisterConfirmDialog({
   open,
@@ -26,7 +16,6 @@ export default function CourseRegisterConfirmDialog({
   handleCoursesUpdate: (courses: Course[]) => void;
 }) {
   const [overlapCourses, setOverlapCourses] = useState<Course[]>([]);
-
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -43,24 +32,20 @@ export default function CourseRegisterConfirmDialog({
   }, [course]);
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>変更の確認</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          次のように変更します。よろしいですか？
-        </DialogContentText>
-        <Box mt={2}>
+    <div className={`modal ${open ? "modal-open" : ""}`}>
+      <div className="modal-box">
+        <h3 className="font-bold text-lg">変更の確認</h3>
+        <p className="py-4">次のように変更します。よろしいですか？</p>
+        <div className="mt-2 space-y-2">
           {course && (
-            <Alert color="success" icon={false} severity="info">
+            <div className="alert alert-success">
               {`追加: ${course.name} (${course.teacher})`}
-            </Alert>
+            </div>
           )}
           {isLoading ? (
-            <Alert color="info" icon={false} severity="info" sx={{ mt: 1 }}>
-              読み込み中...
-            </Alert>
+            <div className="alert alert-info">読み込み中...</div>
           ) : (
-            <Alert color="error" icon={false} severity="info" sx={{ mt: 1 }}>
+            <div className="alert alert-error">
               {`削除: ${
                 overlapCourses
                   .map(
@@ -69,25 +54,30 @@ export default function CourseRegisterConfirmDialog({
                   )
                   .join("・") || "なし"
               }`}
-            </Alert>
+            </div>
           )}
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>キャンセル</Button>
-        {course && (
-          <Button
-            onClick={async () => {
-              const newCourses = await addMyCourse(course.id);
-              handleCoursesUpdate(newCourses);
-              onClose();
-              handleSelectDialogClose();
-            }}
-          >
-            確定
-          </Button>
-        )}
-      </DialogActions>
-    </Dialog>
+        </div>
+        <div className="modal-action">
+          {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+          <button className="btn btn-ghost" onClick={onClose}>
+            キャンセル
+          </button>
+          {course && (
+            // biome-ignore lint/a11y/useButtonType: <explanation>
+            <button
+              className="btn btn-primary"
+              onClick={async () => {
+                const newCourses = await addMyCourse(course.id);
+                handleCoursesUpdate(newCourses);
+                onClose();
+                handleSelectDialogClose();
+              }}
+            >
+              確定
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

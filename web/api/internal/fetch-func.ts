@@ -1,4 +1,4 @@
-import { Err, Ok, type Result } from "~/common/lib/result";
+import { Err, Ok, type Result } from "common/lib/result";
 
 export async function safeFetch(
   path: string,

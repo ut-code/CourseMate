@@ -10,12 +10,8 @@ export default function MyReq() {
   const { openModal } = useModal();
 
   return (
-    <div>
-      <p
-        style={{
-          marginLeft: "40px",
-        }}
-      >
+    <div className="p-4">
+      <p className="ml-10 text-lg">
         {state.data && state.data.length > 0
           ? "以下のリクエストを送信しました！"
           : "リクエストを送信しましょう！"}
@@ -23,9 +19,9 @@ export default function MyReq() {
       {state.current === "loading" ? (
         <FullScreenCircularProgress />
       ) : state.error ? (
-        <p>Error: {state.error.message}</p>
+        <p className="text-red-500">Error: {state.error.message}</p>
       ) : (
-        <ul>
+        <ul className="mt-4 space-y-4">
           {state.data?.map((receivingUser) => (
             <HumanListItem
               key={receivingUser.id}

@@ -9,13 +9,13 @@ import type {
   SharedRoom,
   UpdateRoom,
   UserID,
-} from "~/common/types";
+} from "common/types";
 import { ErrUnauthorized, credFetch } from "~/firebase/auth/lib";
 import endpoints from "../internal/endpoints";
 
 /* TODO
-import { UserID } from "~/common/types";
-import type { User } from "~/common/types";
+import { UserID } from "common/types";
+import type { User } from "common/types";
 */
 
 //// DM グループチャット 共通////
@@ -83,14 +83,22 @@ export async function sendDM(
   return res.json();
 }
 
-export async function getDM(friendId: UserID): Promise<DMRoom> {
+export async function getDM(friendId: UserID): Promise<
+  DMRoom & {
+    name: string;
+    thumbnail: string;
+  }
+> {
   const res = await credFetch("GET", endpoints.dmWith(friendId));
   if (res.status === 401) throw new ErrUnauthorized();
   if (res.status !== 200)
     throw new Error(
       `getDM() failed: expected status code 200, got ${res.status}`,
     );
-  const json: DMRoom = await res.json();
+  const json: DMRoom & {
+    name: string;
+    thumbnail: string;
+  } = await res.json();
   if (!Array.isArray(json?.messages)) return json;
   for (const m of json.messages) {
     m.createdAt = new Date(m.createdAt);
