@@ -66,19 +66,24 @@ export async function getOverview(
     });
 
     // リクエスター (友達申請者) のオーバービュー作成
-    const requesterOverview = requester.value.map((requester) => {
-      const overview: DMOverview = {
-        isDM: true,
-        isFriend: false,
-        friendId: requester.id,
-        name: requester.name,
-        thumbnail: requester.pictureUrl,
-        lastMsg: undefined, // リクエストには最後のメッセージはない
-      };
-      return overview;
-    });
+    const requesterOverview = await Promise.all(
+      requester.value.map(async (requester) => {
+        const lastMessageResult = await getLastMessage(user, requester.id);
+        const lastMessage = lastMessageResult.ok
+          ? lastMessageResult.value
+          : undefined;
+        const overview: DMOverview = {
+          isDM: true,
+          isFriend: false,
+          friendId: requester.id,
+          name: requester.name,
+          thumbnail: requester.pictureUrl,
+          lastMsg: lastMessage,
+        };
+        return overview;
+      }),
+    );
 
-    // すべてのオーバービューを結合
     return Ok([...shared, ...dm, ...requesterOverview]);
   } catch (e) {
     return Err(e);

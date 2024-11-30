@@ -43,7 +43,9 @@ export async function sendDM(
 ): Promise<http.Response<Message>> {
   const rel = await getRelation(from, to);
   if (!rel.ok || rel.value.status === "REJECTED")
-    return http.forbidden("cannot send to rejected-friend");
+    return http.forbidden(
+      "You cannot send a message because the friendship request was rejected.",
+    );
 
   // they are now MATCHED
   const msg: Omit<Message, "id"> = {
