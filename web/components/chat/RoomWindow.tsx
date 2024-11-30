@@ -1,6 +1,6 @@
 "use client";
 import type { Message, MessageID, SendMessage, UserID } from "common/types";
-import type { Content } from "common/zod/types";
+import type { Content, DMRoom, PersonalizedDMRoom } from "common/zod/types";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as chat from "~/api/chat/chat";
@@ -13,23 +13,8 @@ import { socket } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
-type Props = {
-  friendId: UserID;
-  room: {
-    id: number;
-    messages: {
-      id: number;
-      creator: number;
-      createdAt: Date;
-      content: string;
-      edited: boolean;
-    }[];
-    isDM: true;
-  } & {
-    name: string;
-    thumbnail: string;
-  };
-};
+type Props = { friendId: UserID; room: DMRoom & PersonalizedDMRoom };
+
 export function RoomWindow(props: Props) {
   const { friendId, room } = props;
 
@@ -171,6 +156,10 @@ export function RoomWindow(props: Props) {
 
   return (
     <>
+      {!room.isFriend && (
+        <FloatingMessage message="この人とはマッチングしていません。" />
+      )}
+
       <div className="fixed top-14 z-50 w-full bg-white">
         <RoomHeader room={room} />
       </div>
@@ -261,3 +250,22 @@ export function RoomWindow(props: Props) {
     </>
   );
 }
+
+type FloatingMessageProps = {
+  message: string;
+};
+
+const FloatingMessage = ({ message }: FloatingMessageProps) => {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{
+        pointerEvents: "none",
+      }}
+    >
+      <p className="w-11/12 max-w-md rounded-lg bg-white p-6 text-center shadow-lg">
+        {message}
+      </p>
+    </div>
+  );
+};

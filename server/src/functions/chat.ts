@@ -42,8 +42,8 @@ export async function sendDM(
   send: SendMessage,
 ): Promise<http.Response<Message>> {
   const rel = await getRelation(from, to);
-  if (!rel.ok || rel.value.status !== "MATCHED")
-    return http.forbidden("cannot send to non-friend");
+  if (!rel.ok || rel.value.status === "REJECTED")
+    return http.forbidden("cannot send to rejected-friend");
 
   // they are now MATCHED
   const msg: Omit<Message, "id"> = {
@@ -62,8 +62,9 @@ export async function getDM(
   requester: UserID,
   _with: UserID,
 ): Promise<http.Response<PersonalizedDMRoom & DMRoom>> {
-  if (!areMatched(requester, _with))
-    return http.forbidden("cannot DM with a non-friend");
+  const rel = await getRelation(requester, _with);
+  if (!rel.ok || rel.value.status === "REJECTED")
+    return http.forbidden("cannot send to rejected-friend");
 
   const room = await db.getDMbetween(requester, _with);
   if (!room.ok) return http.internalError();
@@ -74,6 +75,7 @@ export async function getDM(
   const personalized: PersonalizedDMRoom & DMRoom = {
     name: friendData.value.name,
     thumbnail: friendData.value.pictureUrl,
+    isFriend: rel.value.status === "MATCHED",
     ...room.value,
   };
 

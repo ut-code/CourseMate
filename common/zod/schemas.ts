@@ -154,6 +154,7 @@ export const DMRoomSchema = z.object({
 export const PersonalizedDMRoomSchema = z.object({
   name: NameSchema,
   thumbnail: z.string(),
+  isFriend: z.boolean(),
 });
 
 export const SharedRoomSchema = z.object({
