@@ -84,7 +84,7 @@ export default function Home() {
           <div className="flex h-full flex-col items-center justify-center">
             {nextUser && (
               <div className="relative h-full w-full">
-                <div className="-translate-x-1/2 absolute inset-0 z-0 mt-4 transform">
+                <div className="-translate-x-4 -translate-y-4 inset-0 z-0 mt-4 transform">
                   <Card displayedUser={nextUser} />
                 </div>
                 <motion.div
@@ -101,7 +101,7 @@ export default function Home() {
                 </motion.div>
               </div>
             )}
-            <div className="button-container mt-4 mb-4 flex w-full space-x-8">
+            <div className="button-container mt-4 mb-4 flex w-full space-x-8 justify-center">
               <RoundButton onclick={onClickCross} icon={<CloseIconStyled />} />
               <RoundButton
                 onclick={onClickHeart}
