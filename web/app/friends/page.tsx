@@ -19,26 +19,26 @@ export default function Friends() {
         <button
           type="button"
           className={`relative flex-1 py-2 text-center ${
-            activeTab === "matching" ? "text-blue-600" : "text-gray-600"
+            activeTab === "matching" ? "text-primary" : "text-gray-600"
           }`}
           onClick={() => setActiveTab("matching")}
         >
-          <span>タブ1</span>
+          <span>マッチ中</span>
           {activeTab === "matching" && (
-            <span className="absolute bottom-0 left-0 h-1 w-full bg-blue-500" />
+            <span className="absolute bottom-0 left-0 h-1 w-full bg-primary" />
           )}
         </button>
 
         <button
           type="button"
           className={`relative flex-1 py-2 text-center ${
-            activeTab === "request" ? "text-blue-600" : "text-gray-600"
+            activeTab === "request" ? "text-primary" : "text-gray-600"
           }`}
           onClick={() => setActiveTab("request")}
         >
-          <span>タブ2</span>
+          <span>リクエスト</span>
           {activeTab === "request" && (
-            <span className="absolute bottom-0 left-0 h-1 w-full bg-blue-500" />
+            <span className="absolute bottom-0 left-0 h-1 w-full bg-primary" />
           )}
         </button>
       </div>
