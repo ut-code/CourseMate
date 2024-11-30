@@ -69,8 +69,8 @@ export function HumanListItem(props: HumanListItemProps) {
           <button
             className="btn btn-success btn-sm"
             onClick={(e) => {
-              e.stopPropagation(); // クリックイベントの伝播を防止
-              onAccept(id); // IDをonAcceptに渡す
+              e.stopPropagation();
+              onAccept(id);
             }}
           >
             承認
@@ -81,8 +81,8 @@ export function HumanListItem(props: HumanListItemProps) {
           <button
             className="btn btn-error btn-sm"
             onClick={(e) => {
-              e.stopPropagation(); // クリックイベントの伝播を防止
-              onReject(id); // IDをonAcceptに渡す
+              e.stopPropagation();
+              onReject(id);
             }}
           >
             拒否
