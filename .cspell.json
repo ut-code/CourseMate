@@ -2,19 +2,25 @@
   "version": "0.2",
   "language": "en",
   "words": [
-    "supabase",
-    "direnv",
-    "bunx",
-    "qiita",
-    "coursemate",
-    "safify",
-    "notistack",
     "autoincrement",
+    "bunx",
+    "chrono",
+    "coursemate",
+    "daisyui",
     "datasource",
-    "lockb",
-    "psql",
+    "direnv",
+    "ECCS",
     "isready",
-    "ECCS"
+    "lockb",
+    "mytheme",
+    "notistack",
+    "psql",
+    "qiita",
+    "reqwest",
+    "safify",
+    "supabase",
+    "swiper",
+    "lefthook"
   ],
   "dictionaries": [
     "softwareTerms",
@@ -30,6 +36,7 @@
   ],
   "ignorePaths": [
     "flake.*",
+    "nix/*",
     "**/.git/**",
     "**/node_modules/**",
     "server/target/**",
@@ -38,6 +45,10 @@
     "**/bun.lockb",
     "**/*.svg",
     "**/migration.sql",
-    "**/data.json"
+    "**/data.json",
+    "**/Cargo.*",
+    "scraper/target",
+    "**/rust-toolchain.toml",
+    "web/out"
   ]
 }

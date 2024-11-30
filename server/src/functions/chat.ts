@@ -1,5 +1,5 @@
-import type { Result } from "../common/lib/result";
-import type { InitRoom, SharedRoom, UserID } from "../common/types";
+import type { Result } from "common/lib/result";
+import type { InitRoom, SharedRoom, UserID } from "common/types";
 import type {
   DMRoom,
   Message,
@@ -8,7 +8,7 @@ import type {
   RoomOverview,
   SendMessage,
   ShareRoomID,
-} from "../common/types";
+} from "common/types";
 import * as db from "../database/chat";
 import { areAllMatched, areMatched, getRelation } from "../database/matches";
 import { getUserByID } from "../database/users";

@@ -1,0 +1,64 @@
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  flex: 1;
+}
+
+.table th,
+.table td {
+  border: 1px solid #000;
+  text-align: center;
+  padding: 0;
+  font-weight: normal;
+  height: 3rem;
+}
+
+.table th {
+  padding: 0;
+}
+
+.table th:first-child {
+  width: 1.5rem;
+}
+
+.table button {
+  width: 100%;
+  height: 100%;
+  border: none;
+  cursor: pointer;
+  padding: 0 0.1rem;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  font-size: 0.5rem;
+  vertical-align: top;
+}
+
+.table > tbody > tr > td > div {
+  width: 100%;
+  height: 100%;
+  padding: 0 0.1rem;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1dvh;
+  vertical-align: top;
+}
+
+.enrolled {
+  background-color: rgb(255, 208, 42, 0.81) !important;
+}
+
+.overlapped {
+  background-color: rgb(245, 130, 32, 0.81) !important;
+}
+
+.spaceAround {
+  justify-content: space-around;
+}

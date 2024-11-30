@@ -13,7 +13,6 @@ GNU Make が導入されています。以下は、ユーザーが使うこと�
 - make setup (セットアップします。)
 - make start (build -> serve します。)
 - make watch (ホットリロードします。)
-- make precommit (type-check, format-check, lint を実行します。husky で自動実行されます。)
 
 ### 環境構築
 
@@ -27,6 +26,7 @@ GNU Make が導入されています。以下は、ユーザーが使うこと�
   - Bun (js)
   - GNU Make
   - nvm (optional)
+  - lefthook
 
 - `make setup` を実行します。
 
@@ -58,4 +58,19 @@ make watch
 make docker
 # または
 make docker-watch
+```
+
+## Deploy
+
+web:
+```sh
+NEXT_PUBLIC_ALLOW_ANY_MAIL_ADDR=true # optional
+make prepare-deploy-web`
+# serve ./web/dist
+```
+
+server:
+```sh
+make prepare-deploy-server
+make deploy-server
 ```

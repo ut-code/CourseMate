@@ -11,12 +11,13 @@
     "prisma-generate-sql": "bunx dotenv -e .env.dev -- prisma generate --sql"
   },
   "prisma": {
-    "seed": "bun src/seeds/seed.ts"
+    "seed": "bun src/seeds/seed-test.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "common": "file:../common",
     "@prisma/client": "^5.20.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
