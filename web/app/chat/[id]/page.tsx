@@ -1,5 +1,6 @@
 "use client";
 import type { DMRoom, PersonalizedDMRoom } from "common/types";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import * as chat from "~/api/chat/chat";
 import { RoomWindow } from "~/components/chat/RoomWindow";
@@ -16,8 +17,16 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <p>idは{id}です。</p>
-      {room ? <RoomWindow friendId={id} room={room} /> : <p>データないよ</p>}
+      {room ? (
+        <RoomWindow friendId={id} room={room} />
+      ) : (
+        <p>
+          Sorry, an unexpected error has occurred.
+          <Link href="/home" className="text-blue-600">
+            Go Back
+          </Link>
+        </p>
+      )}
     </>
   );
 }
