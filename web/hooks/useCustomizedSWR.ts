@@ -77,7 +77,6 @@ export function useCustomizedSWR<T>(
         console.error(
           `useSWR: Schema Parse Error | in incoming data | at schema ${CACHE_KEY} | Error: ${result.error.message}`,
         );
-        console.log("data:", data);
       }
       setState({
         data: data,
