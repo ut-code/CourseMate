@@ -1,3 +1,4 @@
+"use client";
 import { deleteMatch } from "~/api/match";
 import { useMatched } from "~/api/user";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
@@ -13,15 +14,11 @@ export default function Matchings() {
 
   return (
     <div className="p-4">
-      <p className="mr-10 ml-10 text-lg">
-        {data && data.length === 0 && (
-          <>
-            誰ともマッチングしていません。
-            <br />
-            リクエストを送りましょう！
-          </>
-        )}
-      </p>
+      {data && data.length === 0 && (
+        <p className="mr-10 ml-10 text-lg">
+          誰ともマッチングしていません。 リクエストを送りましょう！
+        </p>
+      )}
       {current === "loading" ? (
         <FullScreenCircularProgress />
       ) : error ? (
