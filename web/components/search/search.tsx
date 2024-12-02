@@ -19,12 +19,12 @@ export default function Search({ placeholder }: { placeholder: string }) {
   }
 
   return (
-    <div className="relative flex flex-1 flex-shrink-0">
+    <div className="relative mr-5 ml-5 flex flex-1 flex-shrink-0">
       <label htmlFor="search" className="sr-only">
         Search
       </label>
       <input
-        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+        className=" block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-none placeholder:text-gray-500 focus:border-primary focus:ring-1 focus:ring-primary"
         placeholder={placeholder}
         onChange={(e) => {
           handleSearch(e.target.value);

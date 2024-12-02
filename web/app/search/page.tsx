@@ -14,9 +14,9 @@ export default function SearchPage(props: {
   const query = searchParams?.query || "";
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="card w-96 bg-white p-6 shadow-md">
-        <h2 className="mb-4 font-bold text-2xl">Search</h2>
+    <div className="flex min-h-screen justify-center ">
+      <div className="w-full">
+        <h2 className="m-5 mb-4 font-bold text-2xl">ユーザー検索</h2>
         <Search placeholder="検索" />
         <Table query={query} />
       </div>

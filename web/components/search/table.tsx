@@ -14,22 +14,15 @@ export default function UserTable({ query }: { query: string }) {
   const [users, setUsers] = useState<User[] | null>(null);
 
   useEffect(() => {
-    if (data) {
-      setUsers(data);
-    }
-  }, [data]);
-
-  useEffect(() => {
     function searchByUserName(query: string) {
       const filteredUsers = data?.filter((user) =>
         user.name.toLowerCase().includes(query.toLowerCase()),
       );
       setUsers(filteredUsers || null);
     }
-    if (query === "") {
+    if (!query) {
       setUsers(data);
-    }
-    if (query) {
+    } else {
       searchByUserName(query);
     }
   }, [query, data]);
