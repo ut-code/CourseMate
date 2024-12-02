@@ -1,6 +1,5 @@
 "use client";
-import type { User } from "common/types";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useAll, useMyID } from "~/api/user";
 import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
@@ -11,27 +10,16 @@ export default function UserTable({ query }: { query: string }) {
     state: { data },
   } = useAll();
   const { state } = useMyID();
-  const [users, setUsers] = useState<User[] | null>(null);
-
-  const filteredData = useMemo(() => {
+  const initialData = useMemo(() => {
     return (
       data?.filter((item) => item.id !== state.data && item.id !== 0) ?? null
     );
   }, [data, state.data]);
-
-  useEffect(() => {
-    function searchByUserName(query: string) {
-      const filteredUsers = filteredData?.filter((user) =>
+  const users = query
+    ? initialData?.filter((user) =>
         user.name.toLowerCase().includes(query.toLowerCase()),
-      );
-      setUsers(filteredUsers || null);
-    }
-    if (!query) {
-      setUsers(filteredData);
-    } else {
-      searchByUserName(query);
-    }
-  }, [query, filteredData]);
+      )
+    : initialData;
 
   return (
     <div>
