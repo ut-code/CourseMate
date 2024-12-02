@@ -1,39 +1,29 @@
 "use client";
 
+import type { User } from "common/types";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { useRecommended } from "~/api/user";
+import { useAll } from "~/api/user";
 
 import { useModal } from "~/components/common/modal/ModalProvider";
 import { HumanListItem } from "~/components/human/humanListItem";
 
-const SearchPage: React.FC = () => {
+export default function SearchPage() {
   const [searchWord, setSearchWord] = useState("");
-  const { data: recommended } = useRecommended();
+  const {
+    state: { data },
+  } = useAll();
   const { openModal } = useModal();
-  const [users, setUsers] = useState<
-    | {
-        id: number;
-        guid: string;
-        name: string;
-        gender: string;
-        grade: string;
-        faculty: string;
-        department: string;
-        intro: string;
-        pictureUrl: string;
-      }[]
-    | null
-  >(null);
+  const [users, setUsers] = useState<User[] | null>(null);
 
   useEffect(() => {
-    if (recommended) {
-      setUsers(recommended);
+    if (data) {
+      setUsers(data);
     }
-  }, [recommended]);
+  }, [data]);
 
   function searchByUserName() {
-    const filteredUsers = recommended?.filter((user) =>
+    const filteredUsers = data?.filter((user) =>
       user.name.toLowerCase().includes(searchWord.toLowerCase()),
     );
     setUsers(filteredUsers || null);
@@ -43,7 +33,6 @@ const SearchPage: React.FC = () => {
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="card w-96 bg-white p-6 shadow-md">
         <h2 className="mb-4 font-bold text-2xl">Search</h2>
-
         <div className="form-control mb-4">
           <label htmlFor="searchInput" className="label">
             <span className="label-text">Enter search term</span>
@@ -56,7 +45,6 @@ const SearchPage: React.FC = () => {
             className="input input-bordered w-full"
           />
         </div>
-
         <button
           type="button"
           onClick={searchByUserName}
@@ -77,6 +65,4 @@ const SearchPage: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default SearchPage;
+}
