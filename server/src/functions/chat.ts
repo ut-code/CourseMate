@@ -77,7 +77,12 @@ export async function getDM(
   const personalized: PersonalizedDMRoom & DMRoom = {
     name: friendData.value.name,
     thumbnail: friendData.value.pictureUrl,
-    isFriend: rel.value.status === "MATCHED",
+    matchingStatus:
+      rel.value.status === "MATCHED"
+        ? "matched"
+        : rel.value.status === "PENDING"
+          ? "myRequest"
+          : "otherRequest", //Fix Me: これだとREJECTEDの時に、matchingStatus = otherRequest になってしまう。本当はちゃんと判別しないといけない。呼び出し口でこれがちゃんと使われてないので、無視している。
     ...room.value,
   };
 

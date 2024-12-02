@@ -7,6 +7,7 @@ type HumanListItemProps = {
   pictureUrl: string;
   lastMessage?: string;
   rollUpName?: boolean; // is currently only intended to be used in Chat
+  statusMessage?: string;
   onDelete?: (id: number) => void;
   onOpen?: (user: { id: number; name: string; pictureUrl: string }) => void;
   onAccept?: (id: number) => void;
@@ -23,6 +24,7 @@ export function HumanListItem(props: HumanListItemProps) {
     pictureUrl,
     rollUpName,
     lastMessage,
+    statusMessage,
     onDelete,
     onOpen,
     onAccept,
@@ -60,6 +62,9 @@ export function HumanListItem(props: HumanListItemProps) {
             <span className="max-w-[60vw] truncate text-gray-500 text-sm">
               {lastMessage}
             </span>
+          )}
+          {statusMessage && (
+            <span className="text-blue-500 text-sm">{statusMessage}</span>
           )}
         </div>
       </button>
