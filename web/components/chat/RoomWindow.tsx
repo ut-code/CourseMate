@@ -158,10 +158,15 @@ export function RoomWindow(props: Props) {
 
   return (
     <>
-      {!room.isFriend && (
+      {room.matchingStatus !== "matched" && (
         <FloatingMessage
-          message="この人とはマッチングしていません。"
+          message={
+            room.matchingStatus === "myRequest"
+              ? "この人とはマッチングしていません。最初の挨拶をしましょう。"
+              : "この人とはマッチングしていません。"
+          }
           friendId={friendId}
+          showButtons={room.matchingStatus === "otherRequest"}
         />
       )}
 
@@ -258,11 +263,17 @@ export function RoomWindow(props: Props) {
 
 type FloatingMessageProps = {
   message: string;
-  friendId: UserID;
+  friendId: number;
+  showButtons: boolean;
 };
 
-const FloatingMessage = ({ message, friendId }: FloatingMessageProps) => {
+const FloatingMessage = ({
+  message,
+  friendId,
+  showButtons,
+}: FloatingMessageProps) => {
   const router = useRouter();
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
@@ -277,24 +288,28 @@ const FloatingMessage = ({ message, friendId }: FloatingMessageProps) => {
         }}
       >
         <p>{message}</p>
-        {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-        <button
-          className="btn btn-success btn-sm"
-          onClick={() => {
-            request.accept(friendId).then(() => router.push("/chat"));
-          }}
-        >
-          承認
-        </button>
-        {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-        <button
-          className="btn btn-error btn-sm"
-          onClick={() => {
-            request.reject(friendId).then(() => router.push("/chat"));
-          }}
-        >
-          拒否
-        </button>
+        {showButtons && (
+          <div className="mt-4 space-x-4">
+            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+            <button
+              className="btn btn-success btn-sm"
+              onClick={() => {
+                request.accept(friendId).then(() => router.push("/chat"));
+              }}
+            >
+              承認
+            </button>
+            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+            <button
+              className="btn btn-error btn-sm"
+              onClick={() => {
+                request.reject(friendId).then(() => router.push("/chat"));
+              }}
+            >
+              拒否
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

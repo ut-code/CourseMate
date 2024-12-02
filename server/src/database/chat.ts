@@ -14,7 +14,11 @@ import type {
 } from "common/types";
 import { prisma } from "./client";
 import { getRelation } from "./matches";
-import { getMatchedUser, getPendingRequestsToUser } from "./requests";
+import {
+  getMatchedUser,
+  getPendingRequestsFromUser,
+  getPendingRequestsToUser,
+} from "./requests";
 
 export async function getOverview(
   user: UserID,
@@ -23,10 +27,14 @@ export async function getOverview(
     const matched = await getMatchedUser(user);
     if (!matched.ok) return Err(matched.error);
 
-    const requester = await getPendingRequestsToUser(user);
-    if (!requester.ok) return Err(requester.error);
+    const senders = await getPendingRequestsToUser(user);
+    if (!senders.ok) return Err(senders.error);
 
-    const dm = await Promise.all(
+    const receivers = await getPendingRequestsFromUser(user);
+    if (!receivers.ok) return Err(receivers.error);
+
+    //マッチングしている人のオーバービュー
+    const matchingOverview = await Promise.all(
       matched.value.map(async (friend) => {
         const lastMessageResult = await getLastMessage(user, friend.id);
         const lastMessage = lastMessageResult.ok
@@ -34,10 +42,48 @@ export async function getOverview(
           : undefined;
         const overview: DMOverview = {
           isDM: true,
-          isFriend: true,
+          matchingStatus: "matched",
           friendId: friend.id,
           name: friend.name,
           thumbnail: friend.pictureUrl,
+          lastMsg: lastMessage,
+        };
+        return overview;
+      }),
+    );
+
+    //自分にリクエストを送ってきた人のオーバービュー
+    const senderOverview = await Promise.all(
+      senders.value.map(async (sender) => {
+        const lastMessageResult = await getLastMessage(user, sender.id);
+        const lastMessage = lastMessageResult.ok
+          ? lastMessageResult.value
+          : undefined;
+        const overview: DMOverview = {
+          isDM: true,
+          matchingStatus: "otherRequest",
+          friendId: sender.id,
+          name: sender.name,
+          thumbnail: sender.pictureUrl,
+          lastMsg: lastMessage,
+        };
+        return overview;
+      }),
+    );
+
+    //自分がリクエストを送った人のオーバービュー
+    const receiverOverview = await Promise.all(
+      receivers.value.map(async (receiver) => {
+        const lastMessageResult = await getLastMessage(user, receiver.id);
+        const lastMessage = lastMessageResult.ok
+          ? lastMessageResult.value
+          : undefined;
+        const overview: DMOverview = {
+          isDM: true,
+          matchingStatus: "myRequest",
+          friendId: receiver.id,
+          name: receiver.name,
+          thumbnail: receiver.pictureUrl,
           lastMsg: lastMessage,
         };
         return overview;
@@ -65,26 +111,12 @@ export async function getOverview(
       return overview;
     });
 
-    // リクエスター (友達申請者) のオーバービュー作成
-    const requesterOverview = await Promise.all(
-      requester.value.map(async (requester) => {
-        const lastMessageResult = await getLastMessage(user, requester.id);
-        const lastMessage = lastMessageResult.ok
-          ? lastMessageResult.value
-          : undefined;
-        const overview: DMOverview = {
-          isDM: true,
-          isFriend: false,
-          friendId: requester.id,
-          name: requester.name,
-          thumbnail: requester.pictureUrl,
-          lastMsg: lastMessage,
-        };
-        return overview;
-      }),
-    );
-
-    return Ok([...shared, ...dm, ...requesterOverview]);
+    return Ok([
+      ...matchingOverview,
+      ...senderOverview,
+      ...receiverOverview,
+      ...shared,
+    ]);
   } catch (e) {
     return Err(e);
   }

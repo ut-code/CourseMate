@@ -61,17 +61,17 @@ export async function sendDM(
 }
 
 export async function getDM(
-  requester: UserID,
-  _with: UserID,
+  user: UserID,
+  friend: UserID,
 ): Promise<http.Response<PersonalizedDMRoom & DMRoom>> {
-  const rel = await getRelation(requester, _with);
+  const rel = await getRelation(user, friend);
   if (!rel.ok || rel.value.status === "REJECTED")
     return http.forbidden("cannot send to rejected-friend");
 
-  const room = await db.getDMbetween(requester, _with);
+  const room = await db.getDMbetween(user, friend);
   if (!room.ok) return http.internalError();
 
-  const friendData = await getUserByID(_with);
+  const friendData = await getUserByID(friend);
   if (!friendData.ok) return http.notFound("friend not found");
 
   const personalized: PersonalizedDMRoom & DMRoom = {
@@ -80,9 +80,9 @@ export async function getDM(
     matchingStatus:
       rel.value.status === "MATCHED"
         ? "matched"
-        : rel.value.status === "PENDING"
+        : rel.value.sendingUserId === user //どっちが送ったリクエストなのかを判定
           ? "myRequest"
-          : "otherRequest", //Fix Me: これだとREJECTEDの時に、matchingStatus = otherRequest になってしまう。本当はちゃんと判別しないといけない。呼び出し口でこれがちゃんと使われてないので、無視している。
+          : "otherRequest",
     ...room.value,
   };
 
