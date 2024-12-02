@@ -9,12 +9,12 @@ export default function UserTable({ query }: { query: string }) {
   const {
     state: { data },
   } = useAll();
-  const { state } = useMyID();
+  const {
+    state: { data: myId },
+  } = useMyID();
   const initialData = useMemo(() => {
-    return (
-      data?.filter((item) => item.id !== state.data && item.id !== 0) ?? null
-    );
-  }, [data, state.data]);
+    return data?.filter((item) => item.id !== myId && item.id !== 0) ?? null;
+  }, [data, myId]);
   const users = query
     ? initialData?.filter((user) =>
         user.name.toLowerCase().includes(query.toLowerCase()),

@@ -51,9 +51,17 @@ export function useCustomizedSWR<T>(
 ): Hook<T> {
   const CACHE_KEY = SWR_PREFIX + cacheKey;
 
-  const [state, setState] = useState<State<T>>(() =>
-    loadOldData(CACHE_KEY, schema),
-  );
+  // HACK: 最初の描画時の挙動をサーバー上の挙動とそろえるため、 useEffect() でstaleデータの読み込みを遅延している。
+  // >> https://github.com/vercel/next.js/discussions/17443
+  // >> Code that is only supposed to run in the browser should be executed inside useEffect. That's required because the first render should match the initial render of the server. If you manipulate that result it creates a mismatch and React won't be able to hydrate the page successfully.
+  const [state, setState] = useState<State<T>>({
+    current: "loading",
+    data: null,
+    error: null,
+  });
+  useEffect(() => {
+    setState(loadOldData(CACHE_KEY, schema));
+  }, [CACHE_KEY, schema]);
 
   const reload = useCallback(async () => {
     setState((state) =>
@@ -151,5 +159,5 @@ function loadOldData<T>(
 }
 
 function go(fn: () => Promise<void>) {
-  fn();
+  fn().catch(console.warn);
 }
