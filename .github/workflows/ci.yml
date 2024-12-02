@@ -67,7 +67,7 @@ jobs:
           bun-version: latest
 
       - run: make setup-ci
-      - run: make spell-check
+      - run: bunx cspell --quiet .
 
   test:
     name: Bun Test
@@ -86,7 +86,7 @@ jobs:
       - uses: actions/setup-node@v3
       - uses: oven-sh/setup-bun@v2
       - run: make prepare-deploy-web
-      - run: test `ls web/out | wc -l` != 0
+      - run: test `ls web/.next | wc -l` != 0
 
   deploy-test-server:
     name: Deploy Test (server)

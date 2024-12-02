@@ -1,0 +1,16 @@
+# Lefthook: Precommit Hook
+# docs: https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
+# 必須: Lefthook
+# 必須: `lefthook install`
+pre-commit:
+  parallel: true
+  commands:
+    biome:
+      glob: "*"
+      run: bunx biome check --write --no-errors-on-unmatched --files-ignore-unknown=true -- {staged_files}
+      stage_fixed: true
+    prevent-commit-on-main:
+      run: if [ "$(git branch --show-current)" == "main" ]; then echo "Cannot make commit on main! aborting..."; exit 1; fi
+    cspell:
+      glob: "*"
+      run: bunx cspell --quiet .
