@@ -183,3 +183,19 @@ export async function getMatchedUser(userId: UserID): Promise<Result<User[]>> {
     return Err(e);
   }
 }
+
+export async function matchWithMemo(userId: UserID) {
+  try {
+    const result = await prisma.relationship.create({
+      data: {
+        status: "MATCHED",
+        sendingUserId: userId,
+        receivingUserId: 0, //KeepメモのUserId
+      },
+    });
+
+    return result;
+  } catch (error) {
+    return Err(error);
+  }
+}
