@@ -160,11 +160,7 @@ export function RoomWindow(props: Props) {
     <>
       {room.matchingStatus !== "matched" && (
         <FloatingMessage
-          message={
-            room.matchingStatus === "myRequest"
-              ? "この人とはマッチングしていません。最初の挨拶をしましょう。"
-              : "この人とはマッチングしていません。"
-          }
+          message="この人とはマッチングしていません。"
           friendId={friendId}
           showButtons={room.matchingStatus === "otherRequest"}
         />
