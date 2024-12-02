@@ -1,12 +1,12 @@
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
 import { Chip } from "@mui/material";
-import type { User, UserID } from "common/types";
+import type { UserID, UserWithCoursesAndSubjects } from "common/types";
 import { useState } from "react";
 import NonEditableCoursesTable from "./course/NonEditableCoursesTable";
 import UserAvatar from "./human/avatar";
 
 interface CardProps {
-  displayedUser: User;
+  displayedUser: UserWithCoursesAndSubjects;
   comparisonUserId?: UserID;
   onFlip?: (isBack: boolean) => void;
 }
@@ -97,6 +97,12 @@ const CardFront = ({ displayedUser }: CardProps) => {
           {displayedUser.intro}
         </p>
       </div>
+      <p>TODO: これはサンプルです</p>
+      <ul>
+        {displayedUser.interestSubjects.map((subject) => (
+          <li key={subject.id}>{subject.name}</li>
+        ))}
+      </ul>
       <div className="flex justify-center">
         <ThreeSixtyIcon className="text-3xl" />
       </div>

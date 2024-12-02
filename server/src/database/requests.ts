@@ -1,5 +1,9 @@
 import { Err, Ok, type Result } from "common/lib/result";
-import type { Relationship, User, UserID } from "common/types";
+import type {
+  Relationship,
+  UserID,
+  UserWithCoursesAndSubjects,
+} from "common/types";
 import { prisma } from "./client";
 
 // マッチリクエストの送信
@@ -114,7 +118,7 @@ export async function cancelRequest(
 //ユーザーへのリクエストを探す 俺をリクエストしているのは誰だ
 export async function getPendingRequestsToUser(
   userId: UserID,
-): Promise<Result<User[]>> {
+): Promise<Result<UserWithCoursesAndSubjects[]>> {
   try {
     const found = await prisma.user.findMany({
       where: {
@@ -125,8 +129,37 @@ export async function getPendingRequestsToUser(
           },
         },
       },
+      include: {
+        enrollments: {
+          include: {
+            course: {
+              include: {
+                enrollments: true,
+                slots: true,
+              },
+            },
+          },
+        },
+        interests: {
+          include: {
+            subject: true,
+          },
+        },
+      },
     });
-    return Ok(found);
+    return Ok(
+      found.map((user) => {
+        return {
+          ...user,
+          interestSubjects: user.interests.map((interest) => {
+            return interest.subject;
+          }),
+          courses: user.enrollments.map((enrollment) => {
+            return enrollment.course;
+          }),
+        };
+      }),
+    );
   } catch (e) {
     return Err(e);
   }
@@ -135,7 +168,7 @@ export async function getPendingRequestsToUser(
 //ユーザーがリクエストしている人を探す 俺がリクエストしているのは誰だ
 export async function getPendingRequestsFromUser(
   userId: UserID,
-): Promise<Result<User[]>> {
+): Promise<Result<UserWithCoursesAndSubjects[]>> {
   try {
     const found = await prisma.user.findMany({
       where: {
@@ -146,15 +179,46 @@ export async function getPendingRequestsFromUser(
           },
         },
       },
+      include: {
+        enrollments: {
+          include: {
+            course: {
+              include: {
+                enrollments: true,
+                slots: true,
+              },
+            },
+          },
+        },
+        interests: {
+          include: {
+            subject: true,
+          },
+        },
+      },
     });
-    return Ok(found);
+    return Ok(
+      found.map((user) => {
+        return {
+          ...user,
+          interestSubjects: user.interests.map((interest) => {
+            return interest.subject;
+          }),
+          courses: user.enrollments.map((enrollment) => {
+            return enrollment.course;
+          }),
+        };
+      }),
+    );
   } catch (e) {
     return Err(e);
   }
 }
 
 //マッチした人の取得
-export async function getMatchedUser(userId: UserID): Promise<Result<User[]>> {
+export async function getMatchedUser(
+  userId: UserID,
+): Promise<Result<UserWithCoursesAndSubjects[]>> {
   try {
     const found = await prisma.user.findMany({
       where: {
@@ -177,8 +241,37 @@ export async function getMatchedUser(userId: UserID): Promise<Result<User[]>> {
           },
         ],
       },
+      include: {
+        enrollments: {
+          include: {
+            course: {
+              include: {
+                enrollments: true,
+                slots: true,
+              },
+            },
+          },
+        },
+        interests: {
+          include: {
+            subject: true,
+          },
+        },
+      },
     });
-    return Ok(found);
+    return Ok(
+      found.map((user) => {
+        return {
+          ...user,
+          interestSubjects: user.interests.map((interest) => {
+            return interest.subject;
+          }),
+          courses: user.enrollments.map((enrollment) => {
+            return enrollment.course;
+          }),
+        };
+      }),
+    );
   } catch (e) {
     return Err(e);
   }
