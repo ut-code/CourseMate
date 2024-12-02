@@ -9,6 +9,7 @@ import express, { type Request, type Response } from "express";
 import {
   getPendingRequestsFromUser,
   getPendingRequestsToUser,
+  matchWithMemo,
 } from "../database/requests";
 import {
   createUser,
@@ -124,10 +125,20 @@ router.get("/id/:id", async (req: Request, res: Response) => {
 // INSERT INTO "User" VALUES (body...)
 router.post("/", async (req: Request, res: Response) => {
   const partialUser = InitUserSchema.safeParse(req.body);
-  if (!partialUser.success) return res.status(400).send("invalid format");
+  if (!partialUser.success)
+    return res.status(400).send({
+      error: "Invalid input format",
+      details: partialUser.error.errors,
+    });
 
   const user = await createUser(partialUser.data);
-  if (!user.ok) return res.status(500).send();
+  if (!user.ok) return res.status(500).send({ error: "Failed to create user" });
+
+  //ユーザー作成と同時にメモとマッチング
+  const result = await matchWithMemo(user.value.id);
+  if ("ok" in result && !result.ok) {
+    return res.status(500).send({ error: "Failed to match user with memo" });
+  }
   res.status(201).json(user.value);
 });
 

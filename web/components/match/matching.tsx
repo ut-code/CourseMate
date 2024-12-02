@@ -25,17 +25,24 @@ export default function Matchings() {
         <p className="text-red-500">Error: {error.message}</p>
       ) : (
         <ul className="mt-4 space-y-4">
-          {data?.map((matchedUser) => (
-            <HumanListItem
-              key={matchedUser.id}
-              id={matchedUser.id}
-              name={matchedUser.name}
-              pictureUrl={matchedUser.pictureUrl}
-              onOpen={() => openModal(matchedUser)}
-              onDelete={() => deleteMatch(matchedUser.id).then(() => reload())}
-              hasDots
-            />
-          ))}
+          {data?.map((matchedUser) =>
+            matchedUser.id === 0 ? (
+              //メモ帳
+              <div key={0} />
+            ) : (
+              <HumanListItem
+                key={matchedUser.id}
+                id={matchedUser.id}
+                name={matchedUser.name}
+                pictureUrl={matchedUser.pictureUrl}
+                onOpen={() => openModal(matchedUser)}
+                onDelete={() =>
+                  deleteMatch(matchedUser.id).then(() => reload())
+                }
+                hasDots
+              />
+            ),
+          )}
         </ul>
       )}
     </div>
