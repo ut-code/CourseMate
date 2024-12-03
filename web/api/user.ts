@@ -10,6 +10,9 @@ import type { Hook as UseHook } from "./share/types.ts";
 
 const UserListSchema = z.array(UserSchema);
 
+export function useAll(): Hook<User[]> {
+  return useCustomizedSWR("users::all", all, UserListSchema);
+}
 export function useRecommended(): UseHook<User[]> {
   const url = endpoints.recommendedUsers;
   return useAuthorizedData<User[]>(url);
@@ -26,6 +29,11 @@ export function usePendingFromMe(): Hook<User[]> {
     pendingFromMe,
     UserListSchema,
   );
+}
+
+async function all(): Promise<User[]> {
+  const res = await credFetch("GET", endpoints.users);
+  return res.json();
 }
 
 async function matched(): Promise<User[]> {
@@ -131,6 +139,8 @@ export async function deleteAccount(): Promise<void> {
   const res = await credFetch("DELETE", endpoints.me);
   if (res.status !== 204)
     throw new Error(
-      `failed to delete account: expected status code 204, but got ${res.status} with text ${await res.text()}`,
+      `failed to delete account: expected status code 204, but got ${
+        res.status
+      } with text ${await res.text()}`,
     );
 }

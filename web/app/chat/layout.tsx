@@ -13,7 +13,7 @@ export default function ChatPageLayout({
       <div className="absolute top-14 right-0 bottom-14 left-0 overflow-y-auto sm:top-16">
         {children}
       </div>
-      <BottomBar activeTab="2_chat" />
+      <BottomBar activeTab="3_chat" />
     </NavigateByAuthState>
   );
 }
