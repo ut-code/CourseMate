@@ -1,15 +1,127 @@
+import React, { useState, useRef, useEffect } from "react";
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
-import { Chip } from "@mui/material";
 import type { User, UserID } from "common/types";
-import { useState } from "react";
-import NonEditableCoursesTable from "./course/NonEditableCoursesTable";
 import UserAvatar from "./human/avatar";
+import NonEditableCoursesTable from "./course/NonEditableCoursesTable";
 
 interface CardProps {
   displayedUser: User;
   comparisonUserId?: UserID;
   onFlip?: (isBack: boolean) => void;
 }
+
+const interests = [
+  "記号論理学",
+  "量子力学",
+  "離散数学",
+  "プログラミング",
+  "量子情報理論",
+  "オペレーションズリサーチ",
+];
+
+const CardFront = ({ displayedUser }: { displayedUser: User }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isHiddenInterestExist, setHiddenInterestExist] = useState(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      calculateVisibleInterests();
+    });
+
+    resizeObserver.observe(container);
+
+    calculateVisibleInterests(); // 初期計算
+
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  const calculateVisibleInterests = () => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const containerHeight = container.offsetHeight; // ここで高さを取得
+
+    // 一旦全てのバッジを非表示にする
+    container.innerHTML = "";
+    setHiddenInterestExist(false);
+
+    // interestsを入れるflexコンテナ
+    const flexContainer = document.createElement("div");
+    flexContainer.classList.add("flex", "flex-wrap", "gap-2");
+    container.appendChild(flexContainer);
+
+    // interests配列をループしてバッジを作成
+    interests.forEach((interest) => {
+      // 新しい div 要素を作成
+      const element = document.createElement("div");
+      element.textContent = interest;
+
+      // スタイルを適用
+      element.classList.add("badge", "badge-outline");
+      element.style.overflow = "hidden";
+      element.style.whiteSpace = "nowrap";
+      element.style.textOverflow = "ellipsis";
+      element.style.display = "inline-block";
+
+      // 要素がコンテナの高さを超えていない場合、表示
+      if (flexContainer.offsetHeight + 20 <= containerHeight) {
+        flexContainer.appendChild(element);
+      } else {
+        setHiddenInterestExist(true);
+      }
+    });
+
+  };
+
+  return (
+    <div className="flex h-full flex-col justify-between gap-5 overflow-clip border-2 border-primary bg-secondary p-5">
+      <div className="grid h-[20%] grid-cols-3 items-center">
+        <UserAvatar pictureUrl={displayedUser.pictureUrl} width="9dvh" height="9dvh" />
+        <div className="grid grid-rows-3 items-center col-span-2">
+          <p className="col-span-3 font-bold text-1xl">{displayedUser.name}</p>
+          <p className="col-span-3 text-1xl">{displayedUser.grade}</p>
+          <p className="col-span-1 text-1xl">{displayedUser.faculty}</p>
+          <p className="col-span-2 text-1xl">{displayedUser.department}</p>
+        </div>
+      </div>
+
+      <div ref={containerRef} className="h-[50%] overflow-hidden width-full">
+        <div>
+        </div>
+      </div>
+
+      {isHiddenInterestExist && (
+        <div className="badge badge-outline bg-gray-200 text-gray-700">
+          And More
+        </div>
+      )}
+
+      <div className="flex justify-center">
+        <ThreeSixtyIcon className="text-3xl" />
+      </div>
+    </div>
+  );
+};
+
+const CardBack = ({ displayedUser, comparisonUserId }: CardProps) => {
+  return (
+    <div className="flex h-full flex-col overflow-hidden border-2 border-primary bg-secondary p-4">
+      <div className="flex justify-center">
+        <p className="font-bold text-lg">{displayedUser?.name}</p>
+      </div>
+      <NonEditableCoursesTable
+        userId={displayedUser.id}
+        comparisonUserId={comparisonUserId}
+      />
+      <div className="mt-4 flex justify-center">
+        <ThreeSixtyIcon className="text-3xl" />
+      </div>
+    </div>
+  );
+};
 
 export function Card({ displayedUser, comparisonUserId, onFlip }: CardProps) {
   const [isDisplayingBack, setIsDisplayingBack] = useState(false);
@@ -57,66 +169,3 @@ export function Card({ displayedUser, comparisonUserId, onFlip }: CardProps) {
     </div>
   );
 }
-
-const CardFront = ({ displayedUser }: CardProps) => {
-  return (
-    <div className="flex h-full flex-col justify-between gap-5 overflow-hidden border-2 border-primary bg-secondary p-5">
-      <div className="grid h-[30%] grid-cols-3 items-center">
-        <UserAvatar
-          pictureUrl={displayedUser.pictureUrl}
-          width="10dvh"
-          height="10dvh"
-        />
-        <div className="col-span-2 ml-2 flex justify-center">
-          <span className="font-bold text-4xl">{displayedUser.name}</span>
-        </div>
-      </div>
-      <div className="grid grid-cols-6 items-center gap-4">
-        <Chip label="学部" size="small" className="col-span-1" />
-        <p className="col-span-5 text-xl">{displayedUser.faculty}</p>
-      </div>
-      <div className="grid grid-cols-6 items-center gap-4">
-        <Chip label="学科" size="small" className="col-span-1" />
-        <p
-          className={`col-span-5 text-xl ${displayedUser.department.length > 7 ? "text-xs" : "text-2xl"}`}
-        >
-          {displayedUser.department}
-        </p>
-      </div>
-      <div className="grid grid-cols-6 items-center gap-4">
-        <Chip label="性別" size="small" className="col-span-1" />
-        <p className="col-span-5 text-xl">{displayedUser.gender}</p>
-      </div>
-      <div className="grid grid-cols-6 items-center gap-4">
-        <Chip label="学年" size="small" className="col-span-1" />
-        <p className="col-span-5 text-xl">{displayedUser.grade}</p>
-      </div>
-      <div className="grid max-h-[32%] flex-1 grid-cols-6 gap-4">
-        <Chip label="自己紹介" size="small" className="col-span-1 text-sm" />
-        <p className="col-span-5 line-clamp-8 overflow-hidden text-sm">
-          {displayedUser.intro}
-        </p>
-      </div>
-      <div className="flex justify-center">
-        <ThreeSixtyIcon className="text-3xl" />
-      </div>
-    </div>
-  );
-};
-
-const CardBack = ({ displayedUser, comparisonUserId }: CardProps) => {
-  return (
-    <div className="flex h-full flex-col overflow-hidden border-2 border-primary bg-secondary p-4">
-      <div className="flex justify-center">
-        <p className="font-bold text-lg">{displayedUser?.name}</p>
-      </div>
-      <NonEditableCoursesTable
-        userId={displayedUser.id}
-        comparisonUserId={comparisonUserId}
-      />
-      <div className="mt-4 flex justify-center">
-        <ThreeSixtyIcon className="text-3xl" />
-      </div>
-    </div>
-  );
-};
