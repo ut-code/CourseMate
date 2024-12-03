@@ -119,12 +119,8 @@ export async function getOverview(
     ];
 
     const sortedOverviewByTime = overview.sort((a, b) => {
-      const dateA = a.lastMsg?.createdAt
-        ? new Date(a.lastMsg.createdAt).getTime()
-        : 0;
-      const dateB = b.lastMsg?.createdAt
-        ? new Date(b.lastMsg.createdAt).getTime()
-        : 0;
+      const dateA = a.lastMsg?.createdAt ? a.lastMsg.createdAt.getTime() : 0;
+      const dateB = b.lastMsg?.createdAt ? b.lastMsg.createdAt.getTime() : 0;
       return dateB - dateA;
     });
 
