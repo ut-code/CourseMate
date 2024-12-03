@@ -111,12 +111,24 @@ export async function getOverview(
       return overview;
     });
 
-    return Ok([
+    const overview = [
       ...matchingOverview,
       ...senderOverview,
       ...receiverOverview,
       ...shared,
-    ]);
+    ];
+
+    const sortedOverviewByTime = overview.sort((a, b) => {
+      const dateA = a.lastMsg?.createdAt
+        ? new Date(a.lastMsg.createdAt).getTime()
+        : 0;
+      const dateB = b.lastMsg?.createdAt
+        ? new Date(b.lastMsg.createdAt).getTime()
+        : 0;
+      return dateB - dateA;
+    });
+
+    return Ok([...sortedOverviewByTime]);
   } catch (e) {
     return Err(e);
   }
