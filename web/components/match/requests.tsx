@@ -1,3 +1,4 @@
+"use client";
 import MyReq from "./myRequests";
 import OthersReq from "./othersRequests";
 

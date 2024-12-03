@@ -1,27 +1,13 @@
 "use client";
+import type { DMRoom, PersonalizedDMRoom } from "common/types";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import * as chat from "~/api/chat/chat";
 import { RoomWindow } from "~/components/chat/RoomWindow";
 
 export default function Page({ params }: { params: { id: string } }) {
   const id = Number.parseInt(params.id);
-  const [room, setRoom] = useState<
-    | ({
-        id: number;
-        isDM: true;
-        messages: {
-          id: number;
-          creator: number;
-          createdAt: Date;
-          content: string;
-          edited: boolean;
-        }[];
-      } & {
-        name: string;
-        thumbnail: string;
-      })
-    | null
-  >(null);
+  const [room, setRoom] = useState<(DMRoom & PersonalizedDMRoom) | null>(null);
   useEffect(() => {
     (async () => {
       const room = await chat.getDM(id);
@@ -31,8 +17,16 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <p>idは{id}です。</p>
-      {room ? <RoomWindow friendId={id} room={room} /> : <p>データないよ</p>}
+      {room ? (
+        <RoomWindow friendId={id} room={room} />
+      ) : (
+        <p>
+          Sorry, an unexpected error has occurred.
+          <Link href="/home" className="text-blue-600">
+            Go Back
+          </Link>
+        </p>
+      )}
     </>
   );
 }

@@ -1,10 +1,12 @@
 "use client";
 import type { Message, MessageID, SendMessage, UserID } from "common/types";
-import type { Content } from "common/zod/types";
+import type { Content, DMRoom, PersonalizedDMRoom } from "common/zod/types";
+import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as chat from "~/api/chat/chat";
 import { useMessages } from "~/api/chat/hooks";
+import request from "~/api/request";
 import * as user from "~/api/user";
 import { useMyID } from "~/api/user";
 import { getIdToken } from "~/firebase/auth/lib";
@@ -13,23 +15,8 @@ import { socket } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
-type Props = {
-  friendId: UserID;
-  room: {
-    id: number;
-    messages: {
-      id: number;
-      creator: number;
-      createdAt: Date;
-      content: string;
-      edited: boolean;
-    }[];
-    isDM: true;
-  } & {
-    name: string;
-    thumbnail: string;
-  };
-};
+type Props = { friendId: UserID; room: DMRoom & PersonalizedDMRoom };
+
 export function RoomWindow(props: Props) {
   const { friendId, room } = props;
 
@@ -171,6 +158,14 @@ export function RoomWindow(props: Props) {
 
   return (
     <>
+      {room.matchingStatus !== "matched" && (
+        <FloatingMessage
+          message="この人とはマッチングしていません。"
+          friendId={friendId}
+          showButtons={room.matchingStatus === "otherRequest"}
+        />
+      )}
+
       <div className="fixed top-14 z-50 w-full bg-white">
         <RoomHeader room={room} />
       </div>
@@ -261,3 +256,57 @@ export function RoomWindow(props: Props) {
     </>
   );
 }
+
+type FloatingMessageProps = {
+  message: string;
+  friendId: number;
+  showButtons: boolean;
+};
+
+const FloatingMessage = ({
+  message,
+  friendId,
+  showButtons,
+}: FloatingMessageProps) => {
+  const router = useRouter();
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{
+        pointerEvents: "none", // 背景はクリック可能にする
+      }}
+    >
+      <div
+        className="w-11/12 max-w-md rounded-lg bg-white p-6 text-center shadow-lg"
+        style={{
+          pointerEvents: "auto", // モーダル内はクリック可能にする
+        }}
+      >
+        <p>{message}</p>
+        {showButtons && (
+          <div className="mt-4 space-x-4">
+            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+            <button
+              className="btn btn-success btn-sm"
+              onClick={() => {
+                request.accept(friendId).then(() => router.push("/chat"));
+              }}
+            >
+              承認
+            </button>
+            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+            <button
+              className="btn btn-error btn-sm"
+              onClick={() => {
+                request.reject(friendId).then(() => router.push("/chat"));
+              }}
+            >
+              拒否
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

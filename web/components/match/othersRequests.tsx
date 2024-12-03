@@ -1,3 +1,4 @@
+"use client";
 import request from "~/api/request";
 import { usePendingToMe } from "~/api/user";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";

@@ -7,6 +7,7 @@ type HumanListItemProps = {
   pictureUrl: string;
   lastMessage?: string;
   rollUpName?: boolean; // is currently only intended to be used in Chat
+  statusMessage?: string;
   onDelete?: (id: number) => void;
   onOpen?: (user: { id: number; name: string; pictureUrl: string }) => void;
   onAccept?: (id: number) => void;
@@ -23,6 +24,7 @@ export function HumanListItem(props: HumanListItemProps) {
     pictureUrl,
     rollUpName,
     lastMessage,
+    statusMessage,
     onDelete,
     onOpen,
     onAccept,
@@ -61,6 +63,9 @@ export function HumanListItem(props: HumanListItemProps) {
               {lastMessage}
             </span>
           )}
+          {statusMessage && (
+            <span className="text-blue-500 text-sm">{statusMessage}</span>
+          )}
         </div>
       </button>
       <div className="flex items-center space-x-2">
@@ -68,14 +73,23 @@ export function HumanListItem(props: HumanListItemProps) {
           // biome-ignore lint/a11y/useButtonType: <explanation>
           <button
             className="btn btn-success btn-sm"
-            onClick={() => onAccept(id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAccept(id);
+            }}
           >
             承認
           </button>
         )}
         {onReject && (
           // biome-ignore lint/a11y/useButtonType: <explanation>
-          <button className="btn btn-error btn-sm" onClick={() => onReject(id)}>
+          <button
+            className="btn btn-error btn-sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onReject(id);
+            }}
+          >
             拒否
           </button>
         )}

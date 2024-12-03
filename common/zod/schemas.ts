@@ -123,8 +123,15 @@ export const SendMessageSchema = z.object({
   content: z.string().min(1, { message: "Content must not be empty." }),
 });
 
+export const MatchingStatusSchema = z.union([
+  z.literal("myRequest"),
+  z.literal("otherRequest"),
+  z.literal("matched"),
+]);
+
 export const DMOverviewSchema = z.object({
   isDM: z.literal(true),
+  matchingStatus: MatchingStatusSchema,
   friendId: UserIDSchema,
   name: NameSchema,
   thumbnail: z.string(),
@@ -153,6 +160,7 @@ export const DMRoomSchema = z.object({
 export const PersonalizedDMRoomSchema = z.object({
   name: NameSchema,
   thumbnail: z.string(),
+  matchingStatus: MatchingStatusSchema,
 });
 
 export const SharedRoomSchema = z.object({
