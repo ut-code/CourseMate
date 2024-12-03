@@ -1,5 +1,9 @@
 import React from "react";
 
 export default function adminLoginForm() {
-  return <div></div>;
+  return (
+    <div>
+      <p>ログインフォーム</p>
+    </div>
+  );
 }
