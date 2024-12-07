@@ -184,6 +184,29 @@ export async function getMatchedUser(userId: UserID): Promise<Result<User[]>> {
   }
 }
 
+export async function getMatchedRelations(
+  userId: UserID,
+): Promise<Result<Relationship[]>> {
+  try {
+    const found = await prisma.relationship.findMany({
+      where: {
+        status: "MATCHED",
+        OR: [
+          {
+            sendingUserId: userId,
+          },
+          {
+            receivingUserId: userId,
+          },
+        ],
+      },
+    });
+    return Ok(found);
+  } catch (e) {
+    return Err(e);
+  }
+}
+
 export async function matchWithMemo(userId: UserID) {
   try {
     const result = await prisma.relationship.create({

@@ -36,10 +36,11 @@ model User {
   pictureUrl String
 
   // bindings to other parts of this app
-  enrollments    Enrollment[]
-  sendingUsers   Relationship[] @relation("sending") // 自分がマッチリクエストを送ったユーザー
-  receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
-  interests      Interest[]
+  enrollments     Enrollment[]
+  sendingUsers    Relationship[]    @relation("sending") // 自分がマッチリクエストを送ったユーザー
+  receivingUsers  Relationship[]    @relation("receiving") // 自分にマッチリクエストを送ったユーザー
+  interests       Interest[]
+  LastReadMessage LastReadMessage[]
 }
 
 // プロフィールの画像。
@@ -52,9 +53,9 @@ model InterestSubject {
   id       Int        @id @default(autoincrement())
   name     String
   group    String // such as Computer Science | name = ML
+  Interest Interest[] // ignore this
 
   @@unique([name, group])
-  Interest Interest[] // ignore this
 }
 
 // User->Interest->InterestSubject
@@ -123,10 +124,12 @@ enum MatchingStatus {
 }
 
 model LastReadMessage {
-  messageId Int
-  reader    User @relation(fields: [readerId], references: [id], onDelete, Cascade)
-  readerId  Int
-  roomId Int?
+  id         Int  @id @default(autoincrement())
+  messageId  Int // asserts id are incremental (= latter message always has higher ID)
+  reader     User @relation(fields: [readerId], references: [id], onDelete: Cascade)
+  readerId   Int
+  roomId     Int?
+  relationId Int?
 }
 
 // TODO: lazy load MessageLog s.t. it doesn't need to be loaded on Overview query.

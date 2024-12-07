@@ -136,6 +136,7 @@ export const DMOverviewSchema = z.object({
   name: NameSchema,
   thumbnail: z.string(),
   lastMsg: MessageSchema.optional(),
+  unreadMessages: z.number(),
 });
 
 export const SharedRoomOverviewSchema = z.object({
