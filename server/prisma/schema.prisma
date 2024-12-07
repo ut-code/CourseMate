@@ -122,6 +122,13 @@ enum MatchingStatus {
   REJECTED
 }
 
+model LastReadMessage {
+  messageId Int
+  reader    User @relation(fields: [readerId], references: [id], onDelete, Cascade)
+  readerId  Int
+  roomId Int?
+}
+
 // TODO: lazy load MessageLog s.t. it doesn't need to be loaded on Overview query.
 // https://www.prisma.io/docs/orm/prisma-client/queries/select-fields
 model SharedRoom {

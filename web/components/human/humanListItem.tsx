@@ -7,6 +7,7 @@ type HumanListItemProps = {
   pictureUrl: string;
   lastMessage?: string;
   rollUpName?: boolean; // is currently only intended to be used in Chat
+  unreadCount?: number; // only intended to be used in chat
   statusMessage?: string;
   onDelete?: (id: number) => void;
   onOpen?: (user: { id: number; name: string; pictureUrl: string }) => void;
@@ -23,6 +24,7 @@ export function HumanListItem(props: HumanListItemProps) {
     name,
     pictureUrl,
     rollUpName,
+    unreadCount,
     lastMessage,
     statusMessage,
     onDelete,
@@ -69,6 +71,9 @@ export function HumanListItem(props: HumanListItemProps) {
         </div>
       </button>
       <div className="flex items-center space-x-2">
+        {unreadCount && (
+          <span className="badge badge-primary">{unreadCount}</span>
+        )}
         {onAccept && (
           // biome-ignore lint/a11y/useButtonType: <explanation>
           <button
