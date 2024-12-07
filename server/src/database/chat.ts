@@ -115,6 +115,27 @@ async function getOverviewBetween(
   };
   return overview;
 }
+export async function markAsRead(
+  rel: RelationshipID,
+  reader: UserID,
+  message: MessageID,
+) {
+  const val = {
+    readerId: reader,
+    messageId: message,
+    relationId: rel,
+  };
+  return await prisma.lastReadMessage.upsert({
+    where: {
+      messageId_readerId: {
+        messageId: message,
+        readerId: reader,
+      },
+    },
+    update: {},
+    create: val,
+  });
+}
 
 /**
  * DM の送信

@@ -26,6 +26,18 @@ export function RoomWindow(props: Props) {
     );
   }
 
+  // ?? it doesn't even render?? then I have no idea
+  console.log("rendering");
+  useEffect(() => {
+    (async () => {
+      const lastM = room.messages.at(-1);
+      if (lastM) {
+        console.log("marking as read: ", room.id, lastM.id);
+        await chat.markAsRead(room.id, lastM.id);
+      }
+    })();
+  }, [room]);
+
   const {
     state: { data: myId },
   } = useMyID();

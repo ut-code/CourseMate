@@ -4,6 +4,7 @@ import type {
   Message,
   MessageID,
   PersonalizedDMRoom,
+  RelationshipID,
   RoomOverview,
   SendMessage,
   ShareRoomID,
@@ -12,7 +13,7 @@ import type {
   UserID,
 } from "common/types";
 import { ErrUnauthorized, credFetch } from "~/firebase/auth/lib";
-import endpoints from "../internal/endpoints";
+import * as endpoints from "../internal/endpoints";
 
 /* TODO
 import { UserID } from "common/types";
@@ -32,6 +33,20 @@ export async function deleteMessage(
   if (res.status !== 204)
     throw new Error(
       `on deleteMessage(), expected status code of 204, but got ${res.status}`,
+    );
+}
+
+export async function markAsRead(
+  relationId: RelationshipID,
+  messageId: MessageID,
+) {
+  const res = await credFetch(
+    "POST",
+    endpoints.markAsRead(relationId, messageId),
+  );
+  if (res.status !== 200)
+    throw new Error(
+      `on markAsRead(), expected status code of 200, but got ${res.status}`,
     );
 }
 

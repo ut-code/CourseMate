@@ -130,6 +130,7 @@ model LastReadMessage {
   readerId   Int
   roomId     Int?
   relationId Int?
+  @@unique([messageId, readerId])
 }
 
 // TODO: lazy load MessageLog s.t. it doesn't need to be loaded on Overview query.
