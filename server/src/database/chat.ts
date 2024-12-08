@@ -15,12 +15,11 @@ import type {
 import { prisma } from "./client";
 import { getRelation } from "./matches";
 import {
-  getMatchedRelations,
   getMatchedUser,
   getPendingRequestsFromUser,
   getPendingRequestsToUser,
 } from "./requests";
-import { getUser, getUserByID } from "./users";
+import { getUserByID } from "./users";
 
 export async function getOverview(
   user: UserID,
@@ -133,16 +132,21 @@ export async function markAsRead(
     messageId: message,
     relationId: rel,
   };
-  return await prisma.lastReadMessage.upsert({
+  return await prisma.message.updateMany({
     where: {
-      messageId_readerId: {
-        messageId: message,
-        readerId: reader,
+      id: {
+        lte: message,
       },
       relationId: rel,
+      creator: {
+        not: {
+          equals: reader,
+        },
+      },
     },
-    update: {},
-    create: val,
+    data: {
+      read: true,
+    },
   });
 }
 
@@ -158,6 +162,7 @@ export async function sendDM(
     const message = await prisma.message.create({
       data: {
         relationId: relation,
+        read: false,
         ...content,
       },
     });
@@ -393,23 +398,9 @@ export async function getLastMessage(
 export async function unreadMessages(userId: UserID, roomId: RelationshipID) {
   try {
     // FIXME: this makes request twice to the database. it's not efficient.
-    const lastRead = await prisma.lastReadMessage.findFirst({
-      where: {
-        readerId: userId,
-        relationId: roomId,
-      },
-      orderBy: {
-        id: "desc",
-      },
-      select: { id: true },
-    });
     const unreadMessages = await prisma.message.count({
       where: {
-        id: lastRead
-          ? {
-              gt: lastRead.id,
-            }
-          : undefined,
+        read: false,
         relationId: roomId,
         creator: {
           not: {

@@ -36,11 +36,10 @@ model User {
   pictureUrl String
 
   // bindings to other parts of this app
-  enrollments     Enrollment[]
-  sendingUsers    Relationship[]    @relation("sending") // 自分がマッチリクエストを送ったユーザー
-  receivingUsers  Relationship[]    @relation("receiving") // 自分にマッチリクエストを送ったユーザー
-  interests       Interest[]
-  LastReadMessage LastReadMessage[]
+  enrollments    Enrollment[]
+  sendingUsers   Relationship[] @relation("sending") // 自分がマッチリクエストを送ったユーザー
+  receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
+  interests      Interest[]
 }
 
 // プロフィールの画像。
@@ -123,16 +122,6 @@ enum MatchingStatus {
   REJECTED
 }
 
-model LastReadMessage {
-  id         Int  @id @default(autoincrement())
-  messageId  Int // asserts id are incremental (= latter message always has higher ID)
-  reader     User @relation(fields: [readerId], references: [id], onDelete: Cascade)
-  readerId   Int
-  roomId     Int?
-  relationId Int?
-  @@unique([messageId, readerId])
-}
-
 // TODO: lazy load MessageLog s.t. it doesn't need to be loaded on Overview query.
 // https://www.prisma.io/docs/orm/prisma-client/queries/select-fields
 model SharedRoom {
@@ -149,6 +138,7 @@ model Message {
   createdAt    DateTime      @default(now()) // @readonly
   edited       Boolean       @default(false)
   content      String
+  read         Boolean
   relation     Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId   Int?
   sharedRoom   SharedRoom?   @relation(fields: [sharedRoomId], references: [id], onDelete: Cascade)
