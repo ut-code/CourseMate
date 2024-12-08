@@ -44,9 +44,9 @@ export async function markAsRead(
     "POST",
     endpoints.markAsRead(relationId, messageId),
   );
-  if (res.status !== 200)
+  if (res.status !== 200 && res.status !== 304)
     throw new Error(
-      `on markAsRead(), expected status code of 200, but got ${res.status}`,
+      `on markAsRead(), expected status code of 200 or 304, but got ${res.status}`,
     );
 }
 
