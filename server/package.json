@@ -36,5 +36,6 @@
     "globals": "^15.8.0",
     "prisma": "^5.11.0",
     "typescript": "^5.4.5"
-  }
+  },
+  "trustedPackages": ["prisma"]
 }

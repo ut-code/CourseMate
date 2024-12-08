@@ -20,6 +20,7 @@ export default function Page({ params }: { params: { id: string } }) {
       {room ? (
         <RoomWindow friendId={id} room={room} />
       ) : (
+        // FIXME: this isn't an error when it's just loading
         <p>
           Sorry, an unexpected error has occurred.
           <Link href="/home" className="text-blue-600">

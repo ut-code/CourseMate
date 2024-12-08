@@ -51,6 +51,7 @@ export function RoomList(props: RoomListProps) {
                   rollUpName={true}
                   lastMessage={room.lastMsg?.content}
                   statusMessage="リクエストを受けました"
+                  unreadCount={room.unreadMessages}
                 />
               </Box>
             );
@@ -72,6 +73,7 @@ export function RoomList(props: RoomListProps) {
                   rollUpName={true}
                   lastMessage={room.lastMsg?.content}
                   statusMessage="リクエスト中 メッセージを送りましょう！"
+                  unreadCount={room.unreadMessages}
                 />
               </Box>
             );
@@ -91,6 +93,7 @@ export function RoomList(props: RoomListProps) {
                 pictureUrl={room.thumbnail}
                 rollUpName={true}
                 lastMessage={room.lastMsg?.content}
+                unreadCount={room.unreadMessages}
               />
             </Box>
           );
