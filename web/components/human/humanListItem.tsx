@@ -71,9 +71,9 @@ export function HumanListItem(props: HumanListItemProps) {
         </div>
       </button>
       <div className="flex items-center space-x-2">
-        {unreadCount && (
+        {unreadCount ? (
           <span className="badge badge-primary">{unreadCount}</span>
-        )}
+        ) : undefined}
         {onAccept && (
           // biome-ignore lint/a11y/useButtonType: <explanation>
           <button

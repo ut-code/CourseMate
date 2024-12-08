@@ -26,7 +26,6 @@ export function RoomWindow(props: Props) {
     );
   }
 
-  // ?? it doesn't even render?? then I have no idea
   console.log("rendering");
   useEffect(() => {
     (async () => {

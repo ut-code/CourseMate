@@ -76,8 +76,13 @@ dev-db:
 		sleep 1; \
 	done
 	@echo "PostgreSQL is ready. Running seed..."
-	@cd server; bunx prisma generate; bunx prisma db push; cd ..
-	@make seed;
+	@cd server; \
+		if command -v prisma; then\
+			prisma generate; prisma db push;\
+		else \
+			bunx prisma generate; bunx prisma db push;\
+		fi
+	@make seed
 	@echo "Seeding completed."
 
 # Sync (install/update packages, generate prisma, etc)
@@ -88,7 +93,7 @@ sync-web:
 
 sync-server:
 	cd server; bun install --frozen-lockfile
-	cd server; bunx prisma generate
+	cd server; if command -v prisma; then prisma generate; else bunx prisma generate; fi
 	# copy .env.sample -> .env only if .env is not there
 
 sync-root:

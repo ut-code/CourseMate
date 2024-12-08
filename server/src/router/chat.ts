@@ -57,13 +57,16 @@ router.get("/dm/with/:userid", async (req, res) => {
   return res.status(result.code).send(result.body);
 });
 
-router.post("/mark-as-read/:friend/:messageId", async (req, res) => {
+router.post("/mark-as-read/:rel/:messageId", async (req, res) => {
   const user = await getUserId(req);
   const message = Number.parseInt(req.params.messageId);
-  const rel = await getRelation(user, Number.parseInt(req.params.friend));
-  if (!rel.ok) return res.status(403).end("you[plural] have no relation");
-  await db.markAsRead(rel.value.id, user, message);
-  return res.status(200).end("ok");
+  const rel = Number.parseInt(req.params.rel);
+  try {
+    await db.markAsRead(rel, user, message);
+    return res.status(200).end("ok");
+  } catch (err) {
+    return res.status(304).end("already marked");
+  }
 });
 
 // create a shared chat room.

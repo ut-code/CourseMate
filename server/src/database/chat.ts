@@ -94,7 +94,7 @@ async function getOverviewBetween(
     rel.receivingUserId === user ? rel.sendingUserId : rel.receivingUserId;
   const lastMessage = getLastMessage(user, friendId).then((val) => {
     if (val.ok) return val.value;
-    throw val.error;
+    return undefined;
   });
   const unreadCount = unreadMessages(user, rel.id).then((val) => {
     if (val.ok) return val.value;
@@ -131,6 +131,7 @@ export async function markAsRead(
         messageId: message,
         readerId: reader,
       },
+      relationId: rel,
     },
     update: {},
     create: val,
@@ -398,10 +399,15 @@ export async function unreadMessages(userId: UserID, roomId: RelationshipID) {
       where: {
         id: lastRead
           ? {
-              lt: lastRead.id,
+              gt: lastRead.id,
             }
           : undefined,
         relationId: roomId,
+        creator: {
+          not: {
+            equals: userId,
+          },
+        },
       },
     });
     return Ok(unreadMessages);
