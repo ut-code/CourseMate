@@ -48,7 +48,7 @@ export async function sendDM(
     );
 
   // they are now MATCHED
-  const msg: Omit<Message, "id"> = {
+  const msg: Omit<Omit<Message, "id">, "isPicture"> = {
     creator: from,
     createdAt: new Date(),
     edited: false,

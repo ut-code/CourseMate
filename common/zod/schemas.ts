@@ -116,6 +116,7 @@ export const MessageSchema = z.object({
   creator: UserIDSchema,
   createdAt: z.date(),
   content: ContentSchema,
+  isPicture: z.boolean(),
   edited: z.boolean(),
 });
 
