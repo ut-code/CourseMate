@@ -6,6 +6,7 @@ export type {
   IDToken,
   Gender,
   RelationshipStatus,
+  InterestSubject,
   User,
   InitUser,
   UpdateUser,

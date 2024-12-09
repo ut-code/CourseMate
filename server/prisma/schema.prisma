@@ -1,7 +1,7 @@
 //schema.prisma
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "debian-openssl-3.0.x"]
   previewFeatures = ["typedSql"]
 }
 
@@ -39,6 +39,7 @@ model User {
   enrollments    Enrollment[]
   sendingUsers   Relationship[] @relation("sending") // 自分がマッチリクエストを送ったユーザー
   receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
+  interests      Interest[]
 }
 
 model Avatar {
@@ -50,6 +51,26 @@ model Picture {
   hash     String @id
   data     Bytes
   key      String // password
+}
+
+model InterestSubject {
+  id       Int        @id @default(autoincrement())
+  name     String
+  group    String // such as Computer Science | name = ML
+
+  @@unique([name, group])
+  Interest Interest[] // ignore this
+}
+
+// User->Interest->InterestSubject
+model Interest {
+  userId    Int
+  user      User            @relation(fields: [userId], references: [id])
+  subjectId Int
+  subject   InterestSubject @relation(fields: [subjectId], references: [id])
+
+  @@unique([userId, subjectId])
+>>>>>>> main
 }
 
 // enum Gender {

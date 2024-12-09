@@ -32,6 +32,12 @@ export const IntroLongSchema = z
   // .min(2, { message: "自己紹介文は2文字以上です" })
   .max(225, { message: "自己紹介文は225文字以下です" });
 
+export const InterestSubjectSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  group: z.string(),
+});
+
 export const UserSchema = z.object({
   id: UserIDSchema,
   guid: GUIDSchema,
@@ -118,8 +124,15 @@ export const SendMessageSchema = z.object({
   content: z.string().min(1, { message: "Content must not be empty." }),
 });
 
+export const MatchingStatusSchema = z.union([
+  z.literal("myRequest"),
+  z.literal("otherRequest"),
+  z.literal("matched"),
+]);
+
 export const DMOverviewSchema = z.object({
   isDM: z.literal(true),
+  matchingStatus: MatchingStatusSchema,
   friendId: UserIDSchema,
   name: NameSchema,
   thumbnail: z.string(),
@@ -148,6 +161,7 @@ export const DMRoomSchema = z.object({
 export const PersonalizedDMRoomSchema = z.object({
   name: NameSchema,
   thumbnail: z.string(),
+  matchingStatus: MatchingStatusSchema,
 });
 
 export const SharedRoomSchema = z.object({

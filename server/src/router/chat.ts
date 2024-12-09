@@ -1,13 +1,13 @@
-import express from "express";
-import { safeParseInt } from "../common/lib/result/safeParseInt";
-import type { MessageID, UserID } from "../common/types";
-import { parseUserID } from "../common/zod/methods";
+import { safeParseInt } from "common/lib/result/safeParseInt";
+import type { MessageID, UserID } from "common/types";
+import { parseUserID } from "common/zod/methods";
 import {
   ContentSchema,
   InitRoomSchema,
   SendMessageSchema,
   SharedRoomSchema,
-} from "../common/zod/schemas";
+} from "common/zod/schemas";
+import express from "express";
 import * as db from "../database/chat";
 import { safeGetUserId } from "../firebase/auth/db";
 import * as core from "../functions/chat";
@@ -23,12 +23,12 @@ router.get("/overview", async (req, res) => {
   res.status(result.code).send(result.body);
 });
 
-// send DM to userid.
+// send DM to userId.
 router.post("/dm/to/:userid", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
   const friend = safeParseInt(req.params.userid);
-  if (!friend.ok) return res.status(400).send("bad param encoding: `userid`");
+  if (!friend.ok) return res.status(400).send("bad param encoding: `userId`");
 
   const send = SendMessageSchema.safeParse(req.body);
   if (!send.success) {
@@ -42,14 +42,14 @@ router.post("/dm/to/:userid", async (req, res) => {
   res.status(result.code).send(result.body);
 });
 
-// GET a DM Room with userid, CREATE one if not found.
+// GET a DM Room with userId, CREATE one if not found.
 router.get("/dm/with/:userid", async (req, res) => {
   const user = await safeGetUserId(req);
   if (!user.ok) return res.status(401).send("auth error");
 
   const friend = safeParseInt(req.params.userid);
   if (!friend.ok)
-    return res.status(400).send("invalid param `userid` formatting");
+    return res.status(400).send("invalid param `userId` formatting");
 
   const result = await core.getDM(user.value, friend.value);
 
