@@ -4,12 +4,28 @@
     "indentStyle": "space",
     "indentWidth": 2
   },
+  "linter": {
+    "rules": {
+      "nursery": {
+        "useSortedClasses": "warn"
+      }
+    }
+  },
   "vcs": {
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true
   },
   "files": {
-    "ignore": ["bun.lockb", "server/target", "data.json"]
+    "ignore": [
+      "bun.lockb",
+      "server/target",
+      "data.json",
+      "scraper/target",
+      ".next",
+      "next-env.d.ts",
+      "out",
+      "package-lock.json"
+    ]
   }
 }
