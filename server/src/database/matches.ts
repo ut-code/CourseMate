@@ -8,7 +8,7 @@ export async function getRelation(
   u2: UserID,
 ): Promise<Result<Relationship>> {
   try {
-    // TODO!!!! FIXME!!!!!! FIX THIS findMany!!!!!
+    // FIXME: fix this findMany
     const rel = await prisma.relationship.findMany({
       where: {
         OR: [
