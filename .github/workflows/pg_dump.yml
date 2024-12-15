@@ -2,11 +2,11 @@ name: Backup PostgreSQL Database
 
 on:
   schedule:
-    - cron: "0 19 * * *" # 毎日午前2時に実行
-  pull_request: # PR 作成や更新時にトリガー
+    - cron: "0 19 * * *"
+  pull_request:
     branches:
       - main
-  push: # 通常の push 時にもトリガー
+  push:
     branches:
       - main
 
@@ -18,9 +18,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Add PostgreSQL Repository
+        run: |
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo apt-get update
+
       - name: Install PostgreSQL Client
         run: |
-          sudo apt-get update
           sudo apt-get install -y postgresql-client-15
 
       - name: Backup database
