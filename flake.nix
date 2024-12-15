@@ -27,6 +27,7 @@
             biome
             pkg-config
             openssl
+            pkgs.prisma
           ] ++ [
             rust-pkgs
           ];
