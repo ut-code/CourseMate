@@ -1,0 +1,45 @@
+name: Backup PostgreSQL Database
+
+on:
+  schedule:
+    - cron: "0 19 * * *"
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Add PostgreSQL Repository
+        run: |
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo apt-get update
+
+      - name: Install PostgreSQL Client
+        run: |
+          sudo apt-get install -y postgresql-client-15
+
+      - name: Backup database
+        run: |
+          pg_dump -h ${{ secrets.PG_HOST }} \
+                  -p ${{ secrets.PG_PORT }} \
+                  -U ${{ secrets.PG_USER }} \
+                  -d ${{ secrets.PG_DB }} \
+                  --file=backup.sql
+        env:
+          PGPASSWORD: ${{ secrets.PG_PASSWORD }}
+
+      - name: Upload backup to GitHub
+        uses: actions/upload-artifact@v3
+        with:
+          name: pg-dump-backup
+          path: backup.sql
