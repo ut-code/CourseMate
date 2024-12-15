@@ -19,7 +19,7 @@ import type { Hook as UseHook } from "./share/types.ts";
 
 const UserListSchema = z.array(UserWithCoursesAndSubjectsSchema);
 
-export function useAll(): Hook<User[]> {
+export function useAll(): Hook<UserWithCoursesAndSubjects[]> {
   return useCustomizedSWR("users::all", all, UserListSchema);
 }
 export function useRecommended(): UseHook<UserWithCoursesAndSubjects[]> {
@@ -40,7 +40,7 @@ export function usePendingFromMe(): Hook<UserWithCoursesAndSubjects[]> {
   );
 }
 
-async function all(): Promise<User[]> {
+async function all(): Promise<UserWithCoursesAndSubjects[]> {
   const res = await credFetch("GET", endpoints.users);
   return res.json();
 }
