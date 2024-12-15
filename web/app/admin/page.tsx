@@ -19,5 +19,5 @@ export default function AdminPage() {
     checkAuth();
   }, [router]);
 
-  return <div>Welcome to the Admin Dashboard</div>;
+  return <div>管理者画面へようこそ</div>;
 }

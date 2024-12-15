@@ -1,4 +1,4 @@
-import Header from "~/components/Header";
+import SideNav from "~/components/admin/sideNave";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 
 export default function SettingsPageLayout({
@@ -8,9 +8,13 @@ export default function SettingsPageLayout({
 }) {
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
-      <Header title="管理者画面/Admin" />
-      <div className="absolute top-14 right-0 bottom-14 left-0 overflow-y-auto sm:top-16">
-        {children}
+      <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+        <div className="w-full flex-none md:w-64">
+          <SideNav />
+        </div>
+        <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+          {children}
+        </div>
       </div>
     </NavigateByAuthState>
   );
