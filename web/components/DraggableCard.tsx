@@ -1,6 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Typography } from "@mui/material";
-import type { UserID, UserWithCoursesAndSubjects } from "common/types";
+import type { UserWithCoursesAndSubjects } from "common/types";
 import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { useCallback, useState } from "react";
 import { MdThumbUp } from "react-icons/md";
@@ -10,7 +10,7 @@ const SWIPE_THRESHOLD = 30;
 
 interface DraggableCardProps {
   displayedUser: UserWithCoursesAndSubjects;
-  comparisonUserId?: UserID;
+  currentUser: UserWithCoursesAndSubjects;
   onSwipeRight: () => void;
   onSwipeLeft: () => void;
   clickedButton: string;
@@ -18,7 +18,7 @@ interface DraggableCardProps {
 
 export const DraggableCard = ({
   displayedUser,
-  comparisonUserId,
+  currentUser,
   onSwipeRight,
   onSwipeLeft,
   clickedButton,
@@ -136,10 +136,7 @@ export const DraggableCard = ({
           whileTap={{ scale: 0.95 }}
         >
           <CardOverlay />
-          <Card
-            displayedUser={displayedUser}
-            comparisonUserId={comparisonUserId}
-          />
+          <Card displayedUser={displayedUser} currentUser={currentUser} />
         </motion.div>
       </section>
     </div>
