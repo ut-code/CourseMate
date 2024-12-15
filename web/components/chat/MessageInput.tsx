@@ -1,27 +1,27 @@
-import type { DMOverview, SendMessage, UserID } from "common/types";
+import type { SendMessage, UserID } from "common/types";
 import { parseContent } from "common/zod/methods";
 import { useEffect, useState } from "react";
 import { MdSend } from "react-icons/md";
 
 type Props = {
   send: (to: UserID, m: SendMessage) => void;
-  room: DMOverview;
+  friendId: UserID;
 };
 
 const crossRoomMessageState = new Map<number, string>();
 
-export function MessageInput({ send, room }: Props) {
+export function MessageInput({ send, friendId }: Props) {
   const [message, _setMessage] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   function setMessage(m: string) {
     _setMessage(m);
-    crossRoomMessageState.set(room.friendId, m);
+    crossRoomMessageState.set(friendId, m);
   }
 
   useEffect(() => {
-    _setMessage(crossRoomMessageState.get(room.friendId) || "");
-  }, [room.friendId]);
+    _setMessage(crossRoomMessageState.get(friendId) || "");
+  }, [friendId]);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -34,7 +34,7 @@ export function MessageInput({ send, room }: Props) {
     }
 
     if (message.trim()) {
-      send(room.friendId, { content: message });
+      send(friendId, { content: message });
       setMessage("");
     }
   }
@@ -50,7 +50,7 @@ export function MessageInput({ send, room }: Props) {
         return;
       }
       if (message.trim()) {
-        send(room.friendId, { content: message });
+        send(friendId, { content: message });
         setMessage("");
       }
     }

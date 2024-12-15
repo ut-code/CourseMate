@@ -3,9 +3,10 @@ import { MdHome } from "react-icons/md";
 import { MdPeople } from "react-icons/md";
 import { MdChat } from "react-icons/md";
 import { MdSettings } from "react-icons/md";
+import { MdSearch } from "react-icons/md";
 
 type Props = {
-  activeTab: "0_home" | "1_friends" | "2_chat" | "3_settings";
+  activeTab: "0_home" | "1_friends" | "2_search" | "3_chat" | "4_settings";
 };
 
 function BottomBarCell({
@@ -22,7 +23,9 @@ function BottomBarCell({
   return (
     <Link
       href={href}
-      className={`focus:bg-gray-300 ${isActive ? "active text-primary" : "text-secondary"}`}
+      className={`focus:bg-gray-300 ${
+        isActive ? "active text-primary" : "text-secondary"
+      }`}
     >
       {iconComponent}
       <span
@@ -51,15 +54,21 @@ export default function BottomBar(props: Props) {
         iconComponent={<MdPeople className="text-2xl" />}
       />
       <BottomBarCell
+        label="Search"
+        href="/search"
+        isActive={activeTab === "2_search"}
+        iconComponent={<MdSearch className="text-2xl" />}
+      />
+      <BottomBarCell
         label="Chat"
         href="/chat"
-        isActive={activeTab === "2_chat"}
+        isActive={activeTab === "3_chat"}
         iconComponent={<MdChat className="text-2xl" />}
       />
       <BottomBarCell
         label="Settings"
         href="/settings"
-        isActive={activeTab === "3_settings"}
+        isActive={activeTab === "4_settings"}
         iconComponent={<MdSettings className="text-2xl" />}
       />
     </div>

@@ -144,6 +144,8 @@ export async function deleteAccount(): Promise<void> {
   const res = await credFetch("DELETE", endpoints.me);
   if (res.status !== 204)
     throw new Error(
-      `failed to delete account: expected status code 204, but got ${res.status} with text ${await res.text()}`,
+      `failed to delete account: expected status code 204, but got ${
+        res.status
+      } with text ${await res.text()}`,
     );
 }

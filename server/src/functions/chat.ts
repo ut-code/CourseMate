@@ -42,8 +42,10 @@ export async function sendDM(
   send: SendMessage,
 ): Promise<http.Response<Message>> {
   const rel = await getRelation(from, to);
-  if (!rel.ok || rel.value.status !== "MATCHED")
-    return http.forbidden("cannot send to non-friend");
+  if (!rel.ok || rel.value.status === "REJECTED")
+    return http.forbidden(
+      "You cannot send a message because the friendship request was rejected.",
+    );
 
   // they are now MATCHED
   const msg: Omit<Message, "id"> = {
@@ -59,21 +61,28 @@ export async function sendDM(
 }
 
 export async function getDM(
-  requester: UserID,
-  _with: UserID,
+  user: UserID,
+  friend: UserID,
 ): Promise<http.Response<PersonalizedDMRoom & DMRoom>> {
-  if (!areMatched(requester, _with))
-    return http.forbidden("cannot DM with a non-friend");
+  const rel = await getRelation(user, friend);
+  if (!rel.ok || rel.value.status === "REJECTED")
+    return http.forbidden("cannot send to rejected-friend");
 
-  const room = await db.getDMbetween(requester, _with);
+  const room = await db.getDMbetween(user, friend);
   if (!room.ok) return http.internalError();
 
-  const friendData = await getUserByID(_with);
+  const friendData = await getUserByID(friend);
   if (!friendData.ok) return http.notFound("friend not found");
 
   const personalized: PersonalizedDMRoom & DMRoom = {
     name: friendData.value.name,
     thumbnail: friendData.value.pictureUrl,
+    matchingStatus:
+      rel.value.status === "MATCHED"
+        ? "matched"
+        : rel.value.sendingUserId === user //どっちが送ったリクエストなのかを判定
+          ? "myRequest"
+          : "otherRequest",
     ...room.value,
   };
 
