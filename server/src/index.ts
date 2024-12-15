@@ -17,7 +17,7 @@ const app = express();
 // https://expressjs.com/ja/api.html#app.settings.table  の query parser を参照。
 app.set("query parser", "simple");
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 const allowedOrigins = (
   process.env.CORS_ALLOW_ORIGINS || panic("env CORS_ALLOW_ORIGINS is missing")
 )

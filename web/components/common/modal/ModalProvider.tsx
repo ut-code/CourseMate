@@ -1,4 +1,4 @@
-import type { User } from "common/types";
+import type { UserWithCoursesAndSubjects } from "common/types";
 import { type ReactNode, createContext, useContext, useState } from "react";
 import { useMyID } from "~/api/user";
 import { Card } from "../../Card";
@@ -6,7 +6,7 @@ import { Card } from "../../Card";
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);
 
 type ModalContextProps = {
-  openModal: (user: User) => void;
+  openModal: (user: UserWithCoursesAndSubjects) => void;
   closeModal: () => void;
 };
 
@@ -16,12 +16,13 @@ type ModalProviderProps = {
 
 export const ModalProvider = ({ children }: ModalProviderProps) => {
   const [open, setOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] =
+    useState<UserWithCoursesAndSubjects | null>(null);
   const {
     state: { data: myId },
   } = useMyID();
 
-  const openModal = (user: User) => {
+  const openModal = (user: UserWithCoursesAndSubjects) => {
     setSelectedUser(user);
     setOpen(true);
   };
