@@ -14,6 +14,7 @@ import type {
   InitRoomSchema,
   InitSharedRoomSchema,
   InitUserSchema,
+  InterestSchema,
   InterestSubjectSchema,
   IntroLongSchema,
   IntroShortSchema,
@@ -37,6 +38,7 @@ import type {
   UpdateUserSchema,
   UserIDSchema,
   UserSchema,
+  UserWithCoursesAndSubjectsSchema,
 } from "./schemas";
 
 export type UserID = z.infer<typeof UserIDSchema>;
@@ -47,6 +49,7 @@ export type PictureUrl = z.infer<typeof PictureUrlSchema>;
 export type Gender = z.infer<typeof GenderSchema>;
 export type RelationshipStatus = z.infer<typeof RelationshipStatusSchema>;
 export type InterestSubject = z.infer<typeof InterestSubjectSchema>;
+export type Interest = z.infer<typeof InterestSchema>;
 export type User = z.infer<typeof UserSchema>;
 export type InitUser = z.infer<typeof InitUserSchema>;
 export type UpdateUser = z.infer<typeof UpdateUserSchema>;
@@ -59,6 +62,9 @@ export type Course = z.infer<typeof CourseSchema>;
 export type Enrollment = z.infer<typeof EnrollmentSchema>;
 export type Day = z.infer<typeof DaySchema>;
 export type Period = z.infer<typeof PeriodSchema>;
+export type UserWithCoursesAndSubjects = z.infer<
+  typeof UserWithCoursesAndSubjectsSchema
+>;
 export type MessageID = z.infer<typeof MessageIDSchema>;
 export type ShareRoomID = z.infer<typeof ShareRoomIDSchema>;
 export type Message = z.infer<typeof MessageSchema>;

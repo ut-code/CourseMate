@@ -12,7 +12,7 @@ export type UserID = number;
  * GET -> get user's info. TODO: filter return info by user's options and open level.
  * - statuses:
  *   - 200: ok.
- *     - body: User
+ *     - body: UserWithCoursesAndSubjects
  *   - 400: not found.
  *   - 500: internal error.
  **/
@@ -43,7 +43,7 @@ export const users = `${origin}/users`;
  * GET -> get top N users recommended to me.
  * - statuses:
  *   - 200: good.
- *     - body: User[]
+ *     - body: UserWithCoursesAndSubjects[]
  *   - 401: auth error.
  *   - 500: internal error
  **/
@@ -62,7 +62,7 @@ export const recommendedUsers = `${origin}/users/recommended`;
  * - request body: Omit<User, "id">
  * - statuses:
  *   - 200: ok.
- *     - body: User
+ *     - body: UserWithCoursesAndSubjects
  *   - 500: internal error.
  *
  * [v] 実装済み
@@ -79,7 +79,7 @@ export const me = `${origin}/users/me`;
  * GET -> list all matched users.
  * - statuses:
  *   - 200: ok.
- *     - body: User[]
+ *     - body: UserWithCoursesAndSubjects[]
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
@@ -90,7 +90,7 @@ export const matchedUsers = `${origin}/users/matched`;
  * GET -> list all users that sent request to you.
  * - statuses:
  *   - 200: ok.
- *     - body: User[]
+ *     - body: UserWithCoursesAndSubjects[]
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
@@ -101,7 +101,7 @@ export const pendingRequestsToMe = `${origin}/users/pending/to-me`;
  * GET -> list all users that you sent request.
  * - statuses:
  *   - 200: ok.
- *     - body: User[]
+ *     - body: UserWithCoursesAndSubjects[]
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
@@ -112,7 +112,7 @@ export const pendingRequestsFromMe = `${origin}/users/pending/from-me`;
  * GET -> get user's info. TODO: filter return info by user's options and open level.
  * - statuses:
  *   - 200: ok.
- *     - body: User
+ *     - body: UserWithCoursesAndSubjects
  *   - 400: not found.
  *   - 500: internal error.
  **/
@@ -126,6 +126,7 @@ export const userByGUID = (guid: GUID) => {
  * GET -> check if the user exists.
  * - statuses:
  *   - 200: yes, user exists.
+ *     - body: UserWithCoursesAndSubjects
  *   - 404: no, user doesn't exist.
  *   - 500: internal error.
  **/
