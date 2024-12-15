@@ -1,6 +1,6 @@
 import { recommend as sql } from "@prisma/client/sql";
 import { Err, Ok, type Result } from "common/lib/result";
-import type { User, UserID } from "common/types";
+import type { UserID, UserWithCoursesAndSubjects } from "common/types";
 import { prisma } from "../../database/client";
 import { getUserByID } from "../../database/users";
 
@@ -8,7 +8,14 @@ export async function recommendedTo(
   user: UserID,
   limit: number,
   offset: number,
-): Promise<Result<Array<{ u: User; count: number }>>> {
+): Promise<
+  Result<
+    Array<{
+      u: UserWithCoursesAndSubjects;
+      count: number;
+    }>
+  >
+> {
   try {
     const result = await prisma.$queryRawTyped(sql(user, limit, offset));
     return Promise.all(
