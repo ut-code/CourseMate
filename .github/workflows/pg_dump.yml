@@ -1,0 +1,33 @@
+name: Backup PostgreSQL Database
+
+on:
+  schedule:
+    - cron: "0 19 * * *" # 毎日午前2時に実行
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install PostgreSQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Backup database
+        run: |
+          pg_dump -h ${{ secrets.PG_HOST }} \
+                  -U ${{ secrets.PG_USER }} \
+                  -d ${{ secrets.PG_DB }} \
+                  --file=backup.sql
+        env:
+          PGPASSWORD: ${{ secrets.PG_PASSWORD }}
+
+      - name: Upload backup to GitHub
+        uses: actions/upload-artifact@v3
+        with:
+          name: pg-dump-backup
+          path: backup.sql
