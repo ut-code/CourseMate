@@ -3,6 +3,12 @@ name: Backup PostgreSQL Database
 on:
   schedule:
     - cron: "0 19 * * *" # 毎日午前2時に実行
+  pull_request: # PR 作成や更新時にトリガー
+    branches:
+      - main
+  push: # 通常の push 時にもトリガー
+    branches:
+      - main
 
 jobs:
   backup:
@@ -12,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install PostgreSQL
+      - name: Install PostgreSQL Client
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
@@ -20,6 +26,7 @@ jobs:
       - name: Backup database
         run: |
           pg_dump -h ${{ secrets.PG_HOST }} \
+                  -p ${{ secrets.PG_PORT }} \
                   -U ${{ secrets.PG_USER }} \
                   -d ${{ secrets.PG_DB }} \
                   --file=backup.sql
