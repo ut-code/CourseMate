@@ -38,6 +38,11 @@ export const InterestSubjectSchema = z.object({
   group: z.string(),
 });
 
+export const InterestSchema = z.object({
+  userId: UserIDSchema,
+  subjectId: z.number(),
+});
+
 export const UserSchema = z.object({
   id: UserIDSchema,
   guid: GUIDSchema,
@@ -101,6 +106,11 @@ export const EnrollmentSchema = z.object({
   id: z.number(),
   userId: UserIDSchema,
   courseId: CourseIDSchema,
+});
+
+export const UserWithCoursesAndSubjectsSchema = UserSchema.extend({
+  courses: CourseSchema.array(),
+  interestSubjects: InterestSubjectSchema.array(),
 });
 
 export const MessageIDSchema = z.number(); // TODO! Add __internal_prevent_cast_MessageID: PhantomData
