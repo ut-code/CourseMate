@@ -2,20 +2,22 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { adminAuth } from "../../api/admin/validate/route";
 
 export default function AdminPage() {
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const checkAuth = async () => {
-  //     console.log("こんにちはあああ")
-  //     const res = await fetch("/admin/validate");
-  //     if (!res.ok) {
-  //       router.replace("/admin/login");
-  //     }
-  //   };
-  //   checkAuth();
-  // }, [router]);
+  useEffect(() => {
+    const checkAuth = async () => {
+      const response = await adminAuth();
+
+      if (!response.ok) {
+        router.push("/admin/login");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
 
   return <div>Welcome to the Admin Dashboard</div>;
 }

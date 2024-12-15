@@ -1,13 +1,8 @@
-import { parse } from "cookie";
-import { NextResponse } from "next/server";
+import { ErrUnauthorized, credFetch } from "../../../firebase/auth/lib";
+import endpoints from "../../internal/endpoints";
 
-export async function GET(request) {
-  const cookies = parse(request.headers.get("cookie") || "");
-  console.log("こんにちは", cookies);
-
-  if (cookies.authToken === "admin-token") {
-    return NextResponse.json({ isAuthenticated: true });
-  }
-
-  return NextResponse.json({ isAuthenticated: false }, { status: 401 });
+export async function adminAuth() {
+  const res = await credFetch("GET", endpoints.adminLogin);
+  if (res.status === 401) throw new ErrUnauthorized();
+  return res.json();
 }
