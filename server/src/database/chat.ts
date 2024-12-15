@@ -14,9 +14,12 @@ import type {
 } from "common/types";
 import { prisma } from "./client";
 import { getRelation } from "./matches";
-import { getMatchedUser } from "./requests";
+import {
+  getMatchedUser,
+  getPendingRequestsFromUser,
+  getPendingRequestsToUser,
+} from "./requests";
 
-// ユーザーの参加しているすべての Room の概要 (Overview) の取得
 export async function getOverview(
   user: UserID,
 ): Promise<Result<RoomOverview[]>> {
@@ -24,7 +27,14 @@ export async function getOverview(
     const matched = await getMatchedUser(user);
     if (!matched.ok) return Err(matched.error);
 
-    const dm = await Promise.all(
+    const senders = await getPendingRequestsToUser(user);
+    if (!senders.ok) return Err(senders.error);
+
+    const receivers = await getPendingRequestsFromUser(user);
+    if (!receivers.ok) return Err(receivers.error);
+
+    //マッチングしている人のオーバービュー
+    const matchingOverview = await Promise.all(
       matched.value.map(async (friend) => {
         const lastMessageResult = await getLastMessage(user, friend.id);
         const lastMessage = lastMessageResult.ok
@@ -32,9 +42,48 @@ export async function getOverview(
           : undefined;
         const overview: DMOverview = {
           isDM: true,
+          matchingStatus: "matched",
           friendId: friend.id,
           name: friend.name,
           thumbnail: friend.pictureUrl,
+          lastMsg: lastMessage,
+        };
+        return overview;
+      }),
+    );
+
+    //自分にリクエストを送ってきた人のオーバービュー
+    const senderOverview = await Promise.all(
+      senders.value.map(async (sender) => {
+        const lastMessageResult = await getLastMessage(user, sender.id);
+        const lastMessage = lastMessageResult.ok
+          ? lastMessageResult.value
+          : undefined;
+        const overview: DMOverview = {
+          isDM: true,
+          matchingStatus: "otherRequest",
+          friendId: sender.id,
+          name: sender.name,
+          thumbnail: sender.pictureUrl,
+          lastMsg: lastMessage,
+        };
+        return overview;
+      }),
+    );
+
+    //自分がリクエストを送った人のオーバービュー
+    const receiverOverview = await Promise.all(
+      receivers.value.map(async (receiver) => {
+        const lastMessageResult = await getLastMessage(user, receiver.id);
+        const lastMessage = lastMessageResult.ok
+          ? lastMessageResult.value
+          : undefined;
+        const overview: DMOverview = {
+          isDM: true,
+          matchingStatus: "myRequest",
+          friendId: receiver.id,
+          name: receiver.name,
+          thumbnail: receiver.pictureUrl,
           lastMsg: lastMessage,
         };
         return overview;
@@ -61,7 +110,21 @@ export async function getOverview(
       };
       return overview;
     });
-    return Ok([...shared, ...dm]);
+
+    const overview = [
+      ...matchingOverview,
+      ...senderOverview,
+      ...receiverOverview,
+      ...shared,
+    ];
+
+    const sortedOverviewByTime = overview.sort((a, b) => {
+      const dateA = a.lastMsg?.createdAt ? a.lastMsg.createdAt.getTime() : 0;
+      const dateB = b.lastMsg?.createdAt ? b.lastMsg.createdAt.getTime() : 0;
+      return dateB - dateA;
+    });
+
+    return Ok([...sortedOverviewByTime]);
   } catch (e) {
     return Err(e);
   }

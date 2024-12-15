@@ -1,10 +1,22 @@
-import type { DMOverview } from "common/types";
 import Link from "next/link";
 import { MdArrowBack } from "react-icons/md";
 import UserAvatar from "../human/avatar";
 
 type Props = {
-  room: DMOverview;
+  room: {
+    isDM: true;
+    id: number;
+    messages: {
+      id: number;
+      creator: number;
+      createdAt: Date;
+      content: string;
+      edited: boolean;
+    }[];
+  } & {
+    name: string;
+    thumbnail: string;
+  };
 };
 
 export function RoomHeader(props: Props) {
