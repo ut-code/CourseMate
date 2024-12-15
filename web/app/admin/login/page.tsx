@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { adminLogin } from "../../../api/admin/login/route";
 
 export default function LoginPage() {
   const [name, setName] = useState("");
@@ -11,24 +12,20 @@ export default function LoginPage() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    const res = await fetch("/admin/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, password }),
-    });
-
-    if (res.ok) {
+    try {
+      await adminLogin(name, password);
+      alert("成功しました。遷移します");
       router.replace("/admin");
-    } else {
-      alert("Invalid credentials");
+    } catch (e) {
+      alert("ログインに失敗しました");
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+    <div className="flex min-h-screen items-center justify-center">
       <div className="w-full max-w-md space-y-6 rounded-lg bg-white p-8 shadow-md">
         <h2 className="text-center font-bold text-2xl text-gray-700">
-          管理者画面
+          管理者画面 ログインページ
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="form-control">

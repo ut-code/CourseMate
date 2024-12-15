@@ -4,6 +4,7 @@ import csrf from "./lib/cross-origin/block-unknown-origin";
 import cors from "./lib/cross-origin/multi-origin-cors";
 import { initializeSocket } from "./lib/socket/socket";
 import { allUrlMustBeValid, panic } from "./lib/utils";
+import adminRoutes from "./router/admin";
 import chatRoutes from "./router/chat";
 import coursesRoutes from "./router/courses";
 import matchesRoutes from "./router/matches";
@@ -49,6 +50,7 @@ app.use("/courses", coursesRoutes);
 app.use("/requests", requestsRoutes);
 app.use("/matches", matchesRoutes);
 app.use("/chat", chatRoutes);
+app.use("/admin", adminRoutes);
 
 export function main() {
   // サーバーの起動

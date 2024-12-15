@@ -366,6 +366,8 @@ export const pictureOf = (guid: GUID) => `${origin}/picture/${guid}`;
  */
 export const picture = `${origin}/picture`;
 
+export const adminLogin = `${origin}/admin/login`;
+
 export default {
   user,
   me,
@@ -395,4 +397,5 @@ export default {
   coursesMineOverlaps,
   pictureOf,
   picture,
+  adminLogin,
 };
