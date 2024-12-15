@@ -70,7 +70,6 @@ model Interest {
   subject   InterestSubject @relation(fields: [subjectId], references: [id])
 
   @@unique([userId, subjectId])
->>>>>>> main
 }
 
 // enum Gender {
