@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
 import type { User, UserID } from "common/types";
+import { Chip } from "@mui/material";
+import type { UserID, UserWithCoursesAndSubjects } from "common/types";
+import { useState } from "react";
+import NonEditableCoursesTable from "./course/NonEditableCoursesTable";
 import UserAvatar from "./human/avatar";
 import NonEditableCoursesTable from "./course/NonEditableCoursesTable";
 
 interface CardProps {
-  displayedUser: User;
+  displayedUser: UserWithCoursesAndSubjects;
   comparisonUserId?: UserID;
   onFlip?: (isBack: boolean) => void;
 }

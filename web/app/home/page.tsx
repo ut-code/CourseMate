@@ -1,7 +1,7 @@
 "use client";
 
 import CloseIcon from "@mui/icons-material/Close";
-import type { User } from "common/types";
+import type { UserWithCoursesAndSubjects } from "common/types";
 import { motion, useAnimation } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import { MdThumbUp } from "react-icons/md";
@@ -21,9 +21,9 @@ export default function Home() {
   } = useMyID();
 
   const [_, rerender] = useState({});
-  const [recommended, setRecommended] = useState<Queue<User>>(
-    () => new Queue([]),
-  );
+  const [recommended, setRecommended] = useState<
+    Queue<UserWithCoursesAndSubjects>
+  >(() => new Queue([]));
   useEffect(() => {
     if (data) setRecommended(new Queue(data));
   }, [data]);

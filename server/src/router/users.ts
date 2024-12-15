@@ -1,4 +1,8 @@
-import type { GUID, UpdateUser } from "common/types";
+import type {
+  GUID,
+  UpdateUser,
+  UserWithCoursesAndSubjects,
+} from "common/types";
 import type { User } from "common/types";
 import {
   GUIDSchema,
@@ -106,7 +110,7 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
   if (!user.ok) {
     return res.status(404).json({ error: "User not found" });
   }
-  const json: User = user.value;
+  const json: UserWithCoursesAndSubjects = user.value;
   res.status(200).json(json);
 });
 
