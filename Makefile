@@ -44,6 +44,9 @@ test: dev-db
 
 prepare-deploy-web: sync-common
 	cd web; bun install; bun run build
+deploy-web:
+	@if [ "${PORT}" == "" ]; then echo 'env PORT not found!'; exit 1; fi
+	cd web; bun next start --port ${PORT}
 prepare-deploy-server: sync-common sync-server generate-sql
 deploy-server:
 	cd server; bun src/main.ts
