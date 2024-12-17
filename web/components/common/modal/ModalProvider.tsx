@@ -1,6 +1,6 @@
 import type { UserWithCoursesAndSubjects } from "common/types";
 import { type ReactNode, createContext, useContext, useState } from "react";
-import { useMyID } from "~/api/user";
+import { useAboutMe } from "~/api/user";
 import { Card } from "../../Card";
 
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);
@@ -19,8 +19,8 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   const [selectedUser, setSelectedUser] =
     useState<UserWithCoursesAndSubjects | null>(null);
   const {
-    state: { data: myId },
-  } = useMyID();
+    state: { data: currentUser },
+  } = useAboutMe();
 
   const openModal = (user: UserWithCoursesAndSubjects) => {
     setSelectedUser(user);
@@ -35,7 +35,7 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   return (
     <ModalContext.Provider value={{ openModal, closeModal }}>
       {children}
-      {open && selectedUser && (
+      {open && selectedUser && currentUser && (
         // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
@@ -46,10 +46,7 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
             className="rounded bg-white p-4 shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
-            <Card
-              displayedUser={selectedUser}
-              comparisonUserId={myId ? myId : undefined}
-            />
+            <Card displayedUser={selectedUser} currentUser={currentUser} />
           </div>
         </div>
       )}

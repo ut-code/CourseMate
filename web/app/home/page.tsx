@@ -6,7 +6,7 @@ import { motion, useAnimation } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import { MdThumbUp } from "react-icons/md";
 import request from "~/api/request";
-import { useMyID, useRecommended } from "~/api/user";
+import { useAboutMe, useRecommended } from "~/api/user";
 import { Card } from "~/components/Card";
 import { DraggableCard } from "~/components/DraggableCard";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
@@ -17,8 +17,8 @@ export default function Home() {
   const controls = useAnimation();
   const [clickedButton, setClickedButton] = useState<string>("");
   const {
-    state: { data: myId },
-  } = useMyID();
+    state: { data: currentUser },
+  } = useAboutMe();
 
   const [_, rerender] = useState({});
   const [recommended, setRecommended] = useState<
@@ -71,6 +71,9 @@ export default function Home() {
       });
   }, [controls, accept]);
 
+  if (currentUser == null) {
+    return <FullScreenCircularProgress />;
+  }
   if (recommended == null) {
     return <FullScreenCircularProgress />;
   }
@@ -89,7 +92,7 @@ export default function Home() {
             {nextUser && (
               <div className="relative h-full w-full">
                 <div className="-translate-x-4 -translate-y-4 inset-0 z-0 mt-4 transform">
-                  <Card displayedUser={nextUser} />
+                  <Card displayedUser={nextUser} currentUser={currentUser} />
                 </div>
                 <motion.div
                   animate={controls}
@@ -97,7 +100,7 @@ export default function Home() {
                 >
                   <DraggableCard
                     displayedUser={displayedUser}
-                    comparisonUserId={myId || undefined}
+                    currentUser={currentUser}
                     onSwipeLeft={reject}
                     onSwipeRight={accept}
                     clickedButton={clickedButton}
