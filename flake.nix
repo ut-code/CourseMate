@@ -28,7 +28,7 @@
             pkg-config
             openssl
             lefthook
-            # pkgs.prisma
+            pkgs.prisma
           ] ++ [
             rust-pkgs
           ];
