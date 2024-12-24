@@ -1,6 +1,15 @@
-import type { GUID, UpdateUser, User, UserID } from "common/types.ts";
+import type {
+  GUID,
+  UpdateUser,
+  User,
+  UserID,
+  UserWithCoursesAndSubjects,
+} from "common/types.ts";
 import { parseUser } from "common/zod/methods.ts";
-import { UserIDSchema, UserSchema } from "common/zod/schemas.ts";
+import {
+  UserIDSchema,
+  UserWithCoursesAndSubjectsSchema,
+} from "common/zod/schemas.ts";
 import { z } from "zod";
 import { credFetch } from "~/firebase/auth/lib.ts";
 import { type Hook, useCustomizedSWR } from "~/hooks/useCustomizedSWR.ts";
@@ -8,22 +17,22 @@ import { useAuthorizedData } from "~/hooks/useData.ts";
 import endpoints from "./internal/endpoints.ts";
 import type { Hook as UseHook } from "./share/types.ts";
 
-const UserListSchema = z.array(UserSchema);
+const UserListSchema = z.array(UserWithCoursesAndSubjectsSchema);
 
-export function useAll(): Hook<User[]> {
+export function useAll(): Hook<UserWithCoursesAndSubjects[]> {
   return useCustomizedSWR("users::all", all, UserListSchema);
 }
-export function useRecommended(): UseHook<User[]> {
+export function useRecommended(): UseHook<UserWithCoursesAndSubjects[]> {
   const url = endpoints.recommendedUsers;
-  return useAuthorizedData<User[]>(url);
+  return useAuthorizedData<UserWithCoursesAndSubjects[]>(url);
 }
-export function useMatched(): Hook<User[]> {
+export function useMatched(): Hook<UserWithCoursesAndSubjects[]> {
   return useCustomizedSWR("users::matched", matched, UserListSchema);
 }
-export function usePendingToMe(): Hook<User[]> {
+export function usePendingToMe(): Hook<UserWithCoursesAndSubjects[]> {
   return useCustomizedSWR("users::pending::to-me", pendingToMe, UserListSchema);
 }
-export function usePendingFromMe(): Hook<User[]> {
+export function usePendingFromMe(): Hook<UserWithCoursesAndSubjects[]> {
   return useCustomizedSWR(
     "users::pending::from-me",
     pendingFromMe,
@@ -31,30 +40,34 @@ export function usePendingFromMe(): Hook<User[]> {
   );
 }
 
-async function all(): Promise<User[]> {
+async function all(): Promise<UserWithCoursesAndSubjects[]> {
   const res = await credFetch("GET", endpoints.users);
   return res.json();
 }
 
-async function matched(): Promise<User[]> {
+async function matched(): Promise<UserWithCoursesAndSubjects[]> {
   const res = await credFetch("GET", endpoints.matchedUsers);
   return res.json();
 }
-async function pendingToMe(): Promise<User[]> {
+async function pendingToMe(): Promise<UserWithCoursesAndSubjects[]> {
   const res = await credFetch("GET", endpoints.pendingRequestsToMe);
   return await res.json();
 }
-async function pendingFromMe(): Promise<User[]> {
+async function pendingFromMe(): Promise<UserWithCoursesAndSubjects[]> {
   const res = await credFetch("GET", endpoints.pendingRequestsFromMe);
   return await res.json();
 }
 
 // 自身のユーザー情報を取得する
-export function useAboutMe(): Hook<User> {
-  return useCustomizedSWR("users::aboutMe", aboutMe, UserSchema);
+export function useAboutMe(): Hook<UserWithCoursesAndSubjects> {
+  return useCustomizedSWR(
+    "users::aboutMe",
+    aboutMe,
+    UserWithCoursesAndSubjectsSchema,
+  );
 }
 
-async function aboutMe(): Promise<User> {
+async function aboutMe(): Promise<UserWithCoursesAndSubjects> {
   const res = await credFetch("GET", endpoints.me);
   return res.json();
 }

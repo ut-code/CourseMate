@@ -57,9 +57,9 @@ model InterestSubject {
   id       Int        @id @default(autoincrement())
   name     String
   group    String // such as Computer Science | name = ML
+  Interest Interest[] // ignore this
 
   @@unique([name, group])
-  Interest Interest[] // ignore this
 }
 
 // User->Interest->InterestSubject
@@ -142,6 +142,7 @@ model Message {
   edited       Boolean       @default(false)
   content      String
   isPicture    Boolean // iff the message is a picture. if true, then content is a url of picture.
+  read         Boolean
   relation     Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId   Int?
   sharedRoom   SharedRoom?   @relation(fields: [sharedRoomId], references: [id], onDelete: Cascade)
