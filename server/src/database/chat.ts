@@ -156,7 +156,7 @@ export async function sendDM(
   try {
     const message = await prisma.message.create({
       data: {
-        isPicture: false,
+        // isPicture: false, // todo: bring it back
         relationId: relation,
         read: false,
         ...content,
