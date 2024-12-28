@@ -126,7 +126,7 @@ export function RoomWindow(props: Props) {
         { content },
         friendId,
       );
-      updateLocalMessage(editedMessage);
+      updateLocalMessage(editedMessage.id, editedMessage);
     },
     [updateLocalMessage, friendId],
   );
