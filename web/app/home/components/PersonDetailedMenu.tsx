@@ -1,3 +1,4 @@
+import { DAY_TO_JAPANESE_MAP, sortSlots } from "common/consts";
 import type { UserWithCoursesAndSubjects } from "common/types";
 import { MdClose } from "react-icons/md";
 
@@ -41,19 +42,37 @@ export default function PersonDetailedMenu({ onClose, displayedUser }: Props) {
           <div className="divider m-0" />
           <div>
             <span className="text-gray-500 text-xs">自己紹介</span>
-            <p className="text-lg">{displayedUser.intro}</p>
+            <p className="text-md">{displayedUser.intro}</p>
           </div>
           <div className="divider m-0" />
           <div>
             <span className="text-gray-500 text-xs">講義</span>
-            <p className="text-lg">{displayedUser.courses.length}</p>
-            {/* TODO: */}
+            {displayedUser.courses.map(
+              (course) =>
+                course.name && (
+                  <p key={course.id} className="text-lg">
+                    {sortSlots(course.slots)
+                      .map(
+                        (slot) =>
+                          `${DAY_TO_JAPANESE_MAP.get(slot.day)}${slot.period}`,
+                      )
+                      .join("・")}
+                    /{course.name} ({course.teacher}) {course.id}
+                  </p>
+                ),
+            )}
           </div>
           <div className="divider m-0" />
           <div>
             <span className="text-gray-500 text-xs">興味分野</span>
-            <p className="text-lg">{displayedUser.interestSubjects.length}</p>
-            {/* TODO: */}
+            {displayedUser.interestSubjects.map(
+              (subject) =>
+                subject.name && (
+                  <p key={subject.id} className="text-lg">
+                    {subject.name}
+                  </p>
+                ),
+            )}
           </div>
         </div>
       </div>
