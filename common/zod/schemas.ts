@@ -126,6 +126,7 @@ export const MessageSchema = z.object({
   creator: UserIDSchema,
   createdAt: z.date(),
   content: ContentSchema,
+  isPicture: z.boolean(),
   edited: z.boolean(),
 });
 
@@ -172,6 +173,8 @@ export const PersonalizedDMRoomSchema = z.object({
   name: NameSchema,
   thumbnail: z.string(),
   matchingStatus: MatchingStatusSchema,
+  unreadMessages: z.number(),
+  friendId: z.number(),
 });
 
 export const SharedRoomSchema = z.object({

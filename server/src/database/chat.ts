@@ -151,13 +151,14 @@ export async function markAsRead(
  **/
 export async function sendDM(
   relation: RelationshipID,
-  content: Omit<Message, "id">,
+  content: Omit<Omit<Message, "id">, "isPicture">,
 ): Promise<Result<Message>> {
   try {
     const message = await prisma.message.create({
       data: {
         // isPicture: false, // todo: bring it back
         relationId: relation,
+        isPicture: false,
         read: false,
         ...content,
       },
@@ -166,6 +167,26 @@ export async function sendDM(
   } catch (e) {
     return Err(e);
   }
+}
+/**
+this doesn't create the image. use uploadPic in database/picture.ts to create the image.
+**/
+export async function createImageMessage(
+  sender: UserID,
+  relation: RelationshipID,
+  url: string,
+) {
+  return prisma.message
+    .create({
+      data: {
+        creator: sender,
+        relationId: relation,
+        content: url,
+        isPicture: true,
+      },
+    })
+    .then((val) => Ok(val))
+    .catch((err) => Err(err));
 }
 
 export async function createSharedRoom(
