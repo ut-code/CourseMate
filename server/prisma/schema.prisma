@@ -138,7 +138,7 @@ model Message {
   createdAt    DateTime      @default(now()) // @readonly
   edited       Boolean       @default(false)
   content      String
-  read         Boolean
+  read         Boolean       @default(false)
   relation     Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId   Int?
   sharedRoom   SharedRoom?   @relation(fields: [sharedRoomId], references: [id], onDelete: Cascade)
