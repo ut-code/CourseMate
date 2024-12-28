@@ -38,7 +38,7 @@ router.post("/dm/to/:userid", async (req, res) => {
 
   const result = await core.sendDM(user.value, friend.value, send.data);
   if (result.ok) {
-    ws.sendMessage(result?.body, friend.value);
+    ws.sendMessage(result.body, friend.value);
   }
   res.status(result.code).send(result.body);
 });

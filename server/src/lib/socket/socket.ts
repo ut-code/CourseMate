@@ -13,18 +13,24 @@ export function initializeSocket(server: Server, corsOptions: CorsOptions) {
   });
 
   io.on("connection", (socket) => {
+    console.log(`New connection created of id ${socket.id}`);
     socket.on("register", async (token) => {
       const userId = await getUserIdFromToken(token);
       if (userId) {
         users.set(userId, socket);
+        console.log(
+          `The user of id ${socket.id} turned out to have id ${userId}`,
+        );
       } else {
         console.log("Invalid token or failed to retrieve user ID");
       }
     });
 
     socket.on("disconnect", () => {
+      console.log(`A user disconnected of id ${socket.id}`);
       for (const [id, socket2] of users.entries()) {
         if (socket2.id === socket.id) {
+          console.log(`... whose userId is ${id}`);
           users.delete(id);
           break;
         }

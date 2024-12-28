@@ -72,7 +72,7 @@ router.get("/profile/:guid", async (req, res) => {
   const result = await storage.getProf(guid);
   switch (result.ok) {
     case true:
-      return res.send(result.value);
+      return res.send(new Buffer(result.value));
     case false:
       return res.status(404).send();
   }

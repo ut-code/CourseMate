@@ -1,10 +1,10 @@
 import type { CourseID, Day, GUID } from "common/types";
 import type { MessageID, ShareRoomID } from "common/types";
+import { panic } from "~/lib/utils";
 
-export const API_ENDPOINT: string | null =
-  process.env.NEXT_PUBLIC_API_ENDPOINT ?? "";
-if (!API_ENDPOINT)
-  throw new Error("process.env.NEXT_PUBLIC_API_ENDPOINT not found!");
+export const API_ENDPOINT: string =
+  process.env.NEXT_PUBLIC_API_ENDPOINT ??
+  panic("process.env.NEXT_PUBLIC_API_ENDPOINT not found!");
 
 // TODO: de-export this and use one from /common
 export type UserID = number;
@@ -375,6 +375,7 @@ export const sendPictureTo = (friendId: UserID) =>
  */
 export const profilePictureOf = (guid: GUID) =>
   `${API_ENDPOINT}/picture/profile/${guid}`;
+export const pictureOf = (guid: GUID) => `${API_ENDPOINT}/picture/${guid}`;
 
 /**
  * POST: update my profile picture.

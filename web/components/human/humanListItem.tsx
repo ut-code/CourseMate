@@ -14,6 +14,7 @@ type HumanListItemProps = {
   onAccept?: (id: number) => void;
   onReject?: (id: number) => void;
   onCancel?: (id: number) => void;
+  onRequest?: (id: number) => void;
   hasDots?: boolean;
   dotsActions?: object;
 };
@@ -32,6 +33,7 @@ export function HumanListItem(props: HumanListItemProps) {
     onAccept,
     onReject,
     onCancel,
+    onRequest,
     hasDots,
   } = props;
 
@@ -70,7 +72,7 @@ export function HumanListItem(props: HumanListItemProps) {
           )}
         </div>
       </button>
-      <div className="flex items-center space-x-2">
+      <div className="mr-3 flex items-center space-x-2">
         {unreadCount ? (
           <span className="badge badge-primary">{unreadCount}</span>
         ) : undefined}
@@ -105,6 +107,15 @@ export function HumanListItem(props: HumanListItemProps) {
             onClick={() => onCancel(id)}
           >
             キャンセル
+          </button>
+        )}
+        {onRequest && (
+          // biome-ignore lint/a11y/useButtonType: <explanation>
+          <button
+            className="btn btn-sm bg-primary text-white"
+            onClick={() => onRequest(id)}
+          >
+            リクエスト
           </button>
         )}
         {hasDots && (
