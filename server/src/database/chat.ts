@@ -127,11 +127,6 @@ export async function markAsRead(
   reader: UserID,
   message: MessageID,
 ) {
-  const val = {
-    readerId: reader,
-    messageId: message,
-    relationId: rel,
-  };
   return await prisma.message.updateMany({
     where: {
       id: {
@@ -161,6 +156,7 @@ export async function sendDM(
   try {
     const message = await prisma.message.create({
       data: {
+        // isPicture: false, // todo: bring it back
         relationId: relation,
         read: false,
         ...content,

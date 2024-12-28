@@ -2,16 +2,13 @@
 import type { Message, MessageID, SendMessage, UserID } from "common/types";
 import type { Content, DMRoom, PersonalizedDMRoom } from "common/zod/types";
 import { useRouter } from "next/navigation";
-import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as chat from "~/api/chat/chat";
 import { useMessages } from "~/api/chat/hooks";
 import request from "~/api/request";
-import * as user from "~/api/user";
 import { useMyID } from "~/api/user";
-import { getIdToken } from "~/firebase/auth/lib";
 import Dots from "../common/Dots";
-import { socket } from "../data/socket";
+import { handlers } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
@@ -47,7 +44,6 @@ export function RoomWindow(props: Props) {
     setMessages(state.data);
   }, [state.data]);
 
-  const { enqueueSnackbar } = useSnackbar();
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState<string>("");
 
@@ -68,54 +64,35 @@ export function RoomWindow(props: Props) {
     },
     [write],
   );
-  const updateLocalMessage = useCallback((_: Message) => reload(), [reload]);
+  // TODO: fix these
+  const updateLocalMessage = useCallback(
+    (_a: MessageID, _: Message) => reload(),
+    [reload],
+  );
   const deleteLocalMessage = useCallback((_: MessageID) => reload(), [reload]);
 
+  // メッセージの受取
   useEffect(() => {
-    async function registerSocket() {
-      if (!room) return;
-      const idToken = await getIdToken();
-      socket.emit("register", idToken);
-      socket.on("newMessage", async (msg: Message) => {
-        if (msg.creator === friendId) {
-          appendLocalMessage(msg);
-        } else {
-          const creator = await user.get(msg.creator);
-          if (creator == null) return;
-          enqueueSnackbar(
-            `${creator.name}さんからのメッセージ : ${msg.content}`,
-            {
-              variant: "info",
-            },
-          );
-        }
-      });
-      socket.on("updateMessage", async (msg: Message) => {
-        if (msg.creator === friendId) {
-          updateLocalMessage(msg);
-        }
-      });
-      socket.on("deleteMessage", async (msgId: number) => {
-        deleteLocalMessage(msgId);
-      });
-    }
-    registerSocket();
-    // Clean up
-    return () => {
-      socket.off("newMessage");
-      socket.off("updateMessage");
-      socket.off("deleteMessage");
+    handlers.onCreate = (msg) => {
+      if (msg.creator === friendId) {
+        appendLocalMessage(msg);
+        return true; // caught
+      }
+      return false; // didn't catch
     };
-  }, [
-    room,
-    friendId,
-    enqueueSnackbar,
-    appendLocalMessage,
-    updateLocalMessage,
-    deleteLocalMessage,
-  ]);
+    handlers.onUpdate = (id, msg) => {
+      updateLocalMessage(id, msg);
+    };
+    handlers.onDelete = (id) => {
+      deleteLocalMessage(id);
+    };
+    return () => {
+      handlers.onCreate = undefined;
+      handlers.onDelete = undefined;
+    };
+  }, [friendId, appendLocalMessage, updateLocalMessage, deleteLocalMessage]);
 
-  //画面スクロール
+  // 画面スクロール
   const scrollDiv = useRef<HTMLDivElement>(null);
   const scrollToBottom = useCallback(() => {
     if (scrollDiv.current) {
@@ -149,7 +126,7 @@ export function RoomWindow(props: Props) {
         { content },
         friendId,
       );
-      updateLocalMessage(editedMessage);
+      updateLocalMessage(editedMessage.id, editedMessage);
     },
     [updateLocalMessage, friendId],
   );

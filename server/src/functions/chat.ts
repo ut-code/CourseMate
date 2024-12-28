@@ -56,7 +56,7 @@ export async function sendDM(
   };
 
   const result = await db.sendDM(rel.value.id, msg);
-  if (!result.ok) return http.internalError("");
+  if (!result.ok) return http.internalError("Failed to send DM");
   return http.created(result.value);
 }
 
