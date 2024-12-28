@@ -17,7 +17,7 @@ router.get("/:guid", async (req, res) => {
   const result = await storage.get(guid);
   switch (result.ok) {
     case true:
-      return res.send(result.value);
+      return res.send(new Buffer(result.value));
     case false:
       return res.status(404).send();
   }
