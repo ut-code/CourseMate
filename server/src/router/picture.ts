@@ -1,6 +1,6 @@
 import bodyParser from "body-parser";
+import { safeParseInt } from "common/lib/result/safeParseInt";
 import express from "express";
-import { safeParseInt } from "../common/lib/result/safeParseInt";
 import * as chat from "../database/chat";
 import * as relation from "../database/matches";
 import * as storage from "../database/picture";

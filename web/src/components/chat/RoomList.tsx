@@ -1,7 +1,7 @@
 import { Box, List, Typography } from "@mui/material";
+import type { RoomOverview } from "common/types";
 import { useNavigate } from "react-router-dom";
-import type { RoomOverview } from "../../common/types";
-import { HumanListItem } from "../human/humanListItem";
+import { HumanListItem } from "~/components/human/humanListItem";
 
 type RoomListProps = {
   roomsData: RoomOverview[] | null;
