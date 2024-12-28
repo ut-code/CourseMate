@@ -50,29 +50,42 @@ export default function PersonDetailedMenu({ onClose, displayedUser }: Props) {
             {displayedUser.courses.map(
               (course) =>
                 course.name && (
-                  <p key={course.id} className="text-lg">
-                    {sortSlots(course.slots)
-                      .map(
-                        (slot) =>
-                          `${DAY_TO_JAPANESE_MAP.get(slot.day)}${slot.period}`,
-                      )
-                      .join("・")}
-                    /{course.name} ({course.teacher}) {course.id}
-                  </p>
+                  <div
+                    key={course.id}
+                    className="flex bg-[#F7FCFF] px-2 text-lg"
+                  >
+                    <span className="w-32">
+                      {sortSlots(course.slots)
+                        .map(
+                          (slot) =>
+                            `${DAY_TO_JAPANESE_MAP.get(slot.day)}${slot.period}`,
+                        )
+                        .join("・")}
+                    </span>
+                    <span className="flex-1">
+                      {course.name} ({course.teacher}){" "}
+                    </span>
+                    <span>{course.id}</span>
+                  </div>
                 ),
             )}
           </div>
           <div className="divider m-0" />
           <div>
             <span className="text-gray-500 text-xs">興味分野</span>
-            {displayedUser.interestSubjects.map(
-              (subject) =>
-                subject.name && (
-                  <p key={subject.id} className="text-lg">
-                    {subject.name}
-                  </p>
-                ),
-            )}
+            <div className="flex flex-wrap gap-2">
+              {displayedUser.interestSubjects.map(
+                (subject) =>
+                  subject.name && (
+                    <span
+                      key={subject.id}
+                      className="rounded-sm bg-[#FFF1BF] px-1 text-lg text-primary"
+                    >
+                      #{subject.name}
+                    </span>
+                  ),
+              )}
+            </div>
           </div>
         </div>
       </div>
