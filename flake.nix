@@ -27,6 +27,8 @@
             biome
             pkg-config
             openssl
+            lefthook
+            pkgs.prisma
           ] ++ [
             rust-pkgs
           ];

@@ -282,6 +282,11 @@ export const rejectRequest = (opponentId: UserID) => {
 };
 
 /**
+ **/
+export const markAsRead = (friendId: UserID, messageId: MessageID) => {
+  return `${origin}/chat/mark-as-read/${friendId}/${messageId}`;
+};
+/**
  * []実装済み
  * GET -> get personalized room overviews.
  * - status:
