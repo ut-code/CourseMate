@@ -1,8 +1,10 @@
 import type { CourseID, Day, GUID } from "common/types";
 import type { MessageID, ShareRoomID } from "common/types";
 
-export const origin: string | null = process.env.NEXT_PUBLIC_API_ENDPOINT ?? "";
-if (!origin) throw new Error("process.env.NEXT_PUBLIC_API_ENDPOINT not found!");
+export const API_ENDPOINT: string | null =
+  process.env.NEXT_PUBLIC_API_ENDPOINT ?? "";
+if (!API_ENDPOINT)
+  throw new Error("process.env.NEXT_PUBLIC_API_ENDPOINT not found!");
 
 // TODO: de-export this and use one from /common
 export type UserID = number;
@@ -17,7 +19,7 @@ export type UserID = number;
  *   - 500: internal error.
  **/
 export const user = (userId: UserID) => {
-  return `${origin}/users/id/${userId}`;
+  return `${API_ENDPOINT}/users/id/${userId}`;
 };
 
 /**
@@ -36,7 +38,7 @@ export const user = (userId: UserID) => {
  *   - 500: internal error.
  *
  **/
-export const users = `${origin}/users`;
+export const users = `${API_ENDPOINT}/users`;
 
 /**
  * [v] 実装済み
@@ -47,7 +49,7 @@ export const users = `${origin}/users`;
  *   - 401: auth error.
  *   - 500: internal error
  **/
-export const recommendedUsers = `${origin}/users/recommended`;
+export const recommendedUsers = `${API_ENDPOINT}/users/recommended`;
 
 /**
  * [v] 実装済み
@@ -72,7 +74,7 @@ export const recommendedUsers = `${origin}/users/recommended`;
  *   - 500: internal error.
  *
  **/
-export const me = `${origin}/users/me`;
+export const me = `${API_ENDPOINT}/users/me`;
 
 /**
  * [v] 実装済み
@@ -83,7 +85,7 @@ export const me = `${origin}/users/me`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-export const matchedUsers = `${origin}/users/matched`;
+export const matchedUsers = `${API_ENDPOINT}/users/matched`;
 
 /**
  * [v] 実装済み
@@ -94,7 +96,7 @@ export const matchedUsers = `${origin}/users/matched`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-export const pendingRequestsToMe = `${origin}/users/pending/to-me`;
+export const pendingRequestsToMe = `${API_ENDPOINT}/users/pending/to-me`;
 
 /**
  * [v] 実装済み
@@ -105,7 +107,7 @@ export const pendingRequestsToMe = `${origin}/users/pending/to-me`;
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-export const pendingRequestsFromMe = `${origin}/users/pending/from-me`;
+export const pendingRequestsFromMe = `${API_ENDPOINT}/users/pending/from-me`;
 
 /**
  * [v] 実装済み
@@ -117,7 +119,7 @@ export const pendingRequestsFromMe = `${origin}/users/pending/from-me`;
  *   - 500: internal error.
  **/
 export const userByGUID = (guid: GUID) => {
-  return `${origin}/users/guid/${guid}`;
+  return `${API_ENDPOINT}/users/guid/${guid}`;
 };
 
 // this one may be public to anyone.
@@ -131,7 +133,7 @@ export const userByGUID = (guid: GUID) => {
  *   - 500: internal error.
  **/
 export const userExists = (guid: GUID) => {
-  return `${origin}/users/exists/${guid}`;
+  return `${API_ENDPOINT}/users/exists/${guid}`;
 };
 
 /**
@@ -145,7 +147,7 @@ export const userExists = (guid: GUID) => {
  *   - 500: internal error.
  **/
 export const match = (opponentID: UserID) => {
-  return `${origin}/matches/${opponentID}`;
+  return `${API_ENDPOINT}/matches/${opponentID}`;
 };
 
 /**
@@ -158,7 +160,7 @@ export const match = (opponentID: UserID) => {
  *   - 401: unauthorized.
  *   - 500: internal error.
  **/
-export const matches = `${origin}/matches`;
+export const matches = `${API_ENDPOINT}/matches`;
 
 /**
  * [x] 実装済み
@@ -180,7 +182,7 @@ export const matches = `${origin}/matches`;
  *  - 500: internal error.
  */
 export const coursesUserId = (userId: UserID) => {
-  return `${origin}/courses/userId/${userId}`;
+  return `${API_ENDPOINT}/courses/userId/${userId}`;
 };
 
 /**
@@ -206,7 +208,7 @@ export const coursesUserId = (userId: UserID) => {
  *  - 401: unauthorized.
  *  - 500: internal error.
  */
-export const coursesMine = `${origin}/courses/mine`;
+export const coursesMine = `${API_ENDPOINT}/courses/mine`;
 
 /**
  * [v] 実装済み
@@ -218,7 +220,7 @@ export const coursesMine = `${origin}/courses/mine`;
  *  - 500: internal error.
  */
 export const coursesMineOverlaps = (courseId: CourseID) => {
-  return `${origin}/courses/mine/overlaps/${courseId}`;
+  return `${API_ENDPOINT}/courses/mine/overlaps/${courseId}`;
 };
 
 /**
@@ -231,7 +233,7 @@ export const coursesMineOverlaps = (courseId: CourseID) => {
  *   - 500: internal error.
  **/
 export const coursesDayPeriod = (day: Day, period: number) => {
-  return `${origin}/courses/day-period?day=${day}&period=${period}`;
+  return `${API_ENDPOINT}/courses/day-period?day=${day}&period=${period}`;
 };
 
 /**
@@ -243,7 +245,7 @@ export const coursesDayPeriod = (day: Day, period: number) => {
  *   - 500: internal error.
  **/
 export const sendRequest = (opponentId: UserID) => {
-  return `${origin}/requests/send/${opponentId}`;
+  return `${API_ENDPOINT}/requests/send/${opponentId}`;
 };
 
 /**
@@ -254,7 +256,7 @@ export const sendRequest = (opponentId: UserID) => {
  *   - 500: internal error
  **/
 export const cancelRequest = (opponentId: UserID) => {
-  return `${origin}/requests/cancel/${opponentId}`;
+  return `${API_ENDPOINT}/requests/cancel/${opponentId}`;
 };
 /**
  * [v] 実装済み
@@ -265,7 +267,7 @@ export const cancelRequest = (opponentId: UserID) => {
  *   - 500: internal error.
  **/
 export const acceptRequest = (opponentId: UserID) => {
-  return `${origin}/requests/accept/${opponentId}`;
+  return `${API_ENDPOINT}/requests/accept/${opponentId}`;
 };
 
 /**
@@ -278,13 +280,13 @@ export const acceptRequest = (opponentId: UserID) => {
  *   - 500: internal error.
  **/
 export const rejectRequest = (opponentId: UserID) => {
-  return `${origin}/requests/reject/${opponentId}`;
+  return `${API_ENDPOINT}/requests/reject/${opponentId}`;
 };
 
 /**
  **/
 export const markAsRead = (friendId: UserID, messageId: MessageID) => {
-  return `${origin}/chat/mark-as-read/${friendId}/${messageId}`;
+  return `${API_ENDPOINT}/chat/mark-as-read/${friendId}/${messageId}`;
 };
 /**
  * []実装済み
@@ -295,7 +297,7 @@ export const markAsRead = (friendId: UserID, messageId: MessageID) => {
  *   - 401: unauthorized
  *   - 500: internal error
  */
-export const roomOverview = `${origin}/chat/overview`;
+export const roomOverview = `${API_ENDPOINT}/chat/overview`;
 
 /**
  * []実装済み
@@ -308,7 +310,7 @@ export const roomOverview = `${origin}/chat/overview`;
  *   - 403: Forbidden
  *   - 500: internal error
  **/
-export const dmTo = (userId: UserID) => `${origin}/chat/dm/to/${userId}`;
+export const dmTo = (userId: UserID) => `${API_ENDPOINT}/chat/dm/to/${userId}`;
 
 /**
  * PUT -> start dm with userId. created one if none was found. authorized.
@@ -322,7 +324,8 @@ export const dmTo = (userId: UserID) => `${origin}/chat/dm/to/${userId}`;
  *   - 403: forbidden. you and the user are not matched yet.
  *   - 500: internal error.
  **/
-export const dmWith = (userId: UserID) => `${origin}/chat/dm/with/${userId}`;
+export const dmWith = (userId: UserID) =>
+  `${API_ENDPOINT}/chat/dm/with/${userId}`;
 
 /**
  * POST -> Create a room. authenticated
@@ -334,7 +337,7 @@ export const dmWith = (userId: UserID) => `${origin}/chat/dm/with/${userId}`;
  *   - 403: forbidden (cannot invite non-friends)
  *   - 500: internal error
  **/
-export const sharedRooms = `${origin}/chat/shared`;
+export const sharedRooms = `${API_ENDPOINT}/chat/shared`;
 
 /** authorized
  * GET -> Get info of a room (including the message log).
@@ -342,7 +345,7 @@ export const sharedRooms = `${origin}/chat/shared`;
  * - body: UpdateRoom
  **/
 export const sharedRoom = (roomId: ShareRoomID) =>
-  `${origin}/chat/shared/${roomId}`;
+  `${API_ENDPOINT}/chat/shared/${roomId}`;
 
 /** POST: invite. authorized
  * - body: UserID[]
@@ -353,30 +356,30 @@ export const sharedRoom = (roomId: ShareRoomID) =>
  *   - 500: internal error
  **/
 export const roomInvite = (roomId: ShareRoomID) =>
-  `${origin}/chat/shared/id/${roomId}/invite`;
+  `${API_ENDPOINT}/chat/shared/id/${roomId}/invite`;
 
 /**
  * PATCH: authorized body=SendMessage
  * DELETE: authorized
  **/
 export const message = (messageId: MessageID) =>
-  `${origin}/chat/messages/id/${messageId}`;
+  `${API_ENDPOINT}/chat/messages/id/${messageId}`;
 
 /**
  * POST: send picture.
  */
 export const sendPictureTo = (friendId: UserID) =>
-  `${origin}/picture/to/${friendId}`;
+  `${API_ENDPOINT}/picture/to/${friendId}`;
 /**
  * GET: get profile picture of URL (this is usually hard-encoded in pictureURL so this variable is barely used)
  */
 export const profilePictureOf = (guid: GUID) =>
-  `${origin}/picture/profile/${guid}`;
+  `${API_ENDPOINT}/picture/profile/${guid}`;
 
 /**
  * POST: update my profile picture.
  */
-export const profilePicture = `${origin}/picture/profile`;
+export const profilePicture = `${API_ENDPOINT}/picture/profile`;
 
 export default {
   user,

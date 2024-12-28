@@ -1,11 +1,12 @@
 "use client";
 import type { Message, MessageID, SendMessage, UserID } from "common/types";
-import type { Content, DMRoom, PersonalizedDMRoom } from "common/zod/types";
+import type { Content, DMOverview, DMRoom } from "common/zod/types";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as chat from "~/api/chat/chat";
 import { useMessages } from "~/api/chat/hooks";
+import { API_ENDPOINT } from "~/api/internal/endpoints";
 import request from "~/api/request";
 import * as user from "~/api/user";
 import { useMyID } from "~/api/user";
@@ -15,7 +16,7 @@ import { socket } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
-type Props = { friendId: UserID; room: DMRoom & PersonalizedDMRoom };
+type Props = { friendId: UserID; room: DMRoom & DMOverview };
 
 export function RoomWindow(props: Props) {
   const { friendId, room } = props;
@@ -195,7 +196,7 @@ export function RoomWindow(props: Props) {
                   }}
                   key={m.id}
                   alt=""
-                  src={origin + m.content}
+                  src={API_ENDPOINT + m.content}
                 />
               ) : (
                 <div

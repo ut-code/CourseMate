@@ -22,7 +22,11 @@ sync: sync-server sync-web sync-root sync-common
 	make generate-sql || true
 
 generate-sql:
-	@cd server; bun run prisma-generate-sql
+	@cd server; \
+		if command -v dotenv && command -v prisma; \
+		then dotenv -e .env.dev -- prisma generate --sql; \
+		else bunx dotenv -e .env.dev -- bunx prisma generate --sql; \
+		fi
 
 start: start-all # build -> serve
 build: build-server build-web

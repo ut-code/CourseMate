@@ -173,6 +173,8 @@ export const PersonalizedDMRoomSchema = z.object({
   name: NameSchema,
   thumbnail: z.string(),
   matchingStatus: MatchingStatusSchema,
+  unreadMessages: z.number(),
+  friendId: z.number(),
 });
 
 export const SharedRoomSchema = z.object({
