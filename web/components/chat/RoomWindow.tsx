@@ -1,10 +1,11 @@
 "use client";
 import type { Message, MessageID, SendMessage, UserID } from "common/types";
-import type { Content, DMRoom, PersonalizedDMRoom } from "common/zod/types";
+import type { Content, DMOverview, DMRoom } from "common/zod/types";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as chat from "~/api/chat/chat";
 import { useMessages } from "~/api/chat/hooks";
+import { API_ENDPOINT } from "~/api/internal/endpoints";
 import request from "~/api/request";
 import { useMyID } from "~/api/user";
 import Dots from "../common/Dots";
@@ -12,7 +13,7 @@ import { handlers } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
-type Props = { friendId: UserID; room: DMRoom & PersonalizedDMRoom };
+type Props = { friendId: UserID; room: DMRoom & DMOverview };
 
 export function RoomWindow(props: Props) {
   const { friendId, room } = props;
@@ -160,77 +161,95 @@ export function RoomWindow(props: Props) {
       <div className="absolute top-14 right-0 left-0 flex flex-col overflow-y-auto">
         {messages && messages.length > 0 ? (
           <div className="flex-grow overflow-y-auto p-2" ref={scrollDiv}>
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={`mb-2 flex ${
-                  m.creator === myId ? "justify-end" : "justify-start"
-                }`}
-              >
-                {editingMessageId === m.id ? (
-                  <div className="flex w-3/5 flex-col">
-                    <textarea
-                      value={editedContent}
-                      onChange={(e) => setEditedContent(e.target.value)}
-                      onKeyDown={(e) => {
-                        if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                          commitEdit(editingMessageId, editedContent);
-                        }
-                      }}
-                      className="textarea textarea-bordered h-24 w-full"
-                    />
-                    <div className="mt-2 flex justify-evenly gap-2">
-                      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-                      <button
-                        className="btn btn-primary"
-                        onClick={() =>
-                          commitEdit(editingMessageId, editedContent)
-                        }
-                      >
-                        保存
-                      </button>
-                      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-                      <button className="btn btn-outline" onClick={cancelEdit}>
-                        キャンセル
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    className={`rounded-xl p-2 shadow ${
-                      m.creator === myId ? "bg-secondary" : "bg-white"
-                    }`}
-                  >
-                    <p className="whitespace-pre-wrap break-words">
-                      {m.content}
-                    </p>
-                    {m.creator === myId && (
-                      <Dots
-                        actions={[
-                          {
-                            label: "編集",
-                            onClick: () => startEditing(m.id, m.content),
-                            alert: false,
-                          },
-                          {
-                            label: "削除",
-                            color: "red",
-                            onClick: () => deleteMessage(m.id, friendId),
-                            alert: true,
-                            messages: {
-                              buttonMessage: "削除",
-                              AlertMessage: "本当に削除しますか？",
-                              subAlertMessage: "この操作は取り消せません。",
-                              yesMessage: "削除",
-                            },
-                          },
-                        ]}
+            {messages.map((m) =>
+              m.isPicture ? (
+                <img
+                  height="300px"
+                  width="300px"
+                  style={{
+                    maxHeight: "300px",
+                    maxWidth: "300px",
+                    float: m.creator === myId ? "right" : "left",
+                  }}
+                  key={m.id}
+                  alt=""
+                  src={API_ENDPOINT + m.content}
+                />
+              ) : (
+                <div
+                  key={m.id}
+                  className={`mb-2 flex ${
+                    m.creator === myId ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  {editingMessageId === m.id ? (
+                    <div className="flex w-3/5 flex-col">
+                      <textarea
+                        value={editedContent}
+                        onChange={(e) => setEditedContent(e.target.value)}
+                        onKeyDown={(e) => {
+                          if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                            commitEdit(editingMessageId, editedContent);
+                          }
+                        }}
+                        className="textarea textarea-bordered h-24 w-full"
                       />
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
+                      <div className="mt-2 flex justify-evenly gap-2">
+                        {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+                        <button
+                          className="btn btn-primary"
+                          onClick={() =>
+                            commitEdit(editingMessageId, editedContent)
+                          }
+                        >
+                          保存
+                        </button>
+                        {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+                        <button
+                          className="btn btn-outline"
+                          onClick={cancelEdit}
+                        >
+                          キャンセル
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      className={`rounded-xl p-2 shadow ${
+                        m.creator === myId ? "bg-secondary" : "bg-white"
+                      }`}
+                    >
+                      <p className="whitespace-pre-wrap break-words">
+                        {m.content}
+                      </p>
+                      {m.creator === myId && (
+                        <Dots
+                          actions={[
+                            {
+                              label: "編集",
+                              onClick: () => startEditing(m.id, m.content),
+                              alert: false,
+                            },
+                            {
+                              label: "削除",
+                              color: "red",
+                              onClick: () => deleteMessage(m.id, friendId),
+                              alert: true,
+                              messages: {
+                                buttonMessage: "削除",
+                                AlertMessage: "本当に削除しますか？",
+                                subAlertMessage: "この操作は取り消せません。",
+                                yesMessage: "削除",
+                              },
+                            },
+                          ]}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              ),
+            )}
           </div>
         ) : (
           <div className="text-center text-gray-500">
@@ -239,7 +258,7 @@ export function RoomWindow(props: Props) {
         )}
       </div>
       <div className="fixed bottom-12 w-full bg-white p-0">
-        <MessageInput send={sendDMMessage} friendId={friendId} />
+        <MessageInput reload={reload} send={sendDMMessage} room={room} />
       </div>
     </>
   );

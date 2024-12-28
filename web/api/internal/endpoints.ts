@@ -366,14 +366,21 @@ export const message = (messageId: MessageID) =>
   `${API_ENDPOINT}/chat/messages/id/${messageId}`;
 
 /**
+ * POST: send picture.
+ */
+export const sendPictureTo = (friendId: UserID) =>
+  `${API_ENDPOINT}/picture/to/${friendId}`;
+/**
  * GET: get profile picture of URL (this is usually hard-encoded in pictureURL so this variable is barely used)
  */
+export const profilePictureOf = (guid: GUID) =>
+  `${API_ENDPOINT}/picture/profile/${guid}`;
 export const pictureOf = (guid: GUID) => `${API_ENDPOINT}/picture/${guid}`;
 
 /**
  * POST: update my profile picture.
  */
-export const picture = `${API_ENDPOINT}/picture`;
+export const profilePicture = `${API_ENDPOINT}/picture/profile`;
 
 export default {
   user,
@@ -402,6 +409,6 @@ export default {
   message,
   coursesMine,
   coursesMineOverlaps,
-  pictureOf,
-  picture,
+  profilePictureOf,
+  profilePicture,
 };

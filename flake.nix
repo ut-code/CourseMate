@@ -29,6 +29,7 @@
             openssl
             lefthook
             pkgs.prisma
+            dotenv-cli
           ] ++ [
             rust-pkgs
           ];

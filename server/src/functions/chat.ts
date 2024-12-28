@@ -10,7 +10,7 @@ import type {
   ShareRoomID,
 } from "common/types";
 import * as db from "../database/chat";
-import { areAllMatched, areMatched, getRelation } from "../database/matches";
+import { areAllMatched, getRelation } from "../database/matches";
 import { getUserByID } from "../database/users";
 import * as http from "./share/http";
 
@@ -48,7 +48,7 @@ export async function sendDM(
     );
 
   // they are now MATCHED
-  const msg: Omit<Message, "id"> = {
+  const msg: Omit<Omit<Message, "id">, "isPicture"> = {
     creator: from,
     createdAt: new Date(),
     edited: false,
@@ -73,8 +73,14 @@ export async function getDM(
 
   const friendData = await getUserByID(friend);
   if (!friendData.ok) return http.notFound("friend not found");
+  const unreadCount = db.unreadMessages(user, rel.value.id).then((val) => {
+    if (val.ok) return val.value;
+    throw val.error;
+  });
 
   const personalized: PersonalizedDMRoom & DMRoom = {
+    unreadMessages: await unreadCount,
+    friendId: friendData.value.id,
     name: friendData.value.name,
     thumbnail: friendData.value.pictureUrl,
     matchingStatus:
