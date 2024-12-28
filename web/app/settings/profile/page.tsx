@@ -42,7 +42,11 @@ export default function SettingsProfile() {
                 編集する
               </Link>
             </div>
-            <Card displayedUser={data} onFlip={(back) => setBack(back)} />
+            <Card
+              displayedUser={data}
+              currentUser={data}
+              onFlip={(back) => setBack(back)}
+            />
           </div>
         </div>
       )}
