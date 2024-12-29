@@ -52,7 +52,7 @@ export default function PersonDetailedMenu({ onClose, displayedUser }: Props) {
                 course.name && (
                   <div
                     key={course.id}
-                    className="flex bg-[#F7FCFF] px-2 text-lg"
+                    className="flex rounded-md bg-[#F7FCFF] px-2 text-lg"
                   >
                     <span className="w-[12vh]">
                       {sortSlots(course.slots)
@@ -79,7 +79,7 @@ export default function PersonDetailedMenu({ onClose, displayedUser }: Props) {
                   subject.name && (
                     <span
                       key={subject.id}
-                      className="rounded-sm bg-[#FFF1BF] px-1 text-lg text-primary"
+                      className="rounded-md bg-[#FFF1BF] px-2 py-0.5 text-lg text-primary"
                     >
                       #{subject.name}
                     </span>
