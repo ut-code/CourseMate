@@ -112,7 +112,13 @@ export default function PersonDetailedMenu({
                     subject.name && (
                       <span
                         key={subject.id}
-                        className="rounded-md bg-[#FFF1BF] px-2 py-0.5 text-lg text-primary"
+                        className={`rounded-md px-2 py-0.5 text-md text-primary ${
+                          currentUser.interestSubjects.some(
+                            (s) => s.id === subject.id,
+                          )
+                            ? "bg-[#FFF1BF]"
+                            : "bg-[#F7FCFF]"
+                        }`}
                       >
                         #{subject.name}
                       </span>
