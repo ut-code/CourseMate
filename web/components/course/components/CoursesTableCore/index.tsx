@@ -2,7 +2,6 @@ import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "common/consts";
 import type { Course, Day } from "common/types";
 import { useCallback, useEffect, useState } from "react";
 import { truncateStr } from "./lib";
-import styles from "./styles.module.css";
 
 type Props =
   | {
@@ -140,39 +139,6 @@ export default function CoursesTableCore(props: Props) {
           )}
         </div>
       </div>
-      {/* <table className={styles.table}>
-        <thead>
-          <tr>
-            <th />
-            {ACTIVE_DAYS.map((activeDay) => (
-              <th align="center" key={`header-${activeDay}`}>
-                {DAY_TO_JAPANESE_MAP.get(activeDay as Day)}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, rowIndex) => (
-            <tr key={`period-${rowIndex + 1}`}>
-              <th key={`header-period-${rowIndex + 1}`}>{rowIndex + 1}</th>
-              {ACTIVE_DAYS.map((day) => (
-                <Cell
-                  key={`cell-${day}-${rowIndex.toString()}`}
-                  courseName={row[day]?.name ?? null}
-                  teacherName={row[day]?.teacher ?? null}
-                  isOverlapping={row[day]?.isOverlapping}
-                  isButton={props.isButton}
-                  onClick={
-                    props.isButton
-                      ? () => props.onCellClick(rowIndex, day, row[day] ?? null)
-                      : undefined
-                  }
-                />
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
     </div>
   );
 }
@@ -211,8 +177,8 @@ function Cell({
           overflow: "hidden",
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
-          WebkitLineClamp: 2,
-          lineClamp: 2,
+          WebkitLineClamp: 1,
+          lineClamp: 1,
           textOverflow: "ellipsis",
         }}
       >
@@ -223,7 +189,7 @@ function Cell({
 
   return (
     <span
-      className={`inline-flex flex-1 items-center justify-center rounded-sm text-xs ${
+      className={`inline-flex flex-1 items-center justify-center rounded-sm p-0.5 text-xs ${
         !courseName
           ? "bg-transparent"
           : isOverlapping
@@ -232,31 +198,11 @@ function Cell({
       }`}
     >
       {isButton ? (
-        <button
-          type="button"
-          className={
-            isOverlapping
-              ? styles.overlapped
-              : courseName
-                ? styles.enrolled
-                : ""
-          }
-          onClick={onClick}
-        >
+        <button type="button" onClick={onClick}>
           {content}
         </button>
       ) : (
-        <span
-          className={
-            isOverlapping
-              ? styles.overlapped
-              : courseName
-                ? styles.enrolled
-                : ""
-          }
-        >
-          {content}
-        </span>
+        <span className="inline-flex flex-col justify-between">{content}</span>
       )}
     </span>
   );

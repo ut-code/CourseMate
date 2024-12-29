@@ -4,13 +4,19 @@ import { useState } from "react";
 import { MdClose } from "react-icons/md";
 import { MdOpenInNew } from "react-icons/md";
 import { MdArrowBack } from "react-icons/md";
+import NonEditableCoursesTable from "~/components/course/NonEditableCoursesTable";
 
 type Props = {
   onClose: () => void;
   displayedUser: UserWithCoursesAndSubjects;
+  currentUser: UserWithCoursesAndSubjects;
 };
 
-export default function PersonDetailedMenu({ onClose, displayedUser }: Props) {
+export default function PersonDetailedMenu({
+  onClose,
+  displayedUser,
+  currentUser,
+}: Props) {
   const [menuStatus, setMenuStatus] = useState<"detailedInfo" | "coursesTable">(
     "detailedInfo",
   );
@@ -110,19 +116,23 @@ export default function PersonDetailedMenu({ onClose, displayedUser }: Props) {
             </div>
           </div>
         ) : (
-          <div>
-            <p>
-              courses table
-              {/* TODO: */}
-            </p>
-            <button
-              type="button"
-              className="btn btn-xs font-normal text-primary"
-              onClick={() => setMenuStatus("detailedInfo")}
-            >
-              <MdArrowBack className="mr-[-4px]" />
-              詳細情報に戻る
-            </button>
+          <div className="flex h-[80vh] flex-col">
+            <div className="flex justify-end pr-2">
+              <button
+                type="button"
+                className="btn btn-xs font-normal text-primary"
+                onClick={() => setMenuStatus("detailedInfo")}
+              >
+                <MdArrowBack className="mr-[-4px]" />
+                詳細情報に戻る
+              </button>
+            </div>
+            <div className="flex-1 p-2 pb-6">
+              <NonEditableCoursesTable
+                userId={displayedUser.id}
+                comparisonUserId={currentUser.id}
+              />
+            </div>
           </div>
         )}
       </div>

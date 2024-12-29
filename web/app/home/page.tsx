@@ -134,6 +134,7 @@ export default function Home() {
                   setOpenDetailedMenu(false);
                 }}
                 displayedUser={displayedUser}
+                currentUser={currentUser}
               />
             )}
           </>
