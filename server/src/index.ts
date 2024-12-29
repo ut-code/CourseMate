@@ -31,6 +31,12 @@ export const corsOptions = {
   credentials: true,
 };
 
+if (corsOptions.origins.length > 1 && process.env.NODE_ENV === "production") {
+  console.warn(
+    "WARNING: socket.io only supports one cors origin, therefore only first origin will be registered.",
+  );
+}
+
 app.use(cors(corsOptions));
 app.use(csrf(corsOptions));
 

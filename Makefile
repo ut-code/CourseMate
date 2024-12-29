@@ -16,14 +16,17 @@ setup-ci:
 	make generate-sql
 
 sync: sync-server sync-web sync-root sync-common
-	bunx lefthook install || true
 	@echo '----------------------------------------------------------------------------------------------------------'
 	@echo '| Most work is done. now running prisma-generate-sql (which might fail if .env.dev is not set configured)|'
 	@echo '----------------------------------------------------------------------------------------------------------'
 	make generate-sql || true
 
 generate-sql:
-	@cd server; bun run prisma-generate-sql
+	@cd server; \
+		if command -v dotenv && command -v prisma; \
+		then dotenv -e .env.dev -- prisma generate --sql; \
+		else bunx dotenv -e .env.dev -- bunx prisma generate --sql; \
+		fi
 
 start: start-all # build -> serve
 build: build-server build-web
@@ -44,6 +47,9 @@ test: dev-db
 
 prepare-deploy-web: sync-common
 	cd web; bun install; bun run build
+deploy-web:
+	@if [ "${PORT}" == "" ]; then echo 'env PORT not found!'; exit 1; fi
+	cd web; bun next start --port ${PORT}
 prepare-deploy-server: sync-common sync-server generate-sql
 deploy-server:
 	cd server; bun src/main.ts
@@ -56,7 +62,7 @@ docker-watch:
 	docker compose up --build --watch
 
 seed:
-	cd server; bunx prisma db seed
+	cd server; if command -v prisma; then prisma db seed; else bunx prisma db seed; fi
 
 ## server/.envをDATABASE_URL=postgres://user:password@localhost:5432/databaseにしてから行う
 dev-db: export DATABASE_URL=$(LOCAL_DB)
@@ -76,12 +82,9 @@ dev-db:
 		sleep 1; \
 	done
 	@echo "PostgreSQL is ready. Running seed..."
-	@cd server; \
-		if command -v prisma; then\
-			prisma generate; prisma db push;\
-		else \
-			bunx prisma generate; bunx prisma db push;\
-		fi
+	@cd server; if command -v prisma; then \
+		prisma generate; prisma db push; else \
+		bunx prisma generate; bunx prisma db push; fi
 	@make seed
 	@echo "Seeding completed."
 
