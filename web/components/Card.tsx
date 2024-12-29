@@ -183,10 +183,12 @@ const CardBack = ({ displayedUser, currentUser }: CardProps) => {
       <div className="flex justify-center">
         <p className="font-bold text-lg">{displayedUser?.name}</p>
       </div>
-      <NonEditableCoursesTable
-        userId={displayedUser.id}
-        comparisonUserId={currentUser.id}
-      />
+      <div className="flex-1">
+        <NonEditableCoursesTable
+          userId={displayedUser.id}
+          comparisonUserId={currentUser.id}
+        />
+      </div>
       <div className="mt-4 flex justify-center">
         <ThreeSixtyIcon className="text-3xl" />
       </div>
