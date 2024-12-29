@@ -19,14 +19,16 @@ export async function recommendedTo(
   try {
     const result = await prisma.$queryRawTyped(sql(user, limit, offset));
     return Promise.all(
-      result.map(async (res) => {
-        const user = await getUserByID(res.id);
-        if (!user.ok) throw new Error("not found"); // this shouldn't happen
-        return {
-          count: Number.parseInt(res.overlap?.toString() ?? "0"),
-          u: user.value,
-        };
-      }),
+      result
+        .filter((res) => res.id !== 0) // memo shouldn't appear in recommendation list, even if they are not matched
+        .map(async (res) => {
+          const user = await getUserByID(res.id);
+          if (!user.ok) throw new Error("not found"); // this shouldn't happen
+          return {
+            count: Number.parseInt(res.overlap?.toString() ?? "0"),
+            u: user.value,
+          };
+        }),
     )
       .then((val) => Ok(val))
       .catch((err) => Err(err));
