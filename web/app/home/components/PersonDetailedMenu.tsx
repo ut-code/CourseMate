@@ -54,7 +54,7 @@ export default function PersonDetailedMenu({ onClose, displayedUser }: Props) {
                     key={course.id}
                     className="flex bg-[#F7FCFF] px-2 text-lg"
                   >
-                    <span className="w-32">
+                    <span className="w-[12vh]">
                       {sortSlots(course.slots)
                         .map(
                           (slot) =>
