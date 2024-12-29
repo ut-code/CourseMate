@@ -1,7 +1,6 @@
 import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "common/consts";
 import type { Course, Day } from "common/types";
 import { useCallback, useEffect, useState } from "react";
-import { truncateStr } from "./lib";
 
 type Props =
   | {
@@ -164,12 +163,12 @@ function Cell({
           overflow: "hidden",
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
-          WebkitLineClamp: 2,
-          lineClamp: 2,
+          WebkitLineClamp: 3,
+          lineClamp: 3,
           textOverflow: "ellipsis",
         }}
       >
-        {courseName ? truncateStr(courseName ?? "", 16) : ""}
+        {courseName}
       </span>
       <span
         style={{
@@ -182,27 +181,29 @@ function Cell({
           textOverflow: "ellipsis",
         }}
       >
-        {teacherName ? truncateStr(teacherName ?? "", 6) : ""}
+        {teacherName}
       </span>
     </>
   );
 
   return (
     <span
-      className={`inline-flex flex-1 items-center justify-center rounded-sm p-0.5 text-xs ${
+      className={`inline-flex h-full w-full flex-1 items-center justify-center rounded-sm p-0.5 text-xs ${
         !courseName
-          ? "bg-transparent"
+          ? "bg-gray-50"
           : isOverlapping
             ? "bg-[#FFF1BF]"
             : "bg-[#F7FCFF]"
       }`}
     >
       {isButton ? (
-        <button type="button" onClick={onClick}>
+        <button type="button" onClick={onClick} className="h-full w-full">
           {content}
         </button>
       ) : (
-        <span className="inline-flex flex-col justify-between">{content}</span>
+        <span className="inline-flex h-full w-full flex-col justify-around text-center">
+          {content}
+        </span>
       )}
     </span>
   );
