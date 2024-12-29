@@ -80,7 +80,11 @@ export default function PersonDetailedMenu({
                     course.name && (
                       <div
                         key={course.id}
-                        className="flex gap-0.5 rounded-md bg-[#F7FCFF] px-2 py-1 text-md"
+                        className={`flex gap-0.5 rounded-md px-2 py-1 text-md ${
+                          currentUser.courses.some((c) => c.id === course.id)
+                            ? "bg-[#FFF1BF]"
+                            : "bg-[#F7FCFF]"
+                        }`}
                       >
                         <span className="w-[12vh]">
                           {sortSlots(course.slots)
