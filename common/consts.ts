@@ -18,7 +18,7 @@ export const sortSlots = (
     period: number;
   }[],
 ) => {
-  const order = ["月", "火", "水", "木", "金"];
+  const order = ["mon", "tue", "wed", "thu", "fri", "sat", "sun", "other"];
   return slots.sort((a, b) => {
     const dayComparison = order.indexOf(a.day) - order.indexOf(b.day);
     if (dayComparison !== 0) {
