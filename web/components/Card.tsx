@@ -14,8 +14,203 @@ const CardFront = ({ displayedUser, currentUser }: CardProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const interestsContainerRef = useRef<HTMLDivElement>(null);
   const coursesContainerRef = useRef<HTMLDivElement>(null);
-  const [isHiddenInterestExist, setHiddenInterestExist] = useState(false);
-  const [isHiddenCourseExist, setHiddenCourseExist] = useState(false);
+
+  const calculateVisibleCourses = useCallback(() => {
+    const courses = displayedUser.courses;
+    const container = coursesContainerRef.current;
+    if (!container) return;
+
+    const containerHeight = container.offsetHeight;
+
+    // 初期化
+    container.innerHTML = "";
+
+    const coursesContainer = document.createElement("div");
+    coursesContainer.classList.add(
+      "flex",
+      "flex-wrap",
+      "gap-3",
+      "justify-start",
+    );
+    container.appendChild(coursesContainer);
+
+    // `And More` 要素を作成して追加 (最初は非表示)
+    const andMoreElement = document.createElement("p");
+    andMoreElement.textContent = "And More";
+    andMoreElement.classList.add(
+      "text-sm",
+      "text-gray-500",
+      "text-center",
+      "mt-2",
+      "hidden", // 初期状態で非表示
+    );
+    andMoreElement.style.width = "100%";
+    coursesContainer.appendChild(andMoreElement);
+
+    // 一致しているコースと一致していないコースを分ける
+    const matchingCourses = courses.filter((course) =>
+      currentUser.courses.some((c) => c.id === course.id),
+    );
+    const nonMatchingCourses = courses.filter(
+      (course) => !currentUser.courses.some((c) => c.id === course.id),
+    );
+
+    // バッジの生成
+    const addedElements: HTMLElement[] = [];
+    for (const course of [...matchingCourses, ...nonMatchingCourses]) {
+      const isMatching = currentUser.courses.some((c) => c.id === course.id);
+
+      const element = document.createElement("div");
+      element.textContent = course.name;
+
+      element.classList.add(
+        "rounded-full",
+        "text-center",
+        "px-4",
+        "py-2",
+        "text-base",
+        isMatching ? "font-bold" : "font-normal",
+      );
+      element.style.backgroundColor = "gray";
+      element.style.color = "white";
+      element.style.flexShrink = "0";
+
+      coursesContainer.insertBefore(element, andMoreElement);
+      addedElements.push(element);
+
+      // バッジがはみ出す場合は削除
+      if (
+        coursesContainer.offsetHeight > containerHeight ||
+        andMoreElement.offsetHeight + coursesContainer.offsetHeight >
+          containerHeight
+      ) {
+        coursesContainer.removeChild(element);
+        addedElements.pop();
+        break;
+      }
+    }
+
+    // すべてのバッジが表示されている場合は `And More` を非表示
+    if (
+      addedElements.length ===
+      matchingCourses.length + nonMatchingCourses.length
+    ) {
+      andMoreElement.classList.add("hidden");
+    } else {
+      andMoreElement.classList.remove("hidden");
+    }
+
+    // ループ後、`And More` が完全に表示されるか確認
+    while (
+      coursesContainer.offsetHeight > containerHeight ||
+      andMoreElement.offsetHeight + coursesContainer.offsetHeight >
+        containerHeight
+    ) {
+      const lastElement = addedElements.pop();
+      if (lastElement) {
+        coursesContainer.removeChild(lastElement);
+      } else {
+        break; // バッジがなくなる場合は終了
+      }
+    }
+  }, [displayedUser, currentUser]);
+
+  const calculateVisibleInterests = useCallback(() => {
+    const interests = displayedUser.interestSubjects;
+    const container = interestsContainerRef.current;
+    if (!container) return;
+
+    const containerHeight = container.offsetHeight;
+
+    // 初期化
+    container.innerHTML = "";
+
+    const flexContainer = document.createElement("div");
+    flexContainer.classList.add("flex", "flex-wrap", "gap-3", "justify-start");
+    container.appendChild(flexContainer);
+
+    // `And More` 要素を作成して追加 (最初は非表示)
+    const andMoreElement = document.createElement("p");
+    andMoreElement.textContent = "And More";
+    andMoreElement.classList.add(
+      "text-sm",
+      "text-gray-500",
+      "text-center",
+      "mt-2",
+      "hidden", // 初期状態で非表示
+    );
+    andMoreElement.style.width = "100%";
+    flexContainer.appendChild(andMoreElement);
+
+    // 一致している興味分野と一致していない興味分野を分ける
+    const matchingInterests = interests.filter((interest) =>
+      currentUser.interestSubjects.some((i) => i.name === interest.name),
+    );
+    const nonMatchingInterests = interests.filter(
+      (interest) =>
+        !currentUser.interestSubjects.some((i) => i.name === interest.name),
+    );
+
+    // バッジの生成
+    const addedElements: HTMLElement[] = [];
+    for (const interest of [...matchingInterests, ...nonMatchingInterests]) {
+      const isMatching = currentUser.interestSubjects.some(
+        (i) => i.name === interest.name,
+      );
+
+      const element = document.createElement("div");
+      element.textContent = interest.name;
+
+      element.classList.add(
+        "rounded-full",
+        "text-center",
+        "px-4",
+        "py-2",
+        "text-base",
+        isMatching ? "font-bold" : "font-normal",
+      );
+      element.style.backgroundColor = "#FFF1BF";
+      element.style.color = "#039BE5";
+      element.style.flexShrink = "0";
+
+      flexContainer.insertBefore(element, andMoreElement);
+      addedElements.push(element);
+
+      // バッジがはみ出す場合は削除
+      if (
+        flexContainer.offsetHeight > containerHeight ||
+        andMoreElement.offsetHeight + flexContainer.offsetHeight >
+          containerHeight
+      ) {
+        flexContainer.removeChild(element);
+        addedElements.pop();
+        break;
+      }
+    }
+
+    // すべてのバッジが表示されている場合は `And More` を非表示
+    if (
+      addedElements.length ===
+      matchingInterests.length + nonMatchingInterests.length
+    ) {
+      andMoreElement.classList.add("hidden");
+    } else {
+      andMoreElement.classList.remove("hidden");
+    }
+
+    // ループ後、`And More` が完全に表示されるか確認
+    while (
+      flexContainer.offsetHeight > containerHeight ||
+      andMoreElement.offsetHeight + flexContainer.offsetHeight > containerHeight
+    ) {
+      const lastElement = addedElements.pop();
+      if (lastElement) {
+        flexContainer.removeChild(lastElement);
+      } else {
+        break; // バッジがなくなる場合は終了
+      }
+    }
+  }, [displayedUser, currentUser]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -28,109 +223,11 @@ const CardFront = ({ displayedUser, currentUser }: CardProps) => {
 
     resizeObserver.observe(container);
 
-    calculateVisibleInterests(); // 初期計算
-    calculateVisibleCourses(); // 初期計算
+    calculateVisibleInterests();
+    calculateVisibleCourses();
 
     return () => resizeObserver.disconnect();
-  }, []);
-
-  const calculateVisibleCourses = useCallback(() => {
-    const courses = displayedUser.courses;
-    const container = coursesContainerRef.current;
-    if (!container) return;
-
-    const containerHeight = container.offsetHeight; // コンテナの高さを取得
-
-    // 一旦コンテナを初期化
-    container.innerHTML = "";
-    setHiddenCourseExist(false);
-
-    // courses を一致・非一致で分類
-    const matchingCourses = courses.filter((course) =>
-      currentUser.courses.some((c) => c.id === course.id),
-    );
-    const nonMatchingCourses = courses.filter(
-      (course) => !currentUser.courses.some((c) => c.id === course.id),
-    );
-
-    // courses を表示する flex コンテナ
-    const coursesContainer = document.createElement("div");
-    coursesContainer.classList.add("flex", "flex-wrap", "gap-2");
-    container.appendChild(coursesContainer);
-
-    // 一致しているコースを先に表示
-    for (const course of [...matchingCourses, ...nonMatchingCourses]) {
-      const isMatching = currentUser.courses.some((c) => c.id === course.id);
-
-      // 新しい div 要素を作成
-      const element = document.createElement("div");
-      element.textContent = course.name;
-
-      // スタイル適用（赤 or 灰色）
-      element.classList.add("badge", "badge-outline");
-      element.style.backgroundColor = isMatching ? "red" : "gray";
-      element.style.color = "white";
-
-      // 表示判定
-      if (coursesContainer.offsetHeight + 30 <= containerHeight) {
-        coursesContainer.appendChild(element);
-      } else {
-        setHiddenCourseExist;
-      }
-    }
-  }, [displayedUser, currentUser]);
-
-  const calculateVisibleInterests = useCallback(() => {
-    const interests = displayedUser.interestSubjects;
-    const container = interestsContainerRef.current;
-    if (!container) return;
-
-    const containerHeight = container.offsetHeight; // コンテナの高さを取得
-
-    // 一旦コンテナを初期化
-    container.innerHTML = "";
-    setHiddenInterestExist(false);
-
-    // interests を一致・非一致で分類
-    const matchingInterests = interests.filter((interest) =>
-      currentUser.interestSubjects.some((i) => i.name === interest.name),
-    );
-    const nonMatchingInterests = interests.filter(
-      (interest) =>
-        !currentUser.interestSubjects.some((i) => i.name === interest.name),
-    );
-
-    // interests を表示する flex コンテナ
-    const flexContainer = document.createElement("div");
-    flexContainer.classList.add("flex", "flex-wrap", "gap-2");
-    container.appendChild(flexContainer);
-
-    // 一致している興味分野を先に表示
-    for (const interest of [...matchingInterests, ...nonMatchingInterests]) {
-      const isMatching = currentUser.interestSubjects.some(
-        (i) => i.name === interest.name,
-      );
-
-      // 新しい div 要素を作成
-      const element = document.createElement("div");
-      element.textContent = interest.name;
-
-      // スタイル適用（赤 or 灰色）
-      element.classList.add("badge", "badge-outline");
-      element.style.backgroundColor = isMatching ? "red" : "gray";
-      element.style.color = "white";
-      element.style.overflow = "hidden";
-      element.style.whiteSpace = "nowrap";
-      element.style.textOverflow = "ellipsis";
-
-      // 表示判定
-      if (flexContainer.offsetHeight + 30 <= containerHeight) {
-        flexContainer.appendChild(element);
-      } else {
-        setHiddenInterestExist(true);
-      }
-    }
-  }, [displayedUser, currentUser]);
+  }, [calculateVisibleInterests, calculateVisibleCourses]);
 
   return (
     <div className="flex h-full flex-col gap-5 overflow-clip border-2 border-primary bg-secondary p-5">
@@ -148,29 +245,21 @@ const CardFront = ({ displayedUser, currentUser }: CardProps) => {
         </div>
       </div>
 
+      <p className="text-center font-bold text-lg">履修している科目</p>
       <div className="flex h-[70%] w-full flex-col gap-2" ref={containerRef}>
-        <div
-          ref={interestsContainerRef}
-          className="width-full h-[50%] overflow-hidden"
-        >
-          <div />
-          {isHiddenInterestExist && (
-            <div className="badge badge-outline bg-gray-200 text-gray-700">
-              And More
-            </div>
-          )}
-        </div>
-
         <div
           ref={coursesContainerRef}
           className="width-full h-[50%] overflow-hidden"
         >
           <div />
-          {isHiddenCourseExist && (
-            <div className="badge badge-outline bg-gray-200 text-gray-700">
-              And More
-            </div>
-          )}
+        </div>
+
+        <p className="text-center font-bold text-lg">興味のある分野</p>
+        <div
+          ref={interestsContainerRef}
+          className="width-full h-[50%] overflow-hidden"
+        >
+          <div />
         </div>
       </div>
     </div>
