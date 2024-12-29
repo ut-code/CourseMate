@@ -74,28 +74,30 @@ export default function PersonDetailedMenu({
                   時間割表を確認
                 </button>
               </div>
-              {displayedUser.courses.map(
-                (course) =>
-                  course.name && (
-                    <div
-                      key={course.id}
-                      className="flex rounded-md bg-[#F7FCFF] px-2 text-lg"
-                    >
-                      <span className="w-[12vh]">
-                        {sortSlots(course.slots)
-                          .map(
-                            (slot) =>
-                              `${DAY_TO_JAPANESE_MAP.get(slot.day)}${slot.period}`,
-                          )
-                          .join("・")}
-                      </span>
-                      <span className="flex-1">
-                        {course.name} ({course.teacher}){" "}
-                      </span>
-                      <span>{course.id}</span>
-                    </div>
-                  ),
-              )}
+              <div className="flex flex-col gap-1">
+                {displayedUser.courses.map(
+                  (course) =>
+                    course.name && (
+                      <div
+                        key={course.id}
+                        className="flex gap-0.5 rounded-md bg-[#F7FCFF] px-2 py-1 text-md"
+                      >
+                        <span className="w-[12vh]">
+                          {sortSlots(course.slots)
+                            .map(
+                              (slot) =>
+                                `${DAY_TO_JAPANESE_MAP.get(slot.day)}${slot.period}`,
+                            )
+                            .join("・")}
+                        </span>
+                        <span className="flex-1">
+                          {course.name} ({course.teacher}){" "}
+                        </span>
+                        <span>{course.id}</span>
+                      </div>
+                    ),
+                )}
+              </div>
             </div>
             <div className="divider m-0" />
             <div>
