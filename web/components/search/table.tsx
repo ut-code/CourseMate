@@ -1,6 +1,7 @@
 "use client";
 import { useMemo } from "react";
-import { useAll, useMyID } from "~/api/user";
+import request from "~/api/request";
+import { useAll, useMatched, useMyID, usePendingFromMe } from "~/api/user";
 import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
 
@@ -21,6 +22,19 @@ export default function UserTable({ query }: { query: string }) {
       )
     : initialData;
 
+  const {
+    state: { data: matches },
+  } = useMatched();
+
+  const {
+    state: { data: pending },
+  } = usePendingFromMe();
+
+  // ユーザーがリクエストを送ってない人だけリストアップする
+  const canRequest = (userId: number) =>
+    !matches?.some((match) => match.id === userId) &&
+    !pending?.some((pending) => pending.id === userId);
+
   return (
     <div>
       {users?.map((user) => (
@@ -30,6 +44,14 @@ export default function UserTable({ query }: { query: string }) {
           name={user.name}
           pictureUrl={user.pictureUrl}
           onOpen={() => openModal(user)}
+          onRequest={
+            canRequest(user.id)
+              ? () => {
+                  request.send(user.id);
+                  location.reload();
+                }
+              : undefined
+          }
         />
       ))}
     </div>

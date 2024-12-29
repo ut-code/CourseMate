@@ -27,6 +27,9 @@
             biome
             pkg-config
             openssl
+            lefthook
+            pkgs.prisma
+            dotenv-cli
           ] ++ [
             rust-pkgs
           ];

@@ -1,18 +1,24 @@
-import type { SendMessage, UserID } from "common/types";
+import ImageIcon from "@mui/icons-material/Image";
+import { sendImageTo } from "../../api/image";
+
+import type { DMOverview, SendMessage, UserID } from "common/types";
 import { parseContent } from "common/zod/methods";
 import { useEffect, useState } from "react";
 import { MdSend } from "react-icons/md";
 
 type Props = {
   send: (to: UserID, m: SendMessage) => void;
-  friendId: UserID;
+  reload: () => void;
+  room: DMOverview;
 };
 
 const crossRoomMessageState = new Map<number, string>();
 
-export function MessageInput({ send, friendId }: Props) {
+export function MessageInput({ reload, send, room }: Props) {
+  const friendId = room.friendId;
   const [message, _setMessage] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const isMatched = room.matchingStatus === "matched";
 
   function setMessage(m: string) {
     _setMessage(m);
@@ -60,6 +66,25 @@ export function MessageInput({ send, friendId }: Props) {
     <div className="p-0">
       <form onSubmit={submit}>
         <div className="flex items-center space-x-2 p-2">
+          {isMatched && (
+            <label>
+              <ImageIcon />
+              <input
+                type="file"
+                hidden
+                accept="svg,png,jpg,jpeg,webp,avif"
+                onChange={async (ev) => {
+                  if (!ev.target.files) return;
+                  for (const file of ev.target.files) {
+                    // this non-concurrent await is intentional. without this, the images will be sent unordered.
+                    console.log(room, room.friendId);
+                    await sendImageTo(room.friendId, file).catch(console.error);
+                  }
+                  reload();
+                }}
+              />
+            </label>
+          )}
           <textarea
             name="message"
             placeholder="メッセージを入力"

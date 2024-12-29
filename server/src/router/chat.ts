@@ -9,7 +9,8 @@ import {
 } from "common/zod/schemas";
 import express from "express";
 import * as db from "../database/chat";
-import { safeGetUserId } from "../firebase/auth/db";
+import { getRelation } from "../database/matches";
+import { getUserId, safeGetUserId } from "../firebase/auth/db";
 import * as core from "../functions/chat";
 import * as ws from "../lib/socket/socket";
 
@@ -37,7 +38,7 @@ router.post("/dm/to/:userid", async (req, res) => {
 
   const result = await core.sendDM(user.value, friend.value, send.data);
   if (result.ok) {
-    ws.sendMessage(result?.body, friend.value);
+    ws.sendMessage(result.body, friend.value);
   }
   res.status(result.code).send(result.body);
 });
@@ -54,6 +55,18 @@ router.get("/dm/with/:userid", async (req, res) => {
   const result = await core.getDM(user.value, friend.value);
 
   return res.status(result.code).send(result.body);
+});
+
+router.post("/mark-as-read/:rel/:messageId", async (req, res) => {
+  const user = await getUserId(req);
+  const message = Number.parseInt(req.params.messageId);
+  const rel = Number.parseInt(req.params.rel);
+  try {
+    await db.markAsRead(rel, user, message);
+    return res.status(200).end("ok");
+  } catch (err) {
+    return res.status(304).end("already marked");
+  }
 });
 
 // create a shared chat room.
