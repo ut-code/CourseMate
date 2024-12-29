@@ -10,7 +10,7 @@ export const DAY_TO_JAPANESE_MAP = new Map<Day, string>([
   ["sun", "日"],
 ]);
 
-export const ACTIVE_DAYS = ["mon", "tue", "wed", "thu", "fri", "sat"] as const;
+export const ACTIVE_DAYS = ["mon", "tue", "wed", "thu", "fri"] as const;
 
 export const sortSlots = (
   slots: {

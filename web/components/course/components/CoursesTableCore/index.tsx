@@ -87,22 +87,43 @@ export default function CoursesTableCore(props: Props) {
   }, [props.courses, props.comparisonCourses, transformCoursesToRows]);
 
   return (
-    <table className={styles.table}>
-      <thead>
-        <tr>
-          <th />
-          {ACTIVE_DAYS.map((activeDay) => (
-            <th align="center" key={`header-${activeDay}`}>
-              {DAY_TO_JAPANESE_MAP.get(activeDay as Day)}
-            </th>
+    <div className="flex h-full flex-col">
+      <div
+        className="grid h-[3vh] grid-rows-1 gap-1"
+        style={{
+          gridTemplateColumns: `3vh repeat(${ACTIVE_DAYS.length}, minmax(0, 1fr))`,
+        }}
+      >
+        <span className="rounded-sm bg-gray-100" />
+        {ACTIVE_DAYS.map((activeDay) => (
+          <span
+            key={`header-${activeDay}`}
+            className="inline-flex items-center justify-center rounded-sm bg-gray-100 text-center text-xs"
+          >
+            {DAY_TO_JAPANESE_MAP.get(activeDay as Day)}
+          </span>
+        ))}
+      </div>
+      <div className="mt-1 flex flex-1 gap-1">
+        <div className="flex h-full w-[3vh] flex-col gap-1">
+          {Array.from({ length: 6 }, (_, i) => (
+            <span
+              key={`period-${i + 1}`}
+              className="inline-flex flex-1 items-center justify-center rounded-sm bg-gray-100 text-xs"
+            >
+              {i + 1}
+            </span>
           ))}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row, rowIndex) => (
-          <tr key={`period-${rowIndex + 1}`}>
-            <th key={`header-period-${rowIndex + 1}`}>{rowIndex + 1}</th>
-            {ACTIVE_DAYS.map((day) => (
+        </div>
+        <div
+          className="grid flex-1 grid-rows-6 gap-1"
+          style={{
+            gridTemplateColumns: `repeat(${ACTIVE_DAYS.length}, minmax(0, 1fr))`,
+          }}
+        >
+          {/* TODO: grid-auto-flow: column; で縦方向に流すほうが余計な変形ロジックが減りそう */}
+          {rows.map((row, rowIndex) =>
+            ACTIVE_DAYS.map((day) => (
               <Cell
                 key={`cell-${day}-${rowIndex.toString()}`}
                 courseName={row[day]?.name ?? null}
@@ -115,11 +136,44 @@ export default function CoursesTableCore(props: Props) {
                     : undefined
                 }
               />
+            )),
+          )}
+        </div>
+      </div>
+      {/* <table className={styles.table}>
+        <thead>
+          <tr>
+            <th />
+            {ACTIVE_DAYS.map((activeDay) => (
+              <th align="center" key={`header-${activeDay}`}>
+                {DAY_TO_JAPANESE_MAP.get(activeDay as Day)}
+              </th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {rows.map((row, rowIndex) => (
+            <tr key={`period-${rowIndex + 1}`}>
+              <th key={`header-period-${rowIndex + 1}`}>{rowIndex + 1}</th>
+              {ACTIVE_DAYS.map((day) => (
+                <Cell
+                  key={`cell-${day}-${rowIndex.toString()}`}
+                  courseName={row[day]?.name ?? null}
+                  teacherName={row[day]?.teacher ?? null}
+                  isOverlapping={row[day]?.isOverlapping}
+                  isButton={props.isButton}
+                  onClick={
+                    props.isButton
+                      ? () => props.onCellClick(rowIndex, day, row[day] ?? null)
+                      : undefined
+                  }
+                />
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table> */}
+    </div>
   );
 }
 
@@ -138,7 +192,7 @@ function Cell({
 }) {
   const content = (
     <>
-      <p
+      <span
         style={{
           margin: 0,
           overflow: "hidden",
@@ -150,8 +204,8 @@ function Cell({
         }}
       >
         {courseName ? truncateStr(courseName ?? "", 16) : ""}
-      </p>
-      <p
+      </span>
+      <span
         style={{
           margin: 0,
           overflow: "hidden",
@@ -163,12 +217,20 @@ function Cell({
         }}
       >
         {teacherName ? truncateStr(teacherName ?? "", 6) : ""}
-      </p>
+      </span>
     </>
   );
 
   return (
-    <td align="center">
+    <span
+      className={`inline-flex flex-1 items-center justify-center rounded-sm text-xs ${
+        !courseName
+          ? "bg-transparent"
+          : isOverlapping
+            ? "bg-[#FFF1BF]"
+            : "bg-[#F7FCFF]"
+      }`}
+    >
       {isButton ? (
         <button
           type="button"
@@ -184,7 +246,7 @@ function Cell({
           {content}
         </button>
       ) : (
-        <div
+        <span
           className={
             isOverlapping
               ? styles.overlapped
@@ -194,8 +256,8 @@ function Cell({
           }
         >
           {content}
-        </div>
+        </span>
       )}
-    </td>
+    </span>
   );
 }
