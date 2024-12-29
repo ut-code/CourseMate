@@ -47,7 +47,7 @@ export default function PersonDetailedMenu({ onClose, displayedUser }: Props) {
             </div>
             <div className="divider m-0" />
             <div>
-              <span className="text-gray-500 text-xs">年齢・性別</span>
+              <span className="text-gray-500 text-xs">性別</span>
               <p className="text-lg">{displayedUser.gender}</p>
             </div>
             <div className="divider m-0" />
