@@ -10,7 +10,7 @@ interface CardProps {
   onFlip?: (isBack: boolean) => void;
 }
 
-const CardFront = ({ displayedUser, currentUser }: CardProps) => {
+export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const interestsContainerRef = useRef<HTMLDivElement>(null);
   const coursesContainerRef = useRef<HTMLDivElement>(null);

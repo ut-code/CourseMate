@@ -1,6 +1,6 @@
 import type { Step1User } from "common/zod/types";
 import type { BackProp, StepProps } from "~/app/signup/common";
-import { CardFront } from "~/components/Card.tsx";
+import MockCardFront from "./components/MockCardFront";
 import type { Step2Data } from "./step2_img";
 
 interface inputDataProps {
@@ -28,7 +28,7 @@ export default function Confirmation({
       >
         <h1 className="mb-2 text-xl">確認</h1>
         <div className="flex flex-col items-center">
-          <CardFront
+          <MockCardFront
             displayedUser={{
               ...Step1Data,
               ...Step2Data,
