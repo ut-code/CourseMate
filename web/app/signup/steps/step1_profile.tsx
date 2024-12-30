@@ -19,7 +19,14 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
     formState: { errors },
   } = useForm<Step1User>({
     resolver: zodResolver(Step1UserSchema),
-    defaultValues: prev,
+    defaultValues: prev ?? {
+      name: "",
+      gender: "",
+      grade: "",
+      faculty: "",
+      department: "",
+      intro: "",
+    },
   });
   const onSubmit: SubmitHandler<Step1User> = async (data) => {
     onSave(data);
@@ -51,6 +58,9 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
                 className="select select-bordered w-full"
                 {...register("gender")}
               >
+                <option value={""} disabled>
+                  --選択してください--
+                </option>
                 <option value={"男性"}>男性</option>
                 <option value={"女性"}>女性</option>
                 <option value={"その他"}>その他</option>
@@ -62,6 +72,9 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
                 className="select select-bordered w-full"
                 {...register("grade")}
               >
+                <option value={""} disabled>
+                  --選択してください--
+                </option>
                 <option value={"B1"}>1年生 (B1)</option>
                 <option value={"B2"}>2年生 (B2)</option>
                 <option value={"B3"}>3年生 (B3)</option>
@@ -79,6 +92,9 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
                 className="select select-bordered w-full"
                 {...register("faculty")}
               >
+                <option value={""} disabled>
+                  --選択してください--
+                </option>
                 {faculties.map((fac) => (
                   <option key={fac} value={fac}>
                     {fac}
@@ -88,7 +104,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
             </Field>
             <Field
               fieldName="department"
-              fieldLabel="学科 (先に学部を選択して下さい)"
+              fieldLabel="学科 (先に学部を選択してください)"
               error={errors?.department}
             >
               <select
@@ -96,6 +112,9 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
                 {...register("department")}
                 disabled={!selectedFaculty}
               >
+                <option value={""} disabled>
+                  --選択してください--
+                </option>
                 {selectedFaculty &&
                   facultiesAndDepartments[selectedFaculty].map((dep) => (
                     <option key={dep} value={dep}>
@@ -112,7 +131,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
               <textarea
                 className="textarea textarea-bordered w-full"
                 rows={5}
-                placeholder="こんにちは！仲良くして下さい！"
+                placeholder="こんにちは！仲良くしてください！"
                 {...register("intro")}
               />
             </Field>
