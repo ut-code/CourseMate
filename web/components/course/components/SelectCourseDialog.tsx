@@ -129,7 +129,10 @@ export default function SelectCourseDialog({
         {newCourse && (
           <CourseRegisterConfirmDialog
             open={confirmDialogStatus !== "closed"}
-            onClose={() => setConfirmDialogStatus("closed")}
+            onClose={() => {
+              setConfirmDialogStatus("closed");
+              setNewCourse(null);
+            }}
             courseToAddOrDelete={newCourse}
             mode={confirmDialogStatus === "delete" ? "delete" : "add"}
             handleSelectDialogClose={onClose}

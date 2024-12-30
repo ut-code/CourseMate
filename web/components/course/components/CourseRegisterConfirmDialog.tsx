@@ -70,7 +70,7 @@ export default function CourseRegisterConfirmDialog({
             </div>
           )}
           {isLoading ? (
-            <div className="alert alert-info">読み込み中...</div>
+            <div className="px-4 py-2">読み込み中...</div>
           ) : (
             mode === "add" &&
             coursesToBeDeletedString && (
