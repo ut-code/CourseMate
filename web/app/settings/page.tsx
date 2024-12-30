@@ -1,7 +1,6 @@
 import Link from "next/link";
 import LogOutButton from "~/components/LogOutButton";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
-
 export default function Settings() {
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
@@ -20,6 +19,12 @@ export default function Settings() {
           </li>
           <hr />
           <li>
+            <Link href="/settings/notification" className="btn cm-li-btn">
+              運営からのお知らせ
+            </Link>
+          </li>
+          <hr />
+          <li>
             <Link href="/settings/contact" className="btn cm-li-btn">
               お問い合わせ
             </Link>
@@ -27,7 +32,7 @@ export default function Settings() {
           <hr />
           <li>
             <Link href="/faq" className="btn cm-li-btn">
-              よくある質問
+              よくあるご質問
             </Link>
           </li>
           <hr />

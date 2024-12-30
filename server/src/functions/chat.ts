@@ -10,7 +10,7 @@ import type {
   ShareRoomID,
 } from "common/types";
 import * as db from "../database/chat";
-import { areAllMatched, areMatched, getRelation } from "../database/matches";
+import { areAllMatched, getRelation } from "../database/matches";
 import { getUserByID } from "../database/users";
 import * as http from "./share/http";
 
@@ -42,11 +42,13 @@ export async function sendDM(
   send: SendMessage,
 ): Promise<http.Response<Message>> {
   const rel = await getRelation(from, to);
-  if (!rel.ok || rel.value.status !== "MATCHED")
-    return http.forbidden("cannot send to non-friend");
+  if (!rel.ok || rel.value.status === "REJECTED")
+    return http.forbidden(
+      "You cannot send a message because the friendship request was rejected.",
+    );
 
   // they are now MATCHED
-  const msg: Omit<Message, "id"> = {
+  const msg: Omit<Omit<Message, "id">, "isPicture"> = {
     creator: from,
     createdAt: new Date(),
     edited: false,
@@ -54,26 +56,39 @@ export async function sendDM(
   };
 
   const result = await db.sendDM(rel.value.id, msg);
-  if (!result.ok) return http.internalError("");
+  if (!result.ok) return http.internalError("Failed to send DM");
   return http.created(result.value);
 }
 
 export async function getDM(
-  requester: UserID,
-  _with: UserID,
+  user: UserID,
+  friend: UserID,
 ): Promise<http.Response<PersonalizedDMRoom & DMRoom>> {
-  if (!areMatched(requester, _with))
-    return http.forbidden("cannot DM with a non-friend");
+  const rel = await getRelation(user, friend);
+  if (!rel.ok || rel.value.status === "REJECTED")
+    return http.forbidden("cannot send to rejected-friend");
 
-  const room = await db.getDMbetween(requester, _with);
+  const room = await db.getDMbetween(user, friend);
   if (!room.ok) return http.internalError();
 
-  const friendData = await getUserByID(_with);
+  const friendData = await getUserByID(friend);
   if (!friendData.ok) return http.notFound("friend not found");
+  const unreadCount = db.unreadMessages(user, rel.value.id).then((val) => {
+    if (val.ok) return val.value;
+    throw val.error;
+  });
 
   const personalized: PersonalizedDMRoom & DMRoom = {
+    unreadMessages: await unreadCount,
+    friendId: friendData.value.id,
     name: friendData.value.name,
     thumbnail: friendData.value.pictureUrl,
+    matchingStatus:
+      rel.value.status === "MATCHED"
+        ? "matched"
+        : rel.value.sendingUserId === user //どっちが送ったリクエストなのかを判定
+          ? "myRequest"
+          : "otherRequest",
     ...room.value,
   };
 

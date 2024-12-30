@@ -7,11 +7,14 @@ type HumanListItemProps = {
   pictureUrl: string;
   lastMessage?: string;
   rollUpName?: boolean; // is currently only intended to be used in Chat
+  unreadCount?: number; // only intended to be used in chat
+  statusMessage?: string;
   onDelete?: (id: number) => void;
   onOpen?: (user: { id: number; name: string; pictureUrl: string }) => void;
   onAccept?: (id: number) => void;
   onReject?: (id: number) => void;
   onCancel?: (id: number) => void;
+  onRequest?: (id: number) => void;
   hasDots?: boolean;
   dotsActions?: object;
 };
@@ -21,13 +24,16 @@ export function HumanListItem(props: HumanListItemProps) {
     id,
     name,
     pictureUrl,
-    rollUpName,
     lastMessage,
+    rollUpName,
+    unreadCount,
+    statusMessage,
     onDelete,
     onOpen,
     onAccept,
     onReject,
     onCancel,
+    onRequest,
     hasDots,
   } = props;
 
@@ -61,21 +67,36 @@ export function HumanListItem(props: HumanListItemProps) {
               {lastMessage}
             </span>
           )}
+          {statusMessage && (
+            <span className="text-blue-500 text-sm">{statusMessage}</span>
+          )}
         </div>
       </button>
-      <div className="flex items-center space-x-2">
+      <div className="mr-3 flex items-center space-x-2">
+        {unreadCount ? (
+          <span className="badge badge-primary">{unreadCount}</span>
+        ) : undefined}
         {onAccept && (
           // biome-ignore lint/a11y/useButtonType: <explanation>
           <button
             className="btn btn-success btn-sm"
-            onClick={() => onAccept(id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAccept(id);
+            }}
           >
             承認
           </button>
         )}
         {onReject && (
           // biome-ignore lint/a11y/useButtonType: <explanation>
-          <button className="btn btn-error btn-sm" onClick={() => onReject(id)}>
+          <button
+            className="btn btn-error btn-sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onReject(id);
+            }}
+          >
             拒否
           </button>
         )}
@@ -86,6 +107,15 @@ export function HumanListItem(props: HumanListItemProps) {
             onClick={() => onCancel(id)}
           >
             キャンセル
+          </button>
+        )}
+        {onRequest && (
+          // biome-ignore lint/a11y/useButtonType: <explanation>
+          <button
+            className="btn btn-sm bg-primary text-white"
+            onClick={() => onRequest(id)}
+          >
+            リクエスト
           </button>
         )}
         {hasDots && (

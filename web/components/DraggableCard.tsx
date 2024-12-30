@@ -1,16 +1,16 @@
 import CloseIcon from "@mui/icons-material/Close";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Box, Typography } from "@mui/material";
-import type { User, UserID } from "common/types";
+import type { UserWithCoursesAndSubjects } from "common/types";
 import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { useCallback, useState } from "react";
+import { MdThumbUp } from "react-icons/md";
 import { Card } from "./Card";
 
 const SWIPE_THRESHOLD = 30;
 
 interface DraggableCardProps {
-  displayedUser: User;
-  comparisonUserId?: UserID;
+  displayedUser: UserWithCoursesAndSubjects;
+  currentUser: UserWithCoursesAndSubjects;
   onSwipeRight: () => void;
   onSwipeLeft: () => void;
   clickedButton: string;
@@ -18,7 +18,7 @@ interface DraggableCardProps {
 
 export const DraggableCard = ({
   displayedUser,
-  comparisonUserId,
+  currentUser,
   onSwipeRight,
   onSwipeLeft,
   clickedButton,
@@ -51,17 +51,8 @@ export const DraggableCard = ({
       <div>
         {dragProgress > SWIPE_THRESHOLD || clickedButton === "heart" ? (
           <div
-            style={{
-              position: "absolute",
-              zIndex: 2,
-              backgroundColor: "rgba(255, 0, 0, 0.3)",
-              width: "min(40dvh, 87.5vw)",
-              height: "70dvh",
-              pointerEvents: "none",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            className="pointer-events-none absolute z-20 flex h-[70dvh] w-[min(40dvh,87.5vw)] items-center justify-center"
+            style={{ backgroundColor: "rgba(3, 155, 229, 0.4)" }}
           >
             <Box
               display="flex"
@@ -73,7 +64,7 @@ export const DraggableCard = ({
               width={"16dvh"}
               height={"16dvh"}
             >
-              <FavoriteIcon style={{ color: "red", fontSize: "4.5dvh" }} />
+              <MdThumbUp className="text-5xl text-primary" />
               <Typography variant="h5" component="h1" mb={1}>
                 いいね！
               </Typography>
@@ -145,10 +136,7 @@ export const DraggableCard = ({
           whileTap={{ scale: 0.95 }}
         >
           <CardOverlay />
-          <Card
-            displayedUser={displayedUser}
-            comparisonUserId={comparisonUserId}
-          />
+          <Card displayedUser={displayedUser} currentUser={currentUser} />
         </motion.div>
       </section>
     </div>

@@ -1,35 +1,20 @@
 "use client";
 import type { Message, MessageID, SendMessage, UserID } from "common/types";
-import type { Content } from "common/zod/types";
-import { useSnackbar } from "notistack";
+import type { Content, DMOverview, DMRoom } from "common/zod/types";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as chat from "~/api/chat/chat";
 import { useMessages } from "~/api/chat/hooks";
-import * as user from "~/api/user";
+import { API_ENDPOINT } from "~/api/internal/endpoints";
+import request from "~/api/request";
 import { useMyID } from "~/api/user";
-import { getIdToken } from "~/firebase/auth/lib";
 import Dots from "../common/Dots";
-import { socket } from "../data/socket";
+import { handlers } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
-type Props = {
-  friendId: UserID;
-  room: {
-    id: number;
-    messages: {
-      id: number;
-      creator: number;
-      createdAt: Date;
-      content: string;
-      edited: boolean;
-    }[];
-    isDM: true;
-  } & {
-    name: string;
-    thumbnail: string;
-  };
-};
+type Props = { friendId: UserID; room: DMRoom & DMOverview };
+
 export function RoomWindow(props: Props) {
   const { friendId, room } = props;
 
@@ -38,6 +23,17 @@ export function RoomWindow(props: Props) {
       <div className="text-center text-gray-600">部屋が見つかりません。</div>
     );
   }
+
+  console.log("rendering");
+  useEffect(() => {
+    (async () => {
+      const lastM = room.messages.at(-1);
+      if (lastM) {
+        console.log("marking as read: ", room.id, lastM.id);
+        await chat.markAsRead(room.id, lastM.id);
+      }
+    })();
+  }, [room]);
 
   const {
     state: { data: myId },
@@ -49,7 +45,6 @@ export function RoomWindow(props: Props) {
     setMessages(state.data);
   }, [state.data]);
 
-  const { enqueueSnackbar } = useSnackbar();
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState<string>("");
 
@@ -70,54 +65,35 @@ export function RoomWindow(props: Props) {
     },
     [write],
   );
-  const updateLocalMessage = useCallback((_: Message) => reload(), [reload]);
+  // TODO: fix these
+  const updateLocalMessage = useCallback(
+    (_a: MessageID, _: Message) => reload(),
+    [reload],
+  );
   const deleteLocalMessage = useCallback((_: MessageID) => reload(), [reload]);
 
+  // メッセージの受取
   useEffect(() => {
-    async function registerSocket() {
-      if (!room) return;
-      const idToken = await getIdToken();
-      socket.emit("register", idToken);
-      socket.on("newMessage", async (msg: Message) => {
-        if (msg.creator === friendId) {
-          appendLocalMessage(msg);
-        } else {
-          const creator = await user.get(msg.creator);
-          if (creator == null) return;
-          enqueueSnackbar(
-            `${creator.name}さんからのメッセージ : ${msg.content}`,
-            {
-              variant: "info",
-            },
-          );
-        }
-      });
-      socket.on("updateMessage", async (msg: Message) => {
-        if (msg.creator === friendId) {
-          updateLocalMessage(msg);
-        }
-      });
-      socket.on("deleteMessage", async (msgId: number) => {
-        deleteLocalMessage(msgId);
-      });
-    }
-    registerSocket();
-    // Clean up
-    return () => {
-      socket.off("newMessage");
-      socket.off("updateMessage");
-      socket.off("deleteMessage");
+    handlers.onCreate = (msg) => {
+      if (msg.creator === friendId) {
+        appendLocalMessage(msg);
+        return true; // caught
+      }
+      return false; // didn't catch
     };
-  }, [
-    room,
-    friendId,
-    enqueueSnackbar,
-    appendLocalMessage,
-    updateLocalMessage,
-    deleteLocalMessage,
-  ]);
+    handlers.onUpdate = (id, msg) => {
+      updateLocalMessage(id, msg);
+    };
+    handlers.onDelete = (id) => {
+      deleteLocalMessage(id);
+    };
+    return () => {
+      handlers.onCreate = undefined;
+      handlers.onDelete = undefined;
+    };
+  }, [friendId, appendLocalMessage, updateLocalMessage, deleteLocalMessage]);
 
-  //画面スクロール
+  // 画面スクロール
   const scrollDiv = useRef<HTMLDivElement>(null);
   const scrollToBottom = useCallback(() => {
     if (scrollDiv.current) {
@@ -151,7 +127,7 @@ export function RoomWindow(props: Props) {
         { content },
         friendId,
       );
-      updateLocalMessage(editedMessage);
+      updateLocalMessage(editedMessage.id, editedMessage);
     },
     [updateLocalMessage, friendId],
   );
@@ -171,83 +147,109 @@ export function RoomWindow(props: Props) {
 
   return (
     <>
+      {room.matchingStatus !== "matched" && (
+        <FloatingMessage
+          message="この人とはマッチングしていません。"
+          friendId={friendId}
+          showButtons={room.matchingStatus === "otherRequest"}
+        />
+      )}
+
       <div className="fixed top-14 z-50 w-full bg-white">
         <RoomHeader room={room} />
       </div>
       <div className="absolute top-14 right-0 left-0 flex flex-col overflow-y-auto">
         {messages && messages.length > 0 ? (
           <div className="flex-grow overflow-y-auto p-2" ref={scrollDiv}>
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={`mb-2 flex ${
-                  m.creator === myId ? "justify-end" : "justify-start"
-                }`}
-              >
-                {editingMessageId === m.id ? (
-                  <div className="flex w-3/5 flex-col">
-                    <textarea
-                      value={editedContent}
-                      onChange={(e) => setEditedContent(e.target.value)}
-                      onKeyDown={(e) => {
-                        if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                          commitEdit(editingMessageId, editedContent);
-                        }
-                      }}
-                      className="textarea textarea-bordered h-24 w-full"
-                    />
-                    <div className="mt-2 flex justify-evenly gap-2">
-                      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-                      <button
-                        className="btn btn-primary"
-                        onClick={() =>
-                          commitEdit(editingMessageId, editedContent)
-                        }
-                      >
-                        保存
-                      </button>
-                      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-                      <button className="btn btn-outline" onClick={cancelEdit}>
-                        キャンセル
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    className={`rounded-xl p-2 shadow ${
-                      m.creator === myId ? "bg-secondary" : "bg-white"
-                    }`}
-                  >
-                    <p className="whitespace-pre-wrap break-words">
-                      {m.content}
-                    </p>
-                    {m.creator === myId && (
-                      <Dots
-                        actions={[
-                          {
-                            label: "編集",
-                            onClick: () => startEditing(m.id, m.content),
-                            alert: false,
-                          },
-                          {
-                            label: "削除",
-                            color: "red",
-                            onClick: () => deleteMessage(m.id, friendId),
-                            alert: true,
-                            messages: {
-                              buttonMessage: "削除",
-                              AlertMessage: "本当に削除しますか？",
-                              subAlertMessage: "この操作は取り消せません。",
-                              yesMessage: "削除",
-                            },
-                          },
-                        ]}
+            {messages.map((m) =>
+              m.isPicture ? (
+                <img
+                  height="300px"
+                  width="300px"
+                  style={{
+                    maxHeight: "300px",
+                    maxWidth: "300px",
+                    float: m.creator === myId ? "right" : "left",
+                  }}
+                  key={m.id}
+                  alt=""
+                  src={API_ENDPOINT + m.content}
+                />
+              ) : (
+                <div
+                  key={m.id}
+                  className={`mb-2 flex ${
+                    m.creator === myId ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  {editingMessageId === m.id ? (
+                    <div className="flex w-3/5 flex-col">
+                      <textarea
+                        value={editedContent}
+                        onChange={(e) => setEditedContent(e.target.value)}
+                        onKeyDown={(e) => {
+                          if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                            commitEdit(editingMessageId, editedContent);
+                          }
+                        }}
+                        className="textarea textarea-bordered h-24 w-full"
                       />
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
+                      <div className="mt-2 flex justify-evenly gap-2">
+                        {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+                        <button
+                          className="btn btn-primary"
+                          onClick={() =>
+                            commitEdit(editingMessageId, editedContent)
+                          }
+                        >
+                          保存
+                        </button>
+                        {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+                        <button
+                          className="btn btn-outline"
+                          onClick={cancelEdit}
+                        >
+                          キャンセル
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      className={`rounded-xl p-2 shadow ${
+                        m.creator === myId ? "bg-secondary" : "bg-white"
+                      }`}
+                    >
+                      <p className="whitespace-pre-wrap break-words">
+                        {m.content}
+                      </p>
+                      {m.creator === myId && (
+                        <Dots
+                          actions={[
+                            {
+                              label: "編集",
+                              onClick: () => startEditing(m.id, m.content),
+                              alert: false,
+                            },
+                            {
+                              label: "削除",
+                              color: "red",
+                              onClick: () => deleteMessage(m.id, friendId),
+                              alert: true,
+                              messages: {
+                                buttonMessage: "削除",
+                                AlertMessage: "本当に削除しますか？",
+                                subAlertMessage: "この操作は取り消せません。",
+                                yesMessage: "削除",
+                              },
+                            },
+                          ]}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              ),
+            )}
           </div>
         ) : (
           <div className="text-center text-gray-500">
@@ -256,8 +258,62 @@ export function RoomWindow(props: Props) {
         )}
       </div>
       <div className="fixed bottom-12 w-full bg-white p-0">
-        <MessageInput send={sendDMMessage} friendId={friendId} />
+        <MessageInput reload={reload} send={sendDMMessage} room={room} />
       </div>
     </>
   );
 }
+
+type FloatingMessageProps = {
+  message: string;
+  friendId: number;
+  showButtons: boolean;
+};
+
+const FloatingMessage = ({
+  message,
+  friendId,
+  showButtons,
+}: FloatingMessageProps) => {
+  const router = useRouter();
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{
+        pointerEvents: "none", // 背景はクリック可能にする
+      }}
+    >
+      <div
+        className="w-11/12 max-w-md rounded-lg bg-white p-6 text-center shadow-lg"
+        style={{
+          pointerEvents: "auto", // モーダル内はクリック可能にする
+        }}
+      >
+        <p>{message}</p>
+        {showButtons && (
+          <div className="mt-4 space-x-4">
+            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+            <button
+              className="btn btn-success btn-sm"
+              onClick={() => {
+                request.accept(friendId).then(() => router.push("/chat"));
+              }}
+            >
+              承認
+            </button>
+            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+            <button
+              className="btn btn-error btn-sm"
+              onClick={() => {
+                request.reject(friendId).then(() => router.push("/chat"));
+              }}
+            >
+              拒否
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

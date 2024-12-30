@@ -1,6 +1,7 @@
 import { Box, Button, Modal } from "@mui/material";
 import { useState } from "react";
-import { MAX_IMAGE_SIZE, uploadImage } from "~/api/internal/fetch-func";
+import { uploadAvatar } from "~/api/image";
+import { MAX_IMAGE_SIZE } from "~/api/internal/fetch-func";
 import { PhotoPreview } from "./PhotoPreview";
 
 async function upload(
@@ -13,7 +14,7 @@ async function upload(
     if (file.size >= MAX_IMAGE_SIZE) {
       return onError(new Error("画像が大きすぎます"));
     }
-    const url = await uploadImage(file);
+    const url = await uploadAvatar(file);
     console.log("new URL:", url);
     afterUpload(url);
   } catch (err) {

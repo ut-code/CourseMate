@@ -34,6 +34,51 @@ export function RoomList(props: RoomListProps) {
       </p>
       {roomsData?.map((room) => {
         if (room.isDM) {
+          if (room.matchingStatus === "otherRequest") {
+            return (
+              <Box
+                key={room.friendId}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateToRoom(room);
+                }}
+              >
+                <HumanListItem
+                  key={room.friendId}
+                  id={room.friendId}
+                  name={room.name}
+                  pictureUrl={room.thumbnail}
+                  rollUpName={true}
+                  lastMessage={room.lastMsg?.content}
+                  statusMessage="リクエストを受けました"
+                  unreadCount={room.unreadMessages}
+                />
+              </Box>
+            );
+          }
+          if (room.matchingStatus === "myRequest") {
+            return (
+              <Box
+                key={room.friendId}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateToRoom(room);
+                }}
+              >
+                <HumanListItem
+                  key={room.friendId}
+                  id={room.friendId}
+                  name={room.name}
+                  pictureUrl={room.thumbnail}
+                  rollUpName={true}
+                  lastMessage={room.lastMsg?.content}
+                  statusMessage="リクエスト中 メッセージを送りましょう！"
+                  unreadCount={room.unreadMessages}
+                />
+              </Box>
+            );
+          }
+          // if (room.matchingStatus === "matched")
           return (
             <Box
               key={room.friendId}
@@ -48,6 +93,7 @@ export function RoomList(props: RoomListProps) {
                 pictureUrl={room.thumbnail}
                 rollUpName={true}
                 lastMessage={room.lastMsg?.content}
+                unreadCount={room.unreadMessages}
               />
             </Box>
           );
