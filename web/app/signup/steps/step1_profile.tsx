@@ -1,172 +1,167 @@
-import { useState } from "react";
+import { useEffect } from "react";
 
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
-import type { SelectChangeEvent } from "@mui/material";
-import { parseStep1UserSchema } from "common/zod/methods";
 import type { Step1User } from "common/zod/types";
 import type { StepProps } from "~/app/signup/common";
 import { facultiesAndDepartments } from "~/app/signup/data";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Step1UserSchema } from "common/zod/schemas";
+import { type FieldError, type SubmitHandler, useForm } from "react-hook-form";
+
+const faculties = Object.keys(facultiesAndDepartments);
 export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
-  const [name, setName] = useState(prev?.name ?? "");
-  const [gender, setGender] = useState(prev?.gender ?? "その他");
-  const [grade, setGrade] = useState(prev?.grade ?? "");
-  const [faculty, setFaculty] = useState(prev?.faculty ?? "");
-  const [department, setDepartment] = useState(prev?.department ?? "");
-  const [intro, setIntro] = useState(prev?.intro ?? "");
-  const [errorMessage, setErrorMessage] = useState("");
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    resetField,
+    formState: { errors },
+  } = useForm<Step1User>({
+    resolver: zodResolver(Step1UserSchema),
+    defaultValues: prev ?? {
+      name: "",
+      gender: "",
+      grade: "",
+      faculty: "",
+      department: "",
+      intro: "",
+    },
+  });
+  const onSubmit: SubmitHandler<Step1User> = async (data) => {
+    onSave(data);
+  };
+  const selectedFaculty = watch("faculty");
 
-  async function save() {
-    try {
-      const data: Step1User = {
-        name: name.trim(),
-        grade: grade,
-        gender: gender,
-        faculty: faculty,
-        department: department,
-        intro: intro.trim(),
-      };
-      parseStep1UserSchema(data);
-      onSave(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        let errorMessages: string;
-        try {
-          const parsedError = JSON.parse(error.message);
-          if (Array.isArray(parsedError)) {
-            errorMessages = parsedError.map((err) => err.message).join(", ");
-          } else {
-            errorMessages = error.message;
-          }
-        } catch {
-          errorMessages = error.message;
-        }
-
-        // エラーメッセージをセット
-        setErrorMessage(errorMessages);
-      } else {
-        console.log("unknown error:", error);
-        setErrorMessage("入力に誤りがあります。");
-      }
+  useEffect(() => {
+    if (selectedFaculty) {
+      const defaultDepartment = facultiesAndDepartments[selectedFaculty][0];
+      setValue("department", defaultDepartment);
+    } else {
+      resetField("department");
     }
-  }
-
-  const handleFacultyChange = (event: SelectChangeEvent<string>) => {
-    setFaculty(event.target.value);
-  };
-
-  const handleDepartmentChange = (event: SelectChangeEvent<string>) => {
-    setDepartment(event.target.value);
-  };
-
+  }, [selectedFaculty, setValue, resetField]);
   return (
     <>
-      <Box mt={2} mx={2} display="flex" flexDirection="column" gap={2}>
-        <Typography variant="h6" component="h1">
-          アカウント設定
-        </Typography>
-        <Box flex={1} display="flex" flexDirection="column" gap={2}>
-          <FormControl fullWidth>
-            <TextField
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              label="名前"
-              autoComplete="off"
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel>性別</InputLabel>
-            <Select
-              value={gender}
-              label="性別"
-              onChange={(e) => setGender(e.target.value)}
+      <div className="m-4 mb-8 flex flex-col gap-4">
+        <h1 className="text-xl">アカウント設定</h1>
+        <div className="flex flex-col gap-2">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Field fieldName="name" fieldLabel="名前" error={errors?.name}>
+              <input
+                className="input input-bordered w-full"
+                {...register("name")}
+              />
+            </Field>
+            <Field fieldName="gender" fieldLabel="性別" error={errors?.gender}>
+              <select
+                className="select select-bordered w-full"
+                {...register("gender")}
+              >
+                <option value={""} disabled>
+                  --選択してください--
+                </option>
+                <option value={"男性"}>男性</option>
+                <option value={"女性"}>女性</option>
+                <option value={"その他"}>その他</option>
+                <option value={"秘密"}>秘密</option>
+              </select>
+            </Field>
+            <Field fieldName="grade" fieldLabel="学年" error={errors?.grade}>
+              <select
+                className="select select-bordered w-full"
+                {...register("grade")}
+              >
+                <option value={""} disabled>
+                  --選択してください--
+                </option>
+                <option value={"B1"}>1年生 (B1)</option>
+                <option value={"B2"}>2年生 (B2)</option>
+                <option value={"B3"}>3年生 (B3)</option>
+                <option value={"B4"}>4年生 (B4)</option>
+                <option value={"M1"}>修士1年 (M1)</option>
+                <option value={"M2"}>修士2年 (M2)</option>
+              </select>
+            </Field>
+            <Field
+              fieldName="faculty"
+              fieldLabel="学部"
+              error={errors?.faculty}
             >
-              <MenuItem value={"男性"}>男性</MenuItem>
-              <MenuItem value={"女性"}>女性</MenuItem>
-              <MenuItem value={"その他"}>その他</MenuItem>
-              <MenuItem value={"秘密"}>秘密</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel>学年</InputLabel>
-            <Select
-              value={grade}
-              label="学年"
-              onChange={(e) => setGrade(e.target.value)}
-            >
-              <MenuItem value={"B1"}>1年生 (B1)</MenuItem>
-              <MenuItem value={"B2"}>2年生 (B2)</MenuItem>
-              <MenuItem value={"B3"}>3年生 (B3)</MenuItem>
-              <MenuItem value={"B4"}>4年生 (B4)</MenuItem>
-              <MenuItem value={"M1"}>修士1年 (M1)</MenuItem>
-              <MenuItem value={"M2"}>修士2年 (M2)</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel>学部</InputLabel>
-            <Select value={faculty} label="学部" onChange={handleFacultyChange}>
-              {Object.keys(facultiesAndDepartments).map((fac) => (
-                <MenuItem key={fac} value={fac}>
-                  {fac}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel>学科 (先に学部を選択して下さい)</InputLabel>
-            <Select
-              value={department}
-              onChange={handleDepartmentChange}
-              disabled={!faculty}
-              label="学科(先に学部を選択して下さい)"
-            >
-              {faculty &&
-                facultiesAndDepartments[faculty].map((dep) => (
-                  <MenuItem key={dep} value={dep}>
-                    {dep}
-                  </MenuItem>
+              <select
+                className="select select-bordered w-full"
+                {...register("faculty")}
+              >
+                <option value={""} disabled>
+                  --選択してください--
+                </option>
+                {faculties.map((fac) => (
+                  <option key={fac} value={fac}>
+                    {fac}
+                  </option>
                 ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <TextField
-              multiline
-              label="自己紹介"
-              minRows={3}
-              placeholder="こんにちは！仲良くして下さい！"
-              onChange={(e) => setIntro(e.target.value)}
-            />
-          </FormControl>
-          {errorMessage && (
-            <Box color="red" mb={2}>
-              {errorMessage}
-            </Box>
-          )}
-        </Box>
-      </Box>
-      <Box
-        p={3}
-        sx={{
-          position: "fixed",
-          display: "flex",
-          justifyContent: "space-between",
-          bottom: 0,
-          width: "100%",
-        }}
-      >
-        <span />
-        <button type="button" onClick={save} className="btn btn-primary">
-          {caller === "registration" ? "次へ" : "保存"}
-        </button>
-      </Box>
+              </select>
+            </Field>
+            <Field
+              fieldName="department"
+              fieldLabel="学科 (先に学部を選択してください)"
+              error={errors?.department}
+            >
+              <select
+                className="select select-bordered w-full"
+                {...register("department")}
+                disabled={!selectedFaculty}
+              >
+                <option value={""} disabled>
+                  --選択してください--
+                </option>
+                {selectedFaculty &&
+                  facultiesAndDepartments[selectedFaculty].map((dep) => (
+                    <option key={dep} value={dep}>
+                      {dep}
+                    </option>
+                  ))}
+              </select>
+            </Field>
+            <Field
+              fieldName="intro"
+              fieldLabel="自己紹介"
+              error={errors?.intro}
+            >
+              <textarea
+                className="textarea textarea-bordered w-full"
+                rows={5}
+                placeholder="こんにちは！仲良くしてください！"
+                {...register("intro")}
+              />
+            </Field>
+            <div className="flex justify-end">
+              <button type="submit" className="btn btn-primary">
+                {caller === "registration" ? "次へ" : "保存"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </>
+  );
+}
+
+function Field({
+  fieldLabel,
+  children,
+  error,
+}: {
+  fieldName: string;
+  fieldLabel: string;
+  children: React.ReactNode;
+  error: FieldError | undefined;
+}) {
+  return (
+    <div className="my-2">
+      <div className="text-gray-500 text-sm">{fieldLabel}</div>
+      {children}
+      <div className="text-error text-sm">{error?.message}</div>
+    </div>
   );
 }

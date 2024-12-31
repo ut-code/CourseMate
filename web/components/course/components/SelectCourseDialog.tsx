@@ -2,7 +2,6 @@ import { DAY_TO_JAPANESE_MAP } from "common/consts";
 import type { Course, Day } from "common/types";
 import { useEffect, useState } from "react";
 import courseApi from "~/api/course";
-import CourseDeleteConfirmDialog from "./CourseDeleteConfirmDialog";
 import CourseRegisterConfirmDialog from "./CourseRegisterConfirmDialog";
 
 export default function SelectCourseDialog({
@@ -25,9 +24,9 @@ export default function SelectCourseDialog({
     Course[]
   >([]);
   const [newCourse, setNewCourse] = useState<Course | null>(null);
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-  const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
-    useState(false);
+  const [confirmDialogStatus, setConfirmDialogStatus] = useState<
+    "closed" | "add" | "delete"
+  >("closed");
 
   useEffect(() => {
     (async () => {
@@ -69,14 +68,13 @@ export default function SelectCourseDialog({
                     currentEdit?.course?.teacher ?? "-"
                   } / ${currentEdit?.course?.id ?? "-"}`}</p>
                 </div>
-                {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
                 <button
-                  className="btn btn-sm btn-error"
+                  type="button"
+                  className="btn btn-sm"
                   onClick={async () => {
                     if (!currentEdit?.course?.id) return;
-
                     setNewCourse(currentEdit.course);
-                    setIsDeleteConfirmDialogOpen(true);
+                    setConfirmDialogStatus("delete");
                   }}
                 >
                   削除
@@ -111,7 +109,7 @@ export default function SelectCourseDialog({
                   className="cursor-pointer rounded-lg border p-2 hover:bg-gray-100"
                   onClick={() => {
                     setNewCourse(course);
-                    setIsConfirmDialogOpen(true);
+                    setConfirmDialogStatus("add");
                   }}
                 >
                   <p>{course.name}</p>
@@ -123,26 +121,20 @@ export default function SelectCourseDialog({
         </div>
 
         <div className="modal-action">
-          {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-          <button className="btn btn-primary" onClick={onClose}>
+          <button type="button" className="btn btn-primary" onClick={onClose}>
             閉じる
           </button>
         </div>
 
         {newCourse && (
           <CourseRegisterConfirmDialog
-            open={isConfirmDialogOpen}
-            onClose={() => setIsConfirmDialogOpen(false)}
-            course={newCourse}
-            handleSelectDialogClose={onClose}
-            handleCoursesUpdate={handleCoursesUpdate}
-          />
-        )}
-        {newCourse && (
-          <CourseDeleteConfirmDialog
-            open={isDeleteConfirmDialogOpen}
-            onClose={() => setIsDeleteConfirmDialogOpen(false)}
-            course={newCourse}
+            open={confirmDialogStatus !== "closed"}
+            onClose={() => {
+              setConfirmDialogStatus("closed");
+              setNewCourse(null);
+            }}
+            courseToAddOrDelete={newCourse}
+            mode={confirmDialogStatus === "delete" ? "delete" : "add"}
             handleSelectDialogClose={onClose}
             handleCoursesUpdate={handleCoursesUpdate}
           />
