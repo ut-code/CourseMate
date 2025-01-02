@@ -5,25 +5,28 @@ LOCAL_DB := postgres://user:password@localhost:5432/database
 setup: 
 	if [ ! `command -v bun` ]; then echo 'ERR: Bun is required!'; exit 1; fi
 	make sync
-	bunx husky
 	@echo "auto setup is done. now do:"
 	@echo "- edit server/.env.dev"
 	@echo "- edit web/.env"
 	@echo "- run make sync"
 
-setup-ci:
-	if [ ${DATABASE_URL} == "" ]; then echo 'Please set DATABASE_URL_FOR_SQL_GENERATION!'; exit 1; fi
+setup-ci: 
+	if [ "" == ${DATABASE_URL} ]; then echo 'Please set DATABASE_URL_FOR_SQL_GENERATION!'; exit 1; fi
 	make sync
 	make generate-sql
 
-sync: sync-server sync-web sync-root copy-common 
+sync: sync-server sync-web sync-root sync-common
 	@echo '----------------------------------------------------------------------------------------------------------'
 	@echo '| Most work is done. now running prisma-generate-sql (which might fail if .env.dev is not set configured)|'
 	@echo '----------------------------------------------------------------------------------------------------------'
 	make generate-sql || true
 
 generate-sql:
-	@cd server; bun run prisma-generate-sql
+	@cd server; \
+		if command -v dotenv && command -v prisma; \
+		then dotenv -e .env.dev -- prisma generate --sql; \
+		else bunx dotenv -e .env.dev -- bunx prisma generate --sql; \
+		fi
 
 start: start-all # build -> serve
 build: build-server build-web
@@ -42,21 +45,24 @@ test: dev-db
 	cd ./test; ENV_FILE=../server/.env.dev bun test
 	docker stop postgres
 
-prepare-deploy-web: copy-common
+prepare-deploy-web: sync-common
 	cd web; bun install; bun run build
-prepare-deploy-server: copy-common sync-server generate-sql
+deploy-web:
+	@if [ "${PORT}" == "" ]; then echo 'env PORT not found!'; exit 1; fi
+	cd web; bun next start --port ${PORT}
+prepare-deploy-server: sync-common sync-server generate-sql
 deploy-server:
 	cd server; bun src/main.ts
 
-docker: copy-common
+docker:
 	@# deferring `docker compose down`. https://qiita.com/KEINOS/items/532dc395fe0f89c2b574
 	trap 'docker compose down' EXIT; docker compose up --build
 
-docker-watch: copy-common
+docker-watch:
 	docker compose up --build --watch
 
 seed:
-	cd server; bunx prisma db seed
+	cd server; if command -v prisma; then prisma db seed; else bunx prisma db seed; fi
 
 ## server/.envをDATABASE_URL=postgres://user:password@localhost:5432/databaseにしてから行う
 dev-db: export DATABASE_URL=$(LOCAL_DB)
@@ -70,25 +76,17 @@ dev-db:
 	  -e POSTGRES_DB=database \
 	  postgres:alpine
 	@echo "Waiting for PostgreSQL to be ready..."
-	@sleep 5 # PostgreSQLが起動するまでの待機（必要に応じて調整）
+	@sleep 2 # PostgreSQLが起動するまでの待機（必要に応じて調整）
 	@until docker exec postgres pg_isready -U user -d database; do \
 		echo "Waiting for PostgreSQL to be ready..."; \
 		sleep 1; \
 	done
 	@echo "PostgreSQL is ready. Running seed..."
-	@cd server; bunx prisma generate; bunx prisma db push; cd ..
-	@make seed;
+	@cd server; if command -v prisma; then \
+		prisma generate; prisma db push; else \
+		bunx prisma generate; bunx prisma db push; fi
+	@make seed
 	@echo "Seeding completed."
-
-
-precommit: check-branch lint-staged spell-check
-
-lint-staged:
-	bunx lint-staged
-check-branch:
-	@ if [ "$(git branch --show-current)" == "main" ]; then echo "Cannot make commit on main! aborting..."; exit 1; fi
-spell-check:
-	bunx cspell --quiet .
 
 # Sync (install/update packages, generate prisma, etc)
 
@@ -98,11 +96,13 @@ sync-web:
 
 sync-server:
 	cd server; bun install --frozen-lockfile
-	cd server; bunx prisma generate
+	cd server; if command -v prisma; then prisma generate; else bunx prisma generate; fi
 	# copy .env.sample -> .env only if .env is not there
 
 sync-root:
 	bun install --frozen-lockfile
+sync-common:
+	cd common; bun install --frozen-lockfile
 
 
 # Static checks
@@ -127,7 +127,7 @@ format-check:
 	@exit 1
 
 # type checks
-type-check: copy-common
+type-check: 
 	make type-check-server
 	make type-check-web
 
@@ -143,9 +143,9 @@ type-check-web:
 start-all: build-web build-server
 	make serve-all
 
-build-web: copy-common-to-web
+build-web: 
 	cd web; bun run build
-build-server: copy-common-to-server
+build-server: 
 	cd server; bun run build
 
 serve-all:
@@ -155,17 +155,9 @@ serve-web:
 serve-server:
 	cd server; bun run serve 
 
-watch-web: copy-common-to-web
+watch-web: 
 	cd web; bun run dev
-watch-server: copy-common-to-server
+watch-server: 
 	cd server; bun run dev
-
-copy-common: copy-common-to-server copy-common-to-web
-copy-common-to-server:
-	@ if [ -d server/src/common ]; then rm -r server/src/common; fi
-	@ cp -r common server/src/common
-copy-common-to-web:
-	@ if [ -d web/common ]; then rm -r web/common; fi
-	@ cp -r common web/common
 
 .PHONY: test

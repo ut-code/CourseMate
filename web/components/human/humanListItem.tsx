@@ -1,6 +1,5 @@
-import UserAvatar from "./avatar";
-
 import Dots from "../common/Dots";
+import UserAvatar from "./avatar";
 
 type HumanListItemProps = {
   id: number;
@@ -8,11 +7,14 @@ type HumanListItemProps = {
   pictureUrl: string;
   lastMessage?: string;
   rollUpName?: boolean; // is currently only intended to be used in Chat
+  unreadCount?: number; // only intended to be used in chat
+  statusMessage?: string;
   onDelete?: (id: number) => void;
   onOpen?: (user: { id: number; name: string; pictureUrl: string }) => void;
   onAccept?: (id: number) => void;
   onReject?: (id: number) => void;
   onCancel?: (id: number) => void;
+  onRequest?: (id: number) => void;
   hasDots?: boolean;
   dotsActions?: object;
 };
@@ -22,49 +24,101 @@ export function HumanListItem(props: HumanListItemProps) {
     id,
     name,
     pictureUrl,
-    rollUpName,
     lastMessage,
+    rollUpName,
+    unreadCount,
+    statusMessage,
     onDelete,
     onOpen,
     onAccept,
     onReject,
     onCancel,
+    onRequest,
     hasDots,
   } = props;
+
   const handleDeleteClick = () => {
     if (!onDelete) return;
     onDelete(id);
   };
+
   const handleOpenClick = () => {
     if (!onOpen) return;
     onOpen({ id, name, pictureUrl });
   };
 
   return (
-    <li key={id.toString()}>
-      <button type="button" onClick={handleOpenClick} className="btn cm-li-btn">
-        <div className="flex flex-1 gap-6">
+    <div
+      className="flex items-center justify-between border-b p-4"
+      key={id.toString()}
+    >
+      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+      <button
+        className="flex w-full items-center text-left"
+        onClick={handleOpenClick}
+      >
+        <div className="ml-2">
           <UserAvatar pictureUrl={pictureUrl} width="50px" height="50px" />
-          <div className="flex flex-1 flex-col justify-center">
-            <p className="whitespace-nowrap text-left text-lg">{name}</p>
-            {rollUpName && (
-              <p className="min-h-[1rem] max-w-[60vw] whitespace-nowrap text-left text-gray-500 text-sm">
-                {lastMessage}
-              </p>
-            )}
-          </div>
         </div>
-        <ActionMenu
-          onAccept={onAccept}
-          onReject={onReject}
-          onCancel={onCancel}
-          id={id}
-        />
+        <div className="ml-4 flex flex-col justify-center">
+          <span className="truncate font-medium text-base">{name}</span>
+          {rollUpName && (
+            <span className="max-w-[60vw] truncate text-gray-500 text-sm">
+              {lastMessage}
+            </span>
+          )}
+          {statusMessage && (
+            <span className="text-blue-500 text-sm">{statusMessage}</span>
+          )}
+        </div>
       </button>
-
-      {/* TODO: button の中に移す */}
-      {hasDots && (
-        <div className="absolute top-[50%] right-4 translate-y-[-50%]">
+      <div className="mr-3 flex items-center space-x-2">
+        {unreadCount ? (
+          <span className="badge badge-primary">{unreadCount}</span>
+        ) : undefined}
+        {onAccept && (
+          // biome-ignore lint/a11y/useButtonType: <explanation>
+          <button
+            className="btn btn-success btn-sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAccept(id);
+            }}
+          >
+            承認
+          </button>
+        )}
+        {onReject && (
+          // biome-ignore lint/a11y/useButtonType: <explanation>
+          <button
+            className="btn btn-error btn-sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onReject(id);
+            }}
+          >
+            拒否
+          </button>
+        )}
+        {onCancel && (
+          // biome-ignore lint/a11y/useButtonType: <explanation>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => onCancel(id)}
+          >
+            キャンセル
+          </button>
+        )}
+        {onRequest && (
+          // biome-ignore lint/a11y/useButtonType: <explanation>
+          <button
+            className="btn btn-sm bg-primary text-white"
+            onClick={() => onRequest(id)}
+          >
+            リクエスト
+          </button>
+        )}
+        {hasDots && (
           <Dots
             actions={[
               {
@@ -86,52 +140,8 @@ export function HumanListItem(props: HumanListItemProps) {
               },
             ]}
           />
-        </div>
-      )}
-    </li>
-  );
-}
-
-function ActionMenu({
-  onAccept,
-  onReject,
-  onCancel,
-  id,
-}: {
-  onAccept?: (id: number) => void;
-  onReject?: (id: number) => void;
-  onCancel?: (id: number) => void;
-  id: number;
-}) {
-  return (
-    <div className="flex items-center gap-2">
-      {onAccept && (
-        <button
-          type="button"
-          onClick={() => onAccept(id)}
-          className="btn btn-sm btn-primary"
-        >
-          承認
-        </button>
-      )}
-      {onReject && (
-        <button
-          type="button"
-          onClick={() => onReject(id)}
-          className="btn btn-sm btn-outline btn-primary"
-        >
-          拒否
-        </button>
-      )}
-      {onCancel && (
-        <button
-          type="button"
-          onClick={() => onCancel(id)}
-          className="btn btn-sm btn-outline btn-primary"
-        >
-          キャンセル
-        </button>
-      )}
+        )}
+      </div>
     </div>
   );
 }

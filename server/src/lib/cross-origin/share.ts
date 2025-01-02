@@ -1,4 +1,4 @@
-type Config = {
+export type Config = {
   origins: string[]; // allowed origins
   methods?: string[]; // Access-Control-Allow-Methods
   credentials?: boolean; // Access-Control-Allow-Credentials
@@ -47,4 +47,4 @@ function assertValidConfig(config: Config) {
   }
 }
 
-export { validateConfig, type Config };
+export { validateConfig };

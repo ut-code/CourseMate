@@ -1,56 +1,52 @@
 "use client";
-
-import { Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
-import Matchings from "~/components/match/matching";
-import Requests from "~/components/match/requests";
+
+// https://nextjs.org/docs/messages/react-hydration-error#solution-2-disabling-ssr-on-specific-components
+import dynamic from "next/dynamic";
+const NoSSRMatchings = dynamic(() => import("~/components/match/matching"), {
+  ssr: false,
+});
+const NoSSRRequests = dynamic(() => import("~/components/match/requests"), {
+  ssr: false,
+});
 
 export default function Friends() {
-  const [open, setOpen] = useState(0);
-
-  const handleChange = (_event: React.SyntheticEvent, newOpen: number) => {
-    setOpen(newOpen);
-  };
+  const [activeTab, setActiveTab] = useState("matching");
 
   return (
-    <NavigateByAuthState type="toLoginForUnauthenticated">
-      <div className="fixed z-50 w-full border-gray-200 border-b-[1px] bg-white">
-        <Tabs value={open} onChange={handleChange} variant="fullWidth">
-          <Tab label="マッチ中" {...a11yProps(0)} sx={{ width: "50%" }} />
-          <Tab label="リクエスト" {...a11yProps(1)} sx={{ width: "50%" }} />
-        </Tabs>
-      </div>
-      <div className="absolute top-9 right-0 left-0 overflow-y-auto">
-        <TabPanel open={open}>
-          {open === 0 ? <Matchings /> : open === 1 ? <Requests /> : null}
-        </TabPanel>
-      </div>
-    </NavigateByAuthState>
-  );
-}
+    <div className="w-full">
+      <div className="flex w-full border-gray-200 border-b">
+        <button
+          type="button"
+          className={`relative flex-1 py-2 text-center ${
+            activeTab === "matching" ? "text-primary" : "text-gray-600"
+          }`}
+          onClick={() => setActiveTab("matching")}
+        >
+          <span>マッチ中</span>
+          {activeTab === "matching" && (
+            <span className="absolute bottom-0 left-0 h-1 w-full bg-primary" />
+          )}
+        </button>
 
-function TabPanel({
-  open,
-  children,
-}: {
-  open: number;
-  children: React.ReactNode;
-}) {
-  return (
-    <div
-      // role="tabpanel" // FIXME: biome says it should not be a div, but I couldn't find a proper html elem
-      id={`tabpanel-${open}`}
-      aria-labelledby={`tab-${open}`}
-    >
-      <div>{children}</div>
+        <button
+          type="button"
+          className={`relative flex-1 py-2 text-center ${
+            activeTab === "request" ? "text-primary" : "text-gray-600"
+          }`}
+          onClick={() => setActiveTab("request")}
+        >
+          <span>リクエスト</span>
+          {activeTab === "request" && (
+            <span className="absolute bottom-0 left-0 h-1 w-full bg-primary" />
+          )}
+        </button>
+      </div>
+
+      {/* コンテンツ部分 */}
+      <div className="mt-4 text-center text-gray-700 text-lg">
+        {activeTab === "matching" ? <NoSSRMatchings /> : <NoSSRRequests />}
+      </div>
     </div>
   );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `tab-${index}`,
-    "aria-controls": `tabpanel-${index}`,
-  };
 }

@@ -1,25 +1,12 @@
-import { Box } from "@mui/material";
-import { styled } from "@mui/system";
+import type { UserWithCoursesAndSubjects } from "common/types";
 import { type ReactNode, createContext, useContext, useState } from "react";
-import { useMyID } from "~/api/user";
-import type { User } from "~/common/types";
+import { useAboutMe } from "~/api/user";
 import { Card } from "../../Card";
 
-const Overlay = styled(Box)({
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100vw",
-  height: "100vh",
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  zIndex: 1000,
-});
+const ModalContext = createContext<ModalContextProps | undefined>(undefined);
 
 type ModalContextProps = {
-  openModal: (user: User) => void;
+  openModal: (user: UserWithCoursesAndSubjects) => void;
   closeModal: () => void;
 };
 
@@ -27,16 +14,15 @@ type ModalProviderProps = {
   children: ReactNode;
 };
 
-const ModalContext = createContext<ModalContextProps | undefined>(undefined);
-
 export const ModalProvider = ({ children }: ModalProviderProps) => {
   const [open, setOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] =
+    useState<UserWithCoursesAndSubjects | null>(null);
   const {
-    state: { data: myId },
-  } = useMyID();
+    state: { data: currentUser },
+  } = useAboutMe();
 
-  const openModal = (user: User) => {
+  const openModal = (user: UserWithCoursesAndSubjects) => {
     setSelectedUser(user);
     setOpen(true);
   };
@@ -49,15 +35,20 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   return (
     <ModalContext.Provider value={{ openModal, closeModal }}>
       {children}
-      {open && selectedUser && (
-        <Overlay onClick={closeModal}>
-          <Box onClick={(e) => e.stopPropagation()}>
-            <Card
-              displayedUser={selectedUser}
-              comparisonUserId={myId ? myId : undefined}
-            />
-          </Box>
-        </Overlay>
+      {open && selectedUser && currentUser && (
+        // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={closeModal}
+        >
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+          <div
+            className="rounded bg-white p-4 shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Card displayedUser={selectedUser} currentUser={currentUser} />
+          </div>
+        </div>
       )}
     </ModalContext.Provider>
   );

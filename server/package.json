@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun --watch src/main.ts",
     "build": "tsc",
-    "serve": "bun target/main.js",
-    "prisma-generate-sql": "bunx dotenv -e .env.dev -- prisma generate --sql"
+    "serve": "bun target/main.js"
   },
   "prisma": {
     "seed": "bun src/seeds/seed-test.ts"
@@ -17,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "common": "file:../common",
     "@prisma/client": "^5.20.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -35,5 +35,6 @@
     "globals": "^15.8.0",
     "prisma": "^5.11.0",
     "typescript": "^5.4.5"
-  }
+  },
+  "trustedPackages": ["prisma"]
 }

@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { Err, Ok, type Result } from "common/lib/result";
+import type { IDToken, UserID } from "common/types";
 import type { Request } from "express";
-import { Err, Ok, type Result } from "../../common/lib/result";
-import type { IDToken, UserID } from "../../common/types";
 import { getGUID, getGUIDFromToken } from "./lib";
 
 import { prisma } from "../../database/client";

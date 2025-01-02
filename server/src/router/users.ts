@@ -1,14 +1,19 @@
-import express, { type Request, type Response } from "express";
-import type { GUID, UpdateUser } from "../common/types";
-import type { User } from "../common/types";
+import type {
+  GUID,
+  UpdateUser,
+  UserWithCoursesAndSubjects,
+} from "common/types";
+import type { User } from "common/types";
 import {
   GUIDSchema,
   InitUserSchema,
   UpdateUserSchema,
-} from "../common/zod/schemas";
+} from "common/zod/schemas";
+import express, { type Request, type Response } from "express";
 import {
   getPendingRequestsFromUser,
   getPendingRequestsToUser,
+  matchWithMemo,
 } from "../database/requests";
 import {
   createUser,
@@ -105,7 +110,7 @@ router.get("/guid/:guid", async (req: Request, res: Response) => {
   if (!user.ok) {
     return res.status(404).json({ error: "User not found" });
   }
-  const json: User = user.value;
+  const json: UserWithCoursesAndSubjects = user.value;
   res.status(200).json(json);
 });
 
@@ -124,10 +129,20 @@ router.get("/id/:id", async (req: Request, res: Response) => {
 // INSERT INTO "User" VALUES (body...)
 router.post("/", async (req: Request, res: Response) => {
   const partialUser = InitUserSchema.safeParse(req.body);
-  if (!partialUser.success) return res.status(400).send("invalid format");
+  if (!partialUser.success)
+    return res.status(400).send({
+      error: "Invalid input format",
+      details: partialUser.error.errors,
+    });
 
   const user = await createUser(partialUser.data);
-  if (!user.ok) return res.status(500).send();
+  if (!user.ok) return res.status(500).send({ error: "Failed to create user" });
+
+  //ユーザー作成と同時にメモとマッチング
+  const result = await matchWithMemo(user.value.id);
+  if ("ok" in result && !result.ok) {
+    return res.status(500).send({ error: "Failed to match user with memo" });
+  }
   res.status(201).json(user.value);
 });
 

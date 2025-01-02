@@ -1,5 +1,13 @@
-import { Err, Ok, type Result } from "../common/lib/result";
-import type { GUID, UpdateUser, User, UserID } from "../common/types";
+import { Err, Ok, type Result } from "common/lib/result";
+import type {
+  Course,
+  GUID,
+  InterestSubject,
+  UpdateUser,
+  User,
+  UserID,
+  UserWithCoursesAndSubjects,
+} from "common/types";
 import { prisma } from "./client";
 
 // ユーザーの作成
@@ -17,15 +25,42 @@ export async function createUser(
 }
 
 // ユーザーの取得
-export async function getUser(guid: GUID): Promise<Result<User>> {
+export async function getUser(
+  guid: GUID,
+): Promise<Result<UserWithCoursesAndSubjects>> {
   try {
     const user = await prisma.user.findUnique({
       where: {
         guid: guid,
       },
+      include: {
+        enrollments: {
+          include: {
+            course: {
+              include: {
+                enrollments: true,
+                slots: true,
+              },
+            },
+          },
+        },
+        interests: {
+          include: {
+            subject: true,
+          },
+        },
+      },
     });
     if (!user) return Err(404);
-    return Ok(user);
+    return Ok({
+      ...user,
+      interestSubjects: user.interests.map((interest) => {
+        return interest.subject;
+      }),
+      courses: user.enrollments.map((enrollment) => {
+        return enrollment.course;
+      }),
+    });
   } catch (e) {
     return Err(e);
   }
@@ -50,14 +85,42 @@ export async function getUserIDByGUID(guid: GUID): Promise<Result<UserID>> {
     .catch((err) => Err(err));
 }
 
-export async function getUserByID(id: UserID): Promise<Result<User>> {
+export async function getUserByID(
+  id: UserID,
+): Promise<Result<UserWithCoursesAndSubjects>> {
   try {
     const user = await prisma.user.findUnique({
       where: {
         id,
       },
+      include: {
+        enrollments: {
+          include: {
+            course: {
+              include: {
+                enrollments: true,
+                slots: true,
+              },
+            },
+          },
+        },
+        interests: {
+          include: {
+            subject: true,
+          },
+        },
+      },
     });
-    return user === null ? Err(404) : Ok(user);
+    if (!user) return Err(404);
+    return Ok({
+      ...user,
+      interestSubjects: user.interests.map((interest) => {
+        return interest.subject;
+      }),
+      courses: user.enrollments.map((enrollment) => {
+        return enrollment.course;
+      }),
+    });
   } catch (e) {
     return Err(e);
   }
@@ -100,10 +163,42 @@ export async function deleteUser(userId: UserID): Promise<Result<User>> {
 }
 
 // ユーザーの全取得
-export async function getAllUsers(): Promise<Result<User[]>> {
+export async function getAllUsers(): Promise<
+  Result<(User & { courses: Course[]; interestSubjects: InterestSubject[] })[]>
+> {
   try {
-    const users = await prisma.user.findMany();
-    return Ok(users);
+    const users = await prisma.user.findMany({
+      include: {
+        enrollments: {
+          include: {
+            course: {
+              include: {
+                enrollments: true,
+                slots: true,
+              },
+            },
+          },
+        },
+        interests: {
+          include: {
+            subject: true,
+          },
+        },
+      },
+    });
+    return Ok(
+      users.map((user) => {
+        return {
+          ...user,
+          interestSubjects: user.interests.map((interest) => {
+            return interest.subject;
+          }),
+          courses: user.enrollments.map((enrollment) => {
+            return enrollment.course;
+          }),
+        };
+      }),
+    );
   } catch (e) {
     return Err(e);
   }

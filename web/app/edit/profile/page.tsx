@@ -1,13 +1,14 @@
 "use client";
+// TODO: 挙動修正
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { User } from "common/types";
+import { UpdateUserSchema } from "common/zod/schemas";
 import { useRouter } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { update, useAboutMe } from "~/api/user";
 import { facultiesAndDepartments } from "~/app/signup/data";
-import type { User } from "~/common/types";
-import { UpdateUserSchema } from "~/common/zod/schemas";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import { useAlert } from "~/components/common/alert/AlertProvider";
 import PhotoModal from "~/components/config/PhotoModal";

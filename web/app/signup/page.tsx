@@ -1,11 +1,10 @@
 "use client";
 
-import { Box } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 
+import type { Step1User } from "common/zod/types";
 import { useRouter } from "next/navigation";
-import type { Step1User } from "~/common/zod/types";
 import Header from "~/components/Header";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 import { register } from "./functions";
@@ -78,19 +77,10 @@ function Registration() {
 export default function RegistrationPage() {
   return (
     <NavigateByAuthState type="toHomeForAuthenticated">
-      <Box
-        sx={{
-          position: "absolute",
-          top: "56px",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          overflowY: "auto",
-        }}
-      >
+      <div className="absolute top-14 right-0 bottom-0 left-0 overflow-y-auto">
         <Header title="登録/Register" />
         <Registration />
-      </Box>
+      </div>
     </NavigateByAuthState>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import { Box, List, Typography } from "@mui/material";
+import type { RoomOverview } from "common/types";
 import { useRouter } from "next/navigation";
-import type { RoomOverview } from "~/common/types";
 import { HumanListItem } from "../human/humanListItem";
 
 type RoomListProps = {
@@ -12,15 +12,8 @@ type RoomListProps = {
 export function RoomList(props: RoomListProps) {
   const { roomsData } = props;
   const router = useRouter();
-
-  /**
-   * FIXME:
-   * React Router が使えなくなったので、一時的に room の情報を URL に載せることで状態管理
-   */
   const navigateToRoom = (room: Extract<RoomOverview, { isDM: true }>) => {
-    router.push(
-      `./?friendId=${room.friendId}&roomData=${encodeURIComponent(JSON.stringify(room))}`,
-    );
+    router.push(`/chat/${room.friendId}`);
   };
 
   return (
@@ -41,6 +34,51 @@ export function RoomList(props: RoomListProps) {
       </p>
       {roomsData?.map((room) => {
         if (room.isDM) {
+          if (room.matchingStatus === "otherRequest") {
+            return (
+              <Box
+                key={room.friendId}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateToRoom(room);
+                }}
+              >
+                <HumanListItem
+                  key={room.friendId}
+                  id={room.friendId}
+                  name={room.name}
+                  pictureUrl={room.thumbnail}
+                  rollUpName={true}
+                  lastMessage={room.lastMsg?.content}
+                  statusMessage="リクエストを受けました"
+                  unreadCount={room.unreadMessages}
+                />
+              </Box>
+            );
+          }
+          if (room.matchingStatus === "myRequest") {
+            return (
+              <Box
+                key={room.friendId}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateToRoom(room);
+                }}
+              >
+                <HumanListItem
+                  key={room.friendId}
+                  id={room.friendId}
+                  name={room.name}
+                  pictureUrl={room.thumbnail}
+                  rollUpName={true}
+                  lastMessage={room.lastMsg?.content}
+                  statusMessage="リクエスト中 メッセージを送りましょう！"
+                  unreadCount={room.unreadMessages}
+                />
+              </Box>
+            );
+          }
+          // if (room.matchingStatus === "matched")
           return (
             <Box
               key={room.friendId}
@@ -55,6 +93,7 @@ export function RoomList(props: RoomListProps) {
                 pictureUrl={room.thumbnail}
                 rollUpName={true}
                 lastMessage={room.lastMsg?.content}
+                unreadCount={room.unreadMessages}
               />
             </Box>
           );

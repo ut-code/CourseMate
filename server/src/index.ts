@@ -17,7 +17,7 @@ const app = express();
 // https://expressjs.com/ja/api.html#app.settings.table  の query parser を参照。
 app.set("query parser", "simple");
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 const allowedOrigins = (
   process.env.CORS_ALLOW_ORIGINS || panic("env CORS_ALLOW_ORIGINS is missing")
 )
@@ -30,6 +30,12 @@ export const corsOptions = {
   methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
   credentials: true,
 };
+
+if (corsOptions.origins.length > 1 && process.env.NODE_ENV === "production") {
+  console.warn(
+    "WARNING: socket.io only supports one cors origin, therefore only first origin will be registered.",
+  );
+}
 
 app.use(cors(corsOptions));
 app.use(csrf(corsOptions));

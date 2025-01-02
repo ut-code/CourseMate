@@ -38,6 +38,11 @@ export const InterestSubjectSchema = z.object({
   group: z.string(),
 });
 
+export const InterestSchema = z.object({
+  userId: UserIDSchema,
+  subjectId: z.number(),
+});
+
 export const UserSchema = z.object({
   id: UserIDSchema,
   guid: GUIDSchema,
@@ -103,6 +108,11 @@ export const EnrollmentSchema = z.object({
   courseId: CourseIDSchema,
 });
 
+export const UserWithCoursesAndSubjectsSchema = UserSchema.extend({
+  courses: CourseSchema.array(),
+  interestSubjects: InterestSubjectSchema.array(),
+});
+
 export const MessageIDSchema = z.number(); // TODO! Add __internal_prevent_cast_MessageID: PhantomData
 export const ShareRoomIDSchema = z.number();
 
@@ -116,6 +126,7 @@ export const MessageSchema = z.object({
   creator: UserIDSchema,
   createdAt: z.date(),
   content: ContentSchema,
+  isPicture: z.boolean(),
   edited: z.boolean(),
 });
 
@@ -123,12 +134,20 @@ export const SendMessageSchema = z.object({
   content: z.string().min(1, { message: "Content must not be empty." }),
 });
 
+export const MatchingStatusSchema = z.union([
+  z.literal("myRequest"),
+  z.literal("otherRequest"),
+  z.literal("matched"),
+]);
+
 export const DMOverviewSchema = z.object({
   isDM: z.literal(true),
+  matchingStatus: MatchingStatusSchema,
   friendId: UserIDSchema,
   name: NameSchema,
   thumbnail: z.string(),
   lastMsg: MessageSchema.optional(),
+  unreadMessages: z.number(),
 });
 
 export const SharedRoomOverviewSchema = z.object({
@@ -153,6 +172,9 @@ export const DMRoomSchema = z.object({
 export const PersonalizedDMRoomSchema = z.object({
   name: NameSchema,
   thumbnail: z.string(),
+  matchingStatus: MatchingStatusSchema,
+  unreadMessages: z.number(),
+  friendId: z.number(),
 });
 
 export const SharedRoomSchema = z.object({

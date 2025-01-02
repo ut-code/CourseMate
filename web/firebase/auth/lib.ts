@@ -1,6 +1,6 @@
+import type { IDToken } from "common/types";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import type { User } from "firebase/auth";
-import type { IDToken } from "~/common/types";
 import { app } from "../config";
 
 export class ErrUnauthorized extends Error {}
@@ -17,7 +17,8 @@ const token = new Promise<string>((resolve) => {
 });
 
 export async function getIdToken(): Promise<IDToken> {
-  return await token;
+  const toke = await token;
+  return toke;
 }
 
 type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";

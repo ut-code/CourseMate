@@ -1,5 +1,5 @@
-import { Err, Ok, type Result } from "../common/lib/result";
-import type { UserID } from "../common/types";
+import { Err, Ok, type Result } from "common/lib/result";
+import type { UserID } from "common/types";
 import type {
   DMOverview,
   DMRoom,
@@ -11,12 +11,16 @@ import type {
   ShareRoomID,
   SharedRoom,
   SharedRoomOverview,
-} from "../common/types";
+} from "common/types";
 import { prisma } from "./client";
 import { getRelation } from "./matches";
-import { getMatchedUser } from "./requests";
+import {
+  getMatchedUser,
+  getPendingRequestsFromUser,
+  getPendingRequestsToUser,
+} from "./requests";
+import { getUserByID } from "./users";
 
-// ユーザーの参加しているすべての Room の概要 (Overview) の取得
 export async function getOverview(
   user: UserID,
 ): Promise<Result<RoomOverview[]>> {
@@ -24,21 +28,25 @@ export async function getOverview(
     const matched = await getMatchedUser(user);
     if (!matched.ok) return Err(matched.error);
 
-    const dm = await Promise.all(
-      matched.value.map(async (friend) => {
-        const lastMessageResult = await getLastMessage(user, friend.id);
-        const lastMessage = lastMessageResult.ok
-          ? lastMessageResult.value
-          : undefined;
-        const overview: DMOverview = {
-          isDM: true,
-          friendId: friend.id,
-          name: friend.name,
-          thumbnail: friend.pictureUrl,
-          lastMsg: lastMessage,
-        };
-        return overview;
-      }),
+    const senders = await getPendingRequestsToUser(user);
+    if (!senders.ok) return Err(senders.error);
+
+    const receivers = await getPendingRequestsFromUser(user);
+    if (!receivers.ok) return Err(receivers.error);
+
+    //マッチングしている人のオーバービュー
+    const matchingOverview = await Promise.all(
+      matched.value.map(async (m) => getOverviewBetween(user, m.id)),
+    );
+
+    //自分にリクエストを送ってきた人のオーバービュー
+    const senderOverview = await Promise.all(
+      senders.value.map((s) => getOverviewBetween(user, s.id)),
+    );
+
+    //自分がリクエストを送った人のオーバービュー
+    const receiverOverview = await Promise.all(
+      receivers.value.map((r) => getOverviewBetween(user, r.id)),
     );
 
     const sharedRooms: {
@@ -61,10 +69,80 @@ export async function getOverview(
       };
       return overview;
     });
-    return Ok([...shared, ...dm]);
+
+    const overview = [
+      ...matchingOverview,
+      ...senderOverview,
+      ...receiverOverview,
+      ...shared,
+    ];
+
+    const sortedOverviewByTime = overview.sort((a, b) => {
+      const dateA = a.lastMsg?.createdAt ? a.lastMsg.createdAt.getTime() : 0;
+      const dateB = b.lastMsg?.createdAt ? b.lastMsg.createdAt.getTime() : 0;
+      return dateB - dateA;
+    });
+
+    return Ok([...sortedOverviewByTime]);
   } catch (e) {
     return Err(e);
   }
+}
+
+async function getOverviewBetween(
+  user: number,
+  other: number,
+): Promise<DMOverview> {
+  const relR = await getRelation(user, other);
+  if (!relR.ok) throw relR.error;
+  const rel = relR.value;
+
+  const friendId =
+    rel.receivingUserId === user ? rel.sendingUserId : rel.receivingUserId;
+  const lastMessage = getLastMessage(user, friendId).then((val) => {
+    if (val.ok) return val.value;
+    return undefined;
+  });
+  const unreadCount = unreadMessages(user, rel.id).then((val) => {
+    if (val.ok) return val.value;
+    throw val.error;
+  });
+  const friend = await getUserByID(friendId).then((val) => {
+    if (val.ok) return val.value;
+    throw val.error;
+  });
+  const overview: DMOverview = {
+    isDM: true,
+    matchingStatus: "matched",
+    friendId: friendId,
+    name: friend.name,
+    thumbnail: friend.pictureUrl,
+    lastMsg: await lastMessage,
+    unreadMessages: await unreadCount,
+  };
+  return overview;
+}
+export async function markAsRead(
+  rel: RelationshipID,
+  reader: UserID,
+  message: MessageID,
+) {
+  return await prisma.message.updateMany({
+    where: {
+      id: {
+        lte: message,
+      },
+      relationId: rel,
+      creator: {
+        not: {
+          equals: reader,
+        },
+      },
+    },
+    data: {
+      read: true,
+    },
+  });
 }
 
 /**
@@ -73,12 +151,15 @@ export async function getOverview(
  **/
 export async function sendDM(
   relation: RelationshipID,
-  content: Omit<Message, "id">,
+  content: Omit<Omit<Message, "id">, "isPicture">,
 ): Promise<Result<Message>> {
   try {
     const message = await prisma.message.create({
       data: {
+        // isPicture: false, // todo: bring it back
         relationId: relation,
+        isPicture: false,
+        read: false,
         ...content,
       },
     });
@@ -86,6 +167,26 @@ export async function sendDM(
   } catch (e) {
     return Err(e);
   }
+}
+/**
+this doesn't create the image. use uploadPic in database/picture.ts to create the image.
+**/
+export async function createImageMessage(
+  sender: UserID,
+  relation: RelationshipID,
+  url: string,
+) {
+  return prisma.message
+    .create({
+      data: {
+        creator: sender,
+        relationId: relation,
+        content: url,
+        isPicture: true,
+      },
+    })
+    .then((val) => Ok(val))
+    .catch((err) => Err(err));
 }
 
 export async function createSharedRoom(
@@ -305,6 +406,27 @@ export async function getLastMessage(
     });
     if (!lastMessage) return Err("last message not found");
     return Ok(lastMessage);
+  } catch (e) {
+    return Err(e);
+  }
+}
+
+// only works on Relationship (= DM) for now.
+export async function unreadMessages(userId: UserID, roomId: RelationshipID) {
+  try {
+    // FIXME: this makes request twice to the database. it's not efficient.
+    const unreadMessages = await prisma.message.count({
+      where: {
+        read: false,
+        relationId: roomId,
+        creator: {
+          not: {
+            equals: userId,
+          },
+        },
+      },
+    });
+    return Ok(unreadMessages);
   } catch (e) {
     return Err(e);
   }

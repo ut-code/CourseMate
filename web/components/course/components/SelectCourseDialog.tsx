@@ -1,23 +1,7 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  List,
-  ListItem,
-  ListItemButton,
-  TextField,
-  Typography,
-} from "@mui/material";
-import IconButton from "@mui/material/IconButton";
+import { DAY_TO_JAPANESE_MAP } from "common/consts";
+import type { Course, Day } from "common/types";
 import { useEffect, useState } from "react";
 import courseApi from "~/api/course";
-import { DAY_TO_JAPANESE_MAP } from "~/common/consts";
-import type { Course, Day } from "~/common/types";
 import CourseDeleteConfirmDialog from "./CourseDeleteConfirmDialog";
 import CourseRegisterConfirmDialog from "./CourseRegisterConfirmDialog";
 
@@ -36,10 +20,10 @@ export default function SelectCourseDialog({
   } | null;
   handleCoursesUpdate: (courses: Course[]) => void;
 }) {
-  const [availableCourses, setAvailableCourses] = useState<Course[]>([]); // その曜限で登録可能なすべての講義
+  const [availableCourses, setAvailableCourses] = useState<Course[]>([]);
   const [filteredAvailableCourses, setFilteredAvailableCourses] = useState<
     Course[]
-  >([]); // 登録可能な全ての講義のうち、検索条件に合う講義
+  >([]);
   const [newCourse, setNewCourse] = useState<Course | null>(null);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
@@ -59,81 +43,91 @@ export default function SelectCourseDialog({
   }, [currentEdit]);
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth>
-      <DialogTitle>
-        {currentEdit
-          ? `${DAY_TO_JAPANESE_MAP.get(currentEdit.columnName)}曜${currentEdit.rowIndex + 1}限の授業を選択`
-          : "授業を選択"}
-      </DialogTitle>
-      <DialogContent>
-        <>
-          <Box>
-            <Box px={1} pb={2}>
-              <Typography variant="caption">現在の授業</Typography>
-              {currentEdit?.course ? (
-                <Box display="flex" alignItems="center" sx={{ width: "100%" }}>
-                  <Box flex={1}>
-                    <Typography variant="body1">
-                      {currentEdit?.course?.name ?? "-"}
-                    </Typography>
-                    <Typography variant="body2">{`${currentEdit?.course?.teacher ?? "-"} / ${
-                      currentEdit?.course?.id ?? "-"
-                    }`}</Typography>
-                  </Box>
-                  <IconButton
-                    aria-label="delete"
-                    onClick={async () => {
-                      if (!currentEdit?.course?.id) return;
+    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+    <div
+      className={`modal ${open ? "modal-open" : ""}`}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="modal-box">
+        <h2 className="font-bold text-lg">
+          {currentEdit
+            ? `${DAY_TO_JAPANESE_MAP.get(currentEdit.columnName)}曜${
+                currentEdit.rowIndex + 1
+              }限の授業を選択`
+            : "授業を選択"}
+        </h2>
+        <div className="my-4">
+          <div>
+            <h3 className="font-semibold text-sm">現在の授業</h3>
+            {currentEdit?.course ? (
+              <div className="flex items-center justify-between rounded-lg border p-2">
+                <div>
+                  <p className="text-base">
+                    {currentEdit?.course?.name ?? "-"}
+                  </p>
+                  <p className="text-gray-500 text-sm">{`${
+                    currentEdit?.course?.teacher ?? "-"
+                  } / ${currentEdit?.course?.id ?? "-"}`}</p>
+                </div>
+                {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+                <button
+                  className="btn btn-sm btn-error"
+                  onClick={async () => {
+                    if (!currentEdit?.course?.id) return;
 
-                      setNewCourse(currentEdit.course);
-                      setIsDeleteConfirmDialogOpen(true);
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
-              ) : (
-                <Typography>未登録</Typography>
-              )}
-            </Box>
-          </Box>
-          <TextField
+                    setNewCourse(currentEdit.course);
+                    setIsDeleteConfirmDialogOpen(true);
+                  }}
+                >
+                  削除
+                </button>
+              </div>
+            ) : (
+              <p className="text-gray-500">未登録</p>
+            )}
+          </div>
+
+          <input
+            type="text"
+            placeholder="授業名で検索"
+            className="input input-bordered mt-4 w-full"
             onChange={(e) => {
               const newFilteredCourses = availableCourses.filter((course) =>
                 course.name.includes(e.target.value.trim()),
               );
               setFilteredAvailableCourses(newFilteredCourses);
             }}
-            label="授業名で検索"
-            fullWidth
-            size="small"
           />
           {filteredAvailableCourses.length === 0 ? (
-            <DialogContentText>
+            <p className="mt-2 text-gray-500">
               条件に当てはまる授業はありません。
-            </DialogContentText>
+            </p>
           ) : (
-            <Box sx={{ width: "100%" }}>
-              <List>
-                {filteredAvailableCourses.map((course) => (
-                  <ListItem key={course.id} disablePadding>
-                    <ListItemButton
-                      onClick={() => {
-                        setNewCourse(course);
-                        setIsConfirmDialogOpen(true);
-                      }}
-                    >
-                      <Box>
-                        <Typography>{course.name}</Typography>
-                        <Typography variant="caption">{`${course.teacher} / ${course.id}`}</Typography>
-                      </Box>
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
+            <ul className="mt-4">
+              {filteredAvailableCourses.map((course) => (
+                // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+                <li
+                  key={course.id}
+                  className="cursor-pointer rounded-lg border p-2 hover:bg-gray-100"
+                  onClick={() => {
+                    setNewCourse(course);
+                    setIsConfirmDialogOpen(true);
+                  }}
+                >
+                  <p>{course.name}</p>
+                  <p className="text-gray-500 text-sm">{`${course.teacher} / ${course.id}`}</p>
+                </li>
+              ))}
+            </ul>
           )}
-        </>
+        </div>
+
+        <div className="modal-action">
+          {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+          <button className="btn btn-primary" onClick={onClose}>
+            閉じる
+          </button>
+        </div>
 
         {newCourse && (
           <CourseRegisterConfirmDialog
@@ -153,12 +147,7 @@ export default function SelectCourseDialog({
             handleCoursesUpdate={handleCoursesUpdate}
           />
         )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">
-          閉じる
-        </Button>
-      </DialogActions>
-    </Dialog>
+      </div>
+    </div>
   );
 }

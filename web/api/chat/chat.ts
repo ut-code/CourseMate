@@ -3,19 +3,21 @@ import type {
   InitRoom,
   Message,
   MessageID,
+  PersonalizedDMRoom,
+  RelationshipID,
   RoomOverview,
   SendMessage,
   ShareRoomID,
   SharedRoom,
   UpdateRoom,
   UserID,
-} from "~/common/types";
+} from "common/types";
 import { ErrUnauthorized, credFetch } from "~/firebase/auth/lib";
-import endpoints from "../internal/endpoints";
+import * as endpoints from "../internal/endpoints";
 
 /* TODO
-import { UserID } from "~/common/types";
-import type { User } from "~/common/types";
+import { UserID } from "common/types";
+import type { User } from "common/types";
 */
 
 //// DM グループチャット 共通////
@@ -31,6 +33,20 @@ export async function deleteMessage(
   if (res.status !== 204)
     throw new Error(
       `on deleteMessage(), expected status code of 204, but got ${res.status}`,
+    );
+}
+
+export async function markAsRead(
+  relationId: RelationshipID,
+  messageId: MessageID,
+) {
+  const res = await credFetch(
+    "POST",
+    endpoints.markAsRead(relationId, messageId),
+  );
+  if (res.status !== 200 && res.status !== 304)
+    throw new Error(
+      `on markAsRead(), expected status code of 200 or 304, but got ${res.status}`,
     );
 }
 
@@ -83,14 +99,16 @@ export async function sendDM(
   return res.json();
 }
 
-export async function getDM(friendId: UserID): Promise<DMRoom> {
+export async function getDM(
+  friendId: UserID,
+): Promise<DMRoom & PersonalizedDMRoom> {
   const res = await credFetch("GET", endpoints.dmWith(friendId));
   if (res.status === 401) throw new ErrUnauthorized();
   if (res.status !== 200)
     throw new Error(
       `getDM() failed: expected status code 200, got ${res.status}`,
     );
-  const json: DMRoom = await res.json();
+  const json: DMRoom & PersonalizedDMRoom = await res.json();
   if (!Array.isArray(json?.messages)) return json;
   for (const m of json.messages) {
     m.createdAt = new Date(m.createdAt);
