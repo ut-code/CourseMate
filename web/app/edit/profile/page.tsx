@@ -1,5 +1,5 @@
 "use client";
-// TODO: 挙動修正
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { User } from "common/types";
 import { UpdateUserSchema } from "common/zod/schemas";
@@ -53,11 +53,11 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
     await update(data);
   }
 
-  const [savedData, setSavedData] = useState(defaultValues);
+  const [savedData, setSavedData] = useState(defaultValues); // TODO: unused
 
   function afterPhotoUpload(result: string) {
     try {
-      updateData("pictureUrl", result);
+      updateData("pictureUrl", result); // TODO: no such function
     } catch (err) {
       console.error(err);
       // probably a network error
@@ -101,16 +101,26 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
 
   const values = getValues();
   return (
-    <div className="mx-2 mt-2 flex h-auto w-[70vw] flex-col gap-2 overflow-y-scroll">
+    <div className="mt-14 h-full">
       <form className="" onSubmit={handleSubmit(submit)}>
-        <h1 className="text-xl">プロフィール編集</h1>
-        <input className="input input-bordered w-full" {...register("name")} />
-
-        <p className="flex items-center">
-          <label className="w-full">
-            <h1 className="text-xl">性別</h1>
+        <div className="flex flex-col gap-2 p-2">
+          <div>
+            <label htmlFor="name" className="text-md">
+              名前
+            </label>
+            <input
+              className="input input-bordered w-full"
+              id="name"
+              {...register("name")}
+            />
+          </div>
+          <div>
+            <label htmlFor="gender" className="text-md">
+              性別
+            </label>
             <select
               className="select select-bordered w-full"
+              id="gender"
               {...register("gender")}
             >
               <option value={"男性"}>男性</option>
@@ -119,14 +129,14 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
               <option value={"秘密"}>秘密</option>
             </select>
             <span className="text-error text-sm">{errors.gender?.message}</span>
-          </label>
-        </p>
-
-        <p className="flex items-center">
-          <label className="w-full">
-            <h1 className="text-xl">学年</h1>
+          </div>
+          <div>
+            <label htmlFor="grade" className="text-md">
+              学年
+            </label>
             <select
               className="select select-bordered w-full"
+              id="grade"
               {...register("grade")}
             >
               <option value={"B1"}>1年生 (B1)</option>
@@ -137,14 +147,14 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
               <option value={"M2"}>修士2年 (M2)</option>
             </select>
             <span className="text-error text-sm">{errors.grade?.message}</span>
-          </label>
-        </p>
-
-        <p className="flex items-center">
-          <label className="w-full">
-            <h1 className="text-xl">学部</h1>
+          </div>
+          <div>
+            <label htmlFor="faculty" className="text-md">
+              学部
+            </label>
             <select
               className="select select-bordered w-full"
+              id="faculty"
               {...register("faculty")}
             >
               {faculties.map((fac) => (
@@ -154,14 +164,14 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
             <span className="text-error text-sm">
               {errors.faculty?.message}
             </span>
-          </label>
-        </p>
-
-        <p className="flex items-center">
-          <label className="w-full">
-            <h1 className="text-xl">学科</h1>
+          </div>
+          <div>
+            <label htmlFor="department" className="text-md">
+              学科
+            </label>
             <select
               className="select select-bordered w-full"
+              id="department"
               {...register("department")}
             >
               {values.faculty &&
@@ -174,74 +184,63 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
             <span className="text-error text-sm">
               {errors.department?.message}
             </span>
-          </label>
-        </p>
-
-        <p className="flex items-center justify-between">
-          <label className="w-full">
-            <h1 className="text-xl">自己紹介</h1>
+          </div>
+          <div>
+            <label htmlFor="intro" className="text-md">
+              自己紹介
+            </label>
             <textarea
               className="textarea textarea-bordered w-full"
+              id="intro"
               {...register("intro")}
               rows={3}
               autoComplete="off"
             />
-          </label>
-        </p>
-
-        <div className="mt-6 text-center">
-          <h1 className="text-xl">プロフィール画像</h1>
-        </div>
-        <div className="mt-6 flex flex-col items-center text-center">
-          <div style={{ margin: "auto" }}>
-            <UserAvatar
-              width="300px"
-              height="300px"
-              pictureUrl={values.pictureUrl}
-            />
           </div>
-          <PhotoPreviewButton
-            text="写真を選択"
-            onSelect={() => setOpen(true)}
-          />
-          <PhotoModal
-            open={open}
-            closeFunc={() => setOpen(false)}
-            afterUpload={afterPhotoUpload}
-            onError={(err) =>
-              enqueueSnackbar({
-                variant: "error",
-                message: err.message,
-              })
-            }
-          />
-          <span className="text-error text-sm">
-            {errors.pictureUrl?.message}
-          </span>
+          <div className="mt-4 flex flex-col items-center text-center">
+            <span className="text-md">プロフィール画像</span>
+            <div style={{ margin: "auto" }}>
+              <UserAvatar
+                width="300px"
+                height="300px"
+                pictureUrl={values.pictureUrl}
+              />
+            </div>
+            <PhotoPreviewButton
+              text="写真を選択"
+              onSelect={() => setOpen(true)}
+            />
+            <PhotoModal
+              open={open}
+              closeFunc={() => setOpen(false)}
+              afterUpload={afterPhotoUpload}
+              onError={(err) =>
+                enqueueSnackbar({
+                  variant: "error",
+                  message: err.message,
+                })
+              }
+            />
+            <span className="text-error text-sm">
+              {errors.pictureUrl?.message}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <button type="button" className="btn btn-sm" onClick={handleBack}>
+              設定画面に戻る
+            </button>
+            <button type="submit" className="btn btn-sm btn-primary">
+              保存
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm btn-secondary"
+              onClick={handleGoToCourses}
+            >
+              授業編集へ
+            </button>
+          </div>
         </div>
-
-        <p className="mt-10 flex content-between ">
-          <button
-            type="button"
-            className="btn w-[35vh] rounded-full shadow-gray-400 shadow-md"
-            onClick={handleBack}
-          >
-            設定画面に戻る
-          </button>
-          <button
-            type="submit"
-            className="btn btn-primary w-[35vh] rounded-full shadow-gray-400 shadow-md"
-          >
-            save!
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary w-[35vh] rounded-full shadow-gray-400 shadow-md"
-            onClick={handleGoToCourses}
-          >
-            授業編集へ
-          </button>
-        </p>
       </form>
     </div>
   );
