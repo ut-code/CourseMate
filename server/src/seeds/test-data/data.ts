@@ -73,27 +73,27 @@ export const courses = [
   {
     id: "10001",
     name: "国語八列",
-    teacher: "足助太郎",
+    teacher: "八十島漕郎",
   },
   {
     id: "10002",
     name: "数学八列",
-    teacher: "足助太郎",
+    teacher: "八十島漕郎",
   },
   {
     id: "10003",
     name: "英語八列",
-    teacher: "足助太郎",
+    teacher: "八十島漕郎",
   },
   {
     id: "10004",
     name: "理科八列",
-    teacher: "足助太郎",
+    teacher: "八十島漕郎",
   },
   {
     id: "10005",
     name: "社会八列",
-    teacher: "足助太郎",
+    teacher: "八十島漕郎",
   },
 ];
 
