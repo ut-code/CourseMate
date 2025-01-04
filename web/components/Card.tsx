@@ -17,23 +17,6 @@ export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
   const [isHiddenInterestExist, setHiddenInterestExist] = useState(false);
   const [isHiddenCourseExist, setHiddenCourseExist] = useState(false);
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const resizeObserver = new ResizeObserver(() => {
-      calculateVisibleInterests();
-      calculateVisibleCourses();
-    });
-
-    resizeObserver.observe(container);
-
-    calculateVisibleInterests(); // 初期計算
-    calculateVisibleCourses(); // 初期計算
-
-    return () => resizeObserver.disconnect();
-  }, []);
-
   const calculateVisibleCourses = useCallback(() => {
     const courses = displayedUser.courses;
     const container = coursesContainerRef.current;
@@ -75,7 +58,7 @@ export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
       if (coursesContainer.offsetHeight + 30 <= containerHeight) {
         coursesContainer.appendChild(element);
       } else {
-        setHiddenCourseExist;
+        setHiddenCourseExist(true);
       }
     }
   }, [displayedUser, currentUser]);
@@ -131,6 +114,24 @@ export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
       }
     }
   }, [displayedUser, currentUser]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      calculateVisibleInterests();
+      calculateVisibleCourses();
+    });
+
+    resizeObserver.observe(container);
+
+    // 初期計算を実行
+    calculateVisibleInterests();
+    calculateVisibleCourses();
+
+    return () => resizeObserver.disconnect();
+  }, [calculateVisibleInterests, calculateVisibleCourses]);
 
   return (
     <div className="flex h-full flex-col gap-5 overflow-clip border-2 border-primary bg-secondary p-5">
