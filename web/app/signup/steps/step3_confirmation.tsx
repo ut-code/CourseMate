@@ -1,18 +1,7 @@
-import { Box, Typography } from "@mui/material";
 import type { Step1User } from "common/zod/types";
 import type { BackProp, StepProps } from "~/app/signup/common";
-import UserAvatar from "~/components/human/avatar";
+import MockCardFront from "./components/MockCardFront";
 import type { Step2Data } from "./step2_img";
-
-interface UserInfoProp {
-  name: string;
-  gender: string;
-  grade: string;
-  faculty: string;
-  department: string;
-  intro: string;
-  pictureUrl: string;
-}
 
 interface inputDataProps {
   Step1Data: Step1User | undefined;
@@ -37,38 +26,22 @@ export default function Confirmation({
           margin: "20px",
         }}
       >
-        <Typography variant="h6" component="h1" mb={2}>
-          確認
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <CardFront UserInfo={{ ...Step1Data, ...Step2Data }} />
-        </Box>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+        <h1 className="mb-2 text-xl">確認</h1>
+        <div className="flex flex-col items-center">
+          <MockCardFront
+            displayedUser={{
+              ...Step1Data,
+              ...Step2Data,
+              id: 0,
+              guid: "zero",
+            }}
+          />
+        </div>
+        <div className="flex flex-col items-center">
           <p>この内容で登録しますか？</p>
         </div>
       </div>
-      <Box
-        p={3}
-        sx={{
-          position: "fixed",
-          display: "flex",
-          justifyContent: "space-between",
-          bottom: 0,
-          width: "100%",
-        }}
-      >
+      <div className="fixed bottom-0 flex w-full justify-between p-3">
         <button type="button" onClick={back} className="btn">
           前へ
         </button>
@@ -79,47 +52,7 @@ export default function Confirmation({
         >
           次へ
         </button>
-      </Box>
+      </div>
     </>
-  );
-}
-
-function CardFront({ UserInfo }: { UserInfo: UserInfoProp }) {
-  return (
-    <div
-      style={{
-        width: "70vw",
-        height: "70vh",
-        position: "relative",
-        backgroundColor: "#F7FCFF",
-        border: "2px solid #3596C6",
-        padding: "10px",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-around",
-        }}
-      >
-        <div style={{ width: "50%", maxWidth: "300px", maxHeight: "300px" }}>
-          <UserAvatar
-            pictureUrl={UserInfo?.pictureUrl}
-            width="80%"
-            height="auto"
-          />
-        </div>
-        <p style={{ fontSize: "4vw", fontWeight: "bold" }}>{UserInfo?.name}</p>
-      </div>
-      <div style={{ padding: "10px" }}>
-        {UserInfo?.grade && <p>学年： {UserInfo.grade}</p>}
-        {UserInfo?.faculty && <p>学部： {UserInfo.faculty}</p>}
-        {UserInfo?.department && <p>学科： {UserInfo.department}</p>}
-        {UserInfo?.gender && <p>性別： {UserInfo?.gender}</p>}
-        {UserInfo?.intro && <p>自己紹介: {UserInfo.intro}</p>}
-      </div>
-    </div>
   );
 }
