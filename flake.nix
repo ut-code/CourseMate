@@ -20,7 +20,6 @@
       {
         devShell = pkgs.mkShell {
           src = ./.;
-          nativeBuildInputs = with pkgs; [ bashInteractive ];
           buildInputs = with pkgs; [
             gnumake
             bun
