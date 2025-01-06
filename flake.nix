@@ -1,7 +1,7 @@
 {
   description = "CourseMate";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/master";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
     flake-utils.url = "github:numtide/flake-utils";
     prisma-utils.url = "github:VanCoding/nix-prisma-utils";
     fenix = {
