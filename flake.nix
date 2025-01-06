@@ -34,7 +34,8 @@
             rust-pkgs
           ];
           shellHook = ''
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.stdenv.cc.cc.lib}/lib
+            # no longer necessary
+            # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.stdenv.cc.cc.lib}/lib
           '' + prisma.shellHook;
         };
       });
