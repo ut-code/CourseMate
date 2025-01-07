@@ -17,7 +17,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         unstable-pkgs = unstable.legacyPackages.${system};
-        rust-pkgs = import ./nix/rust-toolchain.nix { inherit fenix system; };
+        rust-toolchain = import ./nix/rust-toolchain.nix { inherit fenix system; };
 
         common = {
           buildInputs = with pkgs; [
@@ -41,11 +41,11 @@
       {
         devShells.default = pkgs.mkShell common;
         devShells.scraper = pkgs.mkShell {
-          buildInputs = common.buildInputs ++ (with pkgs; [
-            pkg-config
-            openssl
-            rust-pkgs
-          ]);
+          buildInputs = common.buildInputs ++ [
+            pkgs.pkg-config
+            pkgs.openssl
+            rust-toolchain
+          ];
           shellHook = common.shellHook;
         };
       });
