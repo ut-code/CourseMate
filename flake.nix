@@ -2,40 +2,49 @@
   description = "CourseMate";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
+    unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
     flake-utils.url = "github:numtide/flake-utils";
-    prisma-utils.url = "github:VanCoding/nix-prisma-utils";
     fenix = {
       url = "github:nix-community/fenix/monthly";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { nixpkgs, flake-utils, prisma-utils, fenix, ... }:
+  outputs = { nixpkgs, unstable, flake-utils, fenix, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; };
-        prisma = import ./nix/prisma.nix { inherit prisma-utils pkgs; };
+        pkgs = nixpkgs.legacyPackages.${system};
+        unstable-pkgs = unstable.legacyPackages.${system};
         rust-pkgs = import ./nix/rust-toolchain.nix { inherit fenix system; };
       in
-      {
-        devShell = pkgs.mkShell {
-          src = ./.;
+      rec {
+        devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             gnumake
             bun
             biome
+            lefthook
+            dotenv-cli
+            unstable-pkgs.prisma
+          ];
+
+          shellHook = ''
+            # requird by prisma
+            export PRISMA_QUERY_ENGINE_BINARY="${unstable-pkgs.prisma-engines}/bin/query-engine";
+            export PRISMA_QUERY_ENGINE_LIBRARY="${unstable-pkgs.prisma-engines}/lib/libquery_engine.node";
+            export PRISMA_INTROSPECTION_ENGINE_BINARY="${unstable-pkgs.prisma-engines}/bin/introspection-engine";
+            export PRISMA_FMT_BINARY="${unstable-pkgs.prisma-engines}/bin/prisma-fmt";
+          '';
+        };
+        devShells.scraper = pkgs.mkShell {
+          buildInputs = devShells.default.buildInputs ++ (with pkgs; [
             pkg-config
             openssl
-            lefthook
-            pkgs.prisma
-            dotenv-cli
-          ] ++ [
             rust-pkgs
-          ];
-          shellHook = ''
-            # no longer necessary
-            # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.stdenv.cc.cc.lib}/lib
-          '' + prisma.shellHook;
+          ]);
+          shellHook = devShells.default.shellHook;
         };
       });
 }
+
