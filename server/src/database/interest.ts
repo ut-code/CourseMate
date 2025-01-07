@@ -9,6 +9,21 @@ export async function get(id: number): Promise<InterestSubject | null> {
   return await prisma.interestSubject.findUnique({ where: { id } });
 }
 
+export async function create(name: string): Promise<InterestSubject> {
+  const existingTag = await prisma.interestSubject.findMany({
+    where: { name },
+  });
+  if (existingTag.length > 0) {
+    throw new Error("同名のタグがすでに存在します");
+  }
+  return await prisma.interestSubject.create({
+    data: {
+      name,
+      group: "", // TODO: 運用次第
+    },
+  });
+}
+
 export async function of(userId: UserID): Promise<InterestSubject[]> {
   return await prisma.interest
     .findMany({
@@ -55,15 +70,5 @@ export async function updateMultipleWithTransaction(
         subjectId,
       })),
     });
-  });
-}
-
-export async function search(query: string): Promise<InterestSubject[]> {
-  return await prisma.interestSubject.findMany({
-    where: {
-      name: {
-        contains: query,
-      },
-    },
   });
 }

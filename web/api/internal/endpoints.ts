@@ -238,6 +238,17 @@ export const coursesDayPeriod = (day: Day, period: number) => {
 
 /**
  * [v] 実装済み
+ * POST -> create a new subject.
+ * - statuses:
+ *  - 200: ok.
+ *   - body: InterestSubject
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ */
+export const subjects = `${API_ENDPOINT}/subjects`;
+
+/**
+ * [v] 実装済み
  * GET -> get subjects the user is interested in.
  * - statuses:
  *  - 200: ok.
@@ -282,18 +293,15 @@ export const subjectsUserId = (userId: UserID) => {
 export const subjectsMine = `${API_ENDPOINT}/subjects/mine`;
 
 /**
- * [] 実装済み
- * GET -> search subjects.
+ * [v] 実装済み
+ * GET -> get all subjects.
  * - statuses:
- *   - 200: ok.
- *     - body: InterestSubject[]
- *   - 401: unauthorized.
- *   - 500: internal error.
- **/
-export const subjectsSearch = (query: string) => {
-  // TODO: token との兼ね合いで、クエリパラメータでなく一旦パスパラメータとしている
-  return `${API_ENDPOINT}/subjects/search/${query}`;
-};
+ *  - 200: ok.
+ *   - body: InterestSubject[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ */
+export const subjectsAll = `${API_ENDPOINT}/subjects/all`;
 
 /**
  * [v] 実装済み
@@ -459,9 +467,10 @@ export default {
   cancelRequest,
   coursesUserId,
   coursesDayPeriod,
+  subjects,
   subjectsUserId,
   subjectsMine,
-  subjectsSearch,
+  subjectsAll,
   roomOverview,
   dmTo,
   dmWith,

@@ -11,6 +11,11 @@ import endpoints from "./internal/endpoints.ts";
 
 const InterestSubjectListSchema = z.array(InterestSubjectSchema);
 
+// 興味分野を作成する
+export async function create(name: string) {
+  return await credFetch("POST", endpoints.subjects, { name });
+}
+
 // 自身の興味分野を取得する
 export function useMyInterests(): Hook<InterestSubject[]> {
   return useCustomizedSWR(
@@ -26,11 +31,9 @@ async function getMySubjects(): Promise<InterestSubject[]> {
 }
 
 // 自身の興味分野を更新する
-export async function update(
-  newSubjectIds: InterestSubjectID[],
-): Promise<void> {
+export async function update(newSubjectIds: InterestSubjectID[]) {
   const url = endpoints.subjectsMine;
-  await credFetch("PUT", url, { subjectIds: newSubjectIds });
+  return await credFetch("PUT", url, { subjectIds: newSubjectIds });
 }
 
 // 指定した userId のユーザの興味分野を取得
@@ -39,8 +42,8 @@ export async function get(id: UserID): Promise<InterestSubject[] | null> {
   return await res.json();
 }
 
-// 興味分野を検索
-export async function search(q: string): Promise<InterestSubject[]> {
-  const res = await credFetch("GET", endpoints.subjectsSearch(q));
+// すべての興味分野を取得
+export async function getAll(): Promise<InterestSubject[]> {
+  const res = await credFetch("GET", endpoints.subjectsAll);
   return await res.json();
 }

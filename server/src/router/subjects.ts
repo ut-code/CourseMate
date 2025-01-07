@@ -30,6 +30,20 @@ router.get("/mine", async (req: Request, res: Response) => {
   }
 });
 
+router.post("/", async (req: Request, res: Response) => {
+  const { name } = req.body;
+  if (typeof name !== "string") {
+    return res.status(400).json({ error: "name must be a string" });
+  }
+  try {
+    const newSubject = await interest.create(name);
+    res.status(201).json(newSubject);
+  } catch (error) {
+    console.error("Error creating subject:", error);
+    res.status(500).json({ error: "Failed to create subject" });
+  }
+});
+
 router.patch("/mine", async (req: Request, res: Response) => {
   const userId = await safeGetUserId(req);
   if (!userId.ok) return res.status(401).send("auth error");
@@ -104,18 +118,13 @@ router.put("/mine", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/search/:query", async (req: Request, res: Response) => {
-  // TODO: token との兼ね合いで、クエリパラメータでなく一旦パスパラメータとしている
-  const q = req.params.query;
-  if (typeof q !== "string") {
-    return res.status(400).json({ error: "Invalid query" });
-  }
+router.get("/all", async (req: Request, res: Response) => {
   try {
-    const subjects = await interest.search(q);
+    const subjects = await interest.all();
     res.status(200).json(subjects);
   } catch (error) {
-    console.error("Error searching subjects:", error);
-    res.status(500).json({ error: "Failed to search subjects" });
+    console.error("Error fetching subjects:", error);
+    res.status(500).json({ error: "Failed to fetch subjects" });
   }
 });
 
