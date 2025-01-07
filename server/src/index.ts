@@ -9,6 +9,7 @@ import coursesRoutes from "./router/courses";
 import matchesRoutes from "./router/matches";
 import pictureRoutes from "./router/picture";
 import requestsRoutes from "./router/requests";
+import subjectsRoutes from "./router/subjects";
 import usersRoutes from "./router/users";
 
 const app = express();
@@ -52,6 +53,7 @@ app.get("/", (_, res) => {
 app.use("/picture", pictureRoutes);
 app.use("/users", usersRoutes);
 app.use("/courses", coursesRoutes);
+app.use("/subjects", subjectsRoutes);
 app.use("/requests", requestsRoutes);
 app.use("/matches", matchesRoutes);
 app.use("/chat", chatRoutes);

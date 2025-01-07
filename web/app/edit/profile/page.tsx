@@ -27,9 +27,7 @@ export default function App() {
   ) : error ? (
     <p>Error: {error.message}</p>
   ) : data ? (
-    <div className="overflow-y-scroll">
-      <EditProfile defaultValues={data} />
-    </div>
+    <EditProfile defaultValues={data} />
   ) : (
     <p>データがありません。</p>
   );
@@ -99,8 +97,8 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
 
   const values = getValues();
   return (
-    <div className="mt-14 h-full">
-      <form className="" onSubmit={handleSubmit(submit)}>
+    <div className="flex h-full flex-col">
+      <form onSubmit={handleSubmit(submit)}>
         <div className="flex flex-col gap-2 p-2">
           <div>
             <label htmlFor="name" className="text-md">
