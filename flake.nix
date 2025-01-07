@@ -17,9 +17,8 @@
         pkgs = nixpkgs.legacyPackages.${system};
         unstable-pkgs = unstable.legacyPackages.${system};
         rust-pkgs = import ./nix/rust-toolchain.nix { inherit fenix system; };
-      in
-      rec {
-        devShells.default = pkgs.mkShell {
+
+        common = {
           buildInputs = with pkgs; [
             gnumake
             bun
@@ -37,13 +36,16 @@
             export PRISMA_FMT_BINARY="${unstable-pkgs.prisma-engines}/bin/prisma-fmt";
           '';
         };
+      in
+      {
+        devShells.default = pkgs.mkShell common;
         devShells.scraper = pkgs.mkShell {
-          buildInputs = devShells.default.buildInputs ++ (with pkgs; [
+          buildInputs = common.buildInputs ++ (with pkgs; [
             pkg-config
             openssl
             rust-pkgs
           ]);
-          shellHook = devShells.default.shellHook;
+          shellHook = common.shellHook;
         };
       });
 }
