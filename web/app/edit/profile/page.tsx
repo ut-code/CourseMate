@@ -43,6 +43,7 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
     register,
     handleSubmit,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: defaultValues,
@@ -52,12 +53,9 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
   async function submit(data: User) {
     await update(data);
   }
-
-  const [savedData, setSavedData] = useState(defaultValues); // TODO: unused
-
   function afterPhotoUpload(result: string) {
     try {
-      updateData("pictureUrl", result); // TODO: no such function
+      setValue("pictureUrl", result);
     } catch (err) {
       console.error(err);
       // probably a network error
