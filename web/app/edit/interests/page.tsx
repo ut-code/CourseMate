@@ -3,6 +3,7 @@
 import type { InterestSubject } from "common/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { MdAdd, MdClose } from "react-icons/md";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import { useAlert } from "~/components/common/alert/AlertProvider";
 import { search, update, useMyInterests } from "../../../api/subject";
@@ -36,6 +37,8 @@ export default function EditInterest() {
       if (searchQuery) {
         const result = await search(searchQuery);
         setSearchResult(result);
+      } else {
+        setSearchResult([]);
       }
     })();
   }, [searchQuery]);
@@ -68,48 +71,82 @@ export default function EditInterest() {
   ) : !data ? (
     <p>データがありません。</p>
   ) : (
-    <div className="overflow-y-scroll">
-      <div className="h-full">
-        <ul>
-          {draftSubjects.map((subject, index) => (
-            <li key={subject.id}>
-              {subject.name}
+    <div className="h-full overflow-y-scroll">
+      <div className="mx-auto flex h-full max-w-lg flex-col px-4">
+        <div className="flex-1">
+          <div className="flex flex-wrap gap-2 p-2">
+            {draftSubjects.map((subject, index) => (
+              <span
+                key={subject.id}
+                className="rounded-md bg-[#F7FCFF] px-2 py-1 text-md text-primary"
+              >
+                #{subject.name}
+                <button
+                  type="button"
+                  className="btn btn-circle btn-xs ml-1"
+                  onClick={() =>
+                    setDraftSubjects((prev) => {
+                      const copy = [...prev];
+                      copy.splice(index, 1);
+                      return copy;
+                    })
+                  }
+                >
+                  <MdClose className="text-xs" />
+                </button>
+              </span>
+            ))}
+          </div>
+          <div className="mt-2 w-full">
+            <input
+              type="text"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="興味分野タグを検索"
+              className="input input-bordered w-full"
+            />
+          </div>
+          <ul className="mt-2">
+            {searchResult.length !== 0 ? (
+              searchResult
+                .filter(
+                  (subject) =>
+                    !draftSubjects.some((draft) => draft.id === subject.id),
+                )
+                .map((subject) => (
+                  <li key={subject.id}>
+                    <button
+                      type="button"
+                      className="btn btn-ghost inline-flex h-full w-full justify-start p-2"
+                      onClick={() =>
+                        setDraftSubjects((prev) => [...prev, subject])
+                      }
+                    >
+                      <span className="font-normal text-lg">
+                        #{subject.name}
+                      </span>
+                    </button>
+                  </li>
+                ))
+            ) : (
+              <li key="empty" className="p-2 text-gray-500">
+                {searchQuery
+                  ? "検索結果がありません"
+                  : "興味分野を検索してみましょう"}
+              </li>
+            )}
+            <li className="flex w-full items-center justify-center py-2">
               <button
                 type="button"
-                className="btn btn-sm"
-                onClick={() =>
-                  setDraftSubjects((prev) => {
-                    const copy = [...prev];
-                    copy.splice(index, 1);
-                    return copy;
-                  })
-                }
+                className="btn btn-secondary px-6 font-normal"
               >
-                x
+                <MdAdd />
+                タグを新規作成
               </button>
             </li>
-          ))}
-        </ul>
-        <input
-          type="text"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-        <ul>
-          {searchResult.map((subject) => (
-            <li key={subject.id}>
-              {subject.name}
-              <button
-                type="button"
-                className="btn btn-sm"
-                onClick={() => setDraftSubjects((prev) => [...prev, subject])}
-              >
-                +
-              </button>
-            </li>
-          ))}
-        </ul>
-        <div className="flex justify-between">
+          </ul>
+        </div>
+        <div className="my-2 flex justify-between">
           <button type="button" className="btn btn-sm" onClick={handleBack}>
             設定画面に戻る
           </button>

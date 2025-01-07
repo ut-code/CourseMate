@@ -10,9 +10,7 @@ export default function EditPageLayout({
     <NavigateByAuthState type="toLoginForUnauthenticated">
       <div className="flex h-screen flex-col">
         <Header title="編集/Edit" />
-        <div className="mt-14 flex-1 overflow-y-scroll sm:mt-16">
-          {children}
-        </div>
+        <div className="mt-14 flex-1 overflow-y-scroll">{children}</div>
       </div>
     </NavigateByAuthState>
   );
