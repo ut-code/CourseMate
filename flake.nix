@@ -2,8 +2,8 @@
   description = "CourseMate";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
-    # prisma v6 is only out on unstable. can be removed when 25.05 channel is released
-    unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    # prisma v6 is only out on unstable uncomment this on updating prisma to v6. can be removed when 25.05 channel is released
+    # unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     flake-utils.url = "github:numtide/flake-utils";
     fenix = {
@@ -12,11 +12,11 @@
     };
   };
 
-  outputs = { nixpkgs, unstable, flake-utils, fenix, ... }:
+  outputs = { nixpkgs, flake-utils, fenix, /* unstable, */ ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        unstable-pkgs = unstable.legacyPackages.${system};
+        # unstable-pkgs = unstable.legacyPackages.${system};
         rust-toolchain = import ./nix/rust-toolchain.nix { inherit fenix system; };
 
         common = {
@@ -26,15 +26,16 @@
             biome
             lefthook
             dotenv-cli
-            unstable-pkgs.prisma
+            prisma
+            prisma-engines
           ];
 
-          shellHook = ''
+          shellHook = with pkgs; ''
             # requird by prisma
-            export PRISMA_QUERY_ENGINE_BINARY="${unstable-pkgs.prisma-engines}/bin/query-engine";
-            export PRISMA_QUERY_ENGINE_LIBRARY="${unstable-pkgs.prisma-engines}/lib/libquery_engine.node";
-            export PRISMA_INTROSPECTION_ENGINE_BINARY="${unstable-pkgs.prisma-engines}/bin/introspection-engine";
-            export PRISMA_FMT_BINARY="${unstable-pkgs.prisma-engines}/bin/prisma-fmt";
+            export PRISMA_QUERY_ENGINE_BINARY="${prisma-engines}/bin/query-engine";
+            export PRISMA_QUERY_ENGINE_LIBRARY="${prisma-engines}/lib/libquery_engine.node";
+            export PRISMA_INTROSPECTION_ENGINE_BINARY="${prisma-engines}/bin/introspection-engine";
+            export PRISMA_FMT_BINARY="${prisma-engines}/bin/prisma-fmt";
           '';
         };
       in
