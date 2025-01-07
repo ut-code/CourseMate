@@ -1,41 +1,54 @@
 {
   description = "CourseMate";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/master";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
+    # prisma v6 is only out on unstable uncomment this on updating prisma to v6. can be removed when 25.05 channel is released
+    # unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
     flake-utils.url = "github:numtide/flake-utils";
-    prisma-utils.url = "github:VanCoding/nix-prisma-utils";
     fenix = {
       url = "github:nix-community/fenix/monthly";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { nixpkgs, flake-utils, prisma-utils, fenix, ... }:
+  outputs = { nixpkgs, flake-utils, fenix, /* unstable, */ ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; };
-        prisma = import ./nix/prisma.nix { inherit prisma-utils pkgs; };
-        rust-pkgs = import ./nix/rust-toolchain.nix { inherit fenix system; };
-      in
-      {
-        devShell = pkgs.mkShell {
-          src = ./.;
-          nativeBuildInputs = with pkgs; [ bashInteractive ];
+        pkgs = nixpkgs.legacyPackages.${system};
+        # unstable-pkgs = unstable.legacyPackages.${system};
+        rust-toolchain = import ./nix/rust-toolchain.nix { inherit fenix system; };
+
+        common = {
           buildInputs = with pkgs; [
             gnumake
             bun
             biome
-            pkg-config
-            openssl
             lefthook
-            pkgs.prisma
             dotenv-cli
-          ] ++ [
-            rust-pkgs
+            prisma
+            prisma-engines
           ];
-          shellHook = ''
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.stdenv.cc.cc.lib}/lib
-          '' + prisma.shellHook;
+
+          shellHook = with pkgs; ''
+            # requird by prisma
+            export PRISMA_QUERY_ENGINE_BINARY="${prisma-engines}/bin/query-engine";
+            export PRISMA_QUERY_ENGINE_LIBRARY="${prisma-engines}/lib/libquery_engine.node";
+            export PRISMA_INTROSPECTION_ENGINE_BINARY="${prisma-engines}/bin/introspection-engine";
+            export PRISMA_FMT_BINARY="${prisma-engines}/bin/prisma-fmt";
+          '';
+        };
+      in
+      {
+        devShells.default = pkgs.mkShell common;
+        devShells.scraper = pkgs.mkShell {
+          buildInputs = common.buildInputs ++ [
+            pkgs.pkg-config
+            pkgs.openssl
+            rust-toolchain
+          ];
+          shellHook = common.shellHook;
         };
       });
 }
+

@@ -10,29 +10,12 @@ interface CardProps {
   onFlip?: (isBack: boolean) => void;
 }
 
-const CardFront = ({ displayedUser, currentUser }: CardProps) => {
+export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const interestsContainerRef = useRef<HTMLDivElement>(null);
   const coursesContainerRef = useRef<HTMLDivElement>(null);
   const [isHiddenInterestExist, setHiddenInterestExist] = useState(false);
   const [isHiddenCourseExist, setHiddenCourseExist] = useState(false);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const resizeObserver = new ResizeObserver(() => {
-      calculateVisibleInterests();
-      calculateVisibleCourses();
-    });
-
-    resizeObserver.observe(container);
-
-    calculateVisibleInterests(); // 初期計算
-    calculateVisibleCourses(); // 初期計算
-
-    return () => resizeObserver.disconnect();
-  }, []);
 
   const calculateVisibleCourses = useCallback(() => {
     const courses = displayedUser.courses;
@@ -75,7 +58,7 @@ const CardFront = ({ displayedUser, currentUser }: CardProps) => {
       if (coursesContainer.offsetHeight + 30 <= containerHeight) {
         coursesContainer.appendChild(element);
       } else {
-        setHiddenCourseExist;
+        setHiddenCourseExist(true);
       }
     }
   }, [displayedUser, currentUser]);
@@ -132,6 +115,24 @@ const CardFront = ({ displayedUser, currentUser }: CardProps) => {
     }
   }, [displayedUser, currentUser]);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      calculateVisibleInterests();
+      calculateVisibleCourses();
+    });
+
+    resizeObserver.observe(container);
+
+    // 初期計算を実行
+    calculateVisibleInterests();
+    calculateVisibleCourses();
+
+    return () => resizeObserver.disconnect();
+  }, [calculateVisibleInterests, calculateVisibleCourses]);
+
   return (
     <div className="flex h-full flex-col gap-5 overflow-clip border-2 border-primary bg-secondary p-5">
       <div className="grid h-[20%] grid-cols-3 items-center">
@@ -183,10 +184,12 @@ const CardBack = ({ displayedUser, currentUser }: CardProps) => {
       <div className="flex justify-center">
         <p className="font-bold text-lg">{displayedUser?.name}</p>
       </div>
-      <NonEditableCoursesTable
-        userId={displayedUser.id}
-        comparisonUserId={currentUser.id}
-      />
+      <div className="flex-1">
+        <NonEditableCoursesTable
+          userId={displayedUser.id}
+          comparisonUserId={currentUser.id}
+        />
+      </div>
       <div className="mt-4 flex justify-center">
         <ThreeSixtyIcon className="text-3xl" />
       </div>
