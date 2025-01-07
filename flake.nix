@@ -36,6 +36,8 @@
             export PRISMA_QUERY_ENGINE_LIBRARY="${prisma-engines}/lib/libquery_engine.node";
             export PRISMA_INTROSPECTION_ENGINE_BINARY="${prisma-engines}/bin/introspection-engine";
             export PRISMA_FMT_BINARY="${prisma-engines}/bin/prisma-fmt";
+
+            export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib
           '';
         };
       in
