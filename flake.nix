@@ -2,6 +2,7 @@
   description = "CourseMate";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
+    # prisma v6 is only out on unstable. can be removed when 25.05 channel is released
     unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     flake-utils.url = "github:numtide/flake-utils";
