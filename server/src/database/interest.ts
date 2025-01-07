@@ -37,3 +37,33 @@ export async function remove(userId: UserID, subjectId: number) {
     },
   });
 }
+
+export async function updateMultipleWithTransaction(
+  userId: UserID,
+  subjectIds: number[],
+) {
+  return await prisma.$transaction(async (prisma) => {
+    await prisma.interest.deleteMany({
+      where: {
+        userId,
+      },
+    });
+
+    await prisma.interest.createMany({
+      data: subjectIds.map((subjectId) => ({
+        userId,
+        subjectId,
+      })),
+    });
+  });
+}
+
+export async function search(query: string): Promise<InterestSubject[]> {
+  return await prisma.interestSubject.findMany({
+    where: {
+      name: {
+        contains: query,
+      },
+    },
+  });
+}
