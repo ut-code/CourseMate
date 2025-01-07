@@ -3,15 +3,13 @@
 import type { InterestSubject } from "common/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAboutMe } from "~/api/user";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import { useAlert } from "~/components/common/alert/AlertProvider";
-import { search, update } from "../../../api/subject";
+import { search, update, useMyInterests } from "../../../api/subject";
 
 export default function EditInterest() {
-  // TODO:
-  const { state } = useAboutMe();
-  const data = state.data?.interestSubjects;
+  const { state } = useMyInterests();
+  const data = state.data;
   const error = state.current === "error" ? state.error : null;
   const loading = state.current === "loading";
 

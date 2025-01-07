@@ -9,12 +9,14 @@ import { credFetch } from "../firebase/auth/lib.ts";
 import { type Hook, useCustomizedSWR } from "../hooks/useCustomizedSWR.ts";
 import endpoints from "./internal/endpoints.ts";
 
+const InterestSubjectListSchema = z.array(InterestSubjectSchema);
+
 // 自身の興味分野を取得する
 export function useMyInterests(): Hook<InterestSubject[]> {
   return useCustomizedSWR(
     "interests::mine",
     getMySubjects,
-    z.array(InterestSubjectSchema),
+    InterestSubjectListSchema,
   );
 }
 
@@ -37,15 +39,7 @@ export async function get(id: UserID): Promise<InterestSubject[] | null> {
   return await res.json();
 }
 
-// キーワードで興味分野を検索
-export function useSearch(q: string): Hook<InterestSubject[]> {
-  return useCustomizedSWR(
-    `interests::search::${q}`,
-    () => search(q),
-    z.array(InterestSubjectSchema),
-  );
-}
-
+// 興味分野を検索
 export async function search(q: string): Promise<InterestSubject[]> {
   const res = await credFetch("GET", endpoints.subjectsSearch(q));
   return await res.json();
