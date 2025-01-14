@@ -50,7 +50,7 @@ export default function RootLayout({
                 <AlertProvider>
                   <ModalProvider>
                     <BanLandscape />
-                    {children}
+                    <div className="flex h-screen flex-col">{children}</div>
                   </ModalProvider>
                 </AlertProvider>
               </AuthProvider>
