@@ -238,6 +238,73 @@ export const coursesDayPeriod = (day: Day, period: number) => {
 
 /**
  * [v] 実装済み
+ * POST -> create a new subject.
+ * - statuses:
+ *  - 200: ok.
+ *   - body: InterestSubject
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ */
+export const subjects = `${API_ENDPOINT}/subjects`;
+
+/**
+ * [v] 実装済み
+ * GET -> get subjects the user is interested in.
+ * - statuses:
+ *  - 200: ok.
+ *   - body: InterestSubject[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ */
+export const subjectsUserId = (userId: UserID) => {
+  return `${API_ENDPOINT}/subjects/userId/${userId}`;
+};
+
+/**
+ * [v] 実装済み
+ * GET -> get my subjects.
+ * - statuses:
+ *  - 200: ok.
+ *  - body: InterestSubject[]
+ * - 401: unauthorized.
+ * - 500: internal error.
+ * PATCH -> update my subjects.
+ * - request body: SubjectId
+ * - statuses:
+ * - 200: ok.
+ * - body: InterestSubject[]
+ * - 401: unauthorized.
+ * - 500: internal error.
+ * DELETE -> delete my subjects.
+ * - request body: SubjectId
+ * - statuses:
+ * - 200: ok.
+ * - body: InterestSubject[]
+ * - 401: unauthorized.
+ * - 500: internal error.
+ * PUT → replace my subjects.
+ * - request body: SubjectId[]
+ * - statuses:
+ * - 200: ok.
+ * - body: InterestSubject[]
+ * - 401: unauthorized.
+ * - 500: internal error.
+ */
+export const subjectsMine = `${API_ENDPOINT}/subjects/mine`;
+
+/**
+ * [v] 実装済み
+ * GET -> get all subjects.
+ * - statuses:
+ *  - 200: ok.
+ *   - body: InterestSubject[]
+ *  - 401: unauthorized.
+ *  - 500: internal error.
+ */
+export const subjectsAll = `${API_ENDPOINT}/subjects/all`;
+
+/**
+ * [v] 実装済み
  * PUT -> create request.
  * - status:
  *   - 201: Created.
@@ -400,6 +467,10 @@ export default {
   cancelRequest,
   coursesUserId,
   coursesDayPeriod,
+  subjects,
+  subjectsUserId,
+  subjectsMine,
+  subjectsAll,
   roomOverview,
   dmTo,
   dmWith,

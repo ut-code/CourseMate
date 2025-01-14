@@ -15,6 +15,7 @@ import type {
   InitSharedRoomSchema,
   InitUserSchema,
   InterestSchema,
+  InterestSubjectIDSchema,
   InterestSubjectSchema,
   IntroLongSchema,
   IntroShortSchema,
@@ -57,6 +58,7 @@ export type Step1User = z.infer<typeof Step1UserSchema>;
 export type RelationshipID = z.infer<typeof RelationshipIDSchema>;
 export type Relationship = z.infer<typeof RelationshipSchema>;
 export type CourseID = z.infer<typeof CourseIDSchema>;
+export type InterestSubjectID = z.infer<typeof InterestSubjectIDSchema>;
 export type Slot = z.infer<typeof SlotSchema>;
 export type Course = z.infer<typeof CourseSchema>;
 export type Enrollment = z.infer<typeof EnrollmentSchema>;

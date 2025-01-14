@@ -2,20 +2,20 @@ import type { Day } from "common/types";
 
 export const subjects: Array<{
   group: string;
-  subjects: Array<[number, string]>;
+  subjects: Array<[string]>;
 }> = [
   {
     group: "Computer Science",
     subjects: [
-      [1, "型システム"],
-      [2, "機械学習"],
-      [3, "CPU アーキテクチャ"],
-      [4, "分散処理"],
+      ["型システム"],
+      ["機械学習"],
+      ["CPU アーキテクチャ"],
+      ["分散処理"],
     ] as const,
   },
   {
     group: "Math",
-    subjects: [[5, "Lean4"]],
+    subjects: [["Lean4"]],
   },
 ];
 export const interest = [
