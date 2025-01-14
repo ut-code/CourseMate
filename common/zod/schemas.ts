@@ -32,17 +32,6 @@ export const IntroLongSchema = z
   // .min(2, { message: "自己紹介文は2文字以上です" })
   .max(225, { message: "自己紹介文は225文字以下です" });
 
-export const InterestSubjectSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  group: z.string(),
-});
-
-export const InterestSchema = z.object({
-  userId: UserIDSchema,
-  subjectId: z.number(),
-});
-
 export const UserSchema = z.object({
   id: UserIDSchema,
   guid: GUIDSchema,
@@ -76,6 +65,8 @@ export const RelationshipSchema = z.object({
 
 export const CourseIDSchema = z.string();
 
+export const InterestSubjectIDSchema = z.number();
+
 export const DaySchema = z.enum([
   "mon",
   "tue",
@@ -106,6 +97,17 @@ export const EnrollmentSchema = z.object({
   id: z.number(),
   userId: UserIDSchema,
   courseId: CourseIDSchema,
+});
+
+export const InterestSubjectSchema = z.object({
+  id: InterestSubjectIDSchema,
+  name: z.string(),
+  group: z.string(),
+});
+
+export const InterestSchema = z.object({
+  userId: UserIDSchema,
+  subjectId: InterestSubjectIDSchema,
 });
 
 export const UserWithCoursesAndSubjectsSchema = UserSchema.extend({

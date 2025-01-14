@@ -11,11 +11,12 @@ import {
 async function main() {
   await Promise.all(
     subjects.map(async ({ group, subjects }) => {
-      for (const [id, name] of subjects) {
-        await prisma.interestSubject.upsert({
-          where: { id },
-          update: { name, group },
-          create: { id, name, group },
+      for (const [name] of subjects) {
+        await prisma.interestSubject.create({
+          data: {
+            name,
+            group,
+          },
         });
       }
     }),
