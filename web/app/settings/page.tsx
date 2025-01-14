@@ -13,6 +13,12 @@ export default function Settings() {
           </li>
           <hr />
           <li>
+            <Link href="/edit/interests" className="btn cm-li-btn">
+              興味分野の設定
+            </Link>
+          </li>
+          <hr />
+          <li>
             <Link href="/tutorial" className="btn cm-li-btn">
               CourseMateの使い方
             </Link>
