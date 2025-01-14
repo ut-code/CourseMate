@@ -1,6 +1,6 @@
 -- $1 = senderId
 SELECT
-    recv, 
+    *, 
     -- course overlap
     (SELECT COUNT(1) FROM "Course" course
         WHERE EXISTS (SELECT 1 FROM "Enrollment" e WHERE e."courseId" = course.id AND e."userId" = recv.id)

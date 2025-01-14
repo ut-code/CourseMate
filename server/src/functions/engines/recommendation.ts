@@ -12,7 +12,7 @@ export async function recommendedTo(
   Result<
     Array<{
       u: UserWithCoursesAndSubjects;
-      count: number;
+      overlap: number;
     }>
   >
 > {
@@ -20,17 +20,15 @@ export async function recommendedTo(
     const result = await prisma.$queryRawTyped(sql(user, limit, offset));
     return Promise.all(
       result.map(async (res) => {
-        const user = await getUserByID(res.id);
-        if (!user.ok) throw new Error("not found"); // this shouldn't happen
-        return {
-          count: Number.parseInt(res.overlap?.toString() ?? "0"),
-          u: user.value,
-        };
+        if (!res) throw new Error("res is null: something is wrong");
+        const { overlap: count, ...u } = res;
+        return { count, u };
       }),
     )
       .then((val) => Ok(val))
       .catch((err) => Err(err));
   } catch (err) {
-    return Err(err);
+    console.error("caught error: ", err);
+    return Err(500);
   }
 }
