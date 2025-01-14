@@ -66,8 +66,8 @@ export default function EditInterest() {
   function handleBack() {
     // TODO: 差分がないときは確認なしで戻る
     showAlert({
-      AlertMessage: "編集中のフィールド、もしくはエラーがあります。",
-      subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
+      AlertMessage: "変更がある場合は、破棄されます。",
+      subAlertMessage: "本当にページを移動しますか？",
       yesMessage: "移動",
       clickYes: () => {
         router.push("/settings/profile");
@@ -219,6 +219,7 @@ export default function EditInterest() {
                       await createSubject(newSubjectName);
                       setIsOpen(false);
                       getSubjects();
+                      setNewSubjectName("");
                     }}
                   >
                     作成
