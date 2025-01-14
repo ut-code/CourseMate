@@ -10,9 +10,7 @@ export default function HomePageLayout({
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
       <Header title="ホーム/Home" />
-      <div className="relative top-14 right-0 bottom-14 left-0 overflow-y-auto sm:top-16">
-        {children}
-      </div>
+      <div className="grow overflow-y-auto">{children}</div>
       <BottomBar activeTab="0_home" />
     </NavigateByAuthState>
   );
