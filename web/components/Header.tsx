@@ -9,8 +9,8 @@ type Props = {
 export default function Header(props: Props) {
   const { title } = props;
   return (
-    <header className="fixed top-0 left-0 z-50 w-full bg-secondary shadow-md">
-      <div className="flex items-center justify-between px-4 py-2">
+    <header className="w-full bg-secondary shadow-md">
+      <div className="flex items-center justify-between px-4 py-3">
         <Link href="/home" passHref>
           <CourseMateIcon width="28px" height="28px" />
         </Link>
