@@ -50,6 +50,7 @@
         };
       };
     in {
+      packages.scraper = pkgs.callPackage ./scraper {toolchain = rust-bin;};
       devShells.default = pkgs.mkShell common;
       devShells.scraper = pkgs.mkShell {
         inherit (common) env;
