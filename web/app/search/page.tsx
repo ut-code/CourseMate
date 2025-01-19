@@ -49,7 +49,8 @@ export default function SearchPage({
     (user) =>
       query === "" ||
       user.name.includes(query) ||
-      user.interestSubjects.some((i) => i.name.includes(query)),
+      user.interestSubjects.some((i) => i.name.includes(query)) ||
+      user.courses.some((c) => c.name.includes(query)),
   );
 
   return (
