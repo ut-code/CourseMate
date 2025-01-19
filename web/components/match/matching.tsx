@@ -13,9 +13,9 @@ export default function Matchings() {
   const { openModal } = useModal();
 
   return (
-    <div className="p-4">
+    <div>
       {data && data.length === 0 && (
-        <p className="mr-10 ml-10 text-lg">
+        <p className="p-4 text-lg">
           誰ともマッチングしていません。 リクエストを送りましょう！
         </p>
       )}

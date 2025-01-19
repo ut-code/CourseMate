@@ -18,7 +18,7 @@ export default function Friends() {
       <div className="flex w-full border-gray-200 border-b">
         <button
           type="button"
-          className={`relative flex-1 py-2 text-center ${
+          className={`relative flex-1 py-3 text-center ${
             activeTab === "matching" ? "text-primary" : "text-gray-600"
           }`}
           onClick={() => setActiveTab("matching")}
@@ -28,7 +28,6 @@ export default function Friends() {
             <span className="absolute bottom-0 left-0 h-1 w-full bg-primary" />
           )}
         </button>
-
         <button
           type="button"
           className={`relative flex-1 py-2 text-center ${
@@ -43,8 +42,7 @@ export default function Friends() {
         </button>
       </div>
 
-      {/* コンテンツ部分 */}
-      <div className="mt-4 text-center text-gray-700 text-lg">
+      <div className="text-center text-gray-700 text-lg">
         {activeTab === "matching" ? <NoSSRMatchings /> : <NoSSRRequests />}
       </div>
     </div>

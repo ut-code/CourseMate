@@ -88,7 +88,7 @@ export default function Home() {
 
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
-      <div className="flex h-full flex-col items-center justify-center">
+      <div className="flex h-full flex-col items-center justify-center p-4">
         {displayedUser && (
           <>
             <div className="flex h-full flex-col items-center justify-center">
