@@ -215,7 +215,7 @@ export function RoomWindow(props: Props) {
                     </div>
                   ) : (
                     <div
-                      className={`rounded-xl p-2 flex shadow ${
+                      className={`rounded-xl p-2 flex max-w-[70vw] shadow ${
                         m.creator === myId ? "bg-secondary" : "bg-white"
                       }`}
                     >
