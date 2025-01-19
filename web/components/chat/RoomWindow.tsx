@@ -145,7 +145,7 @@ export function RoomWindow(props: Props) {
   );
 
   return (
-    <div className="flex flex-col">
+    <div className="flex h-full flex-col">
       {room.matchingStatus !== "matched" && (
         <FloatingMessage
           message="この人とはマッチングしていません。"
@@ -157,7 +157,7 @@ export function RoomWindow(props: Props) {
         <RoomHeader room={room} />
       </div>
       {messages && messages.length > 0 ? (
-        <div className="h-full flex-1 overflow-hidden p-2" ref={scrollDiv}>
+        <div className="flex-1 overflow-auto p-2" ref={scrollDiv}>
           {messages.map((m) =>
             m.isPicture ? (
               <img
