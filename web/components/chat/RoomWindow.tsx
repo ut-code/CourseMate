@@ -205,10 +205,7 @@ export function RoomWindow(props: Props) {
                           保存
                         </button>
                         {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-                        <button
-                          className="btn btn-outline"
-                          onClick={cancelEdit}
-                        >
+                        <button className="btn " onClick={cancelEdit}>
                           キャンセル
                         </button>
                       </div>
@@ -293,18 +290,18 @@ const FloatingMessage = ({
         <p>{message}</p>
         {showButtons && (
           <div className="mt-4 space-x-4">
-            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
             <button
-              className="btn btn-success btn-sm"
+              type="button"
+              className="btn btn-primary btn-sm"
               onClick={() => {
                 request.accept(friendId).then(() => router.push("/chat"));
               }}
             >
               承認
             </button>
-            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
             <button
-              className="btn btn-error btn-sm"
+              type="button"
+              className="btn btn-sm"
               onClick={() => {
                 request.reject(friendId).then(() => router.push("/chat"));
               }}

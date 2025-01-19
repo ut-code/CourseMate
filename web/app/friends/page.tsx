@@ -23,7 +23,7 @@ export default function Friends() {
           }`}
           onClick={() => setActiveTab("matching")}
         >
-          <span>マッチ中</span>
+          <span>マッチ</span>
           {activeTab === "matching" && (
             <span className="absolute bottom-0 left-0 h-1 w-full bg-primary" />
           )}
