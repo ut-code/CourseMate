@@ -34,19 +34,24 @@ export default function useData<T>(url: string) {
   return { data, isLoading, error, reload };
 }
 
-async function safeReadData<T>(url: string): Promise<Result<T>> {
+async function safeReadData<T>(
+  url: string,
+  schema: Zod.Schema<T>,
+): Promise<Result<T>> {
   try {
     const res = await credFetch("GET", url);
-    const result = await res.json();
-    // TODO: zod
+    const data = await res.json();
+    const result = schema.parse(data);
     return Ok(result);
   } catch (e) {
+    console.error(`
+      safeReadData: Schema Parse Error | in incoming data | Error: ${e}`);
     return Err(e);
   }
 }
 
 // TODO: refactor this to look better.
-export function useAuthorizedData<T>(url: string) {
+export function useAuthorizedData<T>(url: string, schema: Zod.Schema<T>) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -55,7 +60,7 @@ export function useAuthorizedData<T>(url: string) {
     setLoading(true);
     setError(null);
 
-    const result = await safeReadData<T>(url);
+    const result = await safeReadData<T>(url, schema);
     if (result.ok) {
       setData(result.value);
       setLoading(false);
@@ -64,7 +69,7 @@ export function useAuthorizedData<T>(url: string) {
     setError(result.error as Error);
     setData(null);
     setLoading(false);
-  }, [url]);
+  }, [url, schema]);
 
   useEffect(() => {
     reload();
