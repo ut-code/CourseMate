@@ -33,11 +33,11 @@
         packages = with pkgs; [
           gnumake
           bun
+          nodejs-slim
           biome
           lefthook
           dotenv-cli
           prisma
-          prisma-engines
           stdenv.cc.cc.lib
         ];
 
