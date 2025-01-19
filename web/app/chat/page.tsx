@@ -18,7 +18,9 @@ function ChatListContent() {
   return state.current === "loading" ? (
     <FullScreenCircularProgress />
   ) : state.current === "error" ? (
-    <p className="decoration-red">Error: {state.error.message}</p>
+    <p className="p-4 decoration-red">
+      エラーが発生しました。リロードしてください。
+    </p>
   ) : (
     <RoomList roomsData={state.data} />
   );
