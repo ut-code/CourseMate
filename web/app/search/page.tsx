@@ -26,11 +26,6 @@ export default function SearchPage({
   const initialData = useMemo(() => {
     return data?.filter((item) => item.id !== myId && item.id !== 0) ?? null;
   }, [data, myId]);
-  const users = query
-    ? initialData?.filter((user) =>
-        user.name.toLowerCase().includes(query.toLowerCase()),
-      )
-    : initialData;
 
   const {
     state: { data: matches },
@@ -46,26 +41,21 @@ export default function SearchPage({
     !matches?.some((match) => match.id === userId) &&
     !pending?.some((pending) => pending.id === userId);
 
-  const [searchQuery__interest, setSearchQuery__interest] = useState<
-    string | null
-  >(null);
-  setSearchQuery__interest; // TODO: use this in some UI
-
-  const filteredUsers = users
-    // this is O(count(users) * count(avg(count(interests))) * count(avg(len(interests.name)))). very bad.
-    ?.filter(
-      (u) =>
-        searchQuery__interest === null ||
-        u.interestSubjects.some((i) => i.name.includes(searchQuery__interest)),
-    );
+  // this is very expensive. someone fix this pls
+  const users = initialData?.filter(
+    (user) =>
+      query === "" ||
+      user.name.includes(query) ||
+      user.interestSubjects.some((i) => i.name.includes(query)),
+  );
 
   return (
     <div className="flex min-h-screen justify-center ">
       <div className="w-full">
         <h2 className="m-5 mb-4 font-bold text-2xl">ユーザー検索</h2>
         <Search placeholder="検索" setSearchString={setQuery} />
-        {filteredUsers ? (
-          <Table users={filteredUsers} canRequest={canRequest} />
+        {users ? (
+          <Table users={users} canRequest={canRequest} />
         ) : (
           <FullScreenCircularProgress />
         )}
