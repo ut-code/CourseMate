@@ -48,7 +48,6 @@ export default function UserTable({ query }: { query: string }) {
         searchQuery__interest === null ||
         u.interestSubjects.some((i) => i.name.includes(searchQuery__interest)),
     );
-  console.log(searchQuery__interest);
 
   return (
     <div>
