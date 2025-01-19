@@ -1,39 +1,17 @@
 "use client";
-import { useMemo } from "react";
+import type { UserID, UserWithCoursesAndSubjects } from "common/types";
 import request from "~/api/request";
-import { useAll, useMatched, useMyID, usePendingFromMe } from "~/api/user";
-import { useModal } from "../common/modal/ModalProvider";
+import { useModal } from "~/components/common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
 
-export default function UserTable({ query }: { query: string }) {
+export default function UserTable({
+  users,
+  canRequest,
+}: {
+  users: UserWithCoursesAndSubjects[];
+  canRequest: (id: UserID) => boolean;
+}) {
   const { openModal } = useModal();
-  const {
-    state: { data },
-  } = useAll();
-  const {
-    state: { data: myId },
-  } = useMyID();
-  const initialData = useMemo(() => {
-    return data?.filter((item) => item.id !== myId && item.id !== 0) ?? null;
-  }, [data, myId]);
-  const users = query
-    ? initialData?.filter((user) =>
-        user.name.toLowerCase().includes(query.toLowerCase()),
-      )
-    : initialData;
-
-  const {
-    state: { data: matches },
-  } = useMatched();
-
-  const {
-    state: { data: pending },
-  } = usePendingFromMe();
-
-  // ユーザーがリクエストを送ってない人だけリストアップする
-  const canRequest = (userId: number) =>
-    !matches?.some((match) => match.id === userId) &&
-    !pending?.some((pending) => pending.id === userId);
 
   return (
     <div>
