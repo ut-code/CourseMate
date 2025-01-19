@@ -28,8 +28,10 @@ export default function Settings() {
       <div className="flex flex-col justify-start">
         <h2 className="p-4 pb-2 text-gray-500 text-xs">基本情報</h2>
         <ul className="w-full">
-          <Item href="/settings/profile" title="あなたのカード" />
-          <Item href="/edit/interests" title="興味分野の設定" />
+          <Item href="/settings/profile" title="プロフィール" />
+          <Item href="/settings/courses" title="授業" />
+          <Item href="/settings/interests" title="興味分野" />
+          <Item href="/settings/card" title="カードのプレビュー" />
         </ul>
         <h2 className="p-4 py-2 text-gray-500 text-xs">その他</h2>
         <ul className="w-full">

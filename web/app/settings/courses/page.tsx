@@ -26,10 +26,10 @@ export default function EditCourses() {
         <p>データがありません。</p>
       )}
       <div className="mt-5 flex justify-between">
-        <Link href="/settings/profile" className="btn">
+        <Link href="/settings" className="btn">
           設定画面に戻る
         </Link>
-        <Link href="/edit/profile" className="btn btn-primary">
+        <Link href="/settings/profile" className="btn btn-primary">
           プロフィール編集へ
         </Link>
       </div>
