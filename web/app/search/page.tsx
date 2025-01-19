@@ -35,6 +35,9 @@ export default function SearchPage({
     state: { data: pending },
   } = usePendingFromMe();
 
+  if (!initialData) {
+    return <FullScreenCircularProgress />;
+  }
   // リクエストを送ってない人のみリクエスト送信可能
   // FIXME: O(n^2) | n = count(users) なのでめっちゃ計算コストかかる。なんとかして。
   const canRequest = (userId: number) =>
@@ -57,7 +60,7 @@ export default function SearchPage({
         {users ? (
           <Table users={users} canRequest={canRequest} />
         ) : (
-          <FullScreenCircularProgress />
+          <span>ユーザーが見つかりません</span>
         )}
       </div>
     </div>
