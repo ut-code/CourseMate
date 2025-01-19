@@ -10,7 +10,7 @@ export default function ChatPageLayout({
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
       <Header title="チャット/Chat" />
-      <div className="grow overflow-y-auto">{children}</div>
+      <div className="grow ">{children}</div>
       <BottomBar activeTab="3_chat" />
     </NavigateByAuthState>
   );

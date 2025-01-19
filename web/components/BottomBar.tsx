@@ -33,7 +33,7 @@ function BottomBarCell({
 export default function BottomBar(props: Props) {
   const { activeTab } = props;
   return (
-    <div className="flex w-full flex-row items-center justify-around ">
+    <div className="flex w-full flex-row items-center justify-around">
       <BottomBarCell
         href="/home"
         isActive={activeTab === "0_home"}
