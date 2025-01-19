@@ -32,7 +32,7 @@ start: start-all # build -> serve
 build: build-server build-web
 serve: serve-all # serve only. does not build.
 watch:
-		(trap 'kill 0' SIGINT; make watch-web & make watch-server & wait)
+		(trap 'kill 0' EXIT; make watch-web & make watch-server & wait)
 
 
 test: export DATABASE_URL=$(LOCAL_DB)
