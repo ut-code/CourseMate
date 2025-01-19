@@ -37,27 +37,27 @@ export default function BottomBar(props: Props) {
       <BottomBarCell
         href="/home"
         isActive={activeTab === "0_home"}
-        iconComponent={<MdHome className="text-2xl" />}
+        iconComponent={<MdHome className="text-3xl" />}
       />
       <BottomBarCell
         href="/friends"
         isActive={activeTab === "1_friends"}
-        iconComponent={<MdPeople className="text-2xl" />}
+        iconComponent={<MdPeople className="text-3xl" />}
       />
       <BottomBarCell
         href="/search"
         isActive={activeTab === "2_search"}
-        iconComponent={<MdSearch className="text-2xl" />}
+        iconComponent={<MdSearch className="text-3xl" />}
       />
       <BottomBarCell
         href="/chat"
         isActive={activeTab === "3_chat"}
-        iconComponent={<MdChat className="text-2xl" />}
+        iconComponent={<MdChat className="text-3xl" />}
       />
       <BottomBarCell
         href="/settings"
         isActive={activeTab === "4_settings"}
-        iconComponent={<MdSettings className="text-2xl" />}
+        iconComponent={<MdSettings className="text-3xl" />}
       />
     </div>
   );
