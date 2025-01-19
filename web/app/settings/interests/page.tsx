@@ -70,7 +70,7 @@ export default function EditInterest() {
       subAlertMessage: "本当にページを移動しますか？",
       yesMessage: "移動",
       clickYes: () => {
-        router.push("/settings/profile");
+        router.push("/settings");
       },
     });
   }
