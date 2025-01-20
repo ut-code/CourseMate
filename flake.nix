@@ -31,7 +31,7 @@
 
       common = {
         packages = with pkgs; [
-          nixVersions.nix_2_25 # HACK: to fix the side effect of the hack below, installing two instances of nix
+          nix # HACK: to fix the side effect of the hack below, installing two instances of nix
           gnumake
           bun
           nodejs-slim
