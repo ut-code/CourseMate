@@ -31,6 +31,7 @@
 
       common = {
         packages = with pkgs; [
+          nixVersions.nix_2_25 # HACK: to fix the side effect of the hack below, installing two instances of nix
           gnumake
           bun
           nodejs-slim
@@ -47,6 +48,12 @@
           PRISMA_QUERY_ENGINE_LIBRARY = "${prisma-engines}/lib/libquery_engine.node";
           PRISMA_INTROSPECTION_ENGINE_BINARY = "${prisma-engines}/bin/introspection-engine";
           PRISMA_FMT_BINARY = "${prisma-engines}/bin/prisma-fmt";
+
+          # HACK: sharp can't find libstdc++.so.6 on bun without this
+          # - hack because: setting this may break other packages
+          # - info: it can find libstdc++.so.6 on Node.js
+          # - info: NobbZ says it's because "We can not set an rpath for a scripting language"
+          LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
         };
       };
     in {
