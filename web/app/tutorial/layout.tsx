@@ -10,7 +10,7 @@ export default function TutorialPageLayout({
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
       <Header title="チュートリアル/Tutorial" />
-      <div className="grow">{children}</div>
+      <div className="flex-1">{children}</div>
       <div className="m-4 text-center">
         <Link href="/home" className="btn btn-primary w-full">
           ホーム画面へ
