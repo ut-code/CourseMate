@@ -1,8 +1,12 @@
 name: Rust
 on: 
   pull_request:
+    paths:
+      - scraper/**
   push:
     branches: [main]
+    paths:
+      - scraper/**
 
 jobs:
   all:
