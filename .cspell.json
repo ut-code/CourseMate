@@ -20,7 +20,9 @@
     "safify",
     "supabase",
     "swiper",
-    "lefthook"
+    "lefthook",
+    "stdenv",
+    "rustc"
   ],
   "dictionaries": [
     "softwareTerms",

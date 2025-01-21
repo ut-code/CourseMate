@@ -48,9 +48,9 @@ model Avatar {
 }
 
 model Picture {
-  hash     String @id
-  data     Bytes
-  key      String // password
+  hash String @id
+  data Bytes
+  key  String // password
 }
 
 model InterestSubject {
@@ -67,7 +67,7 @@ model Interest {
   userId    Int
   user      User            @relation(fields: [userId], references: [id])
   subjectId Int
-  subject   InterestSubject @relation(fields: [subjectId], references: [id])
+  subject   InterestSubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 
   @@unique([userId, subjectId])
 }
@@ -137,11 +137,11 @@ model SharedRoom {
 
 model Message {
   id           Int           @id @default(autoincrement())
-  creator      Int           // refers to UserId
+  creator      Int // refers to UserId
   createdAt    DateTime      @default(now()) // @readonly
   edited       Boolean       @default(false)
   content      String
-  isPicture    Boolean       // iff the message is a picture. if true, then content is a url of picture.
+  isPicture    Boolean // iff the message is a picture. if true, then content is a url of picture.
   read         Boolean       @default(false)
   relation     Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId   Int?

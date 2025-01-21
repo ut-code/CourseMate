@@ -1,8 +1,7 @@
 import { recommend as sql } from "@prisma/client/sql";
 import { Err, Ok, type Result } from "common/lib/result";
-import type { UserID, UserWithCoursesAndSubjects } from "common/types";
+import type { User, UserID, UserWithCoursesAndSubjects } from "common/types";
 import { prisma } from "../../database/client";
-import { getUserByID } from "../../database/users";
 
 export async function recommendedTo(
   user: UserID,
@@ -11,7 +10,7 @@ export async function recommendedTo(
 ): Promise<
   Result<
     Array<{
-      u: UserWithCoursesAndSubjects;
+      u: User; // UserWithCoursesAndSubjects
       count: number;
     }>
   >
@@ -20,17 +19,16 @@ export async function recommendedTo(
     const result = await prisma.$queryRawTyped(sql(user, limit, offset));
     return Promise.all(
       result.map(async (res) => {
-        const user = await getUserByID(res.id);
-        if (!user.ok) throw new Error("not found"); // this shouldn't happen
-        return {
-          count: Number.parseInt(res.overlap?.toString() ?? "0"),
-          u: user.value,
-        };
+        const { overlap: count, ...u } = res;
+        if (count === null)
+          throw new Error("count is null: something is wrong");
+        return { count: Number(count), u };
       }),
     )
       .then((val) => Ok(val))
       .catch((err) => Err(err));
   } catch (err) {
-    return Err(err);
+    console.error("caught error: ", err);
+    return Err(500);
   }
 }
