@@ -22,10 +22,10 @@ export default function App() {
   const data = state.data;
   const error = state.current === "error" ? state.error : null;
   const loading = state.current === "loading";
+  if (error) throw error;
+
   return loading ? (
     <FullScreenCircularProgress />
-  ) : error ? (
-    <p>Error: {error.message}</p>
   ) : data ? (
     <EditProfile defaultValues={data} />
   ) : (

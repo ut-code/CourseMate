@@ -13,7 +13,6 @@ import type { BackProp } from "../common";
 export default function Step5({ back }: BackProp) {
   const { state } = subject.useMyInterests();
   const data = state.data;
-  const error = state.current === "error" ? state.error : null;
   const loading = state.current === "loading";
 
   const router = useRouter();
@@ -84,8 +83,6 @@ export default function Step5({ back }: BackProp) {
 
   return loading ? (
     <FullScreenCircularProgress />
-  ) : error ? (
-    <p>Error: {error.message}</p>
   ) : !data ? (
     <p>データがありません。</p>
   ) : (

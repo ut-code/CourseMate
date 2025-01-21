@@ -16,12 +16,12 @@ export default function SettingsProfile() {
   const loading = state.current === "loading";
   const [back, setBack] = useState<boolean>(false);
 
+  if (error) throw error;
+
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
       {loading ? (
         <FullScreenCircularProgress />
-      ) : error ? (
-        <p className="text-error">エラーが発生しました。{error.message}</p>
       ) : !data ? (
         <p>データがありません。</p>
       ) : (

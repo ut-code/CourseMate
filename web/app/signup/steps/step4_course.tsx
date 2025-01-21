@@ -5,13 +5,12 @@ import type { StepProps } from "../common";
 
 export default function Step4({ onSave }: StepProps<void>) {
   const { state } = useMyID();
+  if (state.current === "error") throw state.current;
   return (
     <div className="flex h-full flex-col">
       <div className="flex flex-1">
         {state.current === "loading" ? (
           <FullScreenCircularProgress />
-        ) : state.current === "error" ? (
-          <p>Error: {state.error.message}</p>
         ) : (
           <div className="mx-4 mt-4 flex flex-1 flex-col gap-4">
             <h1>授業情報の登録 (スキップ可)</h1>

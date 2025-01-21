@@ -83,8 +83,6 @@ export default function EditInterest() {
 
   return loading ? (
     <FullScreenCircularProgress />
-  ) : error ? (
-    <p>Error: {error.message}</p>
   ) : !data ? (
     <p>データがありません。</p>
   ) : (
