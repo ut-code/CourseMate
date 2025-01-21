@@ -23,7 +23,8 @@ GNU Make が導入されています。以下は、ユーザーが使うこと�
 
 - 以下をインストールします:
 
-  - Bun (js)
+  - Bun
+  - Node.js
   - GNU Make
   - nvm (optional)
   - lefthook

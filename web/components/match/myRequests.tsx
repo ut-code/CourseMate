@@ -10,8 +10,8 @@ export default function MyReq() {
   const { openModal } = useModal();
 
   return (
-    <div className="p-4">
-      <p className="ml-10 text-lg">
+    <div>
+      <p className="p-4 text-lg">
         {state.data && state.data.length > 0
           ? "以下のリクエストを送信しました！"
           : "リクエストを送信しましょう！"}

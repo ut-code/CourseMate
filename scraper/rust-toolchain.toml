@@ -1,4 +1,4 @@
 [toolchain]
-channel = "1.82.0"
-targets = ["aarch64-apple-darwin", "x86_64-unknown-linux-gnu"]
+channel = "stable"
 components = ["rustc", "cargo", "rustfmt", "clippy"]
+targets = []

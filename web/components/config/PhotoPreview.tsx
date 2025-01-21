@@ -32,6 +32,7 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
         id="file-upload"
         ref={inputRef}
         type="file"
+        tabIndex={0}
         onChange={(e) => {
           const ok = imageSelectHandler(e);
           if (ok) {
