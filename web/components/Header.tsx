@@ -12,15 +12,15 @@ export default function Header(props: Props) {
     <header className="w-full bg-secondary shadow-md">
       <div className="flex items-center justify-between px-4 py-3">
         <Link href="/home" passHref>
-          <CourseMateIcon width="28px" height="28px" />
+          <CourseMateIcon width="30px" height="30px" />
         </Link>
 
-        <h1 className="flex-grow text-center font-semibold text-black text-lg">
+        <h1 className="flex-grow text-center font-semibold text-black text-xl">
           {title}
         </h1>
 
         <Link href="/faq" passHref>
-          <MdInfoOutline size={24} />
+          <MdInfoOutline size={28} />
         </Link>
       </div>
     </header>

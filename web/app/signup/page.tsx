@@ -12,11 +12,12 @@ import Step1 from "./steps/step1_profile";
 import Step2, { type Step2Data } from "./steps/step2_img";
 import Confirmation from "./steps/step3_confirmation";
 import Step4 from "./steps/step4_course";
+import Step5 from "./steps/step5_interests";
 
 function Registration() {
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
 
   const [step1Data, setStep1Data] = useState<Step1User>();
   const [step2Data, setStep2Data] = useState<Step2Data>();
@@ -71,7 +72,9 @@ function Registration() {
         />
       );
     case 4:
-      return <Step4 />;
+      return <Step4 onSave={() => setStep(5)} />;
+    case 5:
+      return <Step5 back={() => setStep(4)} />;
   }
 }
 export default function RegistrationPage() {
@@ -79,7 +82,7 @@ export default function RegistrationPage() {
     <NavigateByAuthState type="toHomeForAuthenticated">
       <div className="flex h-screen flex-col">
         <Header title="登録/Register" />
-        <div className="mt-14 flex-1">
+        <div className="flex-1">
           <Registration />
         </div>
       </div>

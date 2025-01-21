@@ -49,37 +49,33 @@ export function HumanListItem(props: HumanListItemProps) {
 
   return (
     <div
-      className="flex items-center justify-between border-b p-4"
+      className="flex flex-row items-center border-b p-4"
       key={id.toString()}
     >
-      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-      <button
-        className="flex w-full items-center text-left"
-        onClick={handleOpenClick}
-      >
-        <div className="ml-2">
+      <button type="button" onClick={handleOpenClick}>
+        <div className="ml-1">
           <UserAvatar pictureUrl={pictureUrl} width="50px" height="50px" />
         </div>
-        <div className="ml-4 flex flex-col justify-center">
-          <span className="truncate font-medium text-base">{name}</span>
-          {rollUpName && (
-            <span className="max-w-[60vw] truncate text-gray-500 text-sm">
-              {lastMessage}
-            </span>
-          )}
-          {statusMessage && (
-            <span className="text-blue-500 text-sm">{statusMessage}</span>
-          )}
-        </div>
       </button>
-      <div className="mr-3 flex items-center space-x-2">
+      <div className="ml-7 flex flex-col justify-center">
+        <span className="truncate font-medium text-base">{name}</span>
+        {rollUpName && (
+          <span className="max-w-[60vw] truncate text-gray-500 text-sm">
+            {lastMessage}
+          </span>
+        )}
+        {statusMessage && (
+          <span className="text-blue-500 text-sm">{statusMessage}</span>
+        )}
+      </div>
+      <div className="ml-auto">
         {unreadCount ? (
           <span className="badge badge-primary">{unreadCount}</span>
         ) : undefined}
         {onAccept && (
-          // biome-ignore lint/a11y/useButtonType: <explanation>
           <button
-            className="btn btn-success btn-sm"
+            type="button"
+            className="btn btn-primary btn-sm m-1"
             onClick={(e) => {
               e.stopPropagation();
               onAccept(id);
@@ -89,9 +85,9 @@ export function HumanListItem(props: HumanListItemProps) {
           </button>
         )}
         {onReject && (
-          // biome-ignore lint/a11y/useButtonType: <explanation>
           <button
-            className="btn btn-error btn-sm"
+            type="button"
+            className="btn btn-sm m-1"
             onClick={(e) => {
               e.stopPropagation();
               onReject(id);
@@ -101,18 +97,18 @@ export function HumanListItem(props: HumanListItemProps) {
           </button>
         )}
         {onCancel && (
-          // biome-ignore lint/a11y/useButtonType: <explanation>
           <button
-            className="btn btn-secondary btn-sm"
+            type="button"
+            className="btn btn-sm m-1"
             onClick={() => onCancel(id)}
           >
             キャンセル
           </button>
         )}
         {onRequest && (
-          // biome-ignore lint/a11y/useButtonType: <explanation>
           <button
-            className="btn btn-sm bg-primary text-white"
+            type="button"
+            className="btn btn-sm m-1 bg-primary text-white"
             onClick={() => onRequest(id)}
           >
             リクエスト
