@@ -14,8 +14,8 @@ export default function OthersReq() {
   const { openModal } = useModal();
 
   return (
-    <div className="p-4">
-      <p className="ml-10 text-lg">
+    <div>
+      <p className="p-4 text-lg">
         {data && data.length > 0
           ? "以下のリクエストを受け取りました！"
           : "リクエストは受け取っていません。"}

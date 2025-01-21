@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { useMyID } from "~/api/user";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import EditableCoursesTable from "~/components/course/EditableCoursesTable";
+import type { StepProps } from "../common";
 
-export default function Step4() {
+export default function Step4({ onSave }: StepProps<void>) {
   const { state } = useMyID();
   return (
     <div className="flex h-full flex-col">
@@ -23,9 +23,13 @@ export default function Step4() {
       </div>
       <div className="flex w-full justify-between p-6">
         <span />
-        <Link href="/tutorial" className="btn btn-primary">
+        <button
+          type="button"
+          onClick={() => onSave()}
+          className="btn btn-primary"
+        >
           次へ
-        </Link>
+        </button>
       </div>
     </div>
   );

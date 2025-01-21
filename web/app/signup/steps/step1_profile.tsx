@@ -43,7 +43,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
   }, [selectedFaculty, setValue, resetField]);
   return (
     <>
-      <div className="m-4 mb-8 flex flex-col gap-4">
+      <div className="m-4 flex h-full flex-col gap-4">
         <h1 className="text-xl">アカウント設定</h1>
         <div className="flex flex-col gap-2">
           <form onSubmit={handleSubmit(onSubmit)}>
