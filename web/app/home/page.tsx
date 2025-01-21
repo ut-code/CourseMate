@@ -82,9 +82,7 @@ export default function Home() {
   if (displayedUser == null) {
     return <div>全員にいいねを送りました！</div>;
   }
-  if (error) {
-    return <div>Something went wrong: {error.message}</div>;
-  }
+  if (error) throw error;
 
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
