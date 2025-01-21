@@ -29,9 +29,6 @@ export default function EditCourses() {
         <Link href="/settings" className="btn">
           設定画面に戻る
         </Link>
-        <Link href="/settings/profile" className="btn btn-primary">
-          プロフィール編集へ
-        </Link>
       </div>
     </div>
   );
