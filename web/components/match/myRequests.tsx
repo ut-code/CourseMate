@@ -9,6 +9,8 @@ export default function MyReq() {
   const { state, reload } = usePendingFromMe();
   const { openModal } = useModal();
 
+  if (state.error) throw state.error;
+
   return (
     <div>
       <p className="p-4 text-lg">
@@ -18,8 +20,6 @@ export default function MyReq() {
       </p>
       {state.current === "loading" ? (
         <FullScreenCircularProgress />
-      ) : state.error ? (
-        <p className="text-red-500">Error: {state.error.message}</p>
       ) : (
         <ul className="mt-4 space-y-4">
           {state.data?.map((receivingUser) => (
