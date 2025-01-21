@@ -29,8 +29,8 @@ export default function Home() {
     if (data) setRecommended(new Queue(data));
   }, [data]);
 
-  const displayedUser = recommended?.peek(1);
-  const nextUser = recommended?.peek(2);
+  const displayedUser = recommended?.peek(0);
+  const nextUser = recommended?.peek(1);
   const reject = useCallback(() => {
     const current = recommended?.pop();
     if (!current) return;
@@ -181,9 +181,9 @@ class Queue<T> {
   push(top: T): void {
     this.store.push(top);
   }
-  // peek(1) to peek the next elem to be popped, peek(2) peeks the second next element to be popped.
+  // peek(0) to peek the next elem to be popped, peek(1) peeks the second next element to be popped.
   peek(nth: number): T | undefined {
-    return this.store[nth - 1];
+    return this.store[nth];
   }
   pop(): T | undefined {
     return this.store.shift();
