@@ -1,9 +1,16 @@
 import Link from "next/link";
-import { MdHome } from "react-icons/md";
+import {
+  MdHome,
+  MdOutlineChat,
+  MdOutlinePersonSearch,
+  MdOutlineSettings,
+  MdPeopleOutline,
+  MdPersonSearch,
+} from "react-icons/md";
 import { MdPeople } from "react-icons/md";
 import { MdChat } from "react-icons/md";
 import { MdSettings } from "react-icons/md";
-import { MdSearch } from "react-icons/md";
+import { MdOutlineHome } from "react-icons/md";
 
 type Props = {
   activeTab: "0_home" | "1_friends" | "2_search" | "3_chat" | "4_settings";
@@ -12,18 +19,14 @@ type Props = {
 function BottomBarCell({
   href,
   iconComponent,
-  isActive,
 }: {
   href: string;
   iconComponent: React.ReactNode;
-  isActive: boolean;
 }) {
   return (
     <Link
       href={href}
-      className={`flex flex-1 justify-center py-3 focus:bg-gray-300 ${
-        isActive ? "active text-primary" : "text-secondary"
-      }`}
+      className="flex flex-1 justify-center py-3 text-primary focus:bg-gray-300"
     >
       {iconComponent}
     </Link>
@@ -36,28 +39,53 @@ export default function BottomBar(props: Props) {
     <div className="flex w-full flex-row items-center justify-around">
       <BottomBarCell
         href="/home"
-        isActive={activeTab === "0_home"}
-        iconComponent={<MdHome className="text-3xl" />}
+        iconComponent={
+          activeTab === "0_home" ? (
+            <MdHome className="text-3xl" />
+          ) : (
+            <MdOutlineHome className="text-3xl" />
+          )
+        }
       />
       <BottomBarCell
         href="/friends"
-        isActive={activeTab === "1_friends"}
-        iconComponent={<MdPeople className="text-3xl" />}
+        iconComponent={
+          activeTab === "1_friends" ? (
+            <MdPeople className="text-3xl" />
+          ) : (
+            <MdPeopleOutline className="text-3xl" />
+          )
+        }
       />
       <BottomBarCell
         href="/search"
-        isActive={activeTab === "2_search"}
-        iconComponent={<MdSearch className="text-3xl" />}
+        iconComponent={
+          activeTab === "2_search" ? (
+            <MdPersonSearch className="text-3xl" />
+          ) : (
+            <MdOutlinePersonSearch className="text-3xl " />
+          )
+        }
       />
       <BottomBarCell
         href="/chat"
-        isActive={activeTab === "3_chat"}
-        iconComponent={<MdChat className="text-3xl" />}
+        iconComponent={
+          activeTab === "3_chat" ? (
+            <MdChat className="text-3xl" />
+          ) : (
+            <MdOutlineChat className="text-3xl" />
+          )
+        }
       />
       <BottomBarCell
         href="/settings"
-        isActive={activeTab === "4_settings"}
-        iconComponent={<MdSettings className="text-3xl" />}
+        iconComponent={
+          activeTab === "4_settings" ? (
+            <MdSettings className="text-3xl" />
+          ) : (
+            <MdOutlineSettings className="text-3xl" />
+          )
+        }
       />
     </div>
   );
