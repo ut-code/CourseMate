@@ -12,6 +12,8 @@ export default function Matchings() {
   } = useMatched();
   const { openModal } = useModal();
 
+  if (error) throw error;
+
   return (
     <div>
       {data && data.length === 0 && (
@@ -21,8 +23,6 @@ export default function Matchings() {
       )}
       {current === "loading" ? (
         <FullScreenCircularProgress />
-      ) : error ? (
-        <p className="text-red-500">Error: {error.message}</p>
       ) : (
         <ul className="mt-4 space-y-4">
           {data?.map((matchedUser) =>

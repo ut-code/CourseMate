@@ -22,23 +22,22 @@ export default function Home() {
   } = useAboutMe();
 
   const [_, rerender] = useState({});
-  const [recommended, setRecommended] = useState<
-    Queue<UserWithCoursesAndSubjects>
-  >(() => new Queue([]));
+  const [recommended, setRecommended] =
+    useState<Queue<UserWithCoursesAndSubjects> | null>(null);
   useEffect(() => {
     if (data) setRecommended(new Queue(data));
   }, [data]);
 
-  const displayedUser = recommended.peek(1);
-  const nextUser = recommended.peek(2);
+  const displayedUser = recommended?.peek(0);
+  const nextUser = recommended?.peek(1);
   const reject = useCallback(() => {
-    const current = recommended.pop();
+    const current = recommended?.pop();
     if (!current) return;
-    recommended.push(current);
+    recommended?.push(current);
     rerender({});
   }, [recommended]);
   const accept = useCallback(async () => {
-    const current = recommended.pop();
+    const current = recommended?.pop();
     if (!current) return;
     request.send(current.id);
     rerender({});
@@ -72,18 +71,16 @@ export default function Home() {
       });
   }, [controls, accept]);
 
-  if (currentUser == null) {
+  if (recommended == null) {
     return <FullScreenCircularProgress />;
   }
-  if (recommended == null) {
+  if (currentUser == null) {
     return <FullScreenCircularProgress />;
   }
   if (displayedUser == null) {
     return <div>全員にいいねを送りました！</div>;
   }
-  if (error) {
-    return <div>Something went wrong: {error.message}</div>;
-  }
+  if (error) throw error;
 
   return (
     <div className="flex h-full flex-col items-center justify-center p-4">
@@ -176,9 +173,9 @@ class Queue<T> {
   push(top: T): void {
     this.store.push(top);
   }
-  // peek(1) to peek the next elem to be popped, peek(2) peeks the second next element to be popped.
+  // peek(0) to peek the next elem to be popped, peek(1) peeks the second next element to be popped.
   peek(nth: number): T | undefined {
-    return this.store[nth - 1];
+    return this.store[nth];
   }
   pop(): T | undefined {
     return this.store.shift();
