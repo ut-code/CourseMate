@@ -2,7 +2,7 @@ import Link from "next/link";
 import Header from "~/components/Header";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 
-export default function TutorialPageLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;
