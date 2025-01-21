@@ -75,6 +75,12 @@ export default function EditInterest() {
     });
   }
 
+  function handleFormKeyPress(newSubjectName: string) {
+    createSubject(newSubjectName);
+    setIsOpen(false);
+    getSubjects();
+  }
+
   return loading ? (
     <FullScreenCircularProgress />
   ) : error ? (
@@ -185,48 +191,53 @@ export default function EditInterest() {
         >
           <div className="modal-box">
             <h3 className="mb-4 font-bold text-lg">興味分野タグの作成</h3>
-            <input
-              type="text"
-              className="input input-bordered my-2 w-full"
-              value={newSubjectName}
-              onChange={(e) => setNewSubjectName(e.target.value)}
-              placeholder="タグ名を入力"
-            />
-            {newSubjectName && (
-              <p className="py-4">
-                興味分野タグ{" "}
-                <span className="text-primary">#{newSubjectName}</span>{" "}
-                を作成します
-              </p>
-            )}
-            <div className="modal-action">
-              <form method="dialog">
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    className="btn"
-                    onClick={() => {
-                      setIsOpen(false);
-                      setNewSubjectName("");
-                    }}
-                  >
-                    キャンセル
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={async () => {
-                      await createSubject(newSubjectName);
-                      setIsOpen(false);
-                      getSubjects();
-                      setNewSubjectName("");
-                    }}
-                  >
-                    作成
-                  </button>
-                </div>
-              </form>
-            </div>
+            <form
+              method="post"
+              onSubmit={() => handleFormKeyPress(newSubjectName)}
+            >
+              <input
+                type="text"
+                className="input input-bordered my-2 w-full"
+                value={newSubjectName}
+                onChange={(e) => setNewSubjectName(e.target.value)}
+                placeholder="タグ名を入力"
+              />
+              {newSubjectName && (
+                <p className="py-4">
+                  興味分野タグ{" "}
+                  <span className="text-primary">#{newSubjectName}</span>{" "}
+                  を作成します
+                </p>
+              )}
+              <div className="modal-action">
+                <form method="dialog">
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      className="btn"
+                      onClick={() => {
+                        setIsOpen(false);
+                        setNewSubjectName("");
+                      }}
+                    >
+                      キャンセル
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={async () => {
+                        await createSubject(newSubjectName);
+                        setIsOpen(false);
+                        getSubjects();
+                        setNewSubjectName("");
+                      }}
+                    >
+                      作成
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </form>
           </div>
         </dialog>
       )}
