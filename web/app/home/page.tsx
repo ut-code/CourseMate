@@ -15,7 +15,9 @@ import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 export default function Home() {
   const { data, error } = useRecommended();
   const controls = useAnimation();
+  const backCardControls = useAnimation();
   const [clickedButton, setClickedButton] = useState<string>("");
+
   const {
     state: { data: currentUser },
   } = useAboutMe();
@@ -24,52 +26,54 @@ export default function Home() {
   const [recommended, setRecommended] = useState<
     Queue<UserWithCoursesAndSubjects>
   >(() => new Queue([]));
+
   useEffect(() => {
     if (data) setRecommended(new Queue(data));
   }, [data]);
 
   const displayedUser = recommended.peek(1);
   const nextUser = recommended.peek(2);
-  const reject = useCallback(() => {
-    const current = recommended.pop();
-    if (!current) return;
-    recommended.push(current);
-    rerender({});
-  }, [recommended]);
-  const accept = useCallback(async () => {
-    const current = recommended.pop();
-    if (!current) return;
-    request.send(current.id);
-    rerender({});
-  }, [recommended]);
 
-  const onClickClose = useCallback(() => {
-    setClickedButton("cross");
-    controls
-      .start({
-        x: [0, -1000],
-        transition: { duration: 0.5, times: [0, 1], delay: 0.2 },
-      })
-      .then(() => {
-        reject();
-        setClickedButton("");
-        controls.set({ x: 0 });
-      });
-  }, [controls, reject]);
+  const handleAction = useCallback(
+    async (action: "accept" | "reject") => {
+      const current = recommended.peek(1);
+      if (!current) return;
 
-  const onClickHeart = useCallback(() => {
-    setClickedButton("heart");
-    controls
-      .start({
-        x: [0, 1000],
-        transition: { duration: 0.5, times: [0, 1], delay: 0.2 },
-      })
-      .then(() => {
-        accept();
-        setClickedButton("");
-        controls.set({ x: 0 });
-      });
-  }, [controls, accept]);
+      setClickedButton(action === "accept" ? "heart" : "cross");
+
+      // アニメーション開始前に BackCard の位置をリセット
+      backCardControls.set({ x: 0, y: 0 });
+
+      // 移動アニメーションを実行
+      await Promise.all([
+        controls.start({
+          x: action === "accept" ? 1000 : -1000,
+          transition: { duration: 0.5, delay: 0.2 },
+        }),
+        backCardControls.start({
+          x: 10,
+          y: 10,
+          transition: { duration: 0.5, delay: 0.2 },
+        }),
+      ]);
+
+      // 状態更新
+      if (action === "accept") {
+        await request.send(current.id);
+      } else if (action === "reject") {
+        recommended.push(current);
+      }
+      recommended.pop();
+      rerender({});
+
+      // 位置をリセット
+      controls.set({ x: 0 });
+      backCardControls.set({ x: 0, y: 0 });
+
+      setClickedButton("");
+    },
+    [recommended, controls, backCardControls],
+  );
 
   if (currentUser == null) {
     return <FullScreenCircularProgress />;
@@ -90,28 +94,51 @@ export default function Home() {
         {displayedUser && (
           <div className="flex h-full flex-col items-center justify-center">
             {nextUser && (
-              <div className="relative h-full w-full">
-                <div className="-translate-x-4 -translate-y-4 inset-0 z-0 mt-4 transform">
-                  <Card displayedUser={nextUser} currentUser={currentUser} />
-                </div>
+              <div className="relative grid h-full w-full grid-cols-1 grid-rows-1">
                 <motion.div
+                  className="z-0 col-start-1 row-start-1 mt-4"
+                  initial={{ x: 0, y: 0 }} // 初期位置を (0, 0) に設定
+                  animate={backCardControls}
+                >
+                  <Card displayedUser={nextUser} currentUser={currentUser} />
+                </motion.div>
+                <motion.div
+                  className="z-10 col-start-1 row-start-1 mt-4 flex items-center justify-center"
                   animate={controls}
-                  className="absolute inset-0 z-10 mt-4 flex items-center justify-center"
                 >
                   <DraggableCard
                     displayedUser={displayedUser}
                     currentUser={currentUser}
-                    onSwipeLeft={reject}
-                    onSwipeRight={accept}
+                    onSwipeLeft={() => handleAction("reject")}
+                    onSwipeRight={() => handleAction("accept")}
+                    clickedButton={clickedButton}
+                  />
+                </motion.div>
+              </div>
+            )}
+            {nextUser == null && (
+              <div className="relative grid h-full w-full grid-cols-1 grid-rows-1">
+                <motion.div
+                  className="z-10 col-start-1 row-start-1 mt-4 flex items-center justify-center"
+                  animate={controls}
+                >
+                  <DraggableCard
+                    displayedUser={displayedUser}
+                    currentUser={currentUser}
+                    onSwipeLeft={() => handleAction("reject")}
+                    onSwipeRight={() => handleAction("accept")}
                     clickedButton={clickedButton}
                   />
                 </motion.div>
               </div>
             )}
             <div className="button-container mt-4 mb-4 flex w-full justify-center space-x-8">
-              <CloseButton onclick={onClickClose} icon={<CloseIconStyled />} />
+              <CloseButton
+                onclick={() => handleAction("reject")}
+                icon={<CloseIconStyled />}
+              />
               <GoodButton
-                onclick={onClickHeart}
+                onclick={() => handleAction("accept")}
                 icon={<FavoriteIconStyled />}
               />
             </div>
@@ -160,14 +187,10 @@ class Queue<T> {
   push(top: T): void {
     this.store.push(top);
   }
-  // peek(1) to peek the next elem to be popped, peek(2) peeks the second next element to be popped.
   peek(nth: number): T | undefined {
     return this.store[nth - 1];
   }
   pop(): T | undefined {
     return this.store.shift();
-    // yes, I know what you want to say, it has O(n) time complexity.
-    // it doesn't really matter if there is only like 100 people in home queue at most.
-    // if you really care about performance, why don't you go and limit the amount of people to fetch? that probably has significantly more impact to the performance.
   }
 }
