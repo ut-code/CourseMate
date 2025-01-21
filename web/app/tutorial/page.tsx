@@ -1,13 +1,5 @@
 "use client";
 
-import { Navigation, Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import Link from "next/link";
-import Header from "~/components/Header";
-
 const tutorialSteps = [
   {
     label: "CourseMateの使い方",
@@ -41,36 +33,37 @@ const tutorialSteps = [
 
 export default function Tutorial() {
   return (
-    <div className="absolute inset-0 flex flex-col overflow-y-auto px-5 pt-14">
-      <Header title="チュートリアル/Tutorial" />
-      <div className="text-left">
-        <Swiper
-          modules={[Navigation, Pagination]}
-          spaceBetween={50}
-          slidesPerView={1}
-          navigation
-          pagination={{ clickable: true }}
-          className="pb-16"
+    <div className="carousel h-full w-full">
+      {tutorialSteps.map((step, i) => (
+        <div
+          key={step.imgPath}
+          id={`slide${i + 1}`}
+          className="carousel-item relative w-full"
         >
-          {tutorialSteps.map((step) => (
-            <SwiperSlide key={step.imgPath}>
-              <div className="mb-6 text-center">
-                <h1 className="mb-4 font-bold text-lg">{step.label}</h1>
-                <img
-                  src={step.imgPath}
-                  alt={step.label}
-                  className="mx-auto block h-auto w-[60vw] max-w-[400px]"
-                />
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <div className="text-center">
-          <Link href="/home" className="btn btn-primary w-full">
-            ホーム画面へ
-          </Link>
+          <div className="mx-auto flex max-w-[30vh] flex-col justify-center gap-8">
+            <h2 className="text-center text-2xl">{step.label}</h2>
+            <img
+              src={step.imgPath}
+              alt={step.label}
+              className="w-full object-contain"
+            />
+          </div>
+          <div className="-translate-y-1/2 absolute top-1/2 right-5 left-5 flex transform justify-between">
+            <a
+              href={`#slide${i === 0 ? tutorialSteps.length - 1 : i}`}
+              className="btn btn-circle"
+            >
+              ❮
+            </a>
+            <a
+              href={`#slide${i === tutorialSteps.length - 1 ? 1 : i + 2}`}
+              className="btn btn-circle"
+            >
+              ❯
+            </a>
+          </div>
         </div>
-      </div>
+      ))}
     </div>
   );
 }

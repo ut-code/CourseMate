@@ -9,9 +9,7 @@ export default function HomePageLayout({
   return (
     <>
       <Header title="検索/Search" />
-      <div className="absolute top-14 right-0 bottom-14 left-0 overflow-y-auto sm:top-16">
-        {children}
-      </div>
+      <div className="grow overflow-y-auto">{children}</div>
       <BottomBar activeTab="2_search" />
     </>
   );

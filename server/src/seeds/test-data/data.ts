@@ -2,20 +2,20 @@ import type { Day, User } from "common/types";
 
 export const subjects: Array<{
   group: string;
-  subjects: Array<[number, string]>;
+  subjects: Array<[string]>;
 }> = [
   {
     group: "Computer Science",
     subjects: [
-      [1, "型システム"],
-      [2, "機械学習"],
-      [3, "CPU アーキテクチャ"],
-      [4, "分散処理"],
+      ["型システム"],
+      ["機械学習"],
+      ["CPU アーキテクチャ"],
+      ["分散処理"],
     ] as const,
   },
   {
     group: "Math",
-    subjects: [[5, "Lean4"]],
+    subjects: [["Lean4"]],
   },
 ];
 export const interest = [
@@ -85,27 +85,27 @@ export const courses = [
   {
     id: "10001",
     name: "国語八列",
-    teacher: "足助太郎",
+    teacher: "八十島漕郎",
   },
   {
     id: "10002",
     name: "数学八列",
-    teacher: "足助太郎",
+    teacher: "八十島漕郎",
   },
   {
     id: "10003",
     name: "英語八列",
-    teacher: "足助太郎",
+    teacher: "八十島漕郎",
   },
   {
     id: "10004",
     name: "理科八列",
-    teacher: "足助太郎",
+    teacher: "八十島漕郎",
   },
   {
     id: "10005",
     name: "社会八列",
-    teacher: "足助太郎",
+    teacher: "八十島漕郎",
   },
 ];
 

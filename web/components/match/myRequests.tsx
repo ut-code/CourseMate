@@ -9,17 +9,17 @@ export default function MyReq() {
   const { state, reload } = usePendingFromMe();
   const { openModal } = useModal();
 
+  if (state.error) throw state.error;
+
   return (
-    <div className="p-4">
-      <p className="ml-10 text-lg">
+    <div>
+      <p className="p-4 text-lg">
         {state.data && state.data.length > 0
           ? "以下のリクエストを送信しました！"
           : "リクエストを送信しましょう！"}
       </p>
       {state.current === "loading" ? (
         <FullScreenCircularProgress />
-      ) : state.error ? (
-        <p className="text-red-500">Error: {state.error.message}</p>
       ) : (
         <ul className="mt-4 space-y-4">
           {state.data?.map((receivingUser) => (

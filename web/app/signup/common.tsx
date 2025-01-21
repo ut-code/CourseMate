@@ -2,7 +2,7 @@ export type Caller = "registration" | "configMenu";
 export type StepProps<T> = {
   onSave: (t: T) => void;
   prev?: T;
-  caller: Caller;
+  caller?: Caller;
 };
 
 export type BackProp = {

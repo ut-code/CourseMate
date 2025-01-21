@@ -12,17 +12,17 @@ export default function Matchings() {
   } = useMatched();
   const { openModal } = useModal();
 
+  if (error) throw error;
+
   return (
-    <div className="p-4">
+    <div>
       {data && data.length === 0 && (
-        <p className="mr-10 ml-10 text-lg">
+        <p className="p-4 text-lg">
           誰ともマッチングしていません。 リクエストを送りましょう！
         </p>
       )}
       {current === "loading" ? (
         <FullScreenCircularProgress />
-      ) : error ? (
-        <p className="text-red-500">Error: {error.message}</p>
       ) : (
         <ul className="mt-4 space-y-4">
           {data?.map((matchedUser) =>

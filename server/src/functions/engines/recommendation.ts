@@ -2,7 +2,8 @@ import { recommend as sql } from "@prisma/client/sql";
 import { Err, Ok, type Result } from "common/lib/result";
 import type { UserID, UserWithCoursesAndSubjects } from "common/types";
 import { prisma } from "../../database/client";
-import { getUserByID } from "../../database/users";
+import { getCoursesByUserId } from "../../database/courses";
+import * as interest from "../../database/interest";
 
 export async function recommendedTo(
   user: UserID,
@@ -19,20 +20,26 @@ export async function recommendedTo(
   try {
     const result = await prisma.$queryRawTyped(sql(user, limit, offset));
     return Promise.all(
-      result
-        .filter((res) => res.id !== 0) // memo shouldn't appear in recommendation list, even if they are not matched
-        .map(async (res) => {
-          const user = await getUserByID(res.id);
-          if (!user.ok) throw new Error("not found"); // this shouldn't happen
-          return {
-            count: Number.parseInt(res.overlap?.toString() ?? "0"),
-            u: user.value,
-          };
-        }),
+      result.map(async (res) => {
+        const { overlap: count, ...u } = res;
+        if (count === null)
+          throw new Error("count is null: something is wrong");
+        const courses = getCoursesByUserId(u.id);
+        const subjects = interest.of(u.id);
+        return {
+          count: Number(count),
+          u: {
+            ...u,
+            courses: await courses,
+            interestSubjects: await subjects,
+          },
+        };
+      }),
     )
       .then((val) => Ok(val))
       .catch((err) => Err(err));
   } catch (err) {
-    return Err(err);
+    console.error("caught error: ", err);
+    return Err(500);
   }
 }
