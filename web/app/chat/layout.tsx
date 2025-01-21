@@ -8,10 +8,12 @@ export default function ChatPageLayout({
   children: React.ReactNode;
 }) {
   return (
-    <NavigateByAuthState type="toLoginForUnauthenticated">
+    <>
       <Header title="チャット/Chat" />
-      <div className="flex-1 overflow-hidden">{children}</div>
+      <NavigateByAuthState type="toLoginForUnauthenticated">
+        <div className="flex-1 overflow-hidden">{children}</div>
+      </NavigateByAuthState>
       <BottomBar activeTab="3_chat" />
-    </NavigateByAuthState>
+    </>
   );
 }

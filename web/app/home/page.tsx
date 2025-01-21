@@ -10,7 +10,6 @@ import { useAboutMe, useRecommended } from "~/api/user";
 import { Card } from "~/components/Card";
 import { DraggableCard } from "~/components/DraggableCard";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
-import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 import PersonDetailedMenu from "./components/PersonDetailedMenu";
 
 export default function Home() {
@@ -87,60 +86,55 @@ export default function Home() {
   }
 
   return (
-    <NavigateByAuthState type="toLoginForUnauthenticated">
-      <div className="flex h-full flex-col items-center justify-center p-4">
-        {displayedUser && (
-          <>
-            <div className="flex h-full flex-col items-center justify-center">
-              {nextUser && (
-                <div className="relative h-full w-full">
-                  <div className="-translate-x-4 -translate-y-4 inset-0 z-0 mt-4 transform">
-                    <Card displayedUser={nextUser} currentUser={currentUser} />
-                  </div>
-                  <motion.div
-                    animate={controls}
-                    className="absolute inset-0 z-10 mt-4 flex items-center justify-center"
-                  >
-                    <DraggableCard
-                      displayedUser={displayedUser}
-                      currentUser={currentUser}
-                      onSwipeLeft={reject}
-                      onSwipeRight={accept}
-                      clickedButton={clickedButton}
-                    />
-                  </motion.div>
+    <div className="flex h-full flex-col items-center justify-center p-4">
+      {displayedUser && (
+        <>
+          <div className="flex h-full flex-col items-center justify-center">
+            {nextUser && (
+              <div className="relative h-full w-full">
+                <div className="-translate-x-4 -translate-y-4 inset-0 z-0 mt-4 transform">
+                  <Card displayedUser={nextUser} currentUser={currentUser} />
                 </div>
-              )}
-              <button
-                type="button"
-                onClick={() => setOpenDetailedMenu(!openDetailedMenu)}
-              >
-                てすと
-              </button>
-              <div className="button-container mt-4 mb-4 flex w-full justify-center space-x-8">
-                <CloseButton
-                  onclick={onClickClose}
-                  icon={<CloseIconStyled />}
-                />
-                <GoodButton
-                  onclick={onClickHeart}
-                  icon={<FavoriteIconStyled />}
-                />
+                <motion.div
+                  animate={controls}
+                  className="absolute inset-0 z-10 mt-4 flex items-center justify-center"
+                >
+                  <DraggableCard
+                    displayedUser={displayedUser}
+                    currentUser={currentUser}
+                    onSwipeLeft={reject}
+                    onSwipeRight={accept}
+                    clickedButton={clickedButton}
+                  />
+                </motion.div>
               </div>
-            </div>
-            {openDetailedMenu && (
-              <PersonDetailedMenu
-                onClose={() => {
-                  setOpenDetailedMenu(false);
-                }}
-                displayedUser={displayedUser}
-                currentUser={currentUser}
-              />
             )}
-          </>
-        )}
-      </div>
-    </NavigateByAuthState>
+            <button
+              type="button"
+              onClick={() => setOpenDetailedMenu(!openDetailedMenu)}
+            >
+              てすと
+            </button>
+            <div className="button-container mt-4 mb-4 flex w-full justify-center space-x-8">
+              <CloseButton onclick={onClickClose} icon={<CloseIconStyled />} />
+              <GoodButton
+                onclick={onClickHeart}
+                icon={<FavoriteIconStyled />}
+              />
+            </div>
+          </div>
+          {openDetailedMenu && (
+            <PersonDetailedMenu
+              onClose={() => {
+                setOpenDetailedMenu(false);
+              }}
+              displayedUser={displayedUser}
+              currentUser={currentUser}
+            />
+          )}
+        </>
+      )}
+    </div>
   );
 }
 

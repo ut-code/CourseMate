@@ -8,10 +8,12 @@ export default function HomePageLayout({
   children: React.ReactNode;
 }) {
   return (
-    <NavigateByAuthState type="toLoginForUnauthenticated">
+    <>
       <Header title="ホーム/Home" />
-      <div className="grow overflow-y-auto ">{children}</div>
+      <NavigateByAuthState type="toLoginForUnauthenticated">
+        <div className="grow overflow-y-auto ">{children}</div>
+      </NavigateByAuthState>
       <BottomBar activeTab="0_home" />
-    </NavigateByAuthState>
+    </>
   );
 }

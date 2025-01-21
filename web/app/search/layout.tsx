@@ -1,7 +1,8 @@
 import BottomBar from "~/components/BottomBar";
 import Header from "~/components/Header";
+import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 
-export default function HomePageLayout({
+export default function Page({
   children,
 }: {
   children: React.ReactNode;
@@ -9,7 +10,9 @@ export default function HomePageLayout({
   return (
     <>
       <Header title="検索/Search" />
-      <div className="grow overflow-y-auto">{children}</div>
+      <NavigateByAuthState type="toLoginForUnauthenticated">
+        <div className="grow overflow-y-auto">{children}</div>
+      </NavigateByAuthState>
       <BottomBar activeTab="2_search" />
     </>
   );
