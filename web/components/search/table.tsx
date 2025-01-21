@@ -1,25 +1,17 @@
 "use client";
-import { useMemo } from "react";
-import { useAll, useMyID } from "~/api/user";
-import { useModal } from "../common/modal/ModalProvider";
+import type { UserID, UserWithCoursesAndSubjects } from "common/types";
+import request from "~/api/request";
+import { useModal } from "~/components/common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
 
-export default function UserTable({ query }: { query: string }) {
+export default function UserTable({
+  users,
+  canRequest,
+}: {
+  users: UserWithCoursesAndSubjects[];
+  canRequest: (id: UserID) => boolean;
+}) {
   const { openModal } = useModal();
-  const {
-    state: { data },
-  } = useAll();
-  const {
-    state: { data: myId },
-  } = useMyID();
-  const initialData = useMemo(() => {
-    return data?.filter((item) => item.id !== myId && item.id !== 0) ?? null;
-  }, [data, myId]);
-  const users = query
-    ? initialData?.filter((user) =>
-        user.name.toLowerCase().includes(query.toLowerCase()),
-      )
-    : initialData;
 
   return (
     <div>
@@ -30,6 +22,14 @@ export default function UserTable({ query }: { query: string }) {
           name={user.name}
           pictureUrl={user.pictureUrl}
           onOpen={() => openModal(user)}
+          onRequest={
+            canRequest(user.id)
+              ? () => {
+                  request.send(user.id);
+                  location.reload();
+                }
+              : undefined
+          }
         />
       ))}
     </div>

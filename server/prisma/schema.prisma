@@ -42,10 +42,15 @@ model User {
   interests      Interest[]
 }
 
-// プロフィールの画像。
 model Avatar {
   guid String @id
   data Bytes
+}
+
+model Picture {
+  hash String @id
+  data Bytes
+  key  String // password
 }
 
 model InterestSubject {
@@ -62,7 +67,7 @@ model Interest {
   userId    Int
   user      User            @relation(fields: [userId], references: [id])
   subjectId Int
-  subject   InterestSubject @relation(fields: [subjectId], references: [id])
+  subject   InterestSubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 
   @@unique([userId, subjectId])
 }
@@ -122,8 +127,6 @@ enum MatchingStatus {
   REJECTED
 }
 
-// TODO: lazy load MessageLog s.t. it doesn't need to be loaded on Overview query.
-// https://www.prisma.io/docs/orm/prisma-client/queries/select-fields
 model SharedRoom {
   id        Int       @id @default(autoincrement())
   thumbnail String // URL to thumbnail picture
@@ -138,7 +141,8 @@ model Message {
   createdAt    DateTime      @default(now()) // @readonly
   edited       Boolean       @default(false)
   content      String
-  read         Boolean
+  isPicture    Boolean // iff the message is a picture. if true, then content is a url of picture.
+  read         Boolean       @default(false)
   relation     Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
   relationId   Int?
   sharedRoom   SharedRoom?   @relation(fields: [sharedRoomId], references: [id], onDelete: Cascade)

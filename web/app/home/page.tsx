@@ -11,6 +11,7 @@ import { Card } from "~/components/Card";
 import { DraggableCard } from "~/components/DraggableCard";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
+import PersonDetailedMenu from "./components/PersonDetailedMenu";
 
 export default function Home() {
   const { data, error } = useRecommended();
@@ -18,6 +19,7 @@ export default function Home() {
   const backCardControls = useAnimation();
   const [clickedButton, setClickedButton] = useState<string>("");
 
+  const [openDetailedMenu, setOpenDetailedMenu] = useState(false);
   const {
     state: { data: currentUser },
   } = useAboutMe();
@@ -29,14 +31,15 @@ export default function Home() {
 
   useEffect(() => {
     if (data) setRecommended(new Queue(data));
+    console.log(data);
   }, [data]);
 
-  const displayedUser = recommended.peek(1);
-  const nextUser = recommended.peek(2);
+  const displayedUser = recommended.peek(0);
+  const nextUser = recommended.peek(1);
 
   const handleAction = useCallback(
     async (action: "accept" | "reject") => {
-      const current = recommended.peek(1);
+      const current = recommended.peek(0);
       if (!current) return;
 
       setClickedButton(action === "accept" ? "heart" : "cross");
@@ -58,12 +61,13 @@ export default function Home() {
       ]);
 
       // 状態更新
+      recommended.pop();
       if (action === "accept") {
         await request.send(current.id);
       } else if (action === "reject") {
         recommended.push(current);
+        console.log(recommended);
       }
-      recommended.pop();
       rerender({});
 
       // 位置をリセット
@@ -90,7 +94,7 @@ export default function Home() {
 
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
-      <div className="flex h-full flex-col items-center justify-center">
+      <div className="flex h-full flex-col items-center justify-center p-4">
         {displayedUser && (
           <div className="flex h-full flex-col items-center justify-center">
             {nextUser && (
@@ -142,6 +146,15 @@ export default function Home() {
                 icon={<FavoriteIconStyled />}
               />
             </div>
+            {openDetailedMenu && (
+              <PersonDetailedMenu
+                onClose={() => {
+                  setOpenDetailedMenu(false);
+                }}
+                displayedUser={displayedUser}
+                currentUser={currentUser}
+              />
+            )}
           </div>
         )}
       </div>
@@ -188,7 +201,7 @@ class Queue<T> {
     this.store.push(top);
   }
   peek(nth: number): T | undefined {
-    return this.store[nth - 1];
+    return this.store[nth];
   }
   pop(): T | undefined {
     return this.store.shift();

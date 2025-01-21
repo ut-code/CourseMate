@@ -1,63 +1,50 @@
 import Link from "next/link";
+import { MdChevronRight } from "react-icons/md";
 import LogOutButton from "~/components/LogOutButton";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
+
+function Item({
+  href,
+  title,
+}: {
+  href: string;
+  title: string;
+}) {
+  return (
+    <li>
+      <Link href={href} className="btn cm-li-btn">
+        <div className="flex w-full items-center justify-between">
+          <span>{title}</span>
+          <MdChevronRight className="text-2xl" />
+        </div>
+      </Link>
+    </li>
+  );
+}
+
 export default function Settings() {
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
-      <div className="flex flex-col items-center justify-start">
+      <div className="flex flex-col justify-start">
+        <h2 className="p-4 pb-2 text-gray-500 text-xs">基本情報</h2>
         <ul className="w-full">
-          <li>
-            <Link href="/settings/profile" className="btn cm-li-btn">
-              あなたのカード
-            </Link>
-          </li>
-          <hr />
-          <li>
-            <Link href="/tutorial" className="btn cm-li-btn">
-              CourseMateの使い方
-            </Link>
-          </li>
-          <hr />
-          <li>
-            <Link href="/settings/notification" className="btn cm-li-btn">
-              運営からのお知らせ
-            </Link>
-          </li>
-          <hr />
-          <li>
-            <Link href="/settings/contact" className="btn cm-li-btn">
-              お問い合わせ
-            </Link>
-          </li>
-          <hr />
-          <li>
-            <Link href="/faq" className="btn cm-li-btn">
-              よくあるご質問
-            </Link>
-          </li>
-          <hr />
-          <li>
-            <Link href="/settings/aboutUs" className="btn cm-li-btn">
-              About Us
-            </Link>
-          </li>
-          <hr />
-          <li>
-            <Link href="/settings/disclaimer" className="btn cm-li-btn">
-              免責事項
-            </Link>
-          </li>
-          <hr />
-          <li>
-            <Link href="/settings/delete" className="btn cm-li-btn">
-              アカウント削除
-            </Link>
-          </li>
-          <hr />
+          <Item href="/settings/profile" title="プロフィール" />
+          <Item href="/settings/courses" title="授業" />
+          <Item href="/settings/interests" title="興味分野" />
+          <Item href="/settings/card" title="カードのプレビュー" />
+        </ul>
+        <h2 className="p-4 py-2 text-gray-500 text-xs">その他</h2>
+        <ul className="w-full">
+          <Item href="/tutorial" title="CourseMateの使い方" />
+          <Item href="/settings/notification" title="運営からのお知らせ" />
+          <Item href="/settings/contact" title="お問い合わせ" />
+          <Item href="/faq" title="よくあるご質問" />
+          <Item href="/settings/aboutUs" title="About Us" />
+          <Item href="/settings/disclaimer" title="免責事項" />
+          <Item href="/settings/delete" title="アカウント削除" />
           <li>
             <LogOutButton />
           </li>
-          <hr />
         </ul>
       </div>
     </NavigateByAuthState>

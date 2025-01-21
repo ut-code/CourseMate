@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun --watch src/main.ts",
     "build": "tsc",
-    "serve": "bun target/main.js",
-    "prisma-generate-sql": "bunx dotenv -e .env.dev -- prisma generate --sql"
+    "serve": "bun target/main.js"
   },
   "prisma": {
     "seed": "bun src/seeds/seed-test.ts"

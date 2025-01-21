@@ -1,21 +1,19 @@
 "use client";
 import type { Message, MessageID, SendMessage, UserID } from "common/types";
-import type { Content, DMRoom, PersonalizedDMRoom } from "common/zod/types";
+import type { Content, DMOverview, DMRoom } from "common/zod/types";
 import { useRouter } from "next/navigation";
-import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as chat from "~/api/chat/chat";
 import { useMessages } from "~/api/chat/hooks";
+import { API_ENDPOINT } from "~/api/internal/endpoints";
 import request from "~/api/request";
-import * as user from "~/api/user";
 import { useMyID } from "~/api/user";
-import { getIdToken } from "~/firebase/auth/lib";
 import Dots from "../common/Dots";
-import { socket } from "../data/socket";
+import { handlers } from "../data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 
-type Props = { friendId: UserID; room: DMRoom & PersonalizedDMRoom };
+type Props = { friendId: UserID; room: DMRoom & DMOverview };
 
 export function RoomWindow(props: Props) {
   const { friendId, room } = props;
@@ -26,7 +24,6 @@ export function RoomWindow(props: Props) {
     );
   }
 
-  console.log("rendering");
   useEffect(() => {
     (async () => {
       const lastM = room.messages.at(-1);
@@ -47,7 +44,6 @@ export function RoomWindow(props: Props) {
     setMessages(state.data);
   }, [state.data]);
 
-  const { enqueueSnackbar } = useSnackbar();
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState<string>("");
 
@@ -68,54 +64,35 @@ export function RoomWindow(props: Props) {
     },
     [write],
   );
-  const updateLocalMessage = useCallback((_: Message) => reload(), [reload]);
+  // TODO: fix these
+  const updateLocalMessage = useCallback(
+    (_a: MessageID, _: Message) => reload(),
+    [reload],
+  );
   const deleteLocalMessage = useCallback((_: MessageID) => reload(), [reload]);
 
+  // メッセージの受取
   useEffect(() => {
-    async function registerSocket() {
-      if (!room) return;
-      const idToken = await getIdToken();
-      socket.emit("register", idToken);
-      socket.on("newMessage", async (msg: Message) => {
-        if (msg.creator === friendId) {
-          appendLocalMessage(msg);
-        } else {
-          const creator = await user.get(msg.creator);
-          if (creator == null) return;
-          enqueueSnackbar(
-            `${creator.name}さんからのメッセージ : ${msg.content}`,
-            {
-              variant: "info",
-            },
-          );
-        }
-      });
-      socket.on("updateMessage", async (msg: Message) => {
-        if (msg.creator === friendId) {
-          updateLocalMessage(msg);
-        }
-      });
-      socket.on("deleteMessage", async (msgId: number) => {
-        deleteLocalMessage(msgId);
-      });
-    }
-    registerSocket();
-    // Clean up
-    return () => {
-      socket.off("newMessage");
-      socket.off("updateMessage");
-      socket.off("deleteMessage");
+    handlers.onCreate = (msg) => {
+      if (msg.creator === friendId) {
+        appendLocalMessage(msg);
+        return true; // caught
+      }
+      return false; // didn't catch
     };
-  }, [
-    room,
-    friendId,
-    enqueueSnackbar,
-    appendLocalMessage,
-    updateLocalMessage,
-    deleteLocalMessage,
-  ]);
+    handlers.onUpdate = (id, msg) => {
+      updateLocalMessage(id, msg);
+    };
+    handlers.onDelete = (id) => {
+      deleteLocalMessage(id);
+    };
+    return () => {
+      handlers.onCreate = undefined;
+      handlers.onDelete = undefined;
+    };
+  }, [friendId, appendLocalMessage, updateLocalMessage, deleteLocalMessage]);
 
-  //画面スクロール
+  // 画面スクロール
   const scrollDiv = useRef<HTMLDivElement>(null);
   const scrollToBottom = useCallback(() => {
     if (scrollDiv.current) {
@@ -149,7 +126,7 @@ export function RoomWindow(props: Props) {
         { content },
         friendId,
       );
-      updateLocalMessage(editedMessage);
+      updateLocalMessage(editedMessage.id, editedMessage);
     },
     [updateLocalMessage, friendId],
   );
@@ -168,7 +145,7 @@ export function RoomWindow(props: Props) {
   );
 
   return (
-    <>
+    <div className="flex h-full flex-col">
       {room.matchingStatus !== "matched" && (
         <FloatingMessage
           message="この人とはマッチングしていません。"
@@ -176,14 +153,26 @@ export function RoomWindow(props: Props) {
           showButtons={room.matchingStatus === "otherRequest"}
         />
       )}
-
-      <div className="fixed top-14 z-50 w-full bg-white">
+      <div className="w-full bg-white">
         <RoomHeader room={room} />
       </div>
-      <div className="absolute top-14 right-0 left-0 flex flex-col overflow-y-auto">
-        {messages && messages.length > 0 ? (
-          <div className="flex-grow overflow-y-auto p-2" ref={scrollDiv}>
-            {messages.map((m) => (
+      {messages && messages.length > 0 ? (
+        <div className="flex-1 overflow-auto p-2" ref={scrollDiv}>
+          {messages.map((m) =>
+            m.isPicture ? (
+              <img
+                height="300px"
+                width="300px"
+                style={{
+                  maxHeight: "300px",
+                  maxWidth: "300px",
+                  float: m.creator === myId ? "right" : "left",
+                }}
+                key={m.id}
+                alt=""
+                src={API_ENDPOINT + m.content}
+              />
+            ) : (
               <div
                 key={m.id}
                 className={`mb-2 flex ${
@@ -213,20 +202,18 @@ export function RoomWindow(props: Props) {
                         保存
                       </button>
                       {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-                      <button className="btn btn-outline" onClick={cancelEdit}>
+                      <button className="btn " onClick={cancelEdit}>
                         キャンセル
                       </button>
                     </div>
                   </div>
                 ) : (
                   <div
-                    className={`rounded-xl p-2 shadow ${
+                    className={`flex max-w-[70vw] rounded-xl p-2 shadow ${
                       m.creator === myId ? "bg-secondary" : "bg-white"
                     }`}
                   >
-                    <p className="whitespace-pre-wrap break-words">
-                      {m.content}
-                    </p>
+                    <p className="whitespace-pre-wrap break-all">{m.content}</p>
                     {m.creator === myId && (
                       <Dots
                         actions={[
@@ -253,18 +240,18 @@ export function RoomWindow(props: Props) {
                   </div>
                 )}
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center text-gray-500">
-            最初のメッセージを送ってみましょう！
-          </div>
-        )}
+            ),
+          )}
+        </div>
+      ) : (
+        <div className="flex-1 p-2 text-center text-gray-500">
+          最初のメッセージを送ってみましょう！
+        </div>
+      )}
+      <div className="w-full bg-white">
+        <MessageInput reload={reload} send={sendDMMessage} room={room} />
       </div>
-      <div className="fixed bottom-12 w-full bg-white p-0">
-        <MessageInput send={sendDMMessage} friendId={friendId} />
-      </div>
-    </>
+    </div>
   );
 }
 
@@ -297,18 +284,18 @@ const FloatingMessage = ({
         <p>{message}</p>
         {showButtons && (
           <div className="mt-4 space-x-4">
-            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
             <button
-              className="btn btn-success btn-sm"
+              type="button"
+              className="btn btn-primary btn-sm"
               onClick={() => {
                 request.accept(friendId).then(() => router.push("/chat"));
               }}
             >
               承認
             </button>
-            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
             <button
-              className="btn btn-error btn-sm"
+              type="button"
+              className="btn btn-sm"
               onClick={() => {
                 request.reject(friendId).then(() => router.push("/chat"));
               }}

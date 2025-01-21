@@ -14,6 +14,7 @@ export type {
   RelationshipID,
   Relationship,
   CourseID,
+  InterestSubjectID,
   Slot,
   Course,
   Enrollment,

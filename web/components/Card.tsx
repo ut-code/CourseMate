@@ -1,7 +1,5 @@
-import ThreeSixtyIcon from "@mui/icons-material/ThreeSixty";
 import type { UserWithCoursesAndSubjects } from "common/types";
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import NonEditableCoursesTable from "./course/NonEditableCoursesTable";
+import React, { useRef, useEffect, useCallback } from "react";
 import UserAvatar from "./human/avatar";
 
 interface CardProps {
@@ -10,7 +8,7 @@ interface CardProps {
   onFlip?: (isBack: boolean) => void;
 }
 
-const CardFront = ({ displayedUser, currentUser }: CardProps) => {
+export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const interestsContainerRef = useRef<HTMLDivElement>(null);
   const coursesContainerRef = useRef<HTMLDivElement>(null);
@@ -229,6 +227,24 @@ const CardFront = ({ displayedUser, currentUser }: CardProps) => {
     return () => resizeObserver.disconnect();
   }, [calculateVisibleInterests, calculateVisibleCourses]);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      calculateVisibleInterests();
+      calculateVisibleCourses();
+    });
+
+    resizeObserver.observe(container);
+
+    // 初期計算を実行
+    calculateVisibleInterests();
+    calculateVisibleCourses();
+
+    return () => resizeObserver.disconnect();
+  }, [calculateVisibleInterests, calculateVisibleCourses]);
+
   return (
     <div className="flex h-full flex-col gap-5 overflow-clip border-2 border-primary bg-secondary p-5">
       <div className="grid h-[20%] grid-cols-3 items-center">
@@ -266,61 +282,18 @@ const CardFront = ({ displayedUser, currentUser }: CardProps) => {
   );
 };
 
-const CardBack = ({ displayedUser, currentUser }: CardProps) => {
-  return (
-    <div className="flex h-full flex-col overflow-hidden border-2 border-primary bg-secondary p-4">
-      <div className="flex justify-center">
-        <p className="font-bold text-lg">{displayedUser?.name}</p>
-      </div>
-      <NonEditableCoursesTable
-        userId={displayedUser.id}
-        comparisonUserId={currentUser.id}
-      />
-      <div className="mt-4 flex justify-center">
-        <ThreeSixtyIcon className="text-3xl" />
-      </div>
-    </div>
-  );
-};
-
-export function Card({ displayedUser, currentUser, onFlip }: CardProps) {
-  const [isDisplayingBack, setIsDisplayingBack] = useState(false);
-
-  const handleRotate = () => {
-    setIsDisplayingBack(!isDisplayingBack);
-    if (onFlip) onFlip(!isDisplayingBack);
-  };
-
+export function Card({ displayedUser, currentUser }: CardProps) {
   return (
     <div
       className="perspective-[1000px] relative cursor-pointer"
       style={{ width: "min(40dvh, 87.5vw)", height: "70dvh" }}
-      onClick={handleRotate}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") handleRotate();
-      }}
     >
       <div
         id="card"
         className="transform-style-preserve-3d absolute h-full w-full transition-transform duration-600"
       >
-        <div
-          className="absolute h-full w-full"
-          style={{
-            backfaceVisibility: "hidden",
-            transform: isDisplayingBack ? "rotateY(180deg)" : "rotateY(0deg)",
-          }}
-        >
+        <div className="absolute h-full w-full">
           <CardFront displayedUser={displayedUser} currentUser={currentUser} />
-        </div>
-        <div
-          className="absolute h-full w-full"
-          style={{
-            backfaceVisibility: "hidden",
-            transform: isDisplayingBack ? "rotateY(0deg)" : "rotateY(-180deg)",
-          }}
-        >
-          <CardBack displayedUser={displayedUser} currentUser={currentUser} />
         </div>
       </div>
     </div>

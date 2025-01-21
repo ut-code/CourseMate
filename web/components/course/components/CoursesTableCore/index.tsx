@@ -1,8 +1,6 @@
 import { ACTIVE_DAYS, DAY_TO_JAPANESE_MAP } from "common/consts";
 import type { Course, Day } from "common/types";
 import { useCallback, useEffect, useState } from "react";
-import { truncateStr } from "./lib";
-import styles from "./styles.module.css";
 
 type Props =
   | {
@@ -87,22 +85,43 @@ export default function CoursesTableCore(props: Props) {
   }, [props.courses, props.comparisonCourses, transformCoursesToRows]);
 
   return (
-    <table className={styles.table}>
-      <thead>
-        <tr>
-          <th />
-          {ACTIVE_DAYS.map((activeDay) => (
-            <th align="center" key={`header-${activeDay}`}>
-              {DAY_TO_JAPANESE_MAP.get(activeDay as Day)}
-            </th>
+    <div className="flex h-full flex-col">
+      <div
+        className="grid h-[3vh] grid-rows-1 gap-1"
+        style={{
+          gridTemplateColumns: `3vh repeat(${ACTIVE_DAYS.length}, minmax(0, 1fr))`,
+        }}
+      >
+        <span className="rounded-sm bg-gray-100" />
+        {ACTIVE_DAYS.map((activeDay) => (
+          <span
+            key={`header-${activeDay}`}
+            className="inline-flex items-center justify-center rounded-sm bg-gray-100 text-center text-xs"
+          >
+            {DAY_TO_JAPANESE_MAP.get(activeDay as Day)}
+          </span>
+        ))}
+      </div>
+      <div className="mt-1 flex flex-1 gap-1">
+        <div className="flex h-full w-[3vh] flex-col gap-1">
+          {Array.from({ length: 6 }, (_, i) => (
+            <span
+              key={`period-${i + 1}`}
+              className="inline-flex flex-1 items-center justify-center rounded-sm bg-gray-100 text-xs"
+            >
+              {i + 1}
+            </span>
           ))}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row, rowIndex) => (
-          <tr key={`period-${rowIndex + 1}`}>
-            <th key={`header-period-${rowIndex + 1}`}>{rowIndex + 1}</th>
-            {ACTIVE_DAYS.map((day) => (
+        </div>
+        <div
+          className="grid flex-1 grid-rows-6 gap-1"
+          style={{
+            gridTemplateColumns: `repeat(${ACTIVE_DAYS.length}, minmax(0, 1fr))`,
+          }}
+        >
+          {/* TODO: grid-auto-flow: column; で縦方向に流すほうが余計な変形ロジックが減りそう */}
+          {rows.map((row, rowIndex) =>
+            ACTIVE_DAYS.map((day) => (
               <Cell
                 key={`cell-${day}-${rowIndex.toString()}`}
                 courseName={row[day]?.name ?? null}
@@ -115,11 +134,11 @@ export default function CoursesTableCore(props: Props) {
                     : undefined
                 }
               />
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+            )),
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -138,64 +157,54 @@ function Cell({
 }) {
   const content = (
     <>
-      <p
+      <span
         style={{
           margin: 0,
           overflow: "hidden",
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
-          WebkitLineClamp: 2,
-          lineClamp: 2,
+          WebkitLineClamp: 3,
+          lineClamp: 3,
           textOverflow: "ellipsis",
         }}
       >
-        {courseName ? truncateStr(courseName ?? "", 16) : ""}
-      </p>
-      <p
+        {courseName}
+      </span>
+      <span
         style={{
           margin: 0,
           overflow: "hidden",
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
-          WebkitLineClamp: 2,
-          lineClamp: 2,
+          WebkitLineClamp: 1,
+          lineClamp: 1,
           textOverflow: "ellipsis",
         }}
       >
-        {teacherName ? truncateStr(teacherName ?? "", 6) : ""}
-      </p>
+        {teacherName}
+      </span>
     </>
   );
 
   return (
-    <td align="center">
+    <span
+      className={`inline-flex h-full w-full flex-1 items-center justify-center rounded-sm p-0.5 text-xs ${
+        !courseName
+          ? "bg-gray-50"
+          : isOverlapping
+            ? "bg-[#FFF1BF]"
+            : "bg-[#F7FCFF]"
+      }`}
+    >
       {isButton ? (
-        <button
-          type="button"
-          className={
-            isOverlapping
-              ? styles.overlapped
-              : courseName
-                ? styles.enrolled
-                : ""
-          }
-          onClick={onClick}
-        >
+        <button type="button" onClick={onClick} className="h-full w-full">
           {content}
         </button>
       ) : (
-        <div
-          className={
-            isOverlapping
-              ? styles.overlapped
-              : courseName
-                ? styles.enrolled
-                : ""
-          }
-        >
+        <span className="inline-flex h-full w-full flex-col justify-around text-center">
           {content}
-        </div>
+        </span>
       )}
-    </td>
+    </span>
   );
 }

@@ -1,4 +1,3 @@
-import { Button } from "@mui/material";
 import {
   type ChangeEvent,
   useCallback,
@@ -6,7 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { uploadImage } from "~/api/image";
+import { uploadAvatar } from "~/api/image";
 import { ImageCropper } from "../ImageCropper";
 import { photo } from "../data/photo-preview";
 
@@ -19,19 +18,12 @@ type ButtonProps = {
 export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
   const inputRef: React.LegacyRef<HTMLInputElement> = useRef(null);
   return (
-    <Button
-      variant="contained"
-      component="label"
-      style={{
-        backgroundColor: "#039BE5",
-        color: "white",
-        width: "70vw",
-        maxWidth: "500px",
-        height: "50px",
-        marginTop: "10vh",
-        fontSize: "18px",
-      }}
+    <label
+      className="btn btn-primary mt-[10vh] h-12 w-[70vw] font-normal font-sans text-lg text-white"
       onClick={() => {
+        if (inputRef.current) inputRef.current.value = "";
+      }}
+      onKeyDown={() => {
         if (inputRef.current) inputRef.current.value = "";
       }}
     >
@@ -40,6 +32,7 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
         id="file-upload"
         ref={inputRef}
         type="file"
+        tabIndex={0}
         onChange={(e) => {
           const ok = imageSelectHandler(e);
           if (ok) {
@@ -49,7 +42,7 @@ export function PhotoPreviewButton({ text, onSelect }: ButtonProps) {
         accept=".png, .jpeg, .jpg"
         style={{ display: "none" }}
       />
-    </Button>
+    </label>
   );
 }
 
@@ -89,7 +82,7 @@ export function PhotoPreview({ prev, onCrop }: Props) {
 
   useEffect(() => {
     if (!croppedFile) return;
-    photo.upload = async () => await uploadImage(croppedFile);
+    photo.upload = async () => await uploadAvatar(croppedFile);
     if (onCrop) {
       onCrop(croppedFile);
     }
