@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { MdChevronRight } from "react-icons/md";
 import LogOutButton from "~/components/LogOutButton";
-import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 
 function Item({
   href,
