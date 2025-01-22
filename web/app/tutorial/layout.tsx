@@ -11,7 +11,7 @@ export default function Layout({
     <>
       <Header title="チュートリアル/Tutorial" />
       <NavigateByAuthState type="toLoginForUnauthenticated">
-              <div className="flex-1">{children}</div>
+        <div className="flex-1">{children}</div>
       </NavigateByAuthState>
       <div className="m-4 text-center">
         <Link href="/home" className="btn btn-primary w-full">
