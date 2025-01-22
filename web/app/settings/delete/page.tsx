@@ -37,7 +37,7 @@ export default function DeleteAccount() {
     <div className="flex flex-col p-2">
       <TopNavigation title="アカウント削除" />
       <div className="w-full p-8 text-left">
-        <p className="mb-4 text-red-500 leading-7">
+        <p className="mb-4 text-center text-red-500 leading-7">
           アカウントを削除した場合、マッチングやチャットに関する情報の一切が削除されます。
         </p>
         <div className="text-center">
