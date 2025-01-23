@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Dots from "../common/Dots";
 import UserAvatar from "./avatar";
 
@@ -9,12 +10,12 @@ type HumanListItemProps = {
   rollUpName?: boolean; // is currently only intended to be used in Chat
   unreadCount?: number; // only intended to be used in chat
   statusMessage?: string;
-  onDelete?: (id: number) => void;
+  onDelete?: (id: number) => Promise<void>;
   onOpen?: (user: { id: number; name: string; pictureUrl: string }) => void;
-  onAccept?: (id: number) => void;
-  onReject?: (id: number) => void;
-  onCancel?: (id: number) => void;
-  onRequest?: (id: number) => void;
+  onAccept?: (id: number) => Promise<void>;
+  onReject?: (id: number) => Promise<void>;
+  onCancel?: (id: number) => Promise<void>;
+  onRequest?: (id: number) => Promise<void>;
   hasDots?: boolean;
   dotsActions?: object;
 };
@@ -73,46 +74,36 @@ export function HumanListItem(props: HumanListItemProps) {
           <span className="badge badge-primary">{unreadCount}</span>
         ) : undefined}
         {onAccept && (
-          <button
-            type="button"
+          <ActionButton
             className="btn btn-primary btn-sm m-1"
-            onClick={(e) => {
-              e.stopPropagation();
-              onAccept(id);
-            }}
+            onClick={async () => await onAccept(id)}
           >
             承認
-          </button>
+          </ActionButton>
         )}
         {onReject && (
-          <button
-            type="button"
+          <ActionButton
             className="btn btn-sm m-1"
-            onClick={(e) => {
-              e.stopPropagation();
-              onReject(id);
-            }}
+            onClick={async () => await onReject(id)}
           >
             拒否
-          </button>
+          </ActionButton>
         )}
         {onCancel && (
-          <button
-            type="button"
+          <ActionButton
             className="btn btn-sm m-1"
-            onClick={() => onCancel(id)}
+            onClick={async () => await onCancel(id)}
           >
             キャンセル
-          </button>
+          </ActionButton>
         )}
         {onRequest && (
-          <button
-            type="button"
+          <ActionButton
             className="btn btn-sm m-1 bg-primary text-white"
-            onClick={() => onRequest(id)}
+            onClick={async () => await onRequest(id)}
           >
             リクエスト
-          </button>
+          </ActionButton>
         )}
         {hasDots && (
           <Dots
@@ -139,5 +130,34 @@ export function HumanListItem(props: HumanListItemProps) {
         )}
       </div>
     </div>
+  );
+}
+
+export function ActionButton({
+  onClick,
+  className,
+  children,
+}: {
+  onClick: () => Promise<void>;
+  className: string;
+  children: string; // change this to React.Element or something if you want to put something other than text in here
+}) {
+  const [inProgress, setInProgress] = useState<boolean>(false);
+  return inProgress ? (
+    <button type="button" className={className} disabled>
+      <span className="loading loading-spinner" />
+    </button>
+  ) : (
+    <button
+      type="button"
+      className={className}
+      onClick={async (e) => {
+        e.stopPropagation();
+        setInProgress(true);
+        await onClick();
+      }}
+    >
+      {children}
+    </button>
   );
 }
