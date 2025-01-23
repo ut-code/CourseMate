@@ -132,7 +132,7 @@ export default function Home() {
               </motion.div>
             </div>
           )}
-          <div className="button-container mt-4 mb-4 flex w-full justify-center space-x-8">
+          <div className="button-container mt-4 mb-4 flex w-full justify-around px-8">
             <CloseButton
               onclick={() => handleAction("reject")}
               icon={<CloseIconStyled />}
