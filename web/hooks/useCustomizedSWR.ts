@@ -39,8 +39,31 @@ export type Hook<T> = {
 const SWR_PREFIX = "CourseMate::useSWR::";
 // todo: consider using useSWR Hook from external instead.
 /**
- use static function instead of inline arrow function
- to prevent unnecessary useCallback calls.
+  DANGER: `schema` や `fetcher` は *絶対に* inline で書いてはいけない。
+  inline で書くと、無限描画ループに陥る。
+  例:
+  ```javascript
+  // BAD
+  function Component() {
+    const data = useCustomizedSWR(
+      "myUniqueKey",
+      () => fetch("/path"), // ✘
+      z.array(z.number()), // ✘
+    );
+  }
+  // GOOD
+  const fetcher = () => fetch("/path");
+  const schema = z.array(z.number());
+
+  function Component() {
+    const data = useCustomizedSWR(
+      "myUniqueKey",
+      fetcher, // ◯
+      schema, // ◯
+    );
+  }
+  ```
+
  cacheKey **MUST** be unique in all the codebase, otherwise the cache will interfere each other.
  (I recommend using URL Path, friend's name + unique prefix, or randomly generate static string.)
  **/

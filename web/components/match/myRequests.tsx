@@ -29,8 +29,8 @@ export default function MyReq() {
               name={receivingUser.name}
               pictureUrl={receivingUser.pictureUrl}
               onOpen={() => openModal(receivingUser)}
-              onCancel={(id) => {
-                request.cancel(id).then(reload);
+              onCancel={async (id) => {
+                await request.cancel(id).then(reload);
               }}
             />
           ))}

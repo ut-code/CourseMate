@@ -24,8 +24,8 @@ export default function UserTable({
           onOpen={() => openModal(user)}
           onRequest={
             canRequest(user.id)
-              ? () => {
-                  request.send(user.id);
+              ? async () => {
+                  await request.send(user.id);
                   location.reload();
                 }
               : undefined

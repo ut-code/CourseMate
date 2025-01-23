@@ -51,6 +51,23 @@ async function safeReadData<T>(
 }
 
 // TODO: refactor this to look better.
+/**
+  DANGER: `schema` は *絶対に* inline で書いてはいけない。
+  inline で書くと、無限描画ループに陥る。
+  例:
+  ```javascript
+  // BAD
+  function Component() {
+    const data = useAuthorizedData("/path", z.array(z.number()));
+  }
+  // GOOD
+  const schema = z.array(z.number());
+
+  function Component() {
+    const data = useAuthorizedData("/path", schema);
+  }
+  ```
+ */
 export function useAuthorizedData<T>(url: string, schema: Zod.Schema<T>) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
