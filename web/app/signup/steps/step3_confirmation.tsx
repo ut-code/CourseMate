@@ -23,7 +23,7 @@ export default function Confirmation({
         style={{
           display: "flex",
           flexDirection: "column",
-          margin: "20px",
+          padding: "20px",
         }}
       >
         <h1 className="mb-2 text-xl">確認</h1>
