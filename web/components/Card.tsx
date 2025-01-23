@@ -28,7 +28,7 @@ export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
     coursesContainer.classList.add(
       "flex",
       "flex-wrap",
-      "gap-3",
+      "gap-1",
       "justify-start",
     );
     container.appendChild(coursesContainer);
@@ -61,17 +61,14 @@ export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
 
       const element = document.createElement("div");
       element.textContent = course.name;
-
       element.classList.add(
         "rounded-full",
         "text-center",
-        "px-4",
-        "py-2",
+        "px-3",
+        "py-1",
         "text-base",
-        isMatching ? "font-bold" : "font-normal",
+        isMatching ? "bg-[#FFF1BF]" : "bg-base-200",
       );
-      element.style.backgroundColor = "gray";
-      element.style.color = "white";
       element.style.flexShrink = "0";
 
       coursesContainer.insertBefore(element, andMoreElement);
@@ -125,7 +122,7 @@ export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
     container.innerHTML = "";
 
     const flexContainer = document.createElement("div");
-    flexContainer.classList.add("flex", "flex-wrap", "gap-3", "justify-start");
+    flexContainer.classList.add("flex", "flex-wrap", "gap-1", "justify-start");
     container.appendChild(flexContainer);
 
     // `And More` 要素を作成して追加 (最初は非表示)
@@ -158,18 +155,15 @@ export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
       );
 
       const element = document.createElement("div");
-      element.textContent = interest.name;
-
+      element.textContent = `#${interest.name}`;
       element.classList.add(
-        "rounded-full",
+        "rounded-md",
         "text-center",
-        "px-4",
-        "py-2",
-        "text-base",
-        isMatching ? "font-bold" : "font-normal",
+        "px-3",
+        "py-1",
+        "text-primary",
+        isMatching ? "bg-[#FFF1BF]" : "bg-[#F7FCFF]",
       );
-      element.style.backgroundColor = "#FFF1BF";
-      element.style.color = "#039BE5";
       element.style.flexShrink = "0";
 
       flexContainer.insertBefore(element, andMoreElement);
@@ -249,19 +243,21 @@ export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
   return (
     <div className="flex h-full flex-col gap-5 overflow-clip rounded-md border-2 border-primary bg-secondary p-5">
       <CardBasicInfo displayedUser={displayedUser} />
-      <p className="text-lg">履修している科目</p>
-      <div className="flex h-[70%] w-full flex-col gap-2" ref={containerRef}>
+      <div
+        className="mt-2 flex h-[70%] w-full flex-col gap-2"
+        ref={containerRef}
+      >
+        <p className="text-gray-500 text-sm">授業</p>
         <div
           ref={coursesContainerRef}
-          className="width-full h-[50%] overflow-hidden"
+          className="h-[50%] w-full overflow-hidden"
         >
           <div />
         </div>
-
-        <p className="text-lg">興味のある分野</p>
+        <p className="text-gray-500 text-sm">興味分野</p>
         <div
           ref={interestsContainerRef}
-          className="width-full h-[50%] overflow-hidden"
+          className="h-[50%] w-full overflow-hidden"
         >
           <div />
         </div>
