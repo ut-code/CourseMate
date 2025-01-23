@@ -1,9 +1,7 @@
-import CloseIcon from "@mui/icons-material/Close";
-import { Box, Typography } from "@mui/material";
 import type { UserWithCoursesAndSubjects } from "common/types";
 import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { useCallback, useState } from "react";
-import { MdThumbUp } from "react-icons/md";
+import { MdClose, MdThumbUp } from "react-icons/md";
 import { Card } from "./Card";
 
 const SWIPE_THRESHOLD = 30;
@@ -52,55 +50,18 @@ export const DraggableCard = ({
     return (
       <div>
         {dragProgress > SWIPE_THRESHOLD || clickedButton === "heart" ? (
-          <div
-            className="pointer-events-none absolute z-20 flex h-[70dvh] w-[min(40dvh,87.5vw)] items-center justify-center"
-            style={{ backgroundColor: "rgba(3, 155, 229, 0.4)" }}
-          >
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              flexDirection={"column"}
-              borderRadius={"50%"}
-              bgcolor={"white"}
-              width={"16dvh"}
-              height={"16dvh"}
-            >
+          <div className="pointer-events-none absolute z-20 flex h-[70dvh] w-[min(50dvh,87.5vw)] items-center justify-center rounded-md bg-[rgba(3,155,229,0.4)]">
+            <div className="flex h-[16dvh] w-[16dvh] flex-col items-center justify-center rounded-full bg-white">
               <MdThumbUp className="text-5xl text-primary" />
-              <Typography variant="h5" component="h1" mb={1}>
-                いいね！
-              </Typography>
-            </Box>
+              <span className="text-lg">いいね！</span>
+            </div>
           </div>
         ) : dragProgress < -SWIPE_THRESHOLD || clickedButton === "cross" ? (
-          <div
-            style={{
-              position: "absolute",
-              zIndex: 2,
-              backgroundColor: "rgba(0, 0, 0, 0.3)",
-              width: "min(40dvh, 87.5vw)",
-              height: "70dvh",
-              pointerEvents: "none",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              flexDirection={"column"}
-              borderRadius={"50%"}
-              bgcolor={"white"}
-              width={"16dvh"}
-              height={"16dvh"}
-            >
-              <CloseIcon style={{ color: "black", fontSize: "4.5dvh" }} />
-              <Typography variant="h5" component="h1" mb={1}>
-                スキップ
-              </Typography>
-            </Box>
+          <div className="pointer-events-none absolute z-20 flex h-[70dvh] w-[min(50dvh,87.5vw)] items-center justify-center rounded-md bg-[rgba(0,0,0,0.3)]">
+            <div className="flex h-[16dvh] w-[16dvh] flex-col items-center justify-center rounded-full bg-white">
+              <MdClose className="text-5xl text-gray-500" />
+              <span className="text-lg">スキップ</span>
+            </div>
           </div>
         ) : null}
       </div>

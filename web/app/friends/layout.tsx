@@ -11,7 +11,7 @@ export default function Layout({
     <>
       <Header title="フレンド" />
       <NavigateByAuthState type="toLoginForUnauthenticated">
-        <div className="grow overflow-y-auto">{children}</div>
+        <div className="h-full overflow-y-auto pt-12 pb-12">{children}</div>
       </NavigateByAuthState>
       <BottomBar activeTab="1_friends" />
     </>

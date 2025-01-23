@@ -11,7 +11,7 @@ export default function Layout({
     <>
       <Header title="チャット" />
       <NavigateByAuthState type="toLoginForUnauthenticated">
-        <div className="flex-1 overflow-hidden">{children}</div>
+        <div className="h-full overflow-y-auto pt-12 pb-12">{children}</div>
       </NavigateByAuthState>
       <BottomBar activeTab="3_chat" />
     </>

@@ -35,7 +35,7 @@ export default function SettingsProfile() {
                 style={{
                   // (画面幅 - カード幅) / 2 - profile の padding
                   marginRight:
-                    "calc(calc(calc(100vw - min(40dvh, 87.5vw)) / 2) - 8px)",
+                    "calc(calc(calc(100vw - min(50dvh, 87.5vw)) / 2) - 8px)",
                 }}
               >
                 <MdEdit className="text-lg" />

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Header from "~/components/Header";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 
@@ -11,13 +10,8 @@ export default function Layout({
     <>
       <Header title="チュートリアル" />
       <NavigateByAuthState type="toLoginForUnauthenticated">
-        <div className="flex-1">{children}</div>
+        <div className="h-full overflow-y-auto pt-12">{children}</div>
       </NavigateByAuthState>
-      <div className="m-4 text-center">
-        <Link href="/home" className="btn btn-primary w-full">
-          ホーム画面へ
-        </Link>
-      </div>
     </>
   );
 }

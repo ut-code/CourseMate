@@ -14,7 +14,7 @@ export default function EditCourses() {
   if (error) throw error;
 
   return (
-    <div className="mx-auto my-0 flex h-full max-w-[350] flex-col p-2 text-center">
+    <div className="my-0 flex h-full max-w-[350] flex-col p-2 text-center">
       <h1 className="mb-2 text-xl">授業編集</h1>
       {loading ? (
         <FullScreenCircularProgress />

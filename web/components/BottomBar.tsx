@@ -36,7 +36,7 @@ function BottomBarCell({
 export default function BottomBar(props: Props) {
   const { activeTab } = props;
   return (
-    <div className="flex w-full flex-row items-center justify-around">
+    <div className="fixed bottom-0 z-30 flex h-12 w-full flex-row items-center justify-around border-gray-200 border-t bg-white">
       <BottomBarCell
         href="/home"
         iconComponent={
