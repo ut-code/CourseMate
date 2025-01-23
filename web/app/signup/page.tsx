@@ -79,13 +79,13 @@ function Registration() {
 }
 export default function RegistrationPage() {
   return (
-    <NavigateByAuthState type="toHomeForAuthenticated">
-      <div className="flex h-screen flex-col">
-        <Header title="登録/Register" />
+    <>
+      <Header title="登録/Register" />
+      <NavigateByAuthState type="toHomeForAuthenticated">
         <div className="flex-1">
           <Registration />
         </div>
-      </div>
-    </NavigateByAuthState>
+      </NavigateByAuthState>
+    </>
   );
 }
