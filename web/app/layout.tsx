@@ -30,14 +30,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
         <meta charSet="UTF-8" />
         <link rel="icon" type="image/svg+xml" href="/course-mate-icon.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>CourseMate</title>
       </head>
-      <body>
+      <body className="h-full">
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <SnackbarProvider
@@ -50,7 +50,7 @@ export default function RootLayout({
                 <AlertProvider>
                   <ModalProvider>
                     <BanLandscape />
-                    <div className="flex h-screen flex-col">{children}</div>
+                    <div className="flex h-full flex-col">{children}</div>
                   </ModalProvider>
                 </AlertProvider>
               </AuthProvider>
