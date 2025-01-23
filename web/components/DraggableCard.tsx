@@ -14,6 +14,7 @@ interface DraggableCardProps {
   onSwipeRight: () => void;
   onSwipeLeft: () => void;
   clickedButton: string;
+  setOpenDetailedMenu: (value: boolean) => void;
 }
 
 export const DraggableCard = ({
@@ -22,6 +23,7 @@ export const DraggableCard = ({
   onSwipeRight,
   onSwipeLeft,
   clickedButton,
+  setOpenDetailedMenu,
 }: DraggableCardProps) => {
   const dragX = useMotionValue(0);
   const dragY = useMotionValue(0);
@@ -136,7 +138,11 @@ export const DraggableCard = ({
           whileTap={{ scale: 0.95 }}
         >
           <CardOverlay />
-          <Card displayedUser={displayedUser} currentUser={currentUser} />
+          <Card
+            displayedUser={displayedUser}
+            currentUser={currentUser}
+            setOpenDetailedMenu={setOpenDetailedMenu}
+          />
         </motion.div>
       </section>
     </div>
