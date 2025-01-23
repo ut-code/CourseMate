@@ -1,9 +1,8 @@
-import CloseIcon from "@mui/icons-material/Close";
 import { Box, Typography } from "@mui/material";
 import type { UserWithCoursesAndSubjects } from "common/types";
 import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { useCallback, useState } from "react";
-import { MdThumbUp } from "react-icons/md";
+import { MdClose, MdThumbUp } from "react-icons/md";
 import { Card } from "./Card";
 
 const SWIPE_THRESHOLD = 30;
@@ -89,7 +88,7 @@ export const DraggableCard = ({
               width={"16dvh"}
               height={"16dvh"}
             >
-              <CloseIcon style={{ color: "black", fontSize: "4.5dvh" }} />
+              <MdClose className="text-5xl text-gray-500" />
               <Typography variant="h5" component="h1" mb={1}>
                 スキップ
               </Typography>
