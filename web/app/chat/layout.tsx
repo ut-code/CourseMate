@@ -9,7 +9,7 @@ export default function Layout({
 }) {
   return (
     <>
-      <Header title="チャット/Chat" />
+      <Header title="チャット" />
       <NavigateByAuthState type="toLoginForUnauthenticated">
         <div className="flex-1 overflow-hidden">{children}</div>
       </NavigateByAuthState>

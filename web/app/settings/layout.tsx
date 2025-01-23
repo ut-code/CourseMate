@@ -9,7 +9,7 @@ export default function Layout({
 }) {
   return (
     <>
-      <Header title="設定/Settings" />
+      <Header title="設定" />
       <NavigateByAuthState type="toLoginForUnauthenticated">
         <div className="grow overflow-y-auto">{children}</div>
       </NavigateByAuthState>

@@ -6,7 +6,7 @@ import TopNavigation from "~/components/common/TopNavigation";
 export default function FAQ() {
   return (
     <>
-      <Header title="よくある質問/FAQ" />
+      <Header title="よくある質問" />
       <div className="absolute top-14 right-0 bottom-0 left-0 flex flex-column overflow-y-auto sm:top-16">
         <div className="flex flex-col p-2">
           <TopNavigation title="よくある質問" />
