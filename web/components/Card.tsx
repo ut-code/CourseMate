@@ -1,6 +1,6 @@
 import type { UserWithCoursesAndSubjects } from "common/types";
 import React, { useRef, useEffect, useCallback } from "react";
-import UserAvatar from "./human/avatar";
+import CardBasicInfo from "./CardBasicInfo";
 
 interface CardProps {
   displayedUser: UserWithCoursesAndSubjects;
@@ -248,21 +248,7 @@ export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
 
   return (
     <div className="flex h-full flex-col gap-5 overflow-clip rounded-md border-2 border-primary bg-secondary p-5">
-      <div className="flex h-18 items-center gap-6">
-        <UserAvatar
-          pictureUrl={displayedUser.pictureUrl}
-          width="72px"
-          height="72px"
-        />
-        <div className="flex h-full flex-col justify-center py-1">
-          <p className="text-2xl">{displayedUser.name}</p>
-          <p className="text-lg">{displayedUser.grade}</p>
-          <p
-            className={`text-${displayedUser.faculty.length + displayedUser.department.length > 10 ? "xs" : "md"}`}
-          >{`${displayedUser.faculty} ${displayedUser.department}`}</p>
-        </div>
-      </div>
-
+      <CardBasicInfo displayedUser={displayedUser} />
       <p className="text-lg">履修している科目</p>
       <div className="flex h-[70%] w-full flex-col gap-2" ref={containerRef}>
         <div
