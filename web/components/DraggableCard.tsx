@@ -50,22 +50,14 @@ export const DraggableCard = ({
     return (
       <div>
         {dragProgress > SWIPE_THRESHOLD || clickedButton === "heart" ? (
-          <div
-            className="pointer-events-none absolute z-20 flex h-[70dvh] w-[min(50dvh,87.5vw)] items-center justify-center rounded-md"
-            style={{ backgroundColor: "rgba(3, 155, 229, 0.4)" }}
-          >
+          <div className="pointer-events-none absolute z-20 flex h-[70dvh] w-[min(50dvh,87.5vw)] items-center justify-center rounded-md bg-[rgba(3,155,229,0.4)]">
             <div className="flex h-[16dvh] w-[16dvh] flex-col items-center justify-center rounded-full bg-white">
               <MdThumbUp className="text-5xl text-primary" />
               <span className="text-lg">いいね！</span>
             </div>
           </div>
         ) : dragProgress < -SWIPE_THRESHOLD || clickedButton === "cross" ? (
-          <div
-            className="pointer-events-none absolute z-20 flex h-[70dvh] w-[min(50dvh,87.5vw)] items-center justify-center rounded-md"
-            style={{
-              backgroundColor: "rgba(0, 0, 0, 0.3)",
-            }}
-          >
+          <div className="pointer-events-none absolute z-20 flex h-[70dvh] w-[min(50dvh,87.5vw)] items-center justify-center rounded-md bg-[rgba(0,0,0,0.3)]">
             <div className="flex h-[16dvh] w-[16dvh] flex-col items-center justify-center rounded-full bg-white">
               <MdClose className="text-5xl text-gray-500" />
               <span className="text-lg">スキップ</span>
