@@ -31,7 +31,6 @@ export default function Home() {
 
   useEffect(() => {
     if (data) setRecommended(new Queue(data));
-    console.log(data);
   }, [data]);
 
   const displayedUser = recommended.peek(0);
@@ -66,7 +65,6 @@ export default function Home() {
         await request.send(current.id);
       } else if (action === "reject") {
         recommended.push(current);
-        console.log(recommended);
       }
       rerender({});
 
