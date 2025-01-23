@@ -53,7 +53,7 @@ export const DraggableCard = ({
       <div>
         {dragProgress > SWIPE_THRESHOLD || clickedButton === "heart" ? (
           <div
-            className="pointer-events-none absolute z-20 flex h-[70dvh] w-[min(40dvh,87.5vw)] items-center justify-center"
+            className="pointer-events-none absolute z-20 flex h-[70dvh] w-[min(50dvh,87.5vw)] items-center justify-center"
             style={{ backgroundColor: "rgba(3, 155, 229, 0.4)" }}
           >
             <Box
@@ -78,7 +78,7 @@ export const DraggableCard = ({
               position: "absolute",
               zIndex: 2,
               backgroundColor: "rgba(0, 0, 0, 0.3)",
-              width: "min(40dvh, 87.5vw)",
+              width: "min(50dvh, 87.5vw)",
               height: "70dvh",
               pointerEvents: "none",
               display: "flex",

@@ -13,7 +13,7 @@ export default function MockCardFront({
   return (
     <div
       className="flex h-full flex-col gap-5 overflow-clip border-2 border-primary bg-secondary p-5"
-      style={{ width: "min(40dvh, 87.5vw)" }}
+      style={{ width: "min(50dvh, 87.5vw)" }}
     >
       <div className="grid h-[20%] grid-cols-3 items-center">
         <UserAvatar
