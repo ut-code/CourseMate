@@ -11,6 +11,7 @@ import { DraggableCard } from "~/components/DraggableCard";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import NoMoreUser from "./components/NoMoreUser";
 import PersonDetailedMenu from "./components/PersonDetailedMenu";
+import RoundButton from "./components/RoundButton";
 
 export default function Home() {
   const { data, error } = useRecommended();
@@ -133,13 +134,13 @@ export default function Home() {
             </div>
           )}
           <div className="button-container mt-4 mb-4 flex w-full justify-around px-8">
-            <CloseButton
+            <RoundButton
               onclick={() => handleAction("reject")}
-              icon={<CloseIconStyled />}
+              icon={<MdClose className="text-3xl text-gray-500" />}
             />
-            <GoodButton
+            <RoundButton
               onclick={() => handleAction("accept")}
-              icon={<FavoriteIconStyled />}
+              icon={<MdThumbUp className="text-3xl text-primary" />}
             />
           </div>
           {openDetailedMenu && (
@@ -156,36 +157,6 @@ export default function Home() {
     </div>
   );
 }
-
-interface RoundButtonProps {
-  onclick: () => void;
-  icon: JSX.Element;
-}
-
-const CloseButton = ({ onclick, icon }: RoundButtonProps) => (
-  <button
-    type="button"
-    onClick={onclick}
-    className="btn btn-circle bg-white shadow-md"
-  >
-    {icon}
-  </button>
-);
-const GoodButton = ({ onclick, icon }: RoundButtonProps) => (
-  <button
-    type="button"
-    onClick={onclick}
-    className="btn btn-circle bg-white shadow-md"
-  >
-    {icon}
-  </button>
-);
-
-const CloseIconStyled = () => <MdClose className="text-3xl text-gray-500" />;
-
-const FavoriteIconStyled = () => (
-  <MdThumbUp className="text-3xl text-primary" />
-);
 
 class Queue<T> {
   private store: T[];
