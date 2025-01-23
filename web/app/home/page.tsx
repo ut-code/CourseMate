@@ -110,6 +110,7 @@ export default function Home() {
                   onSwipeLeft={() => handleAction("reject")}
                   onSwipeRight={() => handleAction("accept")}
                   clickedButton={clickedButton}
+                  setOpenDetailedMenu={setOpenDetailedMenu}
                 />
               </motion.div>
             </div>
@@ -126,6 +127,7 @@ export default function Home() {
                   onSwipeLeft={() => handleAction("reject")}
                   onSwipeRight={() => handleAction("accept")}
                   clickedButton={clickedButton}
+                  setOpenDetailedMenu={setOpenDetailedMenu}
                 />
               </motion.div>
             </div>

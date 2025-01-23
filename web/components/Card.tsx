@@ -5,6 +5,7 @@ import UserAvatar from "./human/avatar";
 interface CardProps {
   displayedUser: UserWithCoursesAndSubjects;
   currentUser: UserWithCoursesAndSubjects;
+  setOpenDetailedMenu?: (value: boolean) => void;
   onFlip?: (isBack: boolean) => void;
 }
 
@@ -282,20 +283,28 @@ export const CardFront = ({ displayedUser, currentUser }: CardProps) => {
   );
 };
 
-export function Card({ displayedUser, currentUser }: CardProps) {
+export function Card({
+  displayedUser,
+  currentUser,
+  setOpenDetailedMenu,
+}: CardProps) {
   return (
-    <div
-      className="perspective-[1000px] relative cursor-pointer"
+    <button
+      type="button"
+      className="perspective-[1000px] relative block appearance-none text-left"
       style={{ width: "min(40dvh, 87.5vw)", height: "70dvh" }}
+      onClick={
+        setOpenDetailedMenu ? () => setOpenDetailedMenu(true) : undefined
+      }
     >
       <div
         id="card"
-        className="transform-style-preserve-3d absolute h-full w-full transition-transform duration-600"
+        className="transform-style-preserve-3d absolute top-0 left-0 h-full w-full transition-transform duration-600"
       >
         <div className="absolute h-full w-full">
           <CardFront displayedUser={displayedUser} currentUser={currentUser} />
         </div>
       </div>
-    </div>
+    </button>
   );
 }
