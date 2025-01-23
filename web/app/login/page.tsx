@@ -127,7 +127,7 @@ export default function Login() {
 
   return (
     <NavigateByAuthState type="toHomeForAuthenticated">
-      <Header title="CourseMate" />
+      <Header info />
       <div className="absolute top-14 right-0 bottom-0 left-0 flex flex-col items-center justify-around overflow-y-auto">
         <div className="text-center">
           <CourseMateIcon width="200px" height="200px" />

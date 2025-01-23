@@ -3,26 +3,40 @@ import { MdInfoOutline } from "react-icons/md";
 import { CourseMateIcon } from "./common/CourseMateIcon";
 
 type Props = {
-  title: string;
+  title?: string;
+  info?: boolean;
 };
 
 export default function Header(props: Props) {
-  const { title } = props;
+  const { title, info } = props;
   return (
-    <header className="w-full bg-secondary shadow-md">
-      <div className="flex items-center justify-between px-4 py-3">
-        <Link href="/home" passHref>
+    <header className="relative flex h-12 w-full items-center justify-center border-gray-200 border-b">
+      {title && (
+        <Link
+          href="/home"
+          passHref
+          className="-translate-y-1/2 absolute top-1/2 left-3 transform"
+        >
           <CourseMateIcon width="30px" height="30px" />
         </Link>
+      )}
 
-        <h1 className="flex-grow text-center font-semibold text-black text-xl">
+      {title ? (
+        <h1 className="w-full flex-grow text-center text-black text-xl">
           {title}
         </h1>
-
-        <Link href="/faq" passHref>
-          <MdInfoOutline size={28} />
+      ) : (
+        <CourseMateIcon width="30px" height="30px" />
+      )}
+      {info && (
+        <Link
+          href="/faq"
+          passHref
+          className="-translate-y-1/2 absolute top-1/2 right-3 transform"
+        >
+          <MdInfoOutline size={28} className="text-gray-500" />
         </Link>
-      </div>
+      )}
     </header>
   );
 }
