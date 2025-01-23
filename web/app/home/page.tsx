@@ -1,10 +1,9 @@
 "use client";
 
-import CloseIcon from "@mui/icons-material/Close";
 import type { UserWithCoursesAndSubjects } from "common/types";
 import { motion, useAnimation } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
-import { MdThumbUp } from "react-icons/md";
+import { MdClose, MdThumbUp } from "react-icons/md";
 import request from "~/api/request";
 import { useAboutMe, useRecommended } from "~/api/user";
 import { Card } from "~/components/Card";
@@ -182,7 +181,7 @@ const GoodButton = ({ onclick, icon }: RoundButtonProps) => (
   </button>
 );
 
-const CloseIconStyled = () => <CloseIcon className="text-4xl text-gray-500" />;
+const CloseIconStyled = () => <MdClose className="text-3xl text-gray-500" />;
 
 const FavoriteIconStyled = () => (
   <MdThumbUp className="text-3xl text-primary" />
