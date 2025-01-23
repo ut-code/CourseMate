@@ -1,4 +1,3 @@
-import { Box, Typography } from "@mui/material";
 import type { UserWithCoursesAndSubjects } from "common/types";
 import { motion, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { useCallback, useState } from "react";
@@ -55,21 +54,10 @@ export const DraggableCard = ({
             className="pointer-events-none absolute z-20 flex h-[70dvh] w-[min(50dvh,87.5vw)] items-center justify-center rounded-md"
             style={{ backgroundColor: "rgba(3, 155, 229, 0.4)" }}
           >
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              flexDirection={"column"}
-              borderRadius={"50%"}
-              bgcolor={"white"}
-              width={"16dvh"}
-              height={"16dvh"}
-            >
+            <div className="flex h-[16dvh] w-[16dvh] flex-col items-center justify-center rounded-full bg-white">
               <MdThumbUp className="text-5xl text-primary" />
-              <Typography variant="h5" component="h1" mb={1}>
-                いいね！
-              </Typography>
-            </Box>
+              <span className="text-lg">いいね！</span>
+            </div>
           </div>
         ) : dragProgress < -SWIPE_THRESHOLD || clickedButton === "cross" ? (
           <div
@@ -78,21 +66,10 @@ export const DraggableCard = ({
               backgroundColor: "rgba(0, 0, 0, 0.3)",
             }}
           >
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              flexDirection={"column"}
-              borderRadius={"50%"}
-              bgcolor={"white"}
-              width={"16dvh"}
-              height={"16dvh"}
-            >
+            <div className="flex h-[16dvh] w-[16dvh] flex-col items-center justify-center rounded-full bg-white">
               <MdClose className="text-5xl text-gray-500" />
-              <Typography variant="h5" component="h1" mb={1}>
-                スキップ
-              </Typography>
-            </Box>
+              <span className="text-lg">スキップ</span>
+            </div>
           </div>
         ) : null}
       </div>
