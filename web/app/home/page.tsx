@@ -10,6 +10,7 @@ import { useAboutMe, useRecommended } from "~/api/user";
 import { Card } from "~/components/Card";
 import { DraggableCard } from "~/components/DraggableCard";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
+import NoMoreUser from "./components/NoMoreUser";
 import PersonDetailedMenu from "./components/PersonDetailedMenu";
 
 export default function Home() {
@@ -83,7 +84,7 @@ export default function Home() {
     return <FullScreenCircularProgress />;
   }
   if (displayedUser == null) {
-    return <div>全員にいいねを送りました！</div>;
+    return <NoMoreUser />;
   }
   if (error) throw error;
 
