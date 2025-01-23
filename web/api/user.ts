@@ -24,10 +24,7 @@ export function useAll(): Hook<UserWithCoursesAndSubjects[]> {
 }
 export function useRecommended(): UseHook<UserWithCoursesAndSubjects[]> {
   const url = endpoints.recommendedUsers;
-  return useAuthorizedData<UserWithCoursesAndSubjects[]>(
-    url,
-    z.array(UserWithCoursesAndSubjectsSchema),
-  );
+  return useAuthorizedData<UserWithCoursesAndSubjects[]>(url, UserListSchema);
 }
 export function useMatched(): Hook<UserWithCoursesAndSubjects[]> {
   return useCustomizedSWR("users::matched", matched, UserListSchema);
