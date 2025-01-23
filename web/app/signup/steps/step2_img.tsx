@@ -38,7 +38,7 @@ export default function Step2({
 
   return (
     <>
-      <div className="g-2 m-2 flex flex-col">
+      <div className="g-2 flex flex-col p-2">
         <div style={{ textAlign: "center", marginTop: "15vh" }}>
           <PhotoModal
             open={open}
