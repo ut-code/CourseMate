@@ -13,6 +13,8 @@ export default function OthersReq() {
   const loading = current === "loading";
   const { openModal } = useModal();
 
+  if (error) throw error;
+
   return (
     <div>
       <p className="p-4 text-lg">
@@ -22,8 +24,6 @@ export default function OthersReq() {
       </p>
       {loading ? (
         <FullScreenCircularProgress />
-      ) : error ? (
-        <p className="text-red-500">Error: {error.message}</p>
       ) : (
         <ul className="mt-4 space-y-4">
           {data?.map((sendingUser) => (

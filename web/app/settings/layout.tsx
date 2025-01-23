@@ -1,7 +1,8 @@
 import BottomBar from "~/components/BottomBar";
 import Header from "~/components/Header";
+import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 
-export default function SettingsPageLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;
@@ -9,7 +10,9 @@ export default function SettingsPageLayout({
   return (
     <>
       <Header title="設定/Settings" />
-      <div className="grow overflow-y-auto">{children}</div>
+      <NavigateByAuthState type="toLoginForUnauthenticated">
+        <div className="grow overflow-y-auto">{children}</div>
+      </NavigateByAuthState>
       <BottomBar activeTab="4_settings" />
     </>
   );

@@ -10,7 +10,6 @@ import { useAboutMe, useRecommended } from "~/api/user";
 import { Card } from "~/components/Card";
 import { DraggableCard } from "~/components/DraggableCard";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
-import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 import PersonDetailedMenu from "./components/PersonDetailedMenu";
 
 export default function Home() {
@@ -77,86 +76,82 @@ export default function Home() {
     [recommended, controls, backCardControls],
   );
 
-  if (currentUser == null) {
+  if (recommended == null) {
     return <FullScreenCircularProgress />;
   }
-  if (recommended == null) {
+  if (currentUser == null) {
     return <FullScreenCircularProgress />;
   }
   if (displayedUser == null) {
     return <div>全員にいいねを送りました！</div>;
   }
-  if (error) {
-    return <div>Something went wrong: {error.message}</div>;
-  }
+  if (error) throw error;
 
   return (
-    <NavigateByAuthState type="toLoginForUnauthenticated">
-      <div className="flex h-full flex-col items-center justify-center p-4">
-        {displayedUser && (
-          <div className="flex h-full flex-col items-center justify-center">
-            {nextUser && (
-              <div className="relative grid h-full w-full grid-cols-1 grid-rows-1">
-                <motion.div
-                  className="z-0 col-start-1 row-start-1 mt-4"
-                  initial={{ x: 0, y: 0 }} // 初期位置を (0, 0) に設定
-                  animate={backCardControls}
-                >
-                  <Card displayedUser={nextUser} currentUser={currentUser} />
-                </motion.div>
-                <motion.div
-                  className="z-10 col-start-1 row-start-1 mt-4 flex items-center justify-center"
-                  animate={controls}
-                >
-                  <DraggableCard
-                    displayedUser={displayedUser}
-                    currentUser={currentUser}
-                    onSwipeLeft={() => handleAction("reject")}
-                    onSwipeRight={() => handleAction("accept")}
-                    clickedButton={clickedButton}
-                  />
-                </motion.div>
-              </div>
-            )}
-            {nextUser == null && (
-              <div className="relative grid h-full w-full grid-cols-1 grid-rows-1">
-                <motion.div
-                  className="z-10 col-start-1 row-start-1 mt-4 flex items-center justify-center"
-                  animate={controls}
-                >
-                  <DraggableCard
-                    displayedUser={displayedUser}
-                    currentUser={currentUser}
-                    onSwipeLeft={() => handleAction("reject")}
-                    onSwipeRight={() => handleAction("accept")}
-                    clickedButton={clickedButton}
-                  />
-                </motion.div>
-              </div>
-            )}
-            <div className="button-container mt-4 mb-4 flex w-full justify-center space-x-8">
-              <CloseButton
-                onclick={() => handleAction("reject")}
-                icon={<CloseIconStyled />}
-              />
-              <GoodButton
-                onclick={() => handleAction("accept")}
-                icon={<FavoriteIconStyled />}
-              />
+    <div className="flex h-full flex-col items-center justify-center p-4">
+      {displayedUser && (
+        <div className="flex h-full flex-col items-center justify-center">
+          {nextUser && (
+            <div className="relative grid h-full w-full grid-cols-1 grid-rows-1">
+              <motion.div
+                className="z-0 col-start-1 row-start-1 mt-4"
+                initial={{ x: 0, y: 0 }} // 初期位置を (0, 0) に設定
+                animate={backCardControls}
+              >
+                <Card displayedUser={nextUser} currentUser={currentUser} />
+              </motion.div>
+              <motion.div
+                className="z-10 col-start-1 row-start-1 mt-4 flex items-center justify-center"
+                animate={controls}
+              >
+                <DraggableCard
+                  displayedUser={displayedUser}
+                  currentUser={currentUser}
+                  onSwipeLeft={() => handleAction("reject")}
+                  onSwipeRight={() => handleAction("accept")}
+                  clickedButton={clickedButton}
+                />
+              </motion.div>
             </div>
-            {openDetailedMenu && (
-              <PersonDetailedMenu
-                onClose={() => {
-                  setOpenDetailedMenu(false);
-                }}
-                displayedUser={displayedUser}
-                currentUser={currentUser}
-              />
-            )}
+          )}
+          {nextUser == null && (
+            <div className="relative grid h-full w-full grid-cols-1 grid-rows-1">
+              <motion.div
+                className="z-10 col-start-1 row-start-1 mt-4 flex items-center justify-center"
+                animate={controls}
+              >
+                <DraggableCard
+                  displayedUser={displayedUser}
+                  currentUser={currentUser}
+                  onSwipeLeft={() => handleAction("reject")}
+                  onSwipeRight={() => handleAction("accept")}
+                  clickedButton={clickedButton}
+                />
+              </motion.div>
+            </div>
+          )}
+          <div className="button-container mt-4 mb-4 flex w-full justify-center space-x-8">
+            <CloseButton
+              onclick={() => handleAction("reject")}
+              icon={<CloseIconStyled />}
+            />
+            <GoodButton
+              onclick={() => handleAction("accept")}
+              icon={<FavoriteIconStyled />}
+            />
           </div>
-        )}
-      </div>
-    </NavigateByAuthState>
+          {openDetailedMenu && (
+            <PersonDetailedMenu
+              onClose={() => {
+                setOpenDetailedMenu(false);
+              }}
+              displayedUser={displayedUser}
+              currentUser={currentUser}
+            />
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -198,6 +193,7 @@ class Queue<T> {
   push(top: T): void {
     this.store.push(top);
   }
+  // peek(0) to peek the next elem to be popped, peek(1) peeks the second next element to be popped.
   peek(nth: number): T | undefined {
     return this.store[nth];
   }

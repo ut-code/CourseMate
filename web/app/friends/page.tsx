@@ -3,6 +3,7 @@ import { useState } from "react";
 
 // https://nextjs.org/docs/messages/react-hydration-error#solution-2-disabling-ssr-on-specific-components
 import dynamic from "next/dynamic";
+
 const NoSSRMatchings = dynamic(() => import("~/components/match/matching"), {
   ssr: false,
 });
