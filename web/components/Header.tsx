@@ -9,7 +9,7 @@ type Props = {
 export default function Header(props: Props) {
   const { title } = props;
   return (
-    <header className="relative flex h-12 w-full items-center justify-center border-gray-200 border-b">
+    <header className="fixed top-0 z-30 flex h-12 w-full items-center justify-center border-gray-200 border-b bg-white">
       {title && (
         <Link
           href="/home"
