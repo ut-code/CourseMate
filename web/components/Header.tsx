@@ -4,10 +4,11 @@ import { CourseMateIcon } from "./common/CourseMateIcon";
 
 type Props = {
   title?: string;
+  info?: boolean;
 };
 
 export default function Header(props: Props) {
-  const { title } = props;
+  const { title, info } = props;
   return (
     <header className="relative flex h-12 w-full items-center justify-center border-gray-200 border-b">
       {title && (
@@ -27,13 +28,15 @@ export default function Header(props: Props) {
       ) : (
         <CourseMateIcon width="30px" height="30px" />
       )}
-      <Link
-        href="/faq"
-        passHref
-        className="-translate-y-1/2 absolute top-1/2 right-3 transform"
-      >
-        <MdInfoOutline size={28} className="text-gray-500" />
-      </Link>
+      {info && (
+        <Link
+          href="/faq"
+          passHref
+          className="-translate-y-1/2 absolute top-1/2 right-3 transform"
+        >
+          <MdInfoOutline size={28} className="text-gray-500" />
+        </Link>
+      )}
     </header>
   );
 }
