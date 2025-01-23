@@ -9,7 +9,7 @@ export default function Layout({
 }) {
   return (
     <>
-      <Header title="チュートリアル/Tutorial" />
+      <Header title="チュートリアル" />
       <NavigateByAuthState type="toLoginForUnauthenticated">
         <div className="flex-1">{children}</div>
       </NavigateByAuthState>

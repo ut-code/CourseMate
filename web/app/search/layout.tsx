@@ -9,7 +9,7 @@ export default function Layout({
 }) {
   return (
     <>
-      <Header title="検索/Search" />
+      <Header title="検索" />
       <NavigateByAuthState type="toLoginForUnauthenticated">
         <div className="grow overflow-y-auto">{children}</div>
       </NavigateByAuthState>
