@@ -74,16 +74,9 @@ export const DraggableCard = ({
           </div>
         ) : dragProgress < -SWIPE_THRESHOLD || clickedButton === "cross" ? (
           <div
+            className="pointer-events-none absolute z-20 flex h-[70dvh] w-[min(50dvh,87.5vw)] items-center justify-center"
             style={{
-              position: "absolute",
-              zIndex: 2,
               backgroundColor: "rgba(0, 0, 0, 0.3)",
-              width: "min(50dvh, 87.5vw)",
-              height: "70dvh",
-              pointerEvents: "none",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
             }}
           >
             <Box
