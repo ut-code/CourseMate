@@ -133,7 +133,7 @@ export default function Home() {
               </motion.div>
             </div>
           )}
-          <div className="button-container mt-4 mb-4 flex w-full justify-around px-8">
+          <div className="my-4 flex w-full justify-around px-8">
             <RoundButton
               onclick={() => handleAction("reject")}
               icon={<MdClose className="text-3xl text-gray-500" />}
