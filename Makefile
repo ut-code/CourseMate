@@ -129,7 +129,7 @@ format-check:
 # type checks
 type-check: 
 	make type-check-server
-	make type-check-web
+	make type-check-web 
 
 type-check-server:
 	cd server; bunx tsc --noEmit
