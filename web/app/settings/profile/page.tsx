@@ -42,7 +42,7 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
     handleSubmit,
     getValues,
     setValue,
-    formState: { errors },
+    formState: { isDirty, errors },
   } = useForm({
     defaultValues: defaultValues,
     reValidateMode: "onChange",
@@ -66,7 +66,8 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
   const [open, setOpen] = useState<boolean>(false);
 
   function handleBack() {
-    if (Math.random() < 1 /* todo: has errors on unsaved */) {
+    const hasError = Object.values(errors).length >= 1;
+    if (hasError || isDirty) {
       showAlert({
         AlertMessage: "編集中のフィールド、もしくはエラーがあります。",
         subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
