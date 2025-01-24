@@ -2,8 +2,9 @@
   description = "CourseMate";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
-    # prisma v6 is only out on unstable uncomment this on updating prisma to v6. can be removed when 25.05 channel is released
-    # unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    # this isn't latest branch. latest is `master`, and branch `unstable` requires some tests to pass before rebase
+    # also prisma v6 is only out on this branch.
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     flake-utils.url = "github:numtide/flake-utils";
     rust-overlay = {
@@ -14,6 +15,7 @@
 
   outputs = {
     nixpkgs,
+    nixpkgs-unstable,
     flake-utils,
     rust-overlay,
     /*
@@ -23,6 +25,7 @@
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       overlays = [(import rust-overlay)];
+      unstable = nixpkgs-unstable.legacyPackages.${system};
       pkgs = import nixpkgs {
         inherit system overlays;
       };
@@ -30,17 +33,20 @@
       rust-bin = pkgs.rust-bin.fromRustupToolchainFile ./scraper/rust-toolchain.toml;
 
       common = {
-        packages = with pkgs; [
-          nix # HACK: to fix the side effect of the hack below, installing two instances of nix
-          gnumake
-          bun
-          nodejs-slim
-          biome
-          lefthook
-          dotenv-cli
-          prisma
-          stdenv.cc.cc.lib
-        ];
+        packages =
+          (with unstable; [
+            bun # needed for text-based lock file (1.1.39+)
+            prisma # needed for prisma 6
+          ])
+          ++ (with pkgs; [
+            nix # HACK: to fix the side effect of the hack below, installing two instances of nix
+            gnumake
+            nodejs-slim
+            biome
+            lefthook
+            dotenv-cli
+            stdenv.cc.cc.lib
+          ]);
 
         env = with pkgs; {
           # requird by prisma
