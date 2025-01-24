@@ -34,7 +34,7 @@ router.post("/to/:userId", parseLargeBuffer, async (req, res) => {
   const passkey = hashing.sha256(crypto.randomUUID());
 
   return storage
-    .uploadPic(hash, buf, passkey)
+    .uploadPic(hash, new Uint8Array(buf), passkey)
     .then(async (url) => {
       await chat.createImageMessage(sender.value, rel.value.id, url);
       res.status(201).send(url).end();
@@ -87,7 +87,7 @@ router.post("/profile", parseLargeBuffer, async (req, res) => {
   const buf = await compressImage(req.body);
   if (!buf.ok) return res.status(500).send("failed to compress image");
 
-  const url = await storage.setProf(guid.value, buf.value);
+  const url = await storage.setProf(guid.value, new Uint8Array(buf.value));
   if (!url.ok) return res.status(500).send("failed to upload image");
 
   return res.status(201).type("text/plain").send(url.value);

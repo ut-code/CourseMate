@@ -8,7 +8,7 @@ import { prisma } from "./client";
  **/
 export async function uploadPic(
   hash: string,
-  buf: Buffer,
+  buf: Uint8Array,
   passkey: string,
 ): Promise<string> {
   await prisma.picture.upsert({
@@ -37,7 +37,7 @@ export async function getPic(hash: string, passkey: string) {
  **/
 export async function setProf(
   guid: GUID,
-  buf: Buffer,
+  buf: Uint8Array,
 ): Promise<Result<string>> {
   return prisma.avatar
     .upsert({
@@ -59,7 +59,7 @@ export async function setProf(
 }
 
 // is await-safe.
-export async function getProf(guid: GUID): Promise<Result<Buffer>> {
+export async function getProf(guid: GUID): Promise<Result<Uint8Array>> {
   return prisma.avatar
     .findUnique({
       where: { guid },
