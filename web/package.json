@@ -31,8 +31,8 @@
   },
   "devDependencies": {
     "@types/css-modules": "^1.0.5",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
     "autoprefixer": "^10.4.20",
     "daisyui": "^4.12.23",
     "eslint": "^9.18.0",
