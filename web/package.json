@@ -18,6 +18,8 @@
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "common": "file:../common",
     "devalue": "^5.1.1",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
     "firebase": "^10.14.1",
     "framer-motion": "^11.18.2",
     "next": "^15.1.6",
