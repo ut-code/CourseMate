@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // FIXME!! FIXME!!!!!! TODO!!! you haven't even enabled it smh :/
+  // FIXME!! FIXME!!!!!! TODO!!! this hasn't even been enabled smh :/
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
