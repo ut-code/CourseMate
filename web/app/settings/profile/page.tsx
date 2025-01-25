@@ -48,6 +48,7 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
     reValidateMode: "onChange",
     resolver: zodResolver(UpdateUserSchema),
   });
+
   async function submit(data: User) {
     await update(data);
   }
@@ -95,6 +96,7 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
               id="name"
               {...register("name")}
             />
+            <span className="text-error text-sm">{errors.name?.message}</span>
           </div>
           <div>
             <label htmlFor="gender" className="text-md">
@@ -138,6 +140,9 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
               className="select select-bordered w-full"
               id="faculty"
               {...register("faculty")}
+              onChange={() => {
+                setValue("department", "");
+              }}
             >
               {faculties.map((fac) => (
                 <option key={fac}>{fac}</option>
@@ -178,6 +183,7 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
               rows={3}
               autoComplete="off"
             />
+            <span className="text-error text-sm">{errors.intro?.message}</span>
           </div>
           <div className="mt-4 flex flex-col items-center text-center">
             <span className="text-md">プロフィール画像</span>
