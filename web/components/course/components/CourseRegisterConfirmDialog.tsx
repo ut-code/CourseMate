@@ -1,5 +1,5 @@
 import type { Course } from "common/types";
-import { enqueueSnackbar, useSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { MdAddCircleOutline } from "react-icons/md";
 import { MdRemoveCircleOutline } from "react-icons/md";
