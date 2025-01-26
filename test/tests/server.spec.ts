@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, expect, test } from "bun:test";
 import type { Server } from "node:http";
-import { main } from "../server/src/index";
-import { GET, PUT } from "./fetcher";
+import { main } from "../../server/src/index";
+import { GET, PUT } from "../pkg/fetcher";
 
 let server: Server;
 

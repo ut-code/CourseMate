@@ -15,7 +15,7 @@ setup-ci:
 	make sync
 	make generate-sql
 
-sync: sync-server sync-web sync-root sync-common
+sync: sync-server sync-web sync-root sync-common sync-tests
 	@echo '----------------------------------------------------------------------------------------------------------'
 	@echo '| Most work is done. now running prisma-generate-sql (which might fail if .env.dev is not set configured)|'
 	@echo '----------------------------------------------------------------------------------------------------------'
@@ -103,6 +103,8 @@ sync-root:
 	bun install --frozen-lockfile
 sync-common:
 	cd common; bun install --frozen-lockfile
+sync-tests:
+	cd tests; bun install --frozen-lockfile
 
 
 # Static checks
