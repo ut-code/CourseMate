@@ -6,15 +6,15 @@ import FullScreenCircularProgress from "~/components/common/FullScreenCircularPr
 import Search from "~/components/search/search";
 import Table from "~/components/search/table";
 
-export default function SearchPage({
+export default async function SearchPage({
   searchParams,
 }: {
-  searchParams?: {
+  searchParams?: Promise<{
     query?: string;
     page?: string;
-  };
+  }>;
 }) {
-  const [query, setQuery] = useState<string>(searchParams?.query ?? "");
+  const [query, setQuery] = useState<string>((await searchParams)?.query ?? "");
 
   const {
     state: { data },
