@@ -51,10 +51,16 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
 
   async function submit(data: User) {
     await update(data);
+    enqueueSnackbar({
+      message: "保存しました",
+    });
   }
   function afterPhotoUpload(result: string) {
     try {
       setValue("pictureUrl", result);
+      enqueueSnackbar({
+        message: "画像を更新しました",
+      });
     } catch (err) {
       console.error(err);
       // probably a network error
@@ -69,6 +75,7 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
   function handleBack() {
     const hasError = Object.values(errors).length >= 1;
     if (hasError || isDirty) {
+      console.log(`hasError: ${hasError}`, errors);
       showAlert({
         AlertMessage: "編集中のフィールド、もしくはエラーがあります。",
         subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
@@ -86,7 +93,6 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
 
   const [selectedFaculty, setSelectedFaculty] = useState(values.faculty);
   const departments = facultiesAndDepartments[selectedFaculty] ?? null;
-  console.log(values.faculty, departments);
 
   return (
     <div className="flex h-full flex-col">
