@@ -1,4 +1,5 @@
 import type { Course } from "common/types";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { MdAddCircleOutline } from "react-icons/md";
 import { MdRemoveCircleOutline } from "react-icons/md";
@@ -11,20 +12,21 @@ import {
 export default function CourseRegisterConfirmDialog({
   open,
   onClose,
+  onCancel,
   mode,
   courseToAddOrDelete,
-  handleSelectDialogClose,
   handleCoursesUpdate,
 }: {
   open: boolean;
   onClose: () => void;
+  onCancel: () => void;
   mode: "add" | "delete";
   courseToAddOrDelete: Course;
-  handleSelectDialogClose: () => void;
   handleCoursesUpdate: (courses: Course[]) => void;
 }) {
   const [overlapCourses, setOverlapCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (!courseToAddOrDelete) return;
@@ -85,26 +87,30 @@ export default function CourseRegisterConfirmDialog({
           )}
         </div>
         <div className="modal-action">
-          {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-          <button className="btn btn-ghost" onClick={onClose}>
+          <button type="button" className="btn btn-ghost" onClick={onCancel}>
             キャンセル
           </button>
           {courseToAddOrDelete && (
-            // biome-ignore lint/a11y/useButtonType: <explanation>
             <button
+              type="button"
               className="btn btn-primary"
               onClick={async () => {
                 if (mode === "add") {
                   const newCourses = await addMyCourse(courseToAddOrDelete.id);
                   handleCoursesUpdate(newCourses);
+                  enqueueSnackbar({
+                    message: "授業を追加しました",
+                  });
                 } else {
                   const newCourses = await deleteMyCourse(
                     courseToAddOrDelete.id,
                   );
+                  enqueueSnackbar({
+                    message: "授業を変更しました",
+                  });
                   handleCoursesUpdate(newCourses);
                 }
                 onClose();
-                handleSelectDialogClose();
               }}
             >
               確定
