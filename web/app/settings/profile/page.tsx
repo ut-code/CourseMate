@@ -83,6 +83,11 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
   }
 
   const values = getValues();
+
+  const [selectedFaculty, setSelectedFaculty] = useState(values.faculty);
+  const departments = facultiesAndDepartments[selectedFaculty] ?? null;
+  console.log(values.faculty, departments);
+
   return (
     <div className="flex h-full flex-col">
       <form onSubmit={handleSubmit(submit)}>
@@ -140,7 +145,8 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
               className="select select-bordered w-full"
               id="faculty"
               {...register("faculty")}
-              onChange={() => {
+              onChange={(e) => {
+                setSelectedFaculty(e.target.value);
                 setValue("department", "");
               }}
             >
@@ -161,12 +167,11 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
               id="department"
               {...register("department")}
             >
-              {values.faculty &&
-                facultiesAndDepartments[values.faculty].map((dep) => (
-                  <option key={dep} value={dep}>
-                    {dep}
-                  </option>
-                ))}
+              {departments.map((dep) => (
+                <option key={dep} value={dep}>
+                  {dep}
+                </option>
+              ))}
             </select>
             <span className="text-error text-sm">
               {errors.department?.message}
