@@ -66,8 +66,9 @@ jobs:
           bun-version: latest
       - run: make setup-ci
 
-      - run: bunx tsc --noEmit
-        working-directory: web
+      # Omitted because it's done on web build, and next provides its own wrapped compiler instead of raw tsc
+      # - run: bunx tsc --noEmit
+      #   working-directory: web
       - run: bunx tsc --noEmit
         working-directory: server
 
