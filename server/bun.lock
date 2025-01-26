@@ -4,7 +4,7 @@
     "": {
       "name": "course-mate",
       "dependencies": {
-        "@prisma/client": "^6.0.0",
+        "@prisma/client": "^6.2.1",
         "common": "file:../common",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
@@ -19,9 +19,9 @@
       "devDependencies": {
         "@types/cookie-parser": "^1.4.8",
         "@types/cors": "^2.8.17",
-        "@types/express": "^4.0.0",
+        "@types/express": "^4.17.21",
         "globals": "^15.14.0",
-        "prisma": "^6.0.0",
+        "prisma": "^6.2.1",
         "typescript": "^5.7.3",
       },
     },
@@ -227,7 +227,7 @@
 
     "combined-stream": ["combined-stream@1.0.8", "", { "dependencies": { "delayed-stream": "~1.0.0" } }, "sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg=="],
 
-    "common": ["common@file:../common", { "dependencies": { "zod": "^3.23.8" }, "devDependencies": { "@types/bun": "latest" }, "peerDependencies": { "typescript": "^5.0.0" } }],
+    "common": ["common@file:../common", { "dependencies": { "zod": "^3.24.1" }, "devDependencies": { "@types/bun": "latest" }, "peerDependencies": { "typescript": "^5.6.3" } }],
 
     "content-disposition": ["content-disposition@0.5.4", "", { "dependencies": { "safe-buffer": "5.2.1" } }, "sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ=="],
 
