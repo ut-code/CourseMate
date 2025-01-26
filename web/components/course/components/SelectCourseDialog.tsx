@@ -47,6 +47,12 @@ export default function SelectCourseDialog({
       className={`modal ${open ? "modal-open" : ""}`}
       onClick={(e) => e.stopPropagation()}
     >
+      <form className="modal-backdrop">
+        <button type="button" onClick={onClose}>
+          閉じる
+        </button>
+      </form>
+
       <div className="modal-box">
         <h2 className="font-bold text-lg">
           {currentEdit
@@ -55,6 +61,13 @@ export default function SelectCourseDialog({
               }限の授業を選択`
             : "授業を選択"}
         </h2>
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm absolute top-3 right-3"
+          onClick={onClose}
+        >
+          閉じる
+        </button>
         <div className="my-4">
           <div>
             <h3 className="font-semibold text-sm">現在の授業</h3>
@@ -118,12 +131,6 @@ export default function SelectCourseDialog({
               ))}
             </ul>
           )}
-        </div>
-
-        <div className="modal-action">
-          <button type="button" className="btn btn-primary" onClick={onClose}>
-            閉じる
-          </button>
         </div>
 
         {newCourse && (
