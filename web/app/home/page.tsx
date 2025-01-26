@@ -3,7 +3,7 @@
 import CloseIcon from "@mui/icons-material/Close";
 import type { UserWithCoursesAndSubjects } from "common/types";
 import { motion, useAnimation } from "framer-motion";
-import { useCallback, useEffect, useState } from "react";
+import { type JSX, useCallback, useEffect, useState } from "react";
 import { MdThumbUp } from "react-icons/md";
 import request from "~/api/request";
 import { useAboutMe, useRecommended } from "~/api/user";

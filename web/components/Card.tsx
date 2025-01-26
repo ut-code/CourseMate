@@ -1,5 +1,5 @@
 import type { UserWithCoursesAndSubjects } from "common/types";
-import React, { useRef, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import UserAvatar from "./human/avatar";
 
 interface CardProps {

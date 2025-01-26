@@ -1,6 +1,5 @@
 "use client";
 
-import type React from "react";
 import { useMemo, useState } from "react";
 import { useAll, useMatched, useMyID, usePendingFromMe } from "~/api/user";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
