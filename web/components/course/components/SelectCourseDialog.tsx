@@ -116,17 +116,18 @@ export default function SelectCourseDialog({
           ) : (
             <ul className="mt-4">
               {filteredAvailableCourses.map((course) => (
-                // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-                <li
-                  key={course.id}
-                  className="cursor-pointer rounded-lg border p-2 hover:bg-gray-100"
-                  onClick={() => {
-                    setNewCourse(course);
-                    setConfirmDialogStatus("add");
-                  }}
-                >
-                  <p>{course.name}</p>
-                  <p className="text-gray-500 text-sm">{`${course.teacher} / ${course.id}`}</p>
+                <li key={course.id}>
+                  <button
+                    type="button"
+                    className="w-full cursor-pointer rounded-lg border p-2 hover:bg-gray-100"
+                    onClick={() => {
+                      setNewCourse(course);
+                      setConfirmDialogStatus("add");
+                    }}
+                  >
+                    <p>{course.name}</p>
+                    <p className="text-gray-500 text-sm">{`${course.teacher} / ${course.id}`}</p>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -139,10 +140,14 @@ export default function SelectCourseDialog({
             onClose={() => {
               setConfirmDialogStatus("closed");
               setNewCourse(null);
+              onClose();
+            }}
+            onCancel={() => {
+              setConfirmDialogStatus("closed");
+              setNewCourse(null);
             }}
             courseToAddOrDelete={newCourse}
             mode={confirmDialogStatus === "delete" ? "delete" : "add"}
-            handleSelectDialogClose={onClose}
             handleCoursesUpdate={handleCoursesUpdate}
           />
         )}
