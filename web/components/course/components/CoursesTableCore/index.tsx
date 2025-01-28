@@ -92,11 +92,11 @@ export default function CoursesTableCore(props: Props) {
           gridTemplateColumns: `3vh repeat(${ACTIVE_DAYS.length}, minmax(0, 1fr))`,
         }}
       >
-        <span className="rounded-sm bg-gray-100" />
+        <span className="rounded-xs bg-gray-100" />
         {ACTIVE_DAYS.map((activeDay) => (
           <span
             key={`header-${activeDay}`}
-            className="inline-flex items-center justify-center rounded-sm bg-gray-100 text-center text-xs"
+            className="inline-flex items-center justify-center rounded-xs bg-gray-100 text-center text-xs"
           >
             {DAY_TO_JAPANESE_MAP.get(activeDay as Day)}
           </span>
@@ -107,7 +107,7 @@ export default function CoursesTableCore(props: Props) {
           {Array.from({ length: 6 }, (_, i) => (
             <span
               key={`period-${i + 1}`}
-              className="inline-flex flex-1 items-center justify-center rounded-sm bg-gray-100 text-xs"
+              className="inline-flex flex-1 items-center justify-center rounded-xs bg-gray-100 text-xs"
             >
               {i + 1}
             </span>
@@ -188,7 +188,7 @@ function Cell({
 
   return (
     <span
-      className={`inline-flex h-full w-full flex-1 items-center justify-center rounded-sm p-0.5 text-xs ${
+      className={`inline-flex h-full w-full flex-1 items-center justify-center rounded-xs p-0.5 text-xs ${
         !courseName
           ? "bg-gray-50"
           : isOverlapping
