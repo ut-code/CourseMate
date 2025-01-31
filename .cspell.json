@@ -22,7 +22,10 @@
     "swiper",
     "lefthook",
     "stdenv",
-    "rustc"
+    "rustc",
+    "nixpkgs",
+    "pkgs",
+    "libquery"
   ],
   "dictionaries": [
     "softwareTerms",
