@@ -168,6 +168,11 @@ export async function getAllUsers(): Promise<
 > {
   try {
     const users = await prisma.user.findMany({
+      where: {
+        NOT: {
+          id: 0, // exclude memo from all user search results
+        },
+      },
       include: {
         enrollments: {
           include: {

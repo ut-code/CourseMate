@@ -1,4 +1,4 @@
-import type { Day } from "common/types";
+import type { Day, User } from "common/types";
 
 export const subjects: Array<{
   group: string;
@@ -30,7 +30,19 @@ export const interest = [
   { userId: 103, subjectId: 4 },
 ];
 
-export const users = [
+export const users: User[] = [
+  {
+    id: 0,
+    name: "メモ",
+    gender: "メモ",
+    grade: "メモ",
+    faculty: "メモ",
+    department: "メモ",
+    intro: "メモです。",
+    pictureUrl:
+      "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhvpbYflYCwbG_c11ADWhZUaf93zrtmvYYjSvY4NNxcF4Ri-XO6jiFZq-1InXfcxBjTD9_8jQntvnzML5F0geA04H9etzy3dcZ7SaqpbfKX4PmFgg8nplhaSLBCWo6zOIwq-jJc9tjrXxKV/s1600/bunbougu_memo.png",
+    guid: "0000",
+  },
   {
     id: 101,
     name: "田中太郎",
