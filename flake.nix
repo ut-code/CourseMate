@@ -32,7 +32,7 @@
       };
       # unstable-pkgs = unstable.legacyPackages.${system};
       rust-bin = pkgs.rust-bin.fromRustupToolchainFile ./scraper/rust-toolchain.toml;
-      prisma-bin = (pkgs.callPackage ./server/prisma.nix {inherit prisma-utils;}).package;
+      prisma = pkgs.callPackage ./server/prisma.nix {inherit prisma-utils;};
 
       common = {
         packages =
@@ -49,18 +49,15 @@
             stdenv.cc.cc.lib
           ]);
 
-        env = {
-          # requird by prisma
-          PRISMA_QUERY_ENGINE_BINARY = "${prisma-bin}/bin/query-engine";
-          PRISMA_QUERY_ENGINE_LIBRARY = "${prisma-bin}/lib/libquery_engine.node";
-          PRISMA_INTROSPECTION_ENGINE_BINARY = "${prisma-bin}/bin/introspection-engine";
-          PRISMA_SCHEMA_ENGINE_BINARY = "${prisma-bin}/bin/schema-engine";
-          # HACK: sharp can't find libstdc++.so.6 on bun without this
-          # - hack because: setting this may break other packages
-          # - info: it can find libstdc++.so.6 on Node.js
-          # - info: NobbZ says it's because "We can not set an rpath for a scripting language"
-          LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
-        };
+        env =
+          prisma.env
+          // {
+            # HACK: sharp can't find libstdc++.so.6 on bun without this
+            # - hack because: setting this may break other packages
+            # - info: it can find libstdc++.so.6 on Node.js
+            # - info: NobbZ says it's because "We can not set an rpath for a scripting language"
+            LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+          };
       };
     in {
       packages.scraper = pkgs.callPackage ./scraper {toolchain = rust-bin;};
