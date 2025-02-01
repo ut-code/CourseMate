@@ -7,7 +7,28 @@
 }
 
 /* FIXME: 
-- Error: Cannot apply unknown utility class: no-animation
+/* - Error: Cannot apply unknown utility class: no-animation */
 .cm-li-btn {
-  @apply no-animation h-auto w-full justify-start rounded-none border-none bg-white px-6 py-4 text-left font-normal text-base shadow-none hover:bg-zinc-100 focus:bg-zinc-300;
-} */
+  /* no-animation */
+  @apply h-auto w-full justify-start rounded-none border-none bg-white text-primary px-6 py-4 text-left font-normal text-base shadow-none hover:bg-zinc-100 focus:bg-zinc-300;
+}
+
+@plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "mytheme";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  /* available options: https://daisyui.com/docs/themes/#-4 */
+  /* optional colors: https://daisyui.com/docs/colors/#-2 */
+  --color-primary: #039BE5;
+  --color-primary-content: #FFFFFF;
+  --color-secondary: #E9F8FF;
+  --color-accent: #FFC700;
+  --color-neutral: #000000;
+  --color-base-100: #ffffff;
+
+  /* --rounded-btn: 0.25rem; */
+  /* --rounded-box: 0.25rem; */
+}

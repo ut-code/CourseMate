@@ -6,7 +6,7 @@ import FullScreenCircularProgress from "~/components/common/FullScreenCircularPr
 import Search from "~/components/search/search";
 import Table from "~/components/search/table";
 
-export default async function SearchPage() {
+export default function SearchPage() {
   const [query, setQuery] = useState<string>(() => {
     return new URLSearchParams(location.search)?.get("query") ?? "";
   });
