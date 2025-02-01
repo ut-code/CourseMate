@@ -2,13 +2,19 @@
   description = "CourseMate";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
-    # prisma v6 is only out on unstable uncomment this on updating prisma to v6. can be removed when 25.05 channel is released
-    # unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     flake-utils.url = "github:numtide/flake-utils";
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    prisma-utils = {
+      url = "github:VanCoding/nix-prisma-utils";
+      # HACK: they have named nixpkgs pkgs. I'm submitting a fix PR soon, rename this to `inputs.nixpkgs.follows` when that gets merged.
+      inputs.pkgs.follows = "nixpkgs";
     };
   };
 
@@ -16,9 +22,8 @@
     nixpkgs,
     flake-utils,
     rust-overlay,
-    /*
-    unstable,
-    */
+    prisma-utils,
+    nixpkgs-unstable,
     ...
   }:
     flake-utils.lib.eachDefaultSystem (system: let
@@ -26,35 +31,34 @@
       pkgs = import nixpkgs {
         inherit system overlays;
       };
-      # unstable-pkgs = unstable.legacyPackages.${system};
+      unstable = nixpkgs-unstable.legacyPackages.${system};
+
       rust-bin = pkgs.rust-bin.fromRustupToolchainFile ./scraper/rust-toolchain.toml;
+      prisma = pkgs.callPackage ./server/prisma.nix {inherit prisma-utils;};
 
       common = {
-        packages = with pkgs; [
-          nix # HACK: to fix the side effect of the hack below, installing two instances of nix
-          gnumake
-          bun
-          nodejs
-          biome
-          lefthook
-          dotenv-cli
-          prisma
-          stdenv.cc.cc.lib
-        ];
+        packages =
+          (with pkgs; [
+            nix # HACK: to fix the side effect of the hack below, installing two instances of nix
+            gnumake
+            nodejs
+            biome
+            lefthook
+            dotenv-cli
+          ])
+          ++ (with unstable; [
+            bun
+          ]);
 
-        env = with pkgs; {
-          # requird by prisma
-          PRISMA_QUERY_ENGINE_BINARY = "${prisma-engines}/bin/query-engine";
-          PRISMA_QUERY_ENGINE_LIBRARY = "${prisma-engines}/lib/libquery_engine.node";
-          PRISMA_INTROSPECTION_ENGINE_BINARY = "${prisma-engines}/bin/introspection-engine";
-          PRISMA_FMT_BINARY = "${prisma-engines}/bin/prisma-fmt";
-
-          # HACK: sharp can't find libstdc++.so.6 on bun without this
-          # - hack because: setting this may break other packages
-          # - info: it can find libstdc++.so.6 on Node.js
-          # - info: NobbZ says it's because "We can not set an rpath for a scripting language"
-          LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
-        };
+        env =
+          prisma.env
+          // {
+            # HACK: sharp can't find libstdc++.so.6 on bun without this
+            # - hack because: setting this may break other packages
+            # - info: it can find libstdc++.so.6 on Node.js
+            # - info: NobbZ says it's because "We can not set an rpath for a scripting language"
+            LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+          };
       };
     in {
       packages.scraper = pkgs.callPackage ./scraper {toolchain = rust-bin;};
