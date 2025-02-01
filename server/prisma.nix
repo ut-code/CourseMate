@@ -11,13 +11,13 @@
         libquery-engine-hash = "sha256-USIdaum87ekGY6F6DaL/tKH0BAZvHBDK7zjmCLo//kM=";
         schema-engine-hash = "sha256-k5MkxXViEqojbkkcW/4iBFNdfhb9PlMEF1M2dyhfOok=";
       })
-    # this doesn't support bun.lock yet, but soon will. https://github.com/VanCoding/nix-prisma-utils/pull/12
-    # migrate to bun.lock after that gets merged.
-    .fromNpmLock
-    ./package-lock.json;
+    .fromBunLock
+    ./bun.lock;
   inherit (prisma) package;
 in {
   inherit (prisma) shellHook;
+
+  # waiting for https://github.com/VanCoding/nix-prisma-utils/pull/10
   env = {
     PRISMA_QUERY_ENGINE_BINARY = "${package}/bin/query-engine";
     PRISMA_QUERY_ENGINE_LIBRARY = "${package}/lib/libquery_engine.node";
