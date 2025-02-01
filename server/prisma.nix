@@ -6,10 +6,10 @@
   {
     nixpkgs = pkgs;
     # just copy these hashes for now, and then change them when nix complains about the mismatch
-    prisma-fmt-hash = "sha256-atD5GZfmeU86mF1V6flAshxg4fFR2ews7EwaJWZZzbc=";
-    query-engine-hash = "sha256-8FTZaKmQCf9lrDQvkF5yWPeZ7TSVfFjTbjdbWWEHgq4=";
-    libquery-engine-hash = "sha256-USIdaum87ekGY6F6DaL/tKH0BAZvHBDK7zjmCLo//kM=";
-    schema-engine-hash = "sha256-k5MkxXViEqojbkkcW/4iBFNdfhb9PlMEF1M2dyhfOok=";
+    prisma-fmt-hash = "sha256-0PSvJ2tB5pBS7k65qsF2MCV3s06orrDYDkaC5jnfbPU=";
+    query-engine-hash = "sha256-G2iumxi4HMqcSdmYm+KAlj0k2haX9EE9bh7CScdX7lU=";
+    libquery-engine-hash = "sha256-Uxs7CWqxgBhOivn495YkndEsrG55hHpYrNjdCeUrqwk=";
+    schema-engine-hash = "sha256-08sTw6io+Cyx5O2Mnk/yflAcgzZYxMOPGGSM6OLzqRA=";
   })
 .fromNpmLock
 ./package-lock.json

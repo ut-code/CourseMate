@@ -54,7 +54,7 @@
           PRISMA_QUERY_ENGINE_BINARY = "${prisma-bin}/bin/query-engine";
           PRISMA_QUERY_ENGINE_LIBRARY = "${prisma-bin}/lib/libquery_engine.node";
           PRISMA_INTROSPECTION_ENGINE_BINARY = "${prisma-bin}/bin/introspection-engine";
-          PRISMA_FMT_BINARY = "${prisma-bin}/bin/prisma-fmt";
+          PRISMA_SCHEMA_ENGINE = "${prisma-bin}/bin/schema-engine";
           # HACK: sharp can't find libstdc++.so.6 on bun without this
           # - hack because: setting this may break other packages
           # - info: it can find libstdc++.so.6 on Node.js
