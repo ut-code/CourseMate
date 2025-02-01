@@ -22,10 +22,10 @@
   color-scheme: "light";
   /* available options: https://daisyui.com/docs/themes/#-4 */
   /* optional colors: https://daisyui.com/docs/colors/#-2 */
-  --color-primary: #039BE5;
-  --color-primary-content: #FFFFFF;
-  --color-secondary: #E9F8FF;
-  --color-accent: #FFC700;
+  --color-primary: #039be5;
+  --color-primary-content: #ffffff;
+  --color-secondary: #e9f8ff;
+  --color-accent: #ffc700;
   --color-neutral: #000000;
   --color-base-100: #ffffff;
 
