@@ -44,7 +44,7 @@ export default function Tutorial() {
             className="carousel-item relative w-full"
           >
             <div className="mx-auto flex max-w-[30vh] flex-col justify-center gap-8">
-              <h2 className="text-center text-2xl">{step.label}</h2>
+              <h2 className="text-center text-xl">{step.label}</h2>
               <img
                 src={step.imgPath}
                 alt={step.label}
