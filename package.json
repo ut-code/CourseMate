@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepare": "lefthook install",
+    "prepare": "lefthook install && (cd server; bun run prepare)",
     "check": "bun type && bun style:check",
     "style": "biome check . --fix",
     "style:check": "biome check .",
