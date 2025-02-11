@@ -42,18 +42,25 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
     handleSubmit,
     getValues,
     setValue,
-    formState: { errors },
+    formState: { isDirty, errors },
   } = useForm({
     defaultValues: defaultValues,
     reValidateMode: "onChange",
     resolver: zodResolver(UpdateUserSchema),
   });
+
   async function submit(data: User) {
     await update(data);
+    enqueueSnackbar({
+      message: "保存しました",
+    });
   }
   function afterPhotoUpload(result: string) {
     try {
       setValue("pictureUrl", result);
+      enqueueSnackbar({
+        message: "画像を更新しました",
+      });
     } catch (err) {
       console.error(err);
       // probably a network error
@@ -66,7 +73,9 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
   const [open, setOpen] = useState<boolean>(false);
 
   function handleBack() {
-    if (Math.random() < 1 /* todo: has errors on unsaved */) {
+    const hasError = Object.values(errors).length >= 1;
+    if (hasError || isDirty) {
+      console.log(`hasError: ${hasError}`, errors);
       showAlert({
         AlertMessage: "編集中のフィールド、もしくはエラーがあります。",
         subAlertMessage: "本当にページを移動しますか？変更は破棄されます",
@@ -81,6 +90,10 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
   }
 
   const values = getValues();
+
+  const [selectedFaculty, setSelectedFaculty] = useState(values.faculty);
+  const departments = facultiesAndDepartments[selectedFaculty] ?? null;
+
   return (
     <div className="flex h-full flex-col">
       <form onSubmit={handleSubmit(submit)}>
@@ -94,6 +107,7 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
               id="name"
               {...register("name")}
             />
+            <span className="text-error text-sm">{errors.name?.message}</span>
           </div>
           <div>
             <label htmlFor="gender" className="text-md">
@@ -137,6 +151,10 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
               className="select select-bordered w-full"
               id="faculty"
               {...register("faculty")}
+              onChange={(e) => {
+                setSelectedFaculty(e.target.value);
+                setValue("department", "");
+              }}
             >
               {faculties.map((fac) => (
                 <option key={fac}>{fac}</option>
@@ -155,12 +173,11 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
               id="department"
               {...register("department")}
             >
-              {values.faculty &&
-                facultiesAndDepartments[values.faculty].map((dep) => (
-                  <option key={dep} value={dep}>
-                    {dep}
-                  </option>
-                ))}
+              {departments.map((dep) => (
+                <option key={dep} value={dep}>
+                  {dep}
+                </option>
+              ))}
             </select>
             <span className="text-error text-sm">
               {errors.department?.message}
@@ -177,6 +194,7 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
               rows={3}
               autoComplete="off"
             />
+            <span className="text-error text-sm">{errors.intro?.message}</span>
           </div>
           <div className="mt-4 flex flex-col items-center text-center">
             <span className="text-md">プロフィール画像</span>
