@@ -18,13 +18,14 @@
     "watch": "trap 'kill 0' EXIT; bun run watch:web & bun run watch:server & wait",
     "watch:web": "cd web; bun run dev",
     "watch:server": "cd server; bun run dev",
-    "seed": "cd server; bun prisma seed",
-    "prepare:deploy:web": "bun install && bun run build:web",
-    "prepare:deploy:server": "bun install",
+    "seed": "cd server; bun prisma db seed",
+    "prepare:deploy:web": "bun install --frozen-lockfile && bun run build:web",
+    "prepare:deploy:server": "bun install --frozen-lockfile",
     "deploy:web": "cd web; bun run start --port $PORT",
     "deploy:server": "cd server; bun run src/main.ts",
     "dev-db": "make dev-db",
-    "test": "make test"
+    "test": "make test",
+    "spell": "bunx cspell --quiet ."
   },
   "keywords": [],
   "author": "",
