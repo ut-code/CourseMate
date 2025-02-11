@@ -1,10 +1,9 @@
 "use client";
 
-import CloseIcon from "@mui/icons-material/Close";
 import type { UserWithCoursesAndSubjects } from "common/types";
 import { motion, useAnimation } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
-import { MdThumbUp } from "react-icons/md";
+import { MdClose, MdThumbUp } from "react-icons/md";
 import request from "~/api/request";
 import { useAboutMe, useRecommended } from "~/api/user";
 import { Card } from "~/components/Card";
@@ -12,6 +11,7 @@ import { DraggableCard } from "~/components/DraggableCard";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import NoMoreUser from "./components/NoMoreUser";
 import PersonDetailedMenu from "./components/PersonDetailedMenu";
+import RoundButton from "./components/RoundButton";
 
 export default function Home() {
   const { data, error } = useRecommended();
@@ -133,14 +133,14 @@ export default function Home() {
               </motion.div>
             </div>
           )}
-          <div className="button-container mt-4 mb-4 flex w-full justify-center space-x-8">
-            <CloseButton
+          <div className="mt-2 mb-4 flex w-full justify-around px-8">
+            <RoundButton
               onclick={() => handleAction("reject")}
-              icon={<CloseIconStyled />}
+              icon={<MdClose className="text-3xl text-gray-500" />}
             />
-            <GoodButton
+            <RoundButton
               onclick={() => handleAction("accept")}
-              icon={<FavoriteIconStyled />}
+              icon={<MdThumbUp className="text-3xl text-primary" />}
             />
           </div>
           {openDetailedMenu && (
@@ -157,36 +157,6 @@ export default function Home() {
     </div>
   );
 }
-
-interface RoundButtonProps {
-  onclick: () => void;
-  icon: JSX.Element;
-}
-
-const CloseButton = ({ onclick, icon }: RoundButtonProps) => (
-  <button
-    type="button"
-    onClick={onclick}
-    className="btn btn-circle bg-white shadow-md"
-  >
-    {icon}
-  </button>
-);
-const GoodButton = ({ onclick, icon }: RoundButtonProps) => (
-  <button
-    type="button"
-    onClick={onclick}
-    className="btn btn-circle bg-white shadow-md"
-  >
-    {icon}
-  </button>
-);
-
-const CloseIconStyled = () => <CloseIcon className="text-4xl text-gray-500" />;
-
-const FavoriteIconStyled = () => (
-  <MdThumbUp className="text-3xl text-primary" />
-);
 
 class Queue<T> {
   private store: T[];

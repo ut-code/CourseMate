@@ -11,7 +11,7 @@ export default function Layout({
     <>
       <Header title="検索" />
       <NavigateByAuthState type="toLoginForUnauthenticated">
-        <div className="grow overflow-y-auto">{children}</div>
+        <div className="h-full overflow-y-auto pt-12 pb-12">{children}</div>
       </NavigateByAuthState>
       <BottomBar activeTab="2_search" />
     </>

@@ -95,7 +95,7 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
   const departments = facultiesAndDepartments[selectedFaculty] ?? null;
 
   return (
-    <div className="flex h-full flex-col">
+    <div>
       <form onSubmit={handleSubmit(submit)}>
         <div className="flex flex-col gap-2 p-2">
           <div>

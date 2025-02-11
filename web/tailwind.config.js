@@ -16,6 +16,7 @@ export default {
           accent: "#FFC700",
           neutral: "#000000",
           "base-100": "#ffffff",
+          "base-200": "#f3f3f3", // base の薄いグレー
 
           "--rounded-btn": "0.25rem",
           "--rounded-box": "0.25rem",

@@ -15,11 +15,11 @@ export default function Friends() {
   const [activeTab, setActiveTab] = useState("matching");
 
   return (
-    <div className="w-full">
-      <div className="flex w-full border-gray-200 border-b">
+    <div className="relative w-full">
+      <div className="fixed top-12 flex h-10 w-full border-gray-200 border-b bg-white">
         <button
           type="button"
-          className={`relative flex-1 py-3 text-center ${
+          className={`relative flex-1 text-center ${
             activeTab === "matching" ? "text-primary" : "text-gray-600"
           }`}
           onClick={() => setActiveTab("matching")}
@@ -31,7 +31,7 @@ export default function Friends() {
         </button>
         <button
           type="button"
-          className={`relative flex-1 py-2 text-center ${
+          className={`relative flex-1 text-center ${
             activeTab === "request" ? "text-primary" : "text-gray-600"
           }`}
           onClick={() => setActiveTab("request")}
@@ -43,7 +43,7 @@ export default function Friends() {
         </button>
       </div>
 
-      <div className="text-center text-gray-700 text-lg">
+      <div className="pt-10 text-center text-gray-700 text-lg">
         {activeTab === "matching" ? <NoSSRMatchings /> : <NoSSRRequests />}
       </div>
     </div>
