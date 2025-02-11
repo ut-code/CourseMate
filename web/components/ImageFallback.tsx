@@ -13,21 +13,7 @@ export function ImageFallback({ width, height, url }: Props) {
     : url;
 
   return (
-    // <object
-    //   data={URL}
-    //   type="image/webp"
-    //   width={width} // there probably prevent style shaking
-    //   height={height}
-    //   style={{
-    //     width,
-    //     height,
-    //     objectFit: "cover",
-    //     borderRadius: "50%",
-    //     pointerEvents: "none",
-    //   }}
-    // >
     <img
-      // src="/avatar.svg"
       src={URL}
       onError={(e) => {
         (e.target as HTMLImageElement).src = "/avatar.svg";
@@ -37,6 +23,5 @@ export function ImageFallback({ width, height, url }: Props) {
       style={{ width, height, borderRadius: "50%" }}
       alt=""
     />
-    // </object>
   );
 }
