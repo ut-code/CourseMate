@@ -24,34 +24,36 @@ const BanLandscape = () => {
   }, [checkOrientation]);
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+    <div className="ban-landscape">
       {isLandscape && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
+        <div style={{ position: "absolute", width: "100%", height: "100%" }}>
           <div
             style={{
-              backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "10px",
-              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
-              textAlign: "center",
-              fontSize: "20px",
-              color: "#333",
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000,
             }}
           >
-            このアプリは縦画面で使用してください
+            <div
+              style={{
+                backgroundColor: "white",
+                padding: "20px",
+                borderRadius: "10px",
+                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+                textAlign: "center",
+                fontSize: "20px",
+                color: "#333",
+              }}
+            >
+              このアプリは縦画面で使用してください
+            </div>
           </div>
         </div>
       )}
