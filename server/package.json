@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "bun --env-file=./.env.dev prisma generate --sql || (echo 'please set DATABASE_URL in server/.env.dev' && exit 1)",
     "dev": "bun --watch src/main.ts",
     "build": "tsc",
     "serve": "bun target/main.js"
