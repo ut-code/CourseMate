@@ -91,18 +91,18 @@ dev-db:
 # Sync (install/update packages, generate prisma, etc)
 
 sync-web:
-	cd web; bun install --frozen-lockfile
+	cd web; bun install
 	# copy .env.sample -> .env only if .env is not there
 
 sync-server:
-	cd server; bun install --frozen-lockfile
+	cd server; bun install
 	cd server; if command -v prisma; then prisma generate; else bunx prisma generate; fi
 	# copy .env.sample -> .env only if .env is not there
 
 sync-root:
-	bun install --frozen-lockfile
+	bun install
 sync-common:
-	cd common; bun install --frozen-lockfile
+	cd common; bun install
 
 
 # Static checks
