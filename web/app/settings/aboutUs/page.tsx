@@ -1,13 +1,18 @@
+"use client";
+
 import { FaGithub, FaXTwitter } from "react-icons/fa6";
 import { MdLanguage } from "react-icons/md";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
-import TopNavigation from "~/components/common/TopNavigation";
+import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 
 export default function AboutUs() {
+  useSetHeaderFooter(
+    { title: "About Us", backButtonPath: "/settings" },
+    { activeTab: "4_settings" },
+  );
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
       <div className="relative flex flex-col p-2">
-        <TopNavigation title="About Us" />
         <div className="w-full p-8">
           <h1 className="mb-2 text-left text-xl underline">
             CourseMateについて

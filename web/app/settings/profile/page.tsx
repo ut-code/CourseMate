@@ -14,6 +14,7 @@ import { useAlert } from "~/components/common/alert/AlertProvider";
 import PhotoModal from "~/components/config/PhotoModal";
 import { PhotoPreviewButton } from "~/components/config/PhotoPreview";
 import UserAvatar from "~/components/human/avatar";
+import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 
 const faculties = Object.keys(facultiesAndDepartments);
 
@@ -93,6 +94,8 @@ function EditProfile({ defaultValues }: { defaultValues: User }) {
 
   const [selectedFaculty, setSelectedFaculty] = useState(values.faculty);
   const departments = facultiesAndDepartments[selectedFaculty] ?? null;
+
+  useSetHeaderFooter({ title: "プロフィール" }, { activeTab: "4_settings" });
 
   return (
     <div>

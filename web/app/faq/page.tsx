@@ -1,14 +1,12 @@
 "use client";
 
-import TopNavigation from "~/components/common/TopNavigation";
 import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 
 export default function FAQ() {
-  useSetHeaderFooter({ title: "よくある質問" }, { activeTab: "4_settings" });
+  useSetHeaderFooter({ title: "よくある質問" }, { activeTab: "none" });
   return (
     <div className="absolute top-14 right-0 bottom-0 left-0 flex flex-column overflow-y-auto sm:top-16">
       <div className="flex flex-col p-2">
-        <TopNavigation title="よくある質問" />
         <div className="w-full p-8 text-left">
           <p className="mb-4 leading-7">
             {/* TODO: この辺の構造を直す */}

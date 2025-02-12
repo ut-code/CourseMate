@@ -7,7 +7,7 @@ import { useAboutMe } from "~/api/user";
 import { Card } from "~/components/Card";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
-import TopNavigation from "~/components/common/TopNavigation";
+import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 
 export default function SettingsProfile() {
   const { state } = useAboutMe();
@@ -18,6 +18,11 @@ export default function SettingsProfile() {
 
   if (error) throw error;
 
+  useSetHeaderFooter(
+    { title: "カードのプレビュー", backButtonPath: "/settings" },
+    { activeTab: "4_settings" },
+  );
+
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
       {loading ? (
@@ -26,7 +31,6 @@ export default function SettingsProfile() {
         <p>データがありません。</p>
       ) : (
         <div className="flex flex-col p-2">
-          <TopNavigation title="あなたのカード" />
           <div className="flex flex-1 flex-col items-center">
             <div className="flex w-full justify-end">
               <Link

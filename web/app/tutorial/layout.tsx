@@ -1,3 +1,5 @@
+"use client";
+
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
 import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 

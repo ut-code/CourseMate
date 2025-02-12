@@ -1,11 +1,16 @@
+"use client";
+
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
-import TopNavigation from "~/components/common/TopNavigation";
+import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 
 export default function Disclaimer() {
+  useSetHeaderFooter(
+    { title: "免責事項", backButtonPath: "/settings" },
+    { activeTab: "4_settings" },
+  );
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
       <div className="flex flex-col p-2">
-        <TopNavigation title="免責事項" />
         <div className="w-full p-8 text-left">
           <p className="mb-4 leading-7">
             本サービスはut.code();によって運営されており、東京大学は運営に関与しておりません。本サービスは東大生のみを対象としており、ECCSアカウントによるログインが必須です。

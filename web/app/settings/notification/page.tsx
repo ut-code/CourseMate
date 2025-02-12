@@ -1,5 +1,7 @@
+"use client";
+
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
-import TopNavigation from "~/components/common/TopNavigation";
+import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 
 // Notification型を定義
 type Notification = {
@@ -33,11 +35,13 @@ const sortedNotifications = notifications.sort(
 );
 
 export default function Notification() {
+  useSetHeaderFooter(
+    { title: "運営からのお知らせ", backButtonPath: "/settings" },
+    { activeTab: "4_settings" },
+  );
   return (
     <NavigateByAuthState type="toLoginForUnauthenticated">
       <div className="flex flex-col p-2">
-        <TopNavigation title="お知らせ" />
-
         <ul className="w-full space-y-6 p-8 text-left">
           {sortedNotifications.map((notification) => (
             <li key={notification.date} className="border-b pb-4">

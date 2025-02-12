@@ -6,13 +6,13 @@ import type { TopBarProps } from "~/components/TopBar";
 import { useHeaderFooterInternal } from "../components/HeaderFooterContext";
 
 export function useSetHeaderFooter(
-  { title, info, useBackButton }: TopBarProps,
+  { title, info, backButtonPath: useBackButton }: TopBarProps,
   { activeTab }: BottomBarProps,
 ) {
   const { setHeaderProps, setBottomBarProps } = useHeaderFooterInternal();
 
   useLayoutEffect(() => {
-    setHeaderProps({ title, info, useBackButton });
+    setHeaderProps({ title, info, backButtonPath: useBackButton });
     setBottomBarProps({ activeTab });
   }, [
     title,

@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useCallback } from "react";
 import { deleteAccount } from "~/api/user";
-import TopNavigation from "~/components/common/TopNavigation";
 import { useAlert } from "~/components/common/alert/AlertProvider";
+import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 
 export default function DeleteAccount() {
   const router = useRouter();
@@ -33,9 +33,13 @@ export default function DeleteAccount() {
     });
   }, [showAlert, enqueueSnackbar, router.push]);
 
+  useSetHeaderFooter(
+    { title: "アカウント削除", backButtonPath: "/settings" },
+    { activeTab: "4_settings" },
+  );
+
   return (
     <div className="flex flex-col p-2">
-      <TopNavigation title="アカウント削除" />
       <div className="w-full p-8 text-left">
         <p className="mb-4 text-center text-red-500 leading-7">
           アカウントを削除した場合、マッチングやチャットに関する情報の一切が削除されます。

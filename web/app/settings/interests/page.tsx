@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { MdAdd, MdClose } from "react-icons/md";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import { useAlert } from "~/components/common/alert/AlertProvider";
+import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 import * as subject from "../../../api/subject";
 
 export default function EditInterest() {
@@ -76,6 +77,8 @@ export default function EditInterest() {
   }
 
   if (error) throw error;
+
+  useSetHeaderFooter({ title: "興味分野の編集" }, { activeTab: "4_settings" });
 
   return loading ? (
     <FullScreenCircularProgress />

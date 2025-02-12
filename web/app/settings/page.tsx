@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { MdChevronRight } from "react-icons/md";
 import LogOutButton from "~/components/LogOutButton";
+import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 
 function Item({
   href,
@@ -22,6 +25,7 @@ function Item({
 }
 
 export default function Settings() {
+  useSetHeaderFooter({ title: "設定" }, { activeTab: "4_settings" });
   return (
     <div className="flex flex-col justify-start">
       <h2 className="p-4 pb-2 text-gray-500 text-xs">基本情報</h2>
