@@ -36,7 +36,8 @@
     ".next/types/**/*.ts",
     "common",
     "app",
-    "components"
+    "components",
+    "hooks"
   ],
   "exclude": ["./node_modules"]
 }

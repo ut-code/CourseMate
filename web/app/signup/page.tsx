@@ -5,8 +5,8 @@ import { useState } from "react";
 
 import type { Step1User } from "common/zod/types";
 import { useRouter } from "next/navigation";
-import Header from "~/components/Header";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
+import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 import { register } from "./functions";
 import Step1 from "./steps/step1_profile";
 import Step2, { type Step2Data } from "./steps/step2_img";
@@ -78,14 +78,12 @@ function Registration() {
   }
 }
 export default function RegistrationPage() {
+  useSetHeaderFooter({ title: "登録" }, { activeTab: "none" });
   return (
-    <>
-      <Header title="登録" />
-      <NavigateByAuthState type="toHomeForAuthenticated">
-        <div className="h-full pt-12">
-          <Registration />
-        </div>
-      </NavigateByAuthState>
-    </>
+    <NavigateByAuthState type="toHomeForAuthenticated">
+      <div className="h-full pt-12">
+        <Registration />
+      </div>
+    </NavigateByAuthState>
   );
 }

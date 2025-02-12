@@ -1,17 +1,15 @@
-import Header from "~/components/Header";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
+import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 
 export default function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  useSetHeaderFooter({ title: "チュートリアル" }, { activeTab: "none" });
   return (
-    <>
-      <Header title="チュートリアル" />
-      <NavigateByAuthState type="toLoginForUnauthenticated">
-        <div className="h-full overflow-y-auto pt-12">{children}</div>
-      </NavigateByAuthState>
-    </>
+    <NavigateByAuthState type="toLoginForUnauthenticated">
+      <div className="h-full overflow-y-auto pt-12">{children}</div>
+    </NavigateByAuthState>
   );
 }

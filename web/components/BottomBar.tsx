@@ -12,8 +12,14 @@ import { MdChat } from "react-icons/md";
 import { MdSettings } from "react-icons/md";
 import { MdOutlineHome } from "react-icons/md";
 
-type Props = {
-  activeTab: "0_home" | "1_friends" | "2_search" | "3_chat" | "4_settings";
+export type BottomBarProps = {
+  activeTab:
+    | "0_home"
+    | "1_friends"
+    | "2_search"
+    | "3_chat"
+    | "4_settings"
+    | "none";
 };
 
 function BottomBarCell({
@@ -33,60 +39,63 @@ function BottomBarCell({
   );
 }
 
-export default function BottomBar(props: Props) {
-  const { activeTab } = props;
+export default function BottomBar(props: BottomBarProps) {
   return (
-    <div className="fixed bottom-0 z-30 flex h-12 w-full flex-row items-center justify-around border-gray-200 border-t bg-white">
-      <BottomBarCell
-        href="/home"
-        iconComponent={
-          activeTab === "0_home" ? (
-            <MdHome className="text-3xl" />
-          ) : (
-            <MdOutlineHome className="text-3xl" />
-          )
-        }
-      />
-      <BottomBarCell
-        href="/friends"
-        iconComponent={
-          activeTab === "1_friends" ? (
-            <MdPeople className="text-3xl" />
-          ) : (
-            <MdPeopleOutline className="text-3xl" />
-          )
-        }
-      />
-      <BottomBarCell
-        href="/search"
-        iconComponent={
-          activeTab === "2_search" ? (
-            <MdPersonSearch className="text-3xl" />
-          ) : (
-            <MdOutlinePersonSearch className="text-3xl " />
-          )
-        }
-      />
-      <BottomBarCell
-        href="/chat"
-        iconComponent={
-          activeTab === "3_chat" ? (
-            <MdChat className="text-3xl" />
-          ) : (
-            <MdOutlineChat className="text-3xl" />
-          )
-        }
-      />
-      <BottomBarCell
-        href="/settings"
-        iconComponent={
-          activeTab === "4_settings" ? (
-            <MdSettings className="text-3xl" />
-          ) : (
-            <MdOutlineSettings className="text-3xl" />
-          )
-        }
-      />
-    </div>
+    <>
+      {props.activeTab !== "none" && (
+        <div className="fixed bottom-0 z-30 flex h-12 w-full flex-row items-center justify-around border-gray-200 border-t bg-white">
+          <BottomBarCell
+            href="/home"
+            iconComponent={
+              props.activeTab === "0_home" ? (
+                <MdHome className="text-3xl" />
+              ) : (
+                <MdOutlineHome className="text-3xl" />
+              )
+            }
+          />
+          <BottomBarCell
+            href="/friends"
+            iconComponent={
+              props.activeTab === "1_friends" ? (
+                <MdPeople className="text-3xl" />
+              ) : (
+                <MdPeopleOutline className="text-3xl" />
+              )
+            }
+          />
+          <BottomBarCell
+            href="/search"
+            iconComponent={
+              props.activeTab === "2_search" ? (
+                <MdPersonSearch className="text-3xl" />
+              ) : (
+                <MdOutlinePersonSearch className="text-3xl " />
+              )
+            }
+          />
+          <BottomBarCell
+            href="/chat"
+            iconComponent={
+              props.activeTab === "3_chat" ? (
+                <MdChat className="text-3xl" />
+              ) : (
+                <MdOutlineChat className="text-3xl" />
+              )
+            }
+          />
+          <BottomBarCell
+            href="/settings"
+            iconComponent={
+              props.activeTab === "4_settings" ? (
+                <MdSettings className="text-3xl" />
+              ) : (
+                <MdOutlineSettings className="text-3xl" />
+              )
+            }
+          />
+        </div>
+      )}
+    </>
   );
 }

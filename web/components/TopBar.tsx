@@ -2,13 +2,15 @@ import Link from "next/link";
 import { MdInfoOutline } from "react-icons/md";
 import { CourseMateIcon } from "./common/CourseMateIcon";
 
-type Props = {
+export type TopBarProps = {
   title?: string;
   info?: boolean;
+  useBackButton?: boolean;
 };
 
-export default function Header(props: Props) {
-  const { title, info } = props;
+export default function TopBar(props: TopBarProps) {
+  const { title, info, useBackButton } = props;
+  // TODO: Implement back button
   return (
     <header className="fixed top-0 z-30 flex h-12 w-full items-center justify-center border-gray-200 border-b bg-white">
       {title && (

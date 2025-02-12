@@ -9,6 +9,12 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import BanLandscape from "~/components/BanLandscape";
+import BottomBar from "~/components/BottomBar";
+import {
+  HeaderFooterProvider,
+  useHeaderFooterInternal,
+} from "~/components/HeaderFooterContext";
+import TopBar from "~/components/TopBar";
 import { AlertProvider } from "~/components/common/alert/AlertProvider";
 import { ModalProvider } from "~/components/common/modal/ModalProvider";
 import AuthProvider from "~/firebase/auth/AuthProvider";
@@ -50,7 +56,9 @@ export default function RootLayout({
                 <AlertProvider>
                   <ModalProvider>
                     <BanLandscape />
-                    {children}
+                    <HeaderFooterProvider>
+                      <MainLayout>{children}</MainLayout>
+                    </HeaderFooterProvider>
                   </ModalProvider>
                 </AlertProvider>
               </AuthProvider>
@@ -59,5 +67,16 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
+  );
+}
+
+function MainLayout({ children }: { children: React.ReactNode }) {
+  const { headerProps, bottomBarProps } = useHeaderFooterInternal();
+  return (
+    <>
+      <TopBar {...headerProps} />
+      {children}
+      <BottomBar {...bottomBarProps} />
+    </>
   );
 }

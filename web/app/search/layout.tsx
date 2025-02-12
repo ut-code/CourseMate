@@ -1,19 +1,17 @@
-import BottomBar from "~/components/BottomBar";
-import Header from "~/components/Header";
+"use client";
+
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
+import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 
 export default function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  useSetHeaderFooter({ title: "検索" }, { activeTab: "2_search" });
   return (
-    <>
-      <Header title="検索" />
-      <NavigateByAuthState type="toLoginForUnauthenticated">
-        <div className="h-full overflow-y-auto pt-12 pb-12">{children}</div>
-      </NavigateByAuthState>
-      <BottomBar activeTab="2_search" />
-    </>
+    <NavigateByAuthState type="toLoginForUnauthenticated">
+      <div className="h-full overflow-y-auto pt-12 pb-12">{children}</div>
+    </NavigateByAuthState>
   );
 }

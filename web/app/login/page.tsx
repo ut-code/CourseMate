@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import * as user from "~/api/user";
 import { getByGUID } from "~/api/user";
-import Header from "~/components/Header";
 import { auth } from "~/firebase/config";
 import "./style.css";
 import { useState } from "react";
 import { CourseMateIcon } from "~/components/common/CourseMateIcon";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
+import { useSetHeaderFooter } from "~/hooks/useLayoutHeaderFooter";
 
 const provider = new GoogleAuthProvider();
 const ALLOW_ANY_MAIL_ADDR =
@@ -125,9 +125,10 @@ export default function Login() {
     return <FullScreenCircularProgress />;
   }
 
+  useSetHeaderFooter({ info: true }, { activeTab: "none" });
+
   return (
     <NavigateByAuthState type="toHomeForAuthenticated">
-      <Header info />
       <div className="absolute top-14 right-0 bottom-0 left-0 flex flex-col items-center justify-around overflow-y-auto">
         <div className="text-center">
           <CourseMateIcon width="200px" height="200px" />
