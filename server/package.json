@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "common": "workspace:common",
+    "common": "workspace:*",
     "@prisma/client": "^5.20.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
