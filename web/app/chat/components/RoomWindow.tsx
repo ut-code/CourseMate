@@ -8,8 +8,8 @@ import { useMessages } from "~/api/chat/hooks";
 import { API_ENDPOINT } from "~/api/internal/endpoints";
 import request from "~/api/request";
 import { useMyID } from "~/api/user";
-import Dots from "../common/Dots";
-import { handlers } from "../data/socket";
+import Dots from "~/components/common/Dots";
+import { handlers } from "~/components/data/socket";
 import { MessageInput } from "./MessageInput";
 import { RoomHeader } from "./RoomHeader";
 

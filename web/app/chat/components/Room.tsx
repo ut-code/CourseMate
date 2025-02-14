@@ -1,5 +1,5 @@
 import type { DMOverview } from "common/types";
-import UserAvatar from "../human/avatar";
+import UserAvatar from "~/components/human/avatar";
 
 type Props = {
   room: DMOverview;
