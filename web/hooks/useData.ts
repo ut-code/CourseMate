@@ -1,4 +1,3 @@
-import { Err, Ok, type Result } from "common/lib/result";
 import { useCallback, useEffect, useState } from "react";
 import { credFetch } from "~/firebase/auth/lib";
 
@@ -34,19 +33,15 @@ export default function useData<T>(url: string) {
   return { data, isLoading, error, reload };
 }
 
-async function safeReadData<T>(
-  url: string,
-  schema: Zod.Schema<T>,
-): Promise<Result<T>> {
+async function safeReadData<T>(url: string, schema: Zod.Schema<T>): Promise<T> {
   try {
     const res = await credFetch("GET", url);
     const data = await res.json();
-    const result = schema.parse(data);
-    return Ok(result);
+    return schema.parse(data);
   } catch (e) {
     console.error(`
       safeReadData: Schema Parse Error | in incoming data | Error: ${e}`);
-    return Err(e);
+    throw e;
   }
 }
 

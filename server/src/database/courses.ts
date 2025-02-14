@@ -1,17 +1,18 @@
+import { error } from "common/lib/panic";
 import type { Course, Day, UserID } from "common/types";
 import { prisma } from "./client";
 
-export async function getCourseByCourseId(
-  courseId: string,
-): Promise<Course | null> {
-  return await prisma.course.findUnique({
-    where: {
-      id: courseId,
-    },
-    include: {
-      slots: true,
-    },
-  });
+export async function getCourseByCourseId(courseId: string): Promise<Course> {
+  return (
+    (await prisma.course.findUnique({
+      where: {
+        id: courseId,
+      },
+      include: {
+        slots: true,
+      },
+    })) ?? error("course not found", 404)
+  );
 }
 
 /**

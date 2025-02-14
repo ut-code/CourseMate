@@ -1,3 +1,4 @@
+import { error } from "common/lib/panic";
 import type { InterestSubject, UserID } from "common/types";
 import { prisma } from "./client";
 
@@ -6,7 +7,10 @@ export async function all(): Promise<InterestSubject[]> {
 }
 
 export async function get(id: number): Promise<InterestSubject | null> {
-  return await prisma.interestSubject.findUnique({ where: { id } });
+  return (
+    (await prisma.interestSubject.findUnique({ where: { id } })) ??
+    error("not found", 404)
+  );
 }
 
 export async function create(name: string): Promise<InterestSubject> {
@@ -14,7 +18,7 @@ export async function create(name: string): Promise<InterestSubject> {
     where: { name },
   });
   if (existingTag.length > 0) {
-    throw new Error("同名のタグがすでに存在します");
+    error("同名のタグがすでに存在します");
   }
   return await prisma.interestSubject.create({
     data: {
