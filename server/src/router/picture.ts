@@ -1,11 +1,11 @@
 import bodyParser from "body-parser";
-import { safeParseInt } from "common/lib/result/safeParseInt";
+import { panic } from "common/lib/panic";
 import express from "express";
 import * as chat from "../database/chat";
 import * as relation from "../database/matches";
 import * as storage from "../database/picture";
-import { safeGetUserId } from "../firebase/auth/db";
-import { safeGetGUID } from "../firebase/auth/lib";
+import { getUserId } from "../firebase/auth/db";
+import { getGUID } from "../firebase/auth/lib";
 import { compressImage } from "../functions/img/compress";
 import * as hashing from "../lib/hash";
 
@@ -21,14 +21,11 @@ router.post("/to/:userId", parseLargeBuffer, async (req, res) => {
   if (!Buffer.isBuffer(req.body)) return res.status(400).send("not buffer");
   const buf = req.body;
 
-  const sender = await safeGetUserId(req);
-  if (!sender.ok) return res.status(401).end();
-  const recv = safeParseInt(req.params.userId);
-  if (!recv.ok) return res.status(400).end();
+  const sender = await getUserId(req);
+  const recv = Number.parseInt(req.params.userId) ?? panic("invalid params");
 
-  const rel = await relation.getRelation(sender.value, recv.value);
-  if (!rel.ok) return res.status(401).send();
-  if (rel.value.status !== "MATCHED") return res.status(401).send();
+  const rel = await relation.getRelation(sender, recv);
+  if (rel.status !== "MATCHED") return res.status(401).send();
 
   const hash = hashing.sha256(buf.toString("base64"));
   const passkey = hashing.sha256(crypto.randomUUID());
@@ -36,7 +33,7 @@ router.post("/to/:userId", parseLargeBuffer, async (req, res) => {
   return storage
     .uploadPic(hash, buf, passkey)
     .then(async (url) => {
-      await chat.createImageMessage(sender.value, rel.value.id, url);
+      await chat.createImageMessage(sender, rel.id, url);
       res.status(201).send(url).end();
     })
     .catch((err) => {
@@ -70,27 +67,15 @@ router.get("/:id", async (req, res) => {
 router.get("/profile/:guid", async (req, res) => {
   const guid = req.params.guid;
   const result = await storage.getProf(guid);
-  switch (result.ok) {
-    case true:
-      return res.send(new Buffer(result.value));
-    case false:
-      return res.status(404).send();
-  }
+  return res.send(result);
 });
 
 router.post("/profile", parseLargeBuffer, async (req, res) => {
-  const guid = await safeGetGUID(req);
-  if (!guid.ok) return res.status(401).send();
-
+  const guid = await getGUID(req);
   if (!Buffer.isBuffer(req.body)) return res.status(400).send("not buffer");
-
   const buf = await compressImage(req.body);
-  if (!buf.ok) return res.status(500).send("failed to compress image");
-
-  const url = await storage.setProf(guid.value, buf.value);
-  if (!url.ok) return res.status(500).send("failed to upload image");
-
-  return res.status(201).type("text/plain").send(url.value);
+  const url = await storage.setProf(guid, buf);
+  return res.status(201).type("text/plain").send(url);
 });
 
 export default router;
