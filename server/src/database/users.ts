@@ -1,4 +1,4 @@
-import { panic } from "common/lib/panic";
+import { error, panic } from "common/lib/panic";
 import type {
   Course,
   GUID,
@@ -42,7 +42,7 @@ export async function getUser(guid: GUID): Promise<UserWithCoursesAndSubjects> {
       },
     },
   });
-  if (!user) throw new Error("not found");
+  if (!user) error("not found", 404);
   return {
     ...user,
     interestSubjects: user.interests.map((interest) => {
