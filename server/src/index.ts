@@ -25,6 +25,7 @@ app.set("query parser", "simple");
 // https://qiita.com/nyandora/items/cd4f12eb62295c10269c
 // https://note.shiftinc.jp/n/n42b96d36f0cf
 // エラーハンドラを Express に管理させる。
+// TEMPORARY: will be replaced by hono's `onError`.
 app.use(async (err: unknown, _: unknown, res: unknown, next: unknown) => {
   try {
     if (typeof (err as Error)?.cause === "number") {
