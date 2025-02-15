@@ -38,8 +38,8 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - run: make setup-ci
-      - run: make build
+      - run: bun install
+      - run: bun run build
 
   biome:
     name: Code style check via Biome
@@ -53,8 +53,8 @@ jobs:
         with:
           version: latest
 
-      - run: make setup
-      - run: biome check
+      - run: bun install --frozen-lockfile
+      - run: bun style:check
 
   type-check:
     name: Type Check
@@ -64,12 +64,8 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - run: make setup-ci
-
-      - run: bunx tsc --noEmit
-        working-directory: web
-      - run: bunx tsc --noEmit
-        working-directory: server
+      - run: bun install --frozen-lockfile
+      - run: bun type
 
   spell-check:
     name: Spell Check
@@ -80,8 +76,8 @@ jobs:
         with:
           bun-version: latest
 
-      - run: make setup-ci
-      - run: bunx cspell --quiet .
+      - run: bun install --frozen-lockfile
+      - run: bun spell .
 
   test:
     name: Bun Test
@@ -90,17 +86,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - run: make setup-ci
-      - run: make test
+      - run: bun install --frozen-lockfile
+      - run: bun run test
 
   deploy-test-web:
     name: Deploy Test (web)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
       - uses: oven-sh/setup-bun@v2
-      - run: make prepare-deploy-web
+      - run: bun prepare:deploy:web
       - run: test `ls web/.next | wc -l` != 0
 
   deploy-test-server:
@@ -108,6 +103,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
       - uses: oven-sh/setup-bun@v2
-      - run: make prepare-deploy-server
+      - run: bun prepare:deploy:server
