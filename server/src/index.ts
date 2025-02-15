@@ -16,11 +16,6 @@ import "express-async-errors";
 
 const app = express();
 
-app.use((req, res, next) => {
-  res.set("Cache-Control", "public, max-age=300, stale-while-revalidate=600");
-  next();
-});
-
 // 高度なクエリパーサーを使わないよう設定。これによりクエリパラメータが配列やオブジェクトではなく string になるようにしている。
 // https://expressjs.com/ja/api.html#app.settings.table  の query parser を参照。
 app.set("query parser", "simple");
