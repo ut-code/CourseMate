@@ -1,119 +1,13 @@
+//schema.prisma
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["typedSql"]
   binaryTargets   = ["native", "debian-openssl-3.0.x"]
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-model User {
-  id             Int            @id @default(autoincrement())
-  guid           String         @unique
-  name           String
-  gender         String
-  grade          String
-  faculty        String
-  department     String
-  intro          String
-  pictureUrl     String
-  enrollments    Enrollment[]
-  interests      Interest[]
-  receivingUsers Relationship[] @relation("receiving")
-  sendingUsers   Relationship[] @relation("sending")
-}
-
-model Avatar {
-  guid String @id
-  data Bytes
-}
-
-model Picture {
-  hash String @id
-  data Bytes
-  key  String
-}
-
-model InterestSubject {
-  id       Int        @id @default(autoincrement())
-  name     String
-  group    String
-  Interest Interest[]
-
-  @@unique([name, group])
-}
-
-model Interest {
-  userId    Int
-  subjectId Int
-  subject   InterestSubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  user      User            @relation(fields: [userId], references: [id])
-
-  @@unique([userId, subjectId])
-}
-
-model Course {
-  id          String       @id
-  name        String
-  teacher     String
-  enrollments Enrollment[]
-  slots       Slot[]
-}
-
-model Slot {
-  id       Int    @id @default(autoincrement())
-  courseId String
-  period   Int
-  day      Day
-  course   Course @relation(fields: [courseId], references: [id])
-
-  @@unique([courseId, period, day])
-}
-
-model Enrollment {
-  id       Int    @id @default(autoincrement())
-  userId   Int
-  courseId String
-  course   Course @relation(fields: [courseId], references: [id])
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, courseId])
-}
-
-model Relationship {
-  id              Int            @id @default(autoincrement())
-  status          MatchingStatus
-  sendingUserId   Int
-  receivingUserId Int
-  messages        Message[]
-  receivingUser   User           @relation("receiving", fields: [receivingUserId], references: [id], onDelete: Cascade)
-  sendingUser     User           @relation("sending", fields: [sendingUserId], references: [id], onDelete: Cascade)
-
-  @@unique([sendingUserId, receivingUserId])
-}
-
-model SharedRoom {
-  id        Int       @id @default(autoincrement())
-  thumbnail String
-  name      String
-  members   Int[]
-  messages  Message[]
-}
-
-model Message {
-  id           Int           @id @default(autoincrement())
-  creator      Int
-  createdAt    DateTime      @default(now())
-  edited       Boolean       @default(false)
-  content      String
-  isPicture    Boolean
-  read         Boolean       @default(false)
-  relationId   Int?
-  sharedRoomId Int?
-  relation     Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
-  sharedRoom   SharedRoom?   @relation(fields: [sharedRoomId], references: [id], onDelete: Cascade)
 }
 
 enum Day {
@@ -127,8 +21,130 @@ enum Day {
   other
 }
 
+model User {
+  // identifiers
+  id   Int    @id @default(autoincrement())
+  guid String @unique
+
+  // profile
+  name       String
+  gender     String
+  grade      String
+  faculty    String
+  department String
+  intro      String
+  pictureUrl String
+
+  // bindings to other parts of this app
+  enrollments    Enrollment[]
+  sendingUsers   Relationship[] @relation("sending") // 自分がマッチリクエストを送ったユーザー
+  receivingUsers Relationship[] @relation("receiving") // 自分にマッチリクエストを送ったユーザー
+  interests      Interest[]
+}
+
+model Avatar {
+  guid String @id
+  data Bytes
+}
+
+model Picture {
+  hash String @id
+  data Bytes
+  key  String // password
+}
+
+model InterestSubject {
+  id       Int        @id @default(autoincrement())
+  name     String
+  group    String // such as Computer Science | name = ML
+  Interest Interest[] // ignore this
+
+  @@unique([name, group])
+}
+
+// User->Interest->InterestSubject
+model Interest {
+  userId    Int
+  user      User            @relation(fields: [userId], references: [id])
+  subjectId Int
+  subject   InterestSubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, subjectId])
+}
+
+// enum Gender {
+//   MALE
+//   FEMALE
+//   OTHER
+//   SECRET
+// }
+
+model Course {
+  id          String       @id
+  name        String
+  teacher     String
+  enrollments Enrollment[]
+  slots       Slot[]
+}
+
+// コマ。1つの講義に対して複数存在しうる。
+model Slot {
+  id       Int    @id @default(autoincrement())
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+  period   Int // 1-6. 0 の場合はなし (集中など)
+  day      Day // 曜日。other の場合は集中など
+
+  @@unique([courseId, period, day])
+}
+
+model Enrollment {
+  id       Int    @id @default(autoincrement())
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   Int
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+
+  @@unique([userId, courseId])
+}
+
+model Relationship {
+  id              Int            @id @default(autoincrement())
+  status          MatchingStatus
+  sendingUser     User           @relation("sending", fields: [sendingUserId], references: [id], onDelete: Cascade)
+  sendingUserId   Int
+  receivingUser   User           @relation("receiving", fields: [receivingUserId], references: [id], onDelete: Cascade)
+  receivingUserId Int
+
+  messages Message[]
+
+  @@unique([sendingUserId, receivingUserId])
+}
+
 enum MatchingStatus {
   PENDING
   MATCHED
   REJECTED
+}
+
+model SharedRoom {
+  id        Int       @id @default(autoincrement())
+  thumbnail String // URL to thumbnail picture
+  name      String
+  members   Int[]
+  messages  Message[]
+}
+
+model Message {
+  id           Int           @id @default(autoincrement())
+  creator      Int // refers to UserId
+  createdAt    DateTime      @default(now()) // @readonly
+  edited       Boolean       @default(false)
+  content      String
+  isPicture    Boolean // iff the message is a picture. if true, then content is a url of picture.
+  read         Boolean       @default(false)
+  relation     Relationship? @relation(fields: [relationId], references: [id], onDelete: Cascade)
+  relationId   Int?
+  sharedRoom   SharedRoom?   @relation(fields: [sharedRoomId], references: [id], onDelete: Cascade)
+  sharedRoomId Int?
 }
