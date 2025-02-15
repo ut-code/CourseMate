@@ -1,4 +1,3 @@
-import { Err, Ok, type Result } from "common/lib/result";
 import type { GUID, IDToken } from "common/types";
 import type { Request } from "express";
 import * as admin from "firebase-admin/auth";
@@ -27,14 +26,6 @@ if (process.env.UNSAFE_SKIP_AUTH) {
     }
     return (await verifyIDToken(token)).uid as GUID;
   };
-}
-
-export async function safeGetGUID(req: Request): Promise<Result<GUID>> {
-  try {
-    return Ok(await getGUID(req));
-  } catch (e) {
-    return Err(e);
-  }
 }
 
 export async function verifyIDToken(idToken: IDToken): Promise<DecodedIdToken> {

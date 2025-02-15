@@ -1,4 +1,4 @@
-import { Err, Ok, type Result } from "common/lib/result";
+import { panic } from "common/lib/panic";
 import type { GUID } from "common/types";
 import { prisma } from "./client";
 
@@ -35,10 +35,7 @@ export async function getPic(hash: string, passkey: string) {
  * is safe to await.
  * @returns URL of the file.
  **/
-export async function setProf(
-  guid: GUID,
-  buf: Buffer,
-): Promise<Result<string>> {
+export async function setProf(guid: GUID, buf: Buffer): Promise<string> {
   return prisma.avatar
     .upsert({
       where: {
@@ -50,23 +47,15 @@ export async function setProf(
     .then(() => {
       // ?update=${date} is necessary to let the browsers properly cache the image.
       const pictureUrl = `/picture/profile/${guid}?update=${new Date().getTime()}`;
-      return Ok(pictureUrl);
-    })
-    .catch((err) => {
-      console.error("Error uploading file:", err);
-      return Err(err);
+      return pictureUrl;
     });
 }
 
 // is await-safe.
-export async function getProf(guid: GUID): Promise<Result<Buffer>> {
+export async function getProf(guid: GUID): Promise<Buffer> {
   return prisma.avatar
     .findUnique({
       where: { guid },
     })
-    .then((res) => (res ? Ok(res.data) : Err(404)))
-    .catch((err) => {
-      console.log("Error reading db: ", err);
-      return Err(err);
-    });
+    .then((res) => res?.data ?? panic("not found"));
 }
