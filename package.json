@@ -4,8 +4,28 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "lefthook install"
+    "prepare": "lefthook install && (cd server; bun run prepare)",
+    "check": "bun type && bun style:check",
+    "style": "biome check . --fix",
+    "style:check": "biome check .",
+    "type": "bun type:web && bun type:server && bun type:common",
+    "type:web": "cd web; bun run tsc",
+    "type:server": "cd server; bun run tsc",
+    "type:common": "cd common; bun run tsc",
+    "build": "bun run build:server && bun run build:web",
+    "build:web": "cd web; bun run build",
+    "build:server": "cd server; bun run build",
+    "watch": "trap 'kill 0' EXIT; bun run watch:web & bun run watch:server & wait",
+    "watch:web": "cd web; bun run dev",
+    "watch:server": "cd server; bun run dev",
+    "seed": "cd server; bun prisma db seed",
+    "prepare:deploy:web": "bun install --frozen-lockfile && bun run build:web",
+    "prepare:deploy:server": "bun install --frozen-lockfile",
+    "deploy:web": "cd web; bun run start --port $PORT",
+    "deploy:server": "cd server; bun run src/main.ts",
+    "dev-db": "make dev-db",
+    "test": "make test",
+    "spell": "bunx cspell --quiet ."
   },
   "keywords": [],
   "author": "",
@@ -13,7 +33,6 @@
   "workspaces": ["common", "web", "server"],
   "devDependencies": {
     "@biomejs/biome": "^1.9.1",
-    "husky": "^9.1.4",
     "lefthook": "^1.10.10",
     "lint-staged": "^15.2.10"
   },

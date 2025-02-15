@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "bun --env-file=./.env.dev prisma generate --sql || (echo 'please set DATABASE_URL in server/.env.dev' && exit 1)",
     "dev": "bun --watch src/main.ts",
     "build": "tsc",
     "serve": "bun target/main.js"
@@ -26,6 +26,7 @@
     "firebase-admin": "^12.2.0",
     "sharp": "^0.33.5",
     "socket.io": "^4.7.5",
+    "sql-formatter": "^15.4.10",
     "zod": "^3.23.8"
   },
   "devDependencies": {
