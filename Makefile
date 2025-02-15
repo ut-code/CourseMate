@@ -3,6 +3,7 @@ default: start
 LOCAL_DB := postgres://user:password@localhost:5432/database
 
 test: export DATABASE_URL=$(LOCAL_DB)
+test: export DIRECT_URL=$(LOCAL_DB)
 test: export UNSAFE_SKIP_AUTH=1
 test: export FIREBASE_PROJECT_ID=mock-proj
 test: export CORS_ALLOW_ORIGINS=http://localhost:3000,https://localhost:5173
@@ -13,6 +14,7 @@ test: dev-db
 
 ## server/.envをDATABASE_URL=postgres://user:password@localhost:5432/databaseにしてから行う
 dev-db: export DATABASE_URL=$(LOCAL_DB)
+dev-db: export DIRECT_URL=$(LOCAL_DB)
 dev-db: export NEVER_LOAD_DOTENV=1
 dev-db:
 	docker stop postgres || true
@@ -29,7 +31,7 @@ dev-db:
 		sleep 1; \
 	done
 	@echo "PostgreSQL is ready. Running seed..."
-	@cd server; bunx prisma generate; bunx prisma db push
+	@cd server; bunx prisma generate --sql; bunx prisma db push
 	@bun run seed
 	@echo "Seeding completed."
 
