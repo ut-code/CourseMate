@@ -8,6 +8,8 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // https://github.com/prisma/prisma/discussions/25106#discussioncomment-10500102
+  directUrl  = env("DIRECT_URL")
 }
 
 enum Day {
