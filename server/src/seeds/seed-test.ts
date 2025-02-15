@@ -9,18 +9,17 @@ import {
 } from "./test-data/data";
 
 async function main() {
-  await Promise.all(
-    subjects.map(async ({ group, subjects }) => {
-      for (const [name] of subjects) {
-        await prisma.interestSubject.create({
-          data: {
-            name,
-            group,
-          },
-        });
-      }
-    }),
-  );
+  // avoid flaky tests. don't replace this with Promise.all
+  for (const { group, subjects: subject } of subjects) {
+    for (const [name] of subject) {
+      await prisma.interestSubject.create({
+        data: {
+          name,
+          group,
+        },
+      });
+    }
+  }
 
   await Promise.all(
     users.map(async (user) => {
