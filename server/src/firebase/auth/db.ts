@@ -1,9 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-import { Err, Ok, type Result } from "common/lib/result";
 import type { IDToken, UserID } from "common/types";
 import type { Request } from "express";
 import { getGUID, getGUIDFromToken } from "./lib";
 
+import { error } from "common/lib/panic";
 import { prisma } from "../../database/client";
 /**
  * REQUIRE: cookieParser middleware before this
@@ -28,7 +27,7 @@ export async function getUserId(req: Request): Promise<UserID> {
       id: true,
     },
   });
-  if (!user) throw new Error("User not found!");
+  if (!user) error("auth error: unauthorized", 401);
   return user.id;
 }
 
@@ -41,24 +40,6 @@ export async function getUserIdFromToken(token: IDToken): Promise<UserID> {
   });
   if (!user) throw new Error("User not found!");
   return user.id;
-}
-
-/**
- * never throws.
- * Expected use case:
- * ```js
- *  const result = await safeGetUserId(req);
- *  if (!result.ok)
- *    return res.status(401).send("auth error");
- *  const userId = result.value;
- * ```
- **/
-export async function safeGetUserId(req: Request): Promise<Result<UserID>> {
-  try {
-    return Ok(await getUserId(req));
-  } catch (e) {
-    return Err(e);
-  }
 }
 
 /** returns true if userid is requester's id.
@@ -75,9 +56,9 @@ export async function isRequester(
   req: Request,
   userid: UserID,
 ): Promise<boolean> {
-  const result = await safeGetUserId(req);
-  if (!result.ok) return false;
-  if (result.value !== userid) return false;
-
-  return true;
+  try {
+    return (await getUserId(req)) === userid;
+  } catch (_) {
+    return false;
+  }
 }

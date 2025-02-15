@@ -1,6 +1,8 @@
+import { error } from "common/lib/panic";
 import express, { type Request, type Response } from "express";
+import { z } from "zod";
 import * as interest from "../database/interest";
-import { safeGetUserId } from "../firebase/auth/db";
+import { getUserId } from "../firebase/auth/db";
 
 const router = express.Router();
 
@@ -19,79 +21,38 @@ router.get("/userId/:userId", async (req: Request, res: Response) => {
 });
 
 router.get("/mine", async (req: Request, res: Response) => {
-  const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error");
-  try {
-    const subjects = await interest.of(userId.value);
-    res.status(200).json(subjects);
-  } catch (error) {
-    console.error("Error fetching subjects:", error);
-    res.status(500).json({ error: "Failed to fetch subjects" });
-  }
+  const userId = await getUserId(req);
+  const subjects = await interest.of(userId);
+  res.status(200).json(subjects);
 });
 
 router.post("/", async (req: Request, res: Response) => {
-  const { name } = req.body;
-  if (typeof name !== "string") {
-    return res.status(400).json({ error: "name must be a string" });
-  }
-  try {
-    const newSubject = await interest.create(name);
-    res.status(201).json(newSubject);
-  } catch (error) {
-    console.error("Error creating subject:", error);
-    res.status(500).json({ error: "Failed to create subject" });
-  }
+  const { name } = z.object({ name: z.string() }).parse(req.body);
+  const newSubject = await interest.create(name);
+  res.status(201).json(newSubject);
 });
 
 router.patch("/mine", async (req: Request, res: Response) => {
-  const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error");
-  const { subjectId } = req.body;
-  try {
-    const newSubject = await interest.get(subjectId);
-    if (!newSubject) {
-      return res.status(404).json({ error: "Subject not found" });
-    }
-  } catch (err) {
-    console.error("Error fetching subject:", err);
-    res.status(500).json({ error: "Failed to fetch subject" });
-  }
-  try {
-    const updatedSubjects = await interest.add(userId.value, subjectId);
-    res.status(200).json(updatedSubjects);
-  } catch (error) {
-    console.error("Error updating subjects:", error);
-    res.status(500).json({ error: "Failed to update subjects" });
-  }
+  const userId = await getUserId(req);
+  const { subjectId } = z.object({ subjectId: z.number() }).parse(req.body);
+  const newSubject = await interest.get(subjectId);
+  if (!newSubject) error("subject not found", 404);
+  const updatedSubjects = await interest.add(userId, subjectId);
+  res.status(200).json(updatedSubjects);
 });
 
 router.delete("/mine", async (req: Request, res: Response) => {
-  const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error");
-  const { subjectId } = req.body;
-  try {
-    const newSubject = await interest.get(subjectId);
-    if (!newSubject) {
-      return res.status(404).json({ error: "Subject not found" });
-    }
-  } catch (err) {
-    console.error("Error fetching subject:", err);
-    res.status(500).json({ error: "Failed to fetch subject" });
-  }
-  try {
-    const updatedSubjects = await interest.remove(userId.value, subjectId);
-    res.status(200).json(updatedSubjects);
-  } catch (error) {
-    console.error("Error deleting subjects:", error);
-    res.status(500).json({ error: "Failed to delete subjects" });
-  }
+  const userId = await getUserId(req);
+  const { subjectId } = z.object({ subjectId: z.number() }).parse(req.body);
+  const updatedSubjects = await interest.remove(userId, subjectId);
+  res.status(200).json(updatedSubjects);
 });
 
 router.put("/mine", async (req: Request, res: Response) => {
-  const userId = await safeGetUserId(req);
-  if (!userId.ok) return res.status(401).send("auth error");
-  const { subjectIds } = req.body;
+  const userId = await getUserId(req);
+  const { subjectIds } = z
+    .object({ subjectIds: z.array(z.number()) })
+    .parse(req.body);
   if (!Array.isArray(subjectIds)) {
     return res.status(400).json({ error: "subjectIds must be an array" });
   }
@@ -108,7 +69,7 @@ router.put("/mine", async (req: Request, res: Response) => {
   }
   try {
     const updatedSubjects = await interest.updateMultipleWithTransaction(
-      userId.value,
+      userId,
       subjectIds,
     );
     res.status(200).json(updatedSubjects);
