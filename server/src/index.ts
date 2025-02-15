@@ -1,3 +1,4 @@
+import { error } from "common/lib/panic";
 import cookieParser from "cookie-parser";
 import express, { type Response } from "express";
 import csrf from "./lib/cross-origin/block-unknown-origin";
@@ -11,6 +12,7 @@ import pictureRoutes from "./router/picture";
 import requestsRoutes from "./router/requests";
 import subjectsRoutes from "./router/subjects";
 import usersRoutes from "./router/users";
+import "express-async-errors";
 
 const app = express();
 
@@ -41,6 +43,10 @@ app.use(async (err: unknown, _: unknown, res: unknown, next: unknown) => {
     } catch (err) {
       console.log("[ERR] failed to handle error twice:", err);
     }
+  } finally {
+    try {
+      (res as Response).end("\n");
+    } catch {}
   }
 });
 
