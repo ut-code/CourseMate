@@ -13,8 +13,7 @@
 
     prisma-utils = {
       url = "github:VanCoding/nix-prisma-utils";
-      # HACK: they have named nixpkgs pkgs. I'm submitting a fix PR soon, rename this to `inputs.nixpkgs.follows` when that gets merged.
-      inputs.pkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
