@@ -6,7 +6,7 @@ export async function all(): Promise<InterestSubject[]> {
   return await prisma.interestSubject.findMany();
 }
 
-export async function get(id: number): Promise<InterestSubject | null> {
+export async function get(id: number): Promise<InterestSubject> {
   return (
     (await prisma.interestSubject.findUnique({ where: { id } })) ??
     error("not found", 404)
