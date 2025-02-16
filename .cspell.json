@@ -54,6 +54,7 @@
     "**/Cargo.*",
     "scraper/target",
     "**/rust-toolchain.toml",
-    "web/out"
+    "web/out",
+    "**/tsconfig.tsbuildinfo"
   ]
 }
