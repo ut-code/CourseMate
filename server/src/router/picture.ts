@@ -1,6 +1,8 @@
-import bodyParser from "body-parser";
-import { panic } from "common/lib/panic";
-import express from "express";
+import { zValidator } from "@hono/zod-validator";
+import { error } from "common/lib/panic";
+import { Hono } from "hono";
+import { bodyLimit } from "hono/body-limit";
+import { z } from "zod";
 import * as chat from "../database/chat";
 import * as relation from "../database/matches";
 import * as storage from "../database/picture";
@@ -9,73 +11,76 @@ import { getGUID } from "../firebase/auth/lib";
 import { compressImage } from "../functions/img/compress";
 import * as hashing from "../lib/hash";
 
-const parseLargeBuffer = bodyParser.raw({
-  type: "image/png",
-  limit: "5mb",
+const largeLimit = bodyLimit({
+  maxSize: 50 * 1024, // 50kb
+  onError: (c) => {
+    return c.text("overflow :(", 413);
+  },
 });
-const router = express.Router();
+const router = new Hono();
 
 /* General Pictures in chat */
 
-router.post("/to/:userId", parseLargeBuffer, async (req, res) => {
-  if (!Buffer.isBuffer(req.body)) return res.status(400).send("not buffer");
-  const buf = req.body;
+router.post(
+  "/to/:userId",
+  zValidator("param", z.object({ userId: z.coerce.number() })),
+  largeLimit,
+  async (c) => {
+    const sender = await getUserId(c);
+    const recv = c.req.valid("param").userId;
 
-  const sender = await getUserId(req);
-  const recv = Number.parseInt(req.params.userId) ?? panic("invalid params");
+    const rel = await relation.getRelation(sender, recv);
+    if (rel.status !== "MATCHED") error("not matched", 401);
 
-  const rel = await relation.getRelation(sender, recv);
-  if (rel.status !== "MATCHED") return res.status(401).send();
+    const buf = new Buffer(await c.req.arrayBuffer());
+    const hash = hashing.sha256(buf.toString("base64"));
+    const passkey = hashing.sha256(crypto.randomUUID());
 
-  const hash = hashing.sha256(buf.toString("base64"));
-  const passkey = hashing.sha256(crypto.randomUUID());
-
-  return storage
-    .uploadPic(hash, buf, passkey)
-    .then(async (url) => {
+    return storage.uploadPic(hash, buf, passkey).then(async (url) => {
       await chat.createImageMessage(sender, rel.id, url);
-      res.status(201).send(url).end();
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send("Failed to upload image to database").end();
+      return c.text(url);
     });
-});
+  },
+);
 
-router.get("/:id", async (req, res) => {
-  const hash = req.params.id;
-  const key = req.query.key;
-  if (!key) return res.status(400).send("key is required");
+router.get(
+  "/:id",
+  zValidator("param", z.object({ id: z.string() })),
+  zValidator("query", z.object({ key: z.string() })),
+  async (c) => {
+    const hash = c.req.valid("param").id;
+    const key = c.req.valid("query").key;
+    if (!key) error("key is required", 400);
 
-  return storage
-    .getPic(hash, String(key))
-    .then((buf) => {
+    return storage.getPic(hash, String(key)).then((buf) => {
       if (buf) {
-        res.status(200).send(buf).end();
+        c.body(buf);
       } else {
-        res.status(404).send("not found").end();
+        error("not found", 404);
       }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send("Failed to get image from database").end();
     });
-});
+  },
+);
 
 /* Profile Pictures */
 
-router.get("/profile/:guid", async (req, res) => {
-  const guid = req.params.guid;
-  const result = await storage.getProf(guid);
-  return res.send(result);
-});
+router.get(
+  "/profile/:guid",
+  zValidator("param", z.object({ guid: z.string() })),
+  async (c) => {
+    const guid = c.req.valid("param").guid;
+    const result = await storage.getProf(guid);
+    return c.body(result);
+  },
+);
 
-router.post("/profile", parseLargeBuffer, async (req, res) => {
-  const guid = await getGUID(req);
-  if (!Buffer.isBuffer(req.body)) return res.status(400).send("not buffer");
-  const buf = await compressImage(req.body);
+router.post("/profile", largeLimit, async (c) => {
+  const guid = await getGUID(c);
+  const buf = await compressImage(new Buffer(await c.req.arrayBuffer()));
   const url = await storage.setProf(guid, buf);
-  return res.status(201).type("text/plain").send(url);
+
+  c.status(201);
+  return c.text(url);
 });
 
 export default router;

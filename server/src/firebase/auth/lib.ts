@@ -1,6 +1,7 @@
+import { error } from "common/lib/panic";
 import type { GUID, IDToken } from "common/types";
-import type { Request } from "express";
 import * as admin from "firebase-admin/auth";
+import type { Context } from "hono";
 import { app } from "../init";
 
 const auth = admin.getAuth(app);
@@ -8,9 +9,9 @@ type DecodedIdToken = admin.DecodedIdToken;
 
 // REQUIRE: cookieParser middleware before this
 // THROWS: if idToken is not present in request cookie, or when the token is not valid.
-export async function getGUID(req: Request): Promise<GUID> {
-  const idToken = req.query.token;
-  if (typeof idToken !== "string") throw new Error();
+export async function getGUID(c: Context): Promise<GUID> {
+  const idToken = c.req.query("token");
+  if (typeof idToken !== "string") error("token not found in query", 401);
   return await getGUIDFromToken(idToken);
 }
 

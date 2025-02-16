@@ -1,6 +1,8 @@
+import { zValidator } from "@hono/zod-validator";
 import { error } from "common/lib/panic";
 import type { UserID } from "common/types";
-import express, { type Request, type Response } from "express";
+import { Hono } from "hono";
+import { z } from "zod";
 import {
   approveRequest,
   cancelRequest,
@@ -9,25 +11,23 @@ import {
 } from "../database/requests";
 import { getUserId } from "../firebase/auth/db";
 
-const router = express.Router();
+const router = new Hono();
 
 // リクエストの送信
-router.put("/send/:receiverId", async (req: Request, res: Response) => {
-  const receiverId =
-    Number.parseInt(req.params.receiverId) ??
-    error("bad encoding: receiverId", 400);
-  const senderId = await getUserId(req);
-  try {
+router.put(
+  "/send/:receiverId",
+  zValidator("param", z.object({ receiverId: z.coerce.number() })),
+  async (c) => {
+    const receiverId = c.req.valid("param").receiverId;
+    const senderId = await getUserId(c);
     const sentRequest = await sendRequest({
       senderId: senderId,
       receiverId: receiverId as UserID,
     });
-    res.status(201).json(sentRequest);
-  } catch (error) {
-    console.error("Error sending match request:", error);
-    res.status(500).json({ error: "Failed to send match request" });
-  }
-});
+    c.status(201);
+    return c.json(sentRequest);
+  },
+);
 
 // リクエストの承認
 router.put("/accept/:senderId", async (req: Request, res: Response) => {

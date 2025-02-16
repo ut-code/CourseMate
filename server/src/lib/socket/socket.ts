@@ -9,8 +9,8 @@ const users = new Map<UserID, Socket>();
 
 export function initializeSocket(server: Server, corsOptions: CorsConfig) {
   const cors: CorsOptions = {
-    origin: corsOptions.origins[0],
     ...corsOptions,
+    origin: corsOptions.origin[0],
   };
   const io = new SocketIOServer(server, {
     cors,

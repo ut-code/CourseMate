@@ -1,5 +1,5 @@
 export type Config = {
-  origins: string[]; // allowed origins
+  origin: string[]; // allowed origins
   methods?: string[]; // Access-Control-Allow-Methods
   credentials?: boolean; // Access-Control-Allow-Credentials
 };
@@ -10,7 +10,7 @@ function validateConfig(config: Config) {
   config.credentials = !!config.credentials; // make it boolean. not using Boolean() or new Boolean() because I don't trust JS
 
   // normalize allowOrigin URLs
-  config.origins = config.origins.map((origin) => {
+  config.origin = config.origin.map((origin) => {
     const url = new URL(origin);
     if (url.origin === "null") {
       console.log(
@@ -40,7 +40,7 @@ function validateConfig(config: Config) {
 
 // this throws error if config is not good
 function assertValidConfig(config: Config) {
-  if (config.origins.length === 0) {
+  if (config.origin.length === 0) {
     throw new Error(
       `Empty allowedOrigins in CORS config: ${JSON.stringify(config)}`,
     );
