@@ -1,5 +1,6 @@
 {
-  "name": "course-mate",
+  "name": "server",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -16,8 +17,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "common": "workspace:*",
     "@prisma/client": "^5.20.0",
-    "common": "workspace:common",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

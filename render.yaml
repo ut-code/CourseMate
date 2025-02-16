@@ -1,0 +1,33 @@
+# Exported from Render on 2025-02-15T11:38:48Z
+services:
+- type: web
+  name: CourseMate
+  runtime: static
+  repo: https://github.com/ut-code/CourseMate
+  branch: make-it-ssg
+  envVars:
+  - key: BUN_VERSION
+    sync: false # Render Dashboard https://render.com/docs/blueprint-spec#prompting-for-secret-values
+  - key: SKIP_INSTALL_DEPS
+    sync: false
+  - key: NEXT_PUBLIC_ALLOW_ANY_MAIL_ADDR
+    sync: false
+  - key: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+    sync: false
+  - key: NEXT_PUBLIC_FIREBASE_APP_ID
+    sync: false
+  - key: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    sync: false
+  - key: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    sync: false
+  - key: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    sync: false
+  - key: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    sync: false
+  - key: NEXT_PUBLIC_FIREBASE_API_KEY
+    sync: false
+  - key: NEXT_PUBLIC_API_ENDPOINT
+    sync: false
+  buildCommand: bun install --filter "web" && cd web && bun run build
+  staticPublishPath: web/out
+version: "1"

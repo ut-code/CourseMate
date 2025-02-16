@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { MdArrowBack } from "react-icons/md";
-import UserAvatar from "../human/avatar";
+import UserAvatar from "~/components/human/avatar";
 
 type Props = {
   room: {
