@@ -312,7 +312,7 @@ export async function deleteMessage(
 export async function getLastMessage(
   userId: UserID,
   friendId: UserID,
-): Promise<Message> {
+): Promise<Message | undefined> {
   const rel = await getRelation(userId, friendId);
   if (!rel) throw new Error("relation not found"); // relation not found
   const lastMessage = await prisma.message.findFirst({
@@ -324,8 +324,7 @@ export async function getLastMessage(
     },
     take: 1,
   });
-  if (!lastMessage) throw new Error("last message not found");
-  return lastMessage;
+  return lastMessage ?? undefined;
 }
 
 // only works on Relationship (= DM) for now.
