@@ -1,6 +1,7 @@
 import type { Server } from "node:http";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { HTTPException } from "hono/http-exception";
 import { initializeSocket } from "./lib/socket/socket";
 import { allUrlMustBeValid, env } from "./lib/utils";
 import chatRoutes from "./router/chat";
@@ -10,13 +11,6 @@ import pictureRoutes from "./router/picture";
 import requestsRoutes from "./router/requests";
 import subjectsRoutes from "./router/subjects";
 import usersRoutes from "./router/users";
-
-const app = new Hono();
-
-app.onError((err, c) => {
-  c.status(500);
-  return c.json({ error: err });
-});
 
 const allowedOrigins = env("CORS_ALLOW_ORIGINS")
   .split(",")
@@ -34,20 +28,29 @@ if (corsOptions.origin.length > 1) {
   );
 }
 
-app.use(cors(corsOptions));
+const app = new Hono()
+  .onError((err, c) => {
+    if (err instanceof HTTPException) {
+      c.status(err.status);
+      return c.json({ error: err });
+    }
+    c.status(500);
+    return c.json({ error: err });
+  })
 
-app.get("/", async (c) => {
-  return c.text("Hello from Hono!");
-});
+  .use(cors(corsOptions))
 
-// ルーティング
-app.route("/picture", pictureRoutes);
-app.route("/users", usersRoutes);
-app.route("/courses", coursesRoutes);
-app.route("/subjects", subjectsRoutes);
-app.route("/requests", requestsRoutes);
-app.route("/matches", matchesRoutes);
-app.route("/chat", chatRoutes);
+  .get("/", async (c) => {
+    return c.text("Hello from Hono 🔥");
+  })
+  // ルーティング
+  .route("/picture", pictureRoutes)
+  .route("/users", usersRoutes)
+  .route("/courses", coursesRoutes)
+  .route("/subjects", subjectsRoutes)
+  .route("/requests", requestsRoutes)
+  .route("/matches", matchesRoutes)
+  .route("/chat", chatRoutes);
 
 export function main() {
   const server = Bun.serve({

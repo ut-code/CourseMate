@@ -15,18 +15,11 @@ export async function getGUID(c: Context): Promise<GUID> {
   return await getGUIDFromToken(idToken);
 }
 
-export let getGUIDFromToken = async (token: IDToken) => {
+export async function getGUIDFromToken(token: IDToken) {
+  if (process.env.UNSAFE_SKIP_AUTH && token === "I_AM_abc101") {
+    return "abc101";
+  }
   return (await verifyIDToken(token)).uid as GUID;
-};
-
-// skip auth in test
-if (process.env.UNSAFE_SKIP_AUTH) {
-  getGUIDFromToken = async (token: IDToken) => {
-    if (token === "I_AM_abc101") {
-      return "abc101";
-    }
-    return (await verifyIDToken(token)).uid as GUID;
-  };
 }
 
 export async function verifyIDToken(idToken: IDToken): Promise<DecodedIdToken> {

@@ -1,35 +1,31 @@
 import app from "../server/src/index";
 type Config = Omit<RequestInit, "method">;
-function prefix(path: string): string {
-  if (path.at(0) === "/") return `localhost:3000${path}`;
-  return path;
-}
 
-export async function GET(path: string, config?: Config) {
-  return await app.request(prefix(path), {
+export async function GET<T extends string>(path: T, config?: Config) {
+  return await app.request(path, {
     ...config,
   });
 }
-export async function POST(path: string, config?: Config) {
-  return await app.request(prefix(path), {
+export async function POST<T extends string>(path: T, config?: Config) {
+  return await app.request(path, {
     method: "POST",
     ...config,
   });
 }
-export async function PUT(path: string, config?: Config) {
-  return await app.request(prefix(path), {
+export async function PUT<T extends string>(path: T, config?: Config) {
+  return await app.request(path, {
     method: "PUT",
     ...config,
   });
 }
-export async function PATCH(path: string, config?: Config) {
-  return await app.request(prefix(path), {
+export async function PATCH<T extends string>(path: T, config?: Config) {
+  return await app.request(path, {
     method: "PATCH",
     ...config,
   });
 }
-export async function DELETE(path: string, config?: Config) {
-  return await app.request(prefix(path), {
+export async function DELETE<T extends string>(path: T, config?: Config) {
+  return await app.request(path, {
     method: "DELETE",
     ...config,
   });

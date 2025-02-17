@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, expect, test } from "bun:test";
+import { beforeAll, expect, test } from "bun:test";
 import { GET, PUT } from "./fetcher";
 
 const MOCK_TOKEN = "I_AM_abc101";
@@ -16,7 +16,7 @@ beforeAll(() => {
 test("server up", async () => {
   const res = await GET("/");
   const text = await res.text();
-  expect(text).toBe(`"Hello from Express!"`);
+  expect(text).toBe("Hello from Hono 🔥");
 });
 
 test("/users/exists", async () => {
@@ -28,7 +28,7 @@ test("/users/exists", async () => {
 
 test("basic auth", async () => {
   let res = await GET("/users/me");
-  expect(res.status).toBe(404);
+  expect(res.status).toBe(401);
   res = await GET(`/users/me?token=${MOCK_TOKEN}`);
   expect(res.status).toBe(200);
   const json = await res.json();
@@ -38,12 +38,12 @@ test("basic auth", async () => {
 test("send request", async () => {
   // should error in auth
   let res = await GET("/users/pending/from-me");
-  expect(res.status).toBe(404);
-  // should error in auth
+  expect(res.status).toBe(401);
   res = await PUT("/requests/send/102");
-  expect(res.status).toBe(404);
+  expect(res.status).toBe(401);
 
   res = await GET(`/users/pending/from-me?token=${MOCK_TOKEN}`);
+  expect(res.status).toBe(200);
   expect(await res.json()).toSatisfy((s) => s.length === 0);
   // starting actual request
 
