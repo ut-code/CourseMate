@@ -1,5 +1,7 @@
-import { HTTPResponseError } from "hono/types";
+import { HTTPException } from "hono/http-exception";
+import type { ContentfulStatusCode } from "hono/utils/http-status";
+
 // expected error
-export function error(reason: string, code?: number): never {
-  throw new HTTPResponseError(reason, { cause: code });
+export function error(reason: string, code: ContentfulStatusCode): never {
+  throw new HTTPException(code, { message: reason });
 }

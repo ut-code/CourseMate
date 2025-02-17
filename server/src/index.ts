@@ -2,7 +2,7 @@ import type { Server } from "node:http";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { initializeSocket } from "./lib/socket/socket";
-import { allUrlMustBeValid, env, panic } from "./lib/utils";
+import { allUrlMustBeValid, env } from "./lib/utils";
 import chatRoutes from "./router/chat";
 import coursesRoutes from "./router/courses";
 import matchesRoutes from "./router/matches";
@@ -18,7 +18,6 @@ app.onError((err, c) => {
   return c.json({ error: err });
 });
 
-const port = process.env.PORT || 3000;
 const allowedOrigins = env("CORS_ALLOW_ORIGINS")
   .split(",")
   .filter((s) => s);
@@ -51,7 +50,10 @@ app.route("/matches", matchesRoutes);
 app.route("/chat", chatRoutes);
 
 export function main() {
-  const server = Bun.serve(app);
+  const server = Bun.serve({
+    fetch: app.fetch,
+    port: process.env.PORT ?? 3000,
+  });
   // ??
   initializeSocket(server as unknown as Server, corsOptions);
   return server;

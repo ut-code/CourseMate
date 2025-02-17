@@ -3,12 +3,16 @@ import type { Message, UserID } from "common/types";
 import type { CorsOptions } from "cors";
 import { type Socket, Server as SocketIOServer } from "socket.io";
 import { getUserIdFromToken } from "../../firebase/auth/db";
-import type { Config as CorsConfig } from "../cross-origin/share";
 
 const users = new Map<UserID, Socket>();
 
-export function initializeSocket(server: Server, corsOptions: CorsConfig) {
-  const cors: CorsOptions = {
+export function initializeSocket(
+  server: Server,
+  corsOptions: {
+    origin: string[];
+  },
+) {
+  const cors = {
     ...corsOptions,
     origin: corsOptions.origin[0],
   };
