@@ -1,5 +1,4 @@
 import { panic } from "common/lib/panic";
-export { panic } from "common/lib/panic";
 
 export function allUrlMustBeValid(urls: string[]) {
   for (const url of urls) {

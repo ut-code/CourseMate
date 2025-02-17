@@ -1,6 +1,7 @@
-import { error, panic } from "common/lib/panic";
+import { panic } from "common/lib/panic";
 import type { Relationship, UserID } from "common/types";
 import asyncMap from "../lib/async/map";
+import { error } from "../lib/error";
 import { prisma } from "./client";
 
 export async function getRelation(

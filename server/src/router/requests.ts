@@ -1,5 +1,4 @@
 import { zValidator } from "@hono/zod-validator";
-import { error } from "common/lib/panic";
 import type { UserID } from "common/types";
 import { Hono } from "hono";
 import { z } from "zod";
@@ -10,6 +9,8 @@ import {
   sendRequest,
 } from "../database/requests";
 import { getUserId } from "../firebase/auth/db";
+import { error } from "../lib/error";
+import { param } from "../lib/validator";
 
 const router = new Hono();
 
@@ -30,32 +31,41 @@ router.put(
 );
 
 // リクエストの承認
-router.put("/accept/:senderId", async (req: Request, res: Response) => {
-  const senderId =
-    Number.parseInt(req.params.senderId) ??
-    error("invalid param encoding: senderId", 400);
+router.put(
+  "/accept/:senderId",
+  param({ senderId: z.coerce.number() }),
+  async (c) => {
+    const senderId = c.req.valid("param").senderId;
+    const receiverId = await getUserId(c);
 
-  const receiverId = await getUserId(req);
+    await approveRequest(senderId as UserID, receiverId);
+    c.status(201);
+    c.json({});
+  },
+);
 
-  await approveRequest(senderId as UserID, receiverId);
-  res.status(201).send();
-});
-
-router.put("/cancel/:opponentId", async (req: Request, res: Response) => {
-  const opponentId =
-    Number.parseInt(req.params.opponentId) ?? error("bad param encoding", 400);
-  const requesterId = await getUserId(req);
-  await cancelRequest(requesterId, opponentId);
-});
+router.put(
+  "/cancel/:opponentId",
+  param({ opponentId: z.coerce.number() }),
+  async (c) => {
+    const opponentId = c.req.valid("param").opponentId;
+    const requesterId = await getUserId(c);
+    await cancelRequest(requesterId, opponentId);
+  },
+);
 
 // リクエストの拒否
-router.put("/reject/:opponentId", async (req: Request, res: Response) => {
-  const opponentId =
-    Number.parseInt(req.params.opponentId) ?? error("bad param encoding", 400);
-  const requesterId = await getUserId(req);
+router.put(
+  "/reject/:opponentId",
+  param({ opponentId: z.coerce.number() }),
+  async (c) => {
+    const opponentId = c.req.valid("param").opponentId;
+    const requesterId = await getUserId(c);
 
-  await rejectRequest(opponentId as UserID, requesterId); //TODO 名前を良いのに変える
-  res.status(204).send();
-});
+    await rejectRequest(opponentId as UserID, requesterId); //TODO 名前を良いのに変える
+    c.status(204);
+    c.json({});
+  },
+);
 
 export default router;

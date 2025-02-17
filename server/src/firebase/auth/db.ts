@@ -1,9 +1,9 @@
 import type { IDToken, UserID } from "common/types";
 import { getGUID, getGUIDFromToken } from "./lib";
 
-import { error } from "common/lib/panic";
 import type { Context } from "hono";
 import { prisma } from "../../database/client";
+import { error } from "../../lib/error";
 /**
  * REQUIRE: cookieParser middleware before this
  * THROWS: if idToken is not present in request cookie, or when the token is not valid.

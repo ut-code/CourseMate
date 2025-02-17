@@ -1,5 +1,4 @@
 import { zValidator } from "@hono/zod-validator";
-import { error } from "common/lib/panic";
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { z } from "zod";
@@ -9,6 +8,7 @@ import * as storage from "../database/picture";
 import { getUserId } from "../firebase/auth/db";
 import { getGUID } from "../firebase/auth/lib";
 import { compressImage } from "../functions/img/compress";
+import { error } from "../lib/error";
 import * as hashing from "../lib/hash";
 
 const largeLimit = bodyLimit({

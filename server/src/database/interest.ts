@@ -1,5 +1,5 @@
-import { error } from "common/lib/panic";
 import type { InterestSubject, UserID } from "common/types";
+import { error } from "../lib/error";
 import { prisma } from "./client";
 
 export async function all(): Promise<InterestSubject[]> {

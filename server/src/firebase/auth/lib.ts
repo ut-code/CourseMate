@@ -1,7 +1,7 @@
-import { error } from "common/lib/panic";
 import type { GUID, IDToken } from "common/types";
 import * as admin from "firebase-admin/auth";
 import type { Context } from "hono";
+import { error } from "../../lib/error";
 import { app } from "../init";
 
 const auth = admin.getAuth(app);

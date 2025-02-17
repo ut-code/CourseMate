@@ -1,8 +1,8 @@
-import { error } from "common/lib/panic";
 import { Hono } from "hono";
 import { z } from "zod";
 import * as interest from "../database/interest";
 import { getUserId } from "../firebase/auth/db";
+import { error } from "../lib/error";
 import { json, param } from "../lib/validator";
 
 const router = new Hono();
