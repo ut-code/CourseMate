@@ -50,7 +50,6 @@ app.route("/requests", requestsRoutes);
 app.route("/matches", matchesRoutes);
 app.route("/chat", chatRoutes);
 
-// サーバーの起動
 export function main() {
   const server = Bun.serve(app);
   // ??
