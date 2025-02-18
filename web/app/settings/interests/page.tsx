@@ -12,7 +12,6 @@ import * as subject from "../../../api/subject";
 export default function EditInterest() {
   const { state } = subject.useMyInterests();
   const data = state.data;
-  const error = state.current === "error" ? state.error : null;
   const loading = state.current === "loading";
 
   const router = useRouter();
@@ -75,7 +74,12 @@ export default function EditInterest() {
     });
   }
 
-  if (error) throw error;
+  async function handleSubmit(newSubjectName: string) {
+    await createSubject(newSubjectName);
+    setIsOpen(false);
+    getSubjects();
+    setNewSubjectName("");
+  }
 
   return loading ? (
     <FullScreenCircularProgress />
@@ -185,6 +189,7 @@ export default function EditInterest() {
         >
           <div className="modal-box">
             <h3 className="mb-4 font-bold text-lg">興味分野タグの作成</h3>
+
             <input
               type="text"
               className="input input-bordered my-2 w-full"
@@ -201,30 +206,28 @@ export default function EditInterest() {
             )}
             <div className="modal-action">
               <form method="dialog">
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    className="btn"
-                    onClick={() => {
-                      setIsOpen(false);
-                      setNewSubjectName("");
-                    }}
-                  >
-                    キャンセル
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={async () => {
-                      await createSubject(newSubjectName);
-                      setIsOpen(false);
-                      getSubjects();
-                      setNewSubjectName("");
-                    }}
-                  >
-                    作成
-                  </button>
-                </div>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit(newSubjectName);
+                  }}
+                >
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      className="btn"
+                      onClick={() => {
+                        setIsOpen(false);
+                        setNewSubjectName("");
+                      }}
+                    >
+                      キャンセル
+                    </button>
+                    <button type="submit" className="btn btn-primary">
+                      作成
+                    </button>
+                  </div>
+                </form>
               </form>
             </div>
           </div>
