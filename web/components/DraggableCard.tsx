@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { MdClose, MdThumbUp } from "react-icons/md";
 import { Card } from "./Card";
 
-const SWIPE_THRESHOLD = 30;
+const SWIPE_THRESHOLD = 50;
 
 interface DraggableCardProps {
   displayedUser: UserWithCoursesAndSubjects;
@@ -30,22 +30,13 @@ export const DraggableCard = ({
 
   useMotionValueEvent(dragX, "change", (latest: number) => {
     if (dragging) {
-      dragX.set(latest);
       setDragProgress(latest);
     } else {
-      dragX.set(0);
       setDragProgress(0);
     }
   });
 
-  useMotionValueEvent(dragY, "change", (latest: number) => {
-    if (dragging) {
-      dragY.set(latest);
-    } else {
-      dragY.set(0);
-    }
-  });
-
+  // ドラッグ処理の他の部分はそのまま
   const CardOverlay = () => {
     return (
       <div>
@@ -68,14 +59,15 @@ export const DraggableCard = ({
     );
   };
 
-  const handleDragEnd = useCallback(() => {
-    const x = dragX.get();
-    if (x > SWIPE_THRESHOLD) {
-      onSwipeRight();
+  const handleDragEnd = useCallback(async () => {
+    const xValue = dragX.get();
+    if (xValue > SWIPE_THRESHOLD) {
+      await Promise.resolve(onSwipeRight());
+    } else if (xValue < -SWIPE_THRESHOLD) {
+      await Promise.resolve(onSwipeLeft());
     }
-    if (x < -SWIPE_THRESHOLD) {
-      onSwipeLeft();
-    }
+    dragX.stop();
+    dragY.stop();
     dragX.set(0);
     dragY.set(0);
   }, [dragX, dragY, onSwipeRight, onSwipeLeft]);
@@ -89,11 +81,10 @@ export const DraggableCard = ({
           drag
           dragElastic={0.9}
           dragListener={true}
-          dragConstraints={{ left: 0, right: 0 }}
           onDragStart={() => setDragging(true)}
           onDragEnd={() => {
-            setDragging(false);
             handleDragEnd();
+            setDragging(false);
           }}
           style={{ x: dragX, y: dragY, padding: "10px" }}
           whileTap={{ scale: 0.95 }}

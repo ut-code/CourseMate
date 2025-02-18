@@ -2,7 +2,7 @@
 
 import type { UserWithCoursesAndSubjects } from "common/types";
 import { motion, useAnimation } from "framer-motion";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { MdClose, MdThumbUp } from "react-icons/md";
 import request from "~/api/request";
 import { useAboutMe, useRecommended } from "~/api/user";
@@ -18,8 +18,8 @@ export default function Home() {
   const controls = useAnimation();
   const backCardControls = useAnimation();
   const [clickedButton, setClickedButton] = useState<string>("");
-
   const [openDetailedMenu, setOpenDetailedMenu] = useState(false);
+
   const {
     state: { data: currentUser },
   } = useAboutMe();
@@ -29,7 +29,30 @@ export default function Home() {
     Queue<UserWithCoursesAndSubjects>
   >(() => new Queue([]));
 
-  useEffect(() => {
+  // コンテナと topCard の DOM 参照を用意
+  const containerRef = useRef<HTMLDivElement>(null);
+  const topCardRef = useRef<HTMLDivElement>(null);
+  // topCard のコンテナ内での相対位置（backCard の最終的な配置位置）を保存
+  const [targetPos, setTargetPos] = useState({ x: 0, y: 0 });
+
+  // 初期オフセット：右方向へのずれを防ぐため x は 0、縦方向は必要に応じて設定（例: 20）
+  const initialOffset = { x: 0, y: 0 };
+
+  // レイアウト完了後に topCard の位置を計算する
+  useLayoutEffect(() => {
+    if (topCardRef.current && containerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const topCardRect = topCardRef.current.getBoundingClientRect();
+      setTargetPos({
+        x: topCardRect.left - containerRect.left,
+        y: topCardRect.top - containerRect.top,
+      });
+      // backCard のコントロールに初期オフセットを設定（レンダリング位置と合わせる）
+      backCardControls.set(initialOffset);
+    }
+  }, [backCardControls]);
+
+  useLayoutEffect(() => {
     if (data) setRecommended(new Queue(data));
   }, [data]);
 
@@ -43,23 +66,24 @@ export default function Home() {
 
       setClickedButton(action === "accept" ? "heart" : "cross");
 
-      // アニメーション開始前に BackCard の位置をリセット
-      backCardControls.set({ x: 0, y: 0 });
+      // アニメーション開始前に backCard を初期レンダリング位置（initialOffset）に設定
+      backCardControls.set(initialOffset);
 
-      // 移動アニメーションを実行
       await Promise.all([
+        // トップカードは画面外へ移動（画面サイズに合わせる）
         controls.start({
-          x: action === "accept" ? 1000 : -1000,
+          x: action === "accept" ? window.innerWidth : -window.innerWidth,
           transition: { duration: 0.5, delay: 0.2 },
         }),
+        // backCard は computed した topCard の位置 (targetPos) に移動
         backCardControls.start({
-          x: 10,
-          y: 10,
+          x: targetPos.x,
+          y: targetPos.y,
           transition: { duration: 0.5, delay: 0.2 },
         }),
       ]);
 
-      // 状態更新
+      // キューの更新などの処理
       recommended.pop();
       if (action === "accept") {
         await request.send(current.id);
@@ -68,13 +92,12 @@ export default function Home() {
       }
       rerender({});
 
-      // 位置をリセット
+      // アニメーション後に位置をリセット（backCard は再び初期レンダリング位置に戻す）
       controls.set({ x: 0 });
-      backCardControls.set({ x: 0, y: 0 });
-
+      backCardControls.set(initialOffset);
       setClickedButton("");
     },
-    [recommended, controls, backCardControls],
+    [recommended, controls, backCardControls, targetPos],
   );
 
   if (recommended == null) {
@@ -89,20 +112,26 @@ export default function Home() {
   if (error) throw error;
 
   return (
-    <div className="flex h-full flex-col items-center justify-center p-4">
+    <div
+      ref={containerRef}
+      className="flex h-full flex-col items-center justify-center p-4"
+    >
       {displayedUser && (
         <div className="flex h-full flex-col items-center justify-center">
           {nextUser && (
             <div className="relative grid h-full w-full grid-cols-1 grid-rows-1">
+              {/* backCard: 初期レンダリング位置とアニメーション開始位置を両方とも initialOffset に合わせる */}
               <motion.div
                 className="z-0 col-start-1 row-start-1 mt-4"
-                initial={{ x: 0, y: 0 }} // 初期位置を (0, 0) に設定
+                initial={initialOffset}
                 animate={backCardControls}
               >
                 <Card displayedUser={nextUser} currentUser={currentUser} />
               </motion.div>
+              {/* トップカード: この位置を基準にするために ref を設定 */}
               <motion.div
-                className="z-10 col-start-1 row-start-1 mt-4 flex items-center justify-center"
+                ref={topCardRef}
+                className="z-10 col-start-1 row-start-1 mt-4"
                 animate={controls}
               >
                 <DraggableCard
@@ -119,6 +148,7 @@ export default function Home() {
           {nextUser == null && (
             <div className="relative grid h-full w-full grid-cols-1 grid-rows-1">
               <motion.div
+                ref={topCardRef}
                 className="z-10 col-start-1 row-start-1 mt-4 flex items-center justify-center"
                 animate={controls}
               >
@@ -158,6 +188,7 @@ export default function Home() {
   );
 }
 
+// Queue クラス（状態管理用）
 class Queue<T> {
   private store: T[];
   constructor(initial: T[]) {
@@ -166,7 +197,7 @@ class Queue<T> {
   push(top: T): void {
     this.store.push(top);
   }
-  // peek(0) to peek the next elem to be popped, peek(1) peeks the second next element to be popped.
+  // peek(0): 次にポップされる要素、peek(1): その次の要素
   peek(nth: number): T | undefined {
     return this.store[nth];
   }
