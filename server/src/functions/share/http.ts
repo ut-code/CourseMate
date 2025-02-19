@@ -1,11 +1,13 @@
+import type { StatusCode } from "hono/utils/http-status";
+
 export type Response<T> =
   | {
-      code: number;
+      code: StatusCode;
       ok: true;
       body: T;
     }
   | {
-      code: number;
+      code: StatusCode;
       ok: false;
       body: string;
     };

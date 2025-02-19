@@ -1,4 +1,4 @@
-export { panic } from "common/lib/panic";
+import { panic } from "common/lib/panic";
 
 export function allUrlMustBeValid(urls: string[]) {
   for (const url of urls) {
@@ -9,4 +9,8 @@ export function allUrlMustBeValid(urls: string[]) {
       throw err;
     }
   }
+}
+
+export function env(name: string) {
+  return process.env[name] || panic(`env ${name} is missing`);
 }
