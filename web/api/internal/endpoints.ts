@@ -1,6 +1,6 @@
+import { panic } from "common/lib/panic";
 import type { CourseID, Day, GUID } from "common/types";
 import type { MessageID, ShareRoomID } from "common/types";
-import { panic } from "~/lib/utils";
 
 export const API_ENDPOINT: string =
   process.env.NEXT_PUBLIC_API_ENDPOINT ??

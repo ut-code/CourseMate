@@ -1,9 +1,9 @@
 import type { IDToken, UserID } from "common/types";
-import type { Request } from "express";
 import { getGUID, getGUIDFromToken } from "./lib";
 
-import { error } from "common/lib/panic";
+import type { Context } from "hono";
 import { prisma } from "../../database/client";
+import { error } from "../../lib/error";
 /**
  * REQUIRE: cookieParser middleware before this
  * THROWS: if idToken is not present in request cookie, or when the token is not valid.
@@ -17,8 +17,8 @@ import { prisma } from "../../database/client";
  * }
  * ```
  **/
-export async function getUserId(req: Request): Promise<UserID> {
-  const guid = await getGUID(req);
+export async function getUserId(c: Context): Promise<UserID> {
+  const guid = await getGUID(c);
   const user = await prisma.user.findUnique({
     where: {
       guid: guid,
@@ -38,7 +38,7 @@ export async function getUserIdFromToken(token: IDToken): Promise<UserID> {
       guid: guid,
     },
   });
-  if (!user) throw new Error("User not found!");
+  if (!user) error("User not found!", 401);
   return user.id;
 }
 
@@ -53,11 +53,11 @@ export async function getUserIdFromToken(token: IDToken): Promise<UserID> {
  ```
  **/
 export async function isRequester(
-  req: Request,
+  c: Context,
   userid: UserID,
 ): Promise<boolean> {
   try {
-    return (await getUserId(req)) === userid;
+    return (await getUserId(c)) === userid;
   } catch (_) {
     return false;
   }

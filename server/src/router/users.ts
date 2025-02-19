@@ -1,11 +1,11 @@
 import type { GUID } from "common/types";
-import type { User } from "common/types";
 import {
   GUIDSchema,
   InitUserSchema,
   UpdateUserSchema,
 } from "common/zod/schemas";
-import express, { type Request, type Response } from "express";
+import { Hono } from "hono";
+import { z } from "zod";
 import {
   getPendingRequestsFromUser,
   getPendingRequestsToUser,
@@ -22,97 +22,105 @@ import { getUserId } from "../firebase/auth/db";
 import { getGUID } from "../firebase/auth/lib";
 import { recommendedTo } from "../functions/engines/recommendation";
 import * as core from "../functions/user";
+import { param } from "../lib/validator";
 
-const router = express.Router();
+const router = new Hono()
 
-// 全ユーザーを取得
-router.get("/", async (_: Request, res: Response) => {
-  const result = await core.getAllUsers();
-  res.status(result.code).send(result.body);
-});
+  // 全ユーザーを取得
+  .get("/", async (c) => {
+    const result = await core.getAllUsers();
+    c.status(result.code);
+    return c.json(result.body);
+  })
 
-router.get("/recommended", async (req, res) => {
-  const u = await getUserId(req);
-  const recommended = await recommendedTo(u, 20, 0); // とりあえず 20 人
-  res.send(recommended.map((entry) => entry.u));
-});
+  .get("/recommended", async (c) => {
+    const u = await getUserId(c);
+    const recommended = await recommendedTo(u, 20, 0); // とりあえず 20 人
+    return c.json(recommended.map((entry) => entry.u));
+  })
 
-// 自分の情報を確認するエンドポイント。
-router.get("/me", async (req: Request, res: Response) => {
-  const guid = await getGUID(req);
-  const result = await core.getUser(guid);
-  res.status(result.code).send(result.body);
-});
+  // 自分の情報を確認するエンドポイント。
+  .get("/me", async (c) => {
+    const guid = await getGUID(c);
+    const result = await core.getUser(guid);
+    c.status(result.code);
+    return c.json(result.body);
+  })
 
-// ユーザーの存在を確認するためのエンドポイント。だれでもアクセス可能
-router.get("/exists/:guid", async (req: Request, res: Response) => {
-  const guid = req.params.guid;
-  const ok = await core.userExists(guid as GUID);
-  res.status(ok.code).send();
-});
+  // ユーザーの存在を確認するためのエンドポイント。だれでもアクセス可能
+  .get("/exists/:guid", param({ guid: z.string() }), async (c) => {
+    const guid = c.req.valid("param").guid;
+    const ok = await core.userExists(guid as GUID);
+    c.status(ok.code);
+    return c.json({});
+  })
 
-// 特定のユーザーとマッチしたユーザーを取得
-router.get("/matched", async (req: Request, res: Response) => {
-  const userId = await getUserId(req);
-  const result = await core.getMatched(userId);
-  res.status(result.code).json(result.body);
-});
+  // 特定のユーザーとマッチしたユーザーを取得
+  .get("/matched", async (c) => {
+    const userId = await getUserId(c);
+    const result = await core.getMatched(userId);
+    c.status(result.code);
+    return c.json(result.body);
+  })
 
-// ユーザーにリクエストを送っているユーザーを取得 状態はPENDING
-router.get("/pending/to-me", async (req: Request, res: Response) => {
-  const userId = await getUserId(req);
-  const sendingUsers = await getPendingRequestsToUser(userId);
-  res.status(200).json(sendingUsers);
-});
+  // ユーザーにリクエストを送っているユーザーを取得 状態はPENDING
+  .get("/pending/to-me", async (c) => {
+    const userId = await getUserId(c);
+    const sendingUsers = await getPendingRequestsToUser(userId);
+    c.status(200);
+    return c.json(sendingUsers);
+  })
 
-// ユーザーがリクエストを送っているユーザーを取得 状態はPENDING
-router.get("/pending/from-me", async (req: Request, res: Response) => {
-  const userId = await getUserId(req);
-  const receivers = await getPendingRequestsFromUser(userId);
-  res.status(200).json(receivers);
-});
+  // ユーザーがリクエストを送っているユーザーを取得 状態はPENDING
+  .get("/pending/from-me", async (c) => {
+    const userId = await getUserId(c);
+    const receivers = await getPendingRequestsFromUser(userId);
+    c.status(200);
+    return c.json(receivers);
+  })
 
-// guidでユーザーを取得
-router.get("/guid/:guid", async (req: Request, res: Response) => {
-  const guid_ = GUIDSchema.safeParse(req.params.guid);
-  if (!guid_.success) return res.status(400).send();
-  const guid = guid_.data;
+  // guidでユーザーを取得
+  .get("/guid/:guid", param({ guid: GUIDSchema }), async (c) => {
+    const guid = c.req.valid("param").guid as GUID;
+    const user = await getUser(guid);
+    c.status(200);
+    return c.json(user);
+  })
 
-  const user = await getUser(guid as GUID);
-  res.status(200).json(user);
-});
+  // idでユーザーを取得
+  .get("/id/:id", async (c) => {
+    const userId = await getUserId(c);
+    const user = await getUserByID(userId);
+    c.status(200);
+    return c.json(user);
+  })
 
-// idでユーザーを取得
-router.get("/id/:id", async (req: Request, res: Response) => {
-  const userId = await getUserId(req);
-  const user = await getUserByID(userId);
-  const json: User = user;
-  res.status(200).json(json);
-});
+  // INSERT INTO "User" VALUES (body...)
+  .post("/", async (c) => {
+    const partialUser = InitUserSchema.parse(c.body);
+    const user = await createUser(partialUser);
 
-// INSERT INTO "User" VALUES (body...)
-router.post("/", async (req: Request, res: Response) => {
-  const partialUser = InitUserSchema.parse(req.body);
-  const user = await createUser(partialUser);
+    //ユーザー作成と同時にメモとマッチング
+    await matchWithMemo(user.id);
+    c.status(201);
+    return c.json(user);
+  })
 
-  //ユーザー作成と同時にメモとマッチング
-  await matchWithMemo(user.id);
-  res.status(201).json(user);
-});
+  // ユーザーの更新エンドポイント
+  .put("/me", async (c) => {
+    const id = await getUserId(c);
+    const user = UpdateUserSchema.parse(c.body);
+    const updated = await updateUser(id, user);
+    c.status(200);
+    return c.json(updated);
+  })
 
-// ユーザーの更新エンドポイント
-router.put("/me", async (req: Request, res: Response) => {
-  const id = await getUserId(req);
-  const user = UpdateUserSchema.parse(req.body);
-  const updated = await updateUser(id, user);
-  res.status(200).json(updated);
-});
-
-// ユーザーの削除エンドポイント
-router.delete("/me", async (req, res) => {
-  const id = await getUserId(req);
-  const deleted = await deleteUser(id);
-  res.status(204).send();
-});
+  // ユーザーの削除エンドポイント
+  .delete("/me", async (c) => {
+    const id = await getUserId(c);
+    await deleteUser(id);
+    c.status(204);
+    return c.json({});
+  });
 
 export default router;
