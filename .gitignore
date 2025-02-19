@@ -22,3 +22,5 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+tsconfig.tsbuildinfo

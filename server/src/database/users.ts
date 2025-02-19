@@ -1,4 +1,6 @@
-import { error, panic } from "common/lib/panic";
+import { panic } from "common/lib/panic";
+import { error } from "../lib/error";
+
 import type {
   Course,
   GUID,

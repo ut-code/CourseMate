@@ -1,5 +1,5 @@
-import { error } from "common/lib/panic";
 import type { Course, Day, UserID } from "common/types";
+import { error } from "../lib/error";
 import { prisma } from "./client";
 
 export async function getCourseByCourseId(courseId: string): Promise<Course> {
