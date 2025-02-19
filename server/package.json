@@ -24,6 +24,7 @@
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
     "firebase-admin": "^12.2.0",
+    "lru-cache": "^11.0.2",
     "hono": "^4.7.1",
     "sharp": "^0.33.5",
     "socket.io": "^4.7.5",
