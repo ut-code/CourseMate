@@ -1,3 +1,4 @@
+"use client";
 import type { UserWithCoursesAndSubjects } from "common/types";
 import { type ReactNode, createContext, useContext, useState } from "react";
 import { useAboutMe } from "~/api/user";

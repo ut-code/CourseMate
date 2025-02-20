@@ -10,8 +10,6 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import BanLandscape from "~/components/BanLandscape";
 import { AlertProvider } from "~/components/common/alert/AlertProvider";
-import { ModalProvider } from "~/components/common/modal/ModalProvider";
-import AuthProvider from "~/firebase/auth/AuthProvider";
 
 const theme = createTheme({
   palette: {
@@ -45,15 +43,13 @@ export default function RootLayout({
             anchorOrigin={{ horizontal: "right", vertical: "top" }}
           >
             <React.StrictMode>
-              <AuthProvider>
-                <CssBaseline />
-                <AlertProvider>
-                  <ModalProvider>
-                    <BanLandscape />
-                    {children}
-                  </ModalProvider>
-                </AlertProvider>
-              </AuthProvider>
+              <CssBaseline />
+              <AlertProvider>
+                {/* <ModalProvider> */}
+                <BanLandscape />
+                {children}
+                {/* </ModalProvider> */}
+              </AlertProvider>
             </React.StrictMode>
           </SnackbarProvider>
         </ThemeProvider>
