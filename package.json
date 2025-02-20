@@ -30,7 +30,7 @@
     "prepare:deploy:web": "bun install && bun run build:web",
     "prepare:deploy:server": "bun install",
     "deploy:web": "cd web; bun run start --port $PORT",
-    "deploy:server": "cd server; bun run src/main.ts",
+    "deploy:server": "cd server; bun run src/index.ts",
     "dev-db": "make dev-db",
     "test": "make test",
     "spell": "bunx cspell --quiet ."
