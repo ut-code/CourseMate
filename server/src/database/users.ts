@@ -23,6 +23,7 @@ export async function createUser(partialUser: Omit<User, "id">): Promise<User> {
 // ユーザーの取得
 export async function getUser(guid: GUID): Promise<UserWithCoursesAndSubjects> {
   const user = await prisma.user.findUnique({
+    relationLoadStrategy: "join",
     where: {
       guid: guid,
     },
@@ -75,6 +76,7 @@ export async function getUserByID(
   id: UserID,
 ): Promise<UserWithCoursesAndSubjects> {
   const user = await prisma.user.findUnique({
+    relationLoadStrategy: "join",
     where: {
       id,
     },
@@ -140,6 +142,7 @@ export async function getAllUsers(): Promise<
   (User & { courses: Course[]; interestSubjects: InterestSubject[] })[]
 > {
   const users = await prisma.user.findMany({
+    relationLoadStrategy: "join",
     include: {
       enrollments: {
         include: {

@@ -31,6 +31,7 @@ if (corsOptions.origin.length > 1) {
 const app = new Hono()
   .onError((err, c) => {
     if (err instanceof HTTPException) {
+      console.error(err);
       c.status(err.status);
       return c.json({ error: err });
     }
