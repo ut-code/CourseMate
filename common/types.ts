@@ -40,6 +40,7 @@ export type {
 export type SSEChatEvents = {
   "Chat:Append": {
     message: Message;
+    sender: string; // user name
   };
   "Chat:Update": {
     id: number;
@@ -49,4 +50,9 @@ export type SSEChatEvents = {
     id: number;
   };
   "Chat:Ping": "";
+};
+export type SSEChatEventEnum = "Chat:Append" | "Chat:Update" | "Chat:Delete";
+export type SSEChatEvent<T extends SSEChatEventEnum> = {
+  event: T;
+  data: SSEChatEvents[T];
 };

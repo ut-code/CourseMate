@@ -1,15 +1,10 @@
-import type { SSEChatEvents, UserID } from "common/types";
+import type { SSEChatEvent, SSEChatEventEnum, UserID } from "common/types";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { streamSSE } from "hono/streaming";
 import { getUserIdFromToken } from "../firebase/auth/db";
 
 export const sseChatPath = (id: UserID) => `sse:chat:${id}`;
-type SSEChatEventEnum = "Chat:Append" | "Chat:Update" | "Chat:Delete";
-type SSEChatEvent<T extends SSEChatEventEnum> = {
-  event: T;
-  data: SSEChatEvents[T];
-};
 export function send<T extends SSEChatEventEnum>(
   to: UserID,
   event: SSEChatEvent<T>,

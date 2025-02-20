@@ -24,15 +24,13 @@ async function main({ signal }: { signal: AbortSignal }) {
 
   sse.addEventListener(
     "Chat:Append",
-    async (ev) => {
+    (ev) => {
       console.log(ev);
       const data = JSON.parse(ev.data) as SSEChatEvents["Chat:Append"];
       const msg = data.message;
       // if it exists and caught the create sig
       if (handlers.onCreate?.(msg)) return;
-      const creator = await user.get(msg.creator);
-      if (!creator) return;
-      enqueueSnackbar(`${creator.name}さんからのメッセージ : ${msg.content}`, {
+      enqueueSnackbar(`${data.sender}さんからのメッセージ : ${msg.content}`, {
         variant: "info",
       });
     },

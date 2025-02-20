@@ -7,8 +7,10 @@ import {
   SharedRoomSchema,
 } from "common/zod/schemas";
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 import * as db from "../database/chat";
+import { prisma } from "../database/client";
 import { getUserId } from "../firebase/auth/db";
 import * as core from "../functions/chat";
 import { json, param } from "../lib/validator";
@@ -28,14 +30,23 @@ const router = new Hono()
     const friend = c.req.valid("param").userid;
     const send = c.req.valid("json");
     const result = await core.sendDM(user, friend, send);
-    if (result.ok) {
-      sse.send(friend, {
-        event: "Chat:Append",
-        data: { message: result.body },
-      });
-    }
-    c.status(result.code);
-    return c.json(result.body);
+    const senderName = await prisma.user.findUnique({
+      where: {
+        id: user,
+      },
+      select: {
+        name: true,
+      },
+    });
+    if (!senderName)
+      throw new HTTPException(500, { message: "sender not found???" });
+
+    sse.send(friend, {
+      event: "Chat:Append",
+      data: { message: result, sender: senderName?.name },
+    });
+    c.status(201);
+    return c.json(result);
   })
 
   // GET a DM Room with userId, CREATE one if not found.
