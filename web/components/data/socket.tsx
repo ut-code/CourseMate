@@ -24,7 +24,6 @@ async function main({ signal }: { signal: AbortSignal }) {
   sse.addEventListener(
     "Chat:Append",
     (ev) => {
-      console.log(ev);
       const data = JSON.parse(ev.data) as SSEChatEvents["Chat:Append"];
       const msg = data.message;
       // if it exists and caught the create sig
@@ -38,7 +37,6 @@ async function main({ signal }: { signal: AbortSignal }) {
   sse.addEventListener(
     "Chat:Update",
     (ev) => {
-      console.log(ev);
       const data = JSON.parse(ev.data) as SSEChatEvents["Chat:Update"];
       const msg = data.message;
       handlers.onUpdate?.(msg.id, msg);
@@ -48,7 +46,6 @@ async function main({ signal }: { signal: AbortSignal }) {
   sse.addEventListener(
     "Chat:Delete",
     (ev) => {
-      console.log(ev);
       const data = JSON.parse(ev.data) as SSEChatEvents["Chat:Delete"];
       handlers.onDelete?.(data.id);
     },
