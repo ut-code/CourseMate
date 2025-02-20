@@ -114,7 +114,7 @@ export default function SelectCourseDialog({
               条件に当てはまる授業はありません。
             </p>
           ) : (
-            <ul className="mt-4">
+            <ul className="mt-4 overflow-auto max-h-[300px]">
               {filteredAvailableCourses.map((course) => (
                 <li key={course.id}>
                   <button
