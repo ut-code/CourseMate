@@ -1,4 +1,3 @@
-"use client";
 import BottomBar from "~/components/BottomBar";
 import Header from "~/components/Header";
 import { NavigateByAuthState } from "~/components/common/NavigateByAuthState";
