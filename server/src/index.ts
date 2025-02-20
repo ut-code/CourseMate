@@ -1,4 +1,3 @@
-import type { Server } from "node:http";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
@@ -58,7 +57,6 @@ export function main() {
     port: process.env.PORT ?? 3000,
   });
   // ??
-  initializeSocket(server as unknown as Server, corsOptions);
-  return server;
+  return initializeSocket(app, corsOptions);
 }
 export default app;

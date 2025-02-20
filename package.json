@@ -36,6 +36,8 @@
     "lefthook": "^1.10.10",
     "lint-staged": "^15.2.10"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@hono/node-server": "^1.13.8"
+  },
   "trustedDependencies": ["@biomejs/biome", "lefthook"]
 }

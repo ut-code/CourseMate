@@ -3,6 +3,9 @@
   "workspaces": {
     "": {
       "name": "course-mate",
+      "dependencies": {
+        "@hono/node-server": "^1.13.8",
+      },
       "devDependencies": {
         "@biomejs/biome": "^1.9.1",
         "lefthook": "^1.10.10",
@@ -277,6 +280,8 @@
     "@grpc/grpc-js": ["@grpc/grpc-js@1.9.15", "", { "dependencies": { "@grpc/proto-loader": "^0.7.8", "@types/node": ">=12.12.47" } }, "sha512-nqE7Hc0AzI+euzUwDAy0aY5hCp10r734gMGRdU+qOPX0XSceI2ULrcXB5U2xSc5VkWwalCj4M7GzCAygZl2KoQ=="],
 
     "@grpc/proto-loader": ["@grpc/proto-loader@0.7.13", "", { "dependencies": { "lodash.camelcase": "^4.3.0", "long": "^5.0.0", "protobufjs": "^7.2.5", "yargs": "^17.7.2" }, "bin": { "proto-loader-gen-types": "build/bin/proto-loader-gen-types.js" } }, "sha512-AiXO/bfe9bmxBjxxtYxFAXGZvMaN5s8kO+jBHAJCON8rJoB5YS/D6X7ZNc6XQkuHNmyl4CYaMI1fJ/Gn27RGGw=="],
+
+    "@hono/node-server": ["@hono/node-server@1.13.8", "", { "peerDependencies": { "hono": "^4" } }, "sha512-fsn8ucecsAXUoVxrUil0m13kOEq4mkX4/4QozCqmY+HpGfKl74OYSn8JcMA8GnG0ClfdRI4/ZSeG7zhFaVg+wg=="],
 
     "@hono/zod-validator": ["@hono/zod-validator@0.4.3", "", { "peerDependencies": { "hono": ">=3.9.0", "zod": "^3.19.1" } }, "sha512-xIgMYXDyJ4Hj6ekm9T9Y27s080Nl9NXHcJkOvkXPhubOLj8hZkOL8pDnnXfvCf5xEE8Q4oMFenQUZZREUY2gqQ=="],
 

@@ -1,17 +1,18 @@
-import type { Server } from "node:http";
+import { serve } from "@hono/node-server";
 import type { Message, UserID } from "common/types";
-import type { CorsOptions } from "cors";
+import type { Hono } from "hono";
 import { type Socket, Server as SocketIOServer } from "socket.io";
 import { getUserIdFromToken } from "../../firebase/auth/db";
 
 const users = new Map<UserID, Socket>();
 
 export function initializeSocket(
-  server: Server,
+  app: Hono,
   corsOptions: {
     origin: string[];
   },
 ) {
+  const server = serve(app);
   const cors = {
     ...corsOptions,
     origin: corsOptions.origin[0],
@@ -46,6 +47,8 @@ export function initializeSocket(
       }
     });
   });
+
+  return server;
 }
 
 export function sendMessage(message: Message, friendId: UserID) {
