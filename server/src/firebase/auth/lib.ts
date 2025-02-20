@@ -11,7 +11,7 @@ type DecodedIdToken = admin.DecodedIdToken;
 // THROWS: if idToken is not present in request cookie, or when the token is not valid.
 export async function getGUID(c: Context): Promise<GUID> {
   const idToken = c.req.header("Authorization");
-  if (typeof idToken !== "string") error("token not found in query", 401);
+  if (typeof idToken !== "string") error("token not found in header", 401);
   return await getGUIDFromToken(idToken);
 }
 
