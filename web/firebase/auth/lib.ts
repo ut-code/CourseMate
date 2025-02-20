@@ -34,20 +34,18 @@ export async function credFetch(
   path: string,
   body?: unknown,
 ): Promise<Response> {
-  let idToken = await getIdToken();
+  const idToken = await getIdToken();
   const init: RequestInit = { method };
   if (body) {
     init.body = JSON.stringify(body);
     init.headers = {
       "Content-Type": "application/json",
+      Authorization: idToken,
+    };
+  } else {
+    init.headers = {
+      Authorization: idToken,
     };
   }
-  let res = await fetch(`${path}?token=${idToken}`, init);
-
-  if (res.status === 401) {
-    idToken = await getIdToken();
-    res = await fetch(`${path}?token=${idToken}`, init);
-  }
-
-  return res;
+  return await fetch(path, init);
 }
