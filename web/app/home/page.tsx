@@ -77,13 +77,13 @@ export default function Home() {
     [recommended, controls, backCardControls],
   );
 
-  if (recommended == null) {
+  if (data === undefined) {
     return <FullScreenCircularProgress />;
   }
   if (currentUser == null) {
     return <FullScreenCircularProgress />;
   }
-  if (displayedUser == null) {
+  if (recommended.size() === 0) {
     return <NoMoreUser />;
   }
   if (error) throw error;
@@ -172,5 +172,8 @@ class Queue<T> {
   }
   pop(): T | undefined {
     return this.store.shift();
+  }
+  size(): number {
+    return this.store.length;
   }
 }
