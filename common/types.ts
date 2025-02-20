@@ -1,6 +1,6 @@
 // common/type/types.ts
 
-import type { Message, UserID } from "./zod/types.ts";
+import type { Message } from "./zod/types.ts";
 
 export type {
   UserID,

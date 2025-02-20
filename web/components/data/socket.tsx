@@ -3,7 +3,6 @@ import type { SSEChatEvents } from "common/types";
 import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
 import { API_ENDPOINT } from "~/api/internal/endpoints";
-import * as user from "~/api/user";
 import { getIdToken } from "~/firebase/auth/lib";
 
 export const handlers: {
