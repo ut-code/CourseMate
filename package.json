@@ -1,8 +1,16 @@
 {
   "name": "course-mate",
   "version": "1.0.0",
-  "description": "",
+  "author": "",
   "main": "index.js",
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.1",
+    "lefthook": "^1.10.10",
+    "lint-staged": "^15.2.10"
+  },
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
   "scripts": {
     "prepare": "lefthook install && (cd server; bun run prepare)",
     "check": "bun type && bun style:check",
@@ -27,17 +35,6 @@
     "test": "make test",
     "spell": "bunx cspell --quiet ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "workspaces": ["common", "web", "server"],
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.1",
-    "lefthook": "^1.10.10",
-    "lint-staged": "^15.2.10"
-  },
-  "dependencies": {
-    "@hono/node-server": "^1.13.8"
-  },
-  "trustedDependencies": ["@biomejs/biome", "lefthook"]
+  "trustedDependencies": ["@biomejs/biome", "lefthook"],
+  "workspaces": ["common", "web", "server"]
 }
