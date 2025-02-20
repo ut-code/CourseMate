@@ -7,14 +7,16 @@ import {
   SharedRoomSchema,
 } from "common/zod/schemas";
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 import * as db from "../database/chat";
+import { prisma } from "../database/client";
 import { getUserId } from "../firebase/auth/db";
 import * as core from "../functions/chat";
-import * as ws from "../lib/socket/socket";
 import { json, param } from "../lib/validator";
+import * as sse from "../router/sse";
 
-const userid_param = param({ userid: z.number() });
+const userid_param = param({ userid: z.coerce.number() });
 const router = new Hono()
   .get("/overview", async (c) => {
     const id = await getUserId(c);
@@ -28,10 +30,23 @@ const router = new Hono()
     const friend = c.req.valid("param").userid;
     const send = c.req.valid("json");
     const result = await core.sendDM(user, friend, send);
-    if (result.ok) {
-      ws.sendMessage(result.body, friend);
-    }
-    return c.json(result.body); // status: result.code
+    const senderName = await prisma.user.findUnique({
+      where: {
+        id: user,
+      },
+      select: {
+        name: true,
+      },
+    });
+    if (!senderName)
+      throw new HTTPException(500, { message: "sender not found???" });
+
+    sse.send(friend, {
+      event: "Chat:Append",
+      data: { message: result, sender: senderName?.name },
+    });
+    c.status(201);
+    return c.json(result);
   })
 
   // GET a DM Room with userId, CREATE one if not found.
@@ -118,7 +133,13 @@ const router = new Hono()
 
       const result = await core.updateMessage(user, id, content);
       if (result.ok) {
-        ws.updateMessage(result.body, friend);
+        sse.send(friend, {
+          event: "Chat:Update",
+          data: {
+            id: result.body.id,
+            message: result.body,
+          },
+        });
       }
       c.status(result.code);
       return c.json(result.body);
@@ -134,7 +155,12 @@ const router = new Hono()
       const id = c.req.valid("param").id;
       const friend = c.req.valid("json").friend;
       await db.deleteMessage(id as MessageID, user);
-      ws.deleteMessage(id, friend);
+      sse.send(friend, {
+        event: "Chat:Delete",
+        data: {
+          id,
+        },
+      });
       c.status(204);
       return c.json({});
     },

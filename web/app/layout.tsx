@@ -9,6 +9,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import BanLandscape from "~/components/BanLandscape";
+import SSEProvider from "~/components/SSEProvider";
 import { AlertProvider } from "~/components/common/alert/AlertProvider";
 
 const theme = createTheme({
@@ -47,7 +48,7 @@ export default function RootLayout({
               <AlertProvider>
                 {/* <ModalProvider> */}
                 <BanLandscape />
-                {children}
+                <SSEProvider>{children}</SSEProvider>
                 {/* </ModalProvider> */}
               </AlertProvider>
             </React.StrictMode>

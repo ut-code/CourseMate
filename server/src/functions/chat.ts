@@ -8,6 +8,7 @@ import type {
   SendMessage,
   ShareRoomID,
 } from "common/types";
+import { HTTPException } from "hono/http-exception";
 import * as db from "../database/chat";
 import { areAllMatched, getRelation } from "../database/matches";
 import { getUserByID } from "../database/users";
@@ -37,12 +38,13 @@ export async function sendDM(
   from: UserID,
   to: UserID,
   send: SendMessage,
-): Promise<http.Response<Message>> {
+): Promise<Message> {
   const rel = await getRelation(from, to);
   if (rel.status === "REJECTED")
-    return http.forbidden(
-      "You cannot send a message because the friendship request was rejected.",
-    );
+    throw new HTTPException(403, {
+      message:
+        "You cannot send a message because the friendship request was rejected.",
+    });
 
   // they are now MATCHED
   const msg: Omit<Omit<Message, "id">, "isPicture"> = {
@@ -53,8 +55,9 @@ export async function sendDM(
   };
 
   const result = await db.sendDM(rel.id, msg);
-  if (!result) return http.internalError("Failed to send DM");
-  return http.created(result);
+  if (!result)
+    throw new HTTPException(500, { message: "Failed to send message" });
+  return result;
 }
 
 export async function getDM(
