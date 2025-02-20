@@ -3,6 +3,7 @@ import {
   GUIDSchema,
   InitUserSchema,
   UpdateUserSchema,
+  UserIDSchema,
 } from "common/zod/schemas";
 import { Hono } from "hono";
 import { z } from "zod";
@@ -88,8 +89,8 @@ const router = new Hono()
   })
 
   // idでユーザーを取得
-  .get("/id/:id", async (c) => {
-    const userId = await getUserId(c);
+  .get("/id/:id", param({ id: UserIDSchema }), async (c) => {
+    const userId = c.req.valid("param").id;
     const user = await getUserByID(userId);
     c.status(200);
     return c.json(user);
