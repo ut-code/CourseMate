@@ -5,7 +5,6 @@ import { prisma } from "./client";
 export async function getCourseByCourseId(courseId: string): Promise<Course> {
   return (
     (await prisma.course.findUnique({
-      relationLoadStrategy: "join",
       where: {
         id: courseId,
       },
@@ -21,7 +20,6 @@ export async function getCourseByCourseId(courseId: string): Promise<Course> {
  */
 export async function getCoursesByUserId(userId: UserID): Promise<Course[]> {
   return await prisma.course.findMany({
-    relationLoadStrategy: "join",
     where: {
       enrollments: {
         some: {
@@ -45,7 +43,6 @@ export async function getCourseByDayPeriodAndUserId(
 ): Promise<Course | null> {
   // TODO: findUnique で取れるような制約を掛ける
   return await prisma.course.findFirst({
-    relationLoadStrategy: "join",
     where: {
       enrollments: {
         some: {
@@ -73,7 +70,6 @@ export async function getCoursesByDayAndPeriod(
   period: number,
 ): Promise<Course[]> {
   return await prisma.course.findMany({
-    relationLoadStrategy: "join",
     where: {
       slots: {
         some: {

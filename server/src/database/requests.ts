@@ -103,7 +103,6 @@ export async function getPendingRequestsToUser(
   userId: UserID,
 ): Promise<UserWithCoursesAndSubjects[]> {
   const found = await prisma.user.findMany({
-    relationLoadStrategy: "join",
     where: {
       sendingUsers: {
         some: {
@@ -147,7 +146,6 @@ export async function getPendingRequestsFromUser(
   userId: UserID,
 ): Promise<UserWithCoursesAndSubjects[]> {
   const found = await prisma.user.findMany({
-    relationLoadStrategy: "join",
     where: {
       receivingUsers: {
         some: {
@@ -192,7 +190,6 @@ export async function getMatchedUser(
   userId: UserID,
 ): Promise<UserWithCoursesAndSubjects[]> {
   const found = await prisma.user.findMany({
-    relationLoadStrategy: "join",
     where: {
       OR: [
         {

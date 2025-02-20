@@ -32,6 +32,6 @@ export const prisma = new PrismaClient(
 prisma.$on("query", (e) => {
   console.log(format(e.query, { language: "postgresql" }));
   console.log(`Params: ${e.params}`);
-  console.log(`d湯レーション: ${e.duration}`);
+  console.log(`Duration: ${e.duration}`);
   console.log("\n");
 });
