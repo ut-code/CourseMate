@@ -116,7 +116,6 @@ export async function getPendingRequestsToUser(
         include: {
           course: {
             include: {
-              enrollments: true,
               slots: true,
             },
           },
