@@ -7,6 +7,7 @@ import {
 } from "common/zod/schemas";
 import { Hono } from "hono";
 import { z } from "zod";
+import { prisma } from "../database/client";
 import {
   getPendingRequestsFromUser,
   getPendingRequestsToUser,
@@ -51,9 +52,17 @@ const router = new Hono()
   // ユーザーの存在を確認するためのエンドポイント。だれでもアクセス可能
   .get("/exists/:guid", param({ guid: z.string() }), async (c) => {
     const guid = c.req.valid("param").guid;
-    const ok = await core.userExists(guid as GUID);
-    c.status(ok.code);
-    return c.json({});
+    const user = await prisma.user.findFirst({
+      where: {
+        guid: guid,
+      },
+      select: { guid: true, name: true },
+    });
+    if (!user) {
+      return c.json({ message: "User not found" }, 404);
+    }
+
+    return c.json(200);
   })
 
   // 特定のユーザーとマッチしたユーザーを取得
