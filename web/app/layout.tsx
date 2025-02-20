@@ -11,6 +11,7 @@ import "@fontsource/roboto/700.css";
 import BanLandscape from "~/components/BanLandscape";
 import { AlertProvider } from "~/components/common/alert/AlertProvider";
 import { ModalProvider } from "~/components/common/modal/ModalProvider";
+import SSEProvider from "~/components/data/socket";
 import AuthProvider from "~/firebase/auth/AuthProvider";
 
 const theme = createTheme({
@@ -50,7 +51,7 @@ export default function RootLayout({
                 <AlertProvider>
                   <ModalProvider>
                     <BanLandscape />
-                    {children}
+                    <SSEProvider>{children}</SSEProvider>
                   </ModalProvider>
                 </AlertProvider>
               </AuthProvider>

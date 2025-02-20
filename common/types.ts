@@ -1,5 +1,7 @@
 // common/type/types.ts
 
+import type { Message, UserID } from "./zod/types.ts";
+
 export type {
   UserID,
   GUID,
@@ -34,3 +36,17 @@ export type {
   InitSharedRoom,
   UpdateRoom,
 } from "./zod/types.ts";
+
+export type SSEChatEvents = {
+  "Chat:Append": {
+    message: Message;
+  };
+  "Chat:Update": {
+    id: number;
+    message: Message;
+  };
+  "Chat:Delete": {
+    id: number;
+  };
+  "Chat:Ping": "";
+};

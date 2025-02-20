@@ -1,13 +1,13 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
-import { initializeSocket } from "./lib/socket/socket";
 import { allUrlMustBeValid, env } from "./lib/utils";
 import chatRoutes from "./router/chat";
 import coursesRoutes from "./router/courses";
 import matchesRoutes from "./router/matches";
 import pictureRoutes from "./router/picture";
 import requestsRoutes from "./router/requests";
+import sseRoutes from "./router/sse";
 import subjectsRoutes from "./router/subjects";
 import usersRoutes from "./router/users";
 
@@ -30,11 +30,10 @@ if (corsOptions.origin.length > 1) {
 const app = new Hono()
   .onError((err, c) => {
     if (err instanceof HTTPException) {
-      c.status(err.status);
-      return c.json({ error: err });
+      throw err;
     }
-    c.status(500);
-    return c.json({ error: err });
+    console.log(err);
+    return c.json({ error: err }, 500);
   })
 
   .use(cors(corsOptions))
@@ -49,14 +48,7 @@ const app = new Hono()
   .route("/subjects", subjectsRoutes)
   .route("/requests", requestsRoutes)
   .route("/matches", matchesRoutes)
-  .route("/chat", chatRoutes);
+  .route("/chat", chatRoutes)
+  .route("/sse", sseRoutes);
 
-export function main() {
-  const server = Bun.serve({
-    fetch: app.fetch,
-    port: process.env.PORT ?? 3000,
-  });
-  // ??
-  return initializeSocket(app, corsOptions);
-}
 export default app;
