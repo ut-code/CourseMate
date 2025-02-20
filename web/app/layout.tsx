@@ -9,9 +9,9 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import BanLandscape from "~/components/BanLandscape";
+import SSEProvider from "~/components/SSEProvider";
 import { AlertProvider } from "~/components/common/alert/AlertProvider";
 import { ModalProvider } from "~/components/common/modal/ModalProvider";
-import SSEProvider from "~/components/data/socket";
 import AuthProvider from "~/firebase/auth/AuthProvider";
 
 const theme = createTheme({
