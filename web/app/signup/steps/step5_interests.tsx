@@ -86,6 +86,7 @@ export default function Step5({ back }: BackProp) {
     <>
       <div className="h-full overflow-y-scroll">
         <div className="mx-auto flex h-full max-w-lg flex-col px-4">
+          <h1 className="text-xl">興味分野の登録(5/5、スキップ可)</h1>
           <div className="flex-1">
             <div className="flex flex-wrap gap-2 p-2">
               {draftSubjects.map((subject, index) => (
