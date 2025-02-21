@@ -13,7 +13,7 @@ export default function Step4({ onSave }: StepProps<void>) {
           <FullScreenCircularProgress />
         ) : (
           <div className="mx-4 mt-4 flex flex-1 flex-col gap-4">
-            <h1>授業情報の登録 (スキップ可)</h1>
+            <h1>授業情報の登録(4/5,スキップ可)</h1>
             <div className="flex-1">
               <EditableCoursesTable userId={state.data} />
             </div>
