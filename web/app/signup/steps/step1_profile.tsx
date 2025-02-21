@@ -44,7 +44,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
   return (
     <>
       <div className="flex h-full flex-col gap-4 p-4">
-        <h1 className="text-xl">アカウント設定</h1>
+        <h1 className="text-xl">アカウント設定(1/5)</h1>
         <div className="flex flex-col gap-2">
           <form onSubmit={handleSubmit(onSubmit)}>
             <Field fieldName="name" fieldLabel="名前" error={errors?.name}>

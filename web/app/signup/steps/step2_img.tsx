@@ -39,6 +39,7 @@ export default function Step2({
   return (
     <>
       <div className="g-2 flex flex-col p-2">
+        <h1 className="text-xl">プロフィール画像設定(2/5)</h1>
         <div style={{ textAlign: "center", marginTop: "15vh" }}>
           <PhotoModal
             open={open}
