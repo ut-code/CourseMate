@@ -107,7 +107,7 @@ const router = new Hono()
 
   // INSERT INTO "User" VALUES (body...)
   .post("/", async (c) => {
-    const partialUser = InitUserSchema.parse(c.body);
+    const partialUser = InitUserSchema.parse(await c.req.json());
     const user = await createUser(partialUser);
 
     //ユーザー作成と同時にメモとマッチング
@@ -119,7 +119,7 @@ const router = new Hono()
   // ユーザーの更新エンドポイント
   .put("/me", async (c) => {
     const id = await getUserId(c);
-    const user = UpdateUserSchema.parse(c.body);
+    const user = UpdateUserSchema.parse(await c.req.json());
     const updated = await updateUser(id, user);
     c.status(200);
     return c.json(updated);
