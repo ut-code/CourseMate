@@ -67,7 +67,7 @@ model InterestSubject {
 // User->Interest->InterestSubject
 model Interest {
   userId    Int
-  user      User            @relation(fields: [userId], references: [id])
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade )
   subjectId Int
   subject   InterestSubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 
