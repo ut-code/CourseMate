@@ -35,7 +35,7 @@ model User {
   faculty    String
   department String
   intro      String
-  pictureUrl String
+  pictureUrl String @default("/avatar.svg")
 
   // bindings to other parts of this app
   enrollments    Enrollment[]
