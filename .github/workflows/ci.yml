@@ -26,7 +26,6 @@ jobs:
         with:
           bun-version: latest
       - run: bun i --frozen-lockfile
-        working-directory: server
       - run: bunx prisma db push
         working-directory: server
 
@@ -39,7 +38,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - run: bun install
+      - run: bun install --frozen-lockfile
       - run: bun run build
 
   biome:
