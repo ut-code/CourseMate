@@ -28,7 +28,7 @@ const router = new Hono()
 
       await deleteMatch(requesterId, opponentId as UserID);
       c.status(204);
-      c.text("");
+      return c.text("");
     },
   );
 

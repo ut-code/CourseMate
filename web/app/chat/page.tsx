@@ -1,16 +1,11 @@
 "use client";
 
-import { Suspense } from "react";
 import { useRoomsOverview } from "~/api/chat/hooks";
-import RoomList from "~/components/chat/RoomList";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
+import RoomList from "./components/RoomList";
 
 export default function Chat() {
-  return (
-    <Suspense fallback={<FullScreenCircularProgress />}>
-      <ChatListContent />
-    </Suspense>
-  );
+  return <ChatListContent />;
 }
 
 function ChatListContent() {
