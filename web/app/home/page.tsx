@@ -28,9 +28,13 @@ export default function Home() {
   const [recommended, setRecommended] = useState<
     Queue<UserWithCoursesAndSubjects>
   >(() => new Queue([]));
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (data) setRecommended(new Queue(data));
+    if (data) {
+      setRecommended(new Queue(data));
+      setLoading(false);
+    }
   }, [data]);
 
   const displayedUser = recommended.peek(0);
@@ -77,13 +81,13 @@ export default function Home() {
     [recommended, controls, backCardControls],
   );
 
-  if (data === undefined) {
+  if (loading) {
     return <FullScreenCircularProgress />;
   }
   if (currentUser == null) {
     return <FullScreenCircularProgress />;
   }
-  if (recommended.size() === 0) {
+  if (recommended.size() === 0 && loading === false) {
     return <NoMoreUser />;
   }
   if (error) throw error;

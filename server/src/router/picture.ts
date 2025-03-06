@@ -12,7 +12,7 @@ import { error } from "../lib/error";
 import * as hashing from "../lib/hash";
 
 const largeLimit = bodyLimit({
-  maxSize: 50 * 1024, // 50kb
+  maxSize: 50 * 1024 * 1024, // 50mb
   onError: (c) => {
     return c.text("overflow :(", 413);
   },
