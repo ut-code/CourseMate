@@ -72,6 +72,6 @@ make prepare-deploy-web`
 
 server:
 ```sh
-make prepare-deploy-server
-make deploy-server
+# prisma がビルド時に DATABASE_URL を要求するため、 root に .env を作って、 .env.sample に従って埋めよう。
+bun deploy:server
 ```
