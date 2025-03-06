@@ -23,10 +23,6 @@ export default function Step2({
   }, []);
 
   async function next() {
-    if (!url) {
-      notify("画像は必須です");
-      return;
-    }
     const data = {
       pictureUrl: url,
     };
