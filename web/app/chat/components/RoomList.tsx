@@ -2,8 +2,7 @@
 
 import { Box, List, Typography } from "@mui/material";
 import type { RoomOverview } from "common/types";
-import { useState } from "react";
-// import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { HumanListItem } from "~/components/human/humanListItem";
 import RoomPage from "./RoomPage";
 
@@ -13,14 +12,12 @@ type RoomListProps = {
 
 export function RoomList(props: RoomListProps) {
   const { roomsData } = props;
-  // const router = useRouter();
-
-  const [friendId, setFriendId] = useState<number | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const friendId = searchParams.get("friendId");
 
   const openRoom = (room: Extract<RoomOverview, { isDM: true }>) => {
-    // TODO: room いらん
-    setFriendId(room.friendId);
-    // router.push(`/chat/${room.friendId}`);
+    router.push(`/chat?friendId=${room.friendId}`);
   };
 
   return (
@@ -87,7 +84,6 @@ export function RoomList(props: RoomListProps) {
                   </Box>
                 );
               }
-              // if (room.matchingStatus === "matched")
               return (
                 <Box
                   key={room.friendId}
@@ -115,17 +111,7 @@ export function RoomList(props: RoomListProps) {
           })}
         </List>
       ) : (
-        <div className="h-screen w-screen bg-gray-200">
-          <button
-            type="button"
-            onClick={() => {
-              setFriendId(null);
-            }}
-          >
-            x
-          </button>
-          <RoomPage id={friendId} />
-        </div>
+        <RoomPage id={Number.parseInt(friendId)} />
       )}
     </>
   );
