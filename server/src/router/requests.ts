@@ -40,7 +40,7 @@ const router = new Hono()
 
       await approveRequest(senderId as UserID, receiverId);
       c.status(201);
-      c.json({});
+      return c.json({});
     },
   )
 
@@ -51,6 +51,7 @@ const router = new Hono()
       const opponentId = c.req.valid("param").opponentId;
       const requesterId = await getUserId(c);
       await cancelRequest(requesterId, opponentId);
+      return c.json({});
     },
   )
 
@@ -64,7 +65,7 @@ const router = new Hono()
 
       await rejectRequest(opponentId as UserID, requesterId); //TODO 名前を良いのに変える
       c.status(204);
-      c.json({});
+      return c.json({});
     },
   );
 

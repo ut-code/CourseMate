@@ -54,9 +54,7 @@ const router = new Hono()
 
       return storage.getPic(hash, String(key)).then((buf) => {
         if (buf) {
-          c.body(buf);
-        } else {
-          error("not found", 404);
+          return c.body(buf);
         }
       });
     },
