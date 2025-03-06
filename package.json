@@ -28,9 +28,10 @@
     "watch:server": "cd server; bun run dev",
     "seed": "cd server; bun prisma db seed",
     "prepare:deploy:web": "bun install && bun run build:web",
-    "prepare:deploy:server": "bun install",
     "deploy:web": "cd web; bun run start --port $PORT",
-    "deploy:server": "cd server; bun run src/index.ts",
+    "deploy:server": "bun run --env-file=.env :deploy:server",
+    ":deploy:server": "fly deploy --build-arg SQL_GENERATE_URL=$SQL_GENERATE_URL",
+    "docker:server": "docker build . --build-arg SQL_GENERATE_URL=$SQL_GENERATE_URL",
     "dev-db": "make dev-db",
     "test": "make test",
     "spell": "bunx cspell --quiet ."

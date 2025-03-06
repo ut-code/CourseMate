@@ -1,0 +1,17 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Server to Fly.io
+    runs-on: ubuntu-latest
+    env:
+      SQL_GENERATE_URL: ${{ secrets.DATABASE_URL_FOR_PRISMA_SQL_GENERATION }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --build-arg SQL_GENERATE_URL=$SQL_GENERATE_URL --access-token "${{ secrets.FLY_DEPLOY_TOKEN }}"

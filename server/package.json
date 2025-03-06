@@ -6,8 +6,10 @@
   "scripts": {
     "prepare": "bun --env-file=./.env.dev prisma generate --sql || (echo 'please set DATABASE_URL in server/.env.dev' && exit 1)",
     "dev": "bun --watch src/index.ts",
-    "build": "tsc",
-    "serve": "bun target/main.js"
+    "check": "tsc",
+    "clean": "rm target -r || true",
+    "build": "bun clean && bun check && bun run :build",
+    ":build": "bun build ./src/index.ts --target bun --outfile target/index.js --minify"
   },
   "prisma": {
     "seed": "bun src/seeds/seed-test.ts"

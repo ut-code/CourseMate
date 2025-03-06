@@ -39,6 +39,7 @@
         packages =
           (with pkgs; [
             nix # HACK: to fix the side effect of the hack below, installing two instances of nix
+            flyctl
             gnumake
             nodejs
             biome
