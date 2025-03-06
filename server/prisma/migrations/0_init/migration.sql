@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Day" AS ENUM ('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun');
+CREATE TYPE "Day" AS ENUM ('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'other');
 
 -- CreateEnum
 CREATE TYPE "MatchingStatus" AS ENUM ('PENDING', 'MATCHED', 'REJECTED');
@@ -8,21 +8,30 @@ CREATE TYPE "MatchingStatus" AS ENUM ('PENDING', 'MATCHED', 'REJECTED');
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "guid" TEXT NOT NULL,
-    "name" TEXT NOT NULL DEFAULT '名無し',
-    "pictureUrl" TEXT NOT NULL DEFAULT '',
-    "grade" TEXT NOT NULL DEFAULT '',
-    "gender" TEXT NOT NULL DEFAULT '',
-    "hobby" TEXT NOT NULL DEFAULT '',
-    "intro_short" TEXT NOT NULL DEFAULT '',
-    "intro_long" TEXT NOT NULL DEFAULT '',
+    "name" TEXT NOT NULL,
+    "gender" TEXT NOT NULL,
+    "grade" TEXT NOT NULL,
+    "faculty" TEXT NOT NULL,
+    "department" TEXT NOT NULL,
+    "intro" TEXT NOT NULL,
+    "pictureUrl" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Avatar" (
+    "guid" TEXT NOT NULL,
+    "data" BYTEA NOT NULL,
+
+    CONSTRAINT "Avatar_pkey" PRIMARY KEY ("guid")
 );
 
 -- CreateTable
 CREATE TABLE "Course" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "teacher" TEXT NOT NULL,
 
     CONSTRAINT "Course_pkey" PRIMARY KEY ("id")
 );
@@ -95,19 +104,20 @@ CREATE UNIQUE INDEX "Relationship_sendingUserId_receivingUserId_key" ON "Relatio
 ALTER TABLE "Slot" ADD CONSTRAINT "Slot_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Enrollment" ADD CONSTRAINT "Enrollment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Enrollment" ADD CONSTRAINT "Enrollment_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Relationship" ADD CONSTRAINT "Relationship_sendingUserId_fkey" FOREIGN KEY ("sendingUserId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Enrollment" ADD CONSTRAINT "Enrollment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Relationship" ADD CONSTRAINT "Relationship_receivingUserId_fkey" FOREIGN KEY ("receivingUserId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Relationship" ADD CONSTRAINT "Relationship_sendingUserId_fkey" FOREIGN KEY ("sendingUserId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_relationId_fkey" FOREIGN KEY ("relationId") REFERENCES "Relationship"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_sharedRoomId_fkey" FOREIGN KEY ("sharedRoomId") REFERENCES "SharedRoom"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
