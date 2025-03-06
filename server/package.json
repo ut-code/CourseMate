@@ -9,8 +9,7 @@
     "check": "tsc",
     "clean": "rm target -r || true",
     "build": "bun clean && bun check && bun run :build",
-    ":build": "bun build ./src/index.ts --target bun --outfile target/index.js --minify",
-    "serve": "bun run ./a.js"
+    ":build": "bun build ./src/index.ts --target bun --outfile target/index.js --minify"
   },
   "prisma": {
     "seed": "bun src/seeds/seed-test.ts"
