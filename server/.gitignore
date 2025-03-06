@@ -4,6 +4,5 @@ node_modules
 .env
 
 .env.dev
-# deprecated, delete /dist if you have one
-/dist
+# deprecated, delete /dist and if you have one
 /target
