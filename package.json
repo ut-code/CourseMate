@@ -1,5 +1,6 @@
 {
   "name": "course-mate",
+  "private": true,
   "version": "1.0.0",
   "author": "",
   "main": "index.js",

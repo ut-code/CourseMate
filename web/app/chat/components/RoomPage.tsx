@@ -3,11 +3,10 @@ import type { DMRoom, PersonalizedDMRoom } from "common/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import * as chat from "~/api/chat/chat";
-import { RoomWindow } from "~/components/chat/RoomWindow";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
+import { RoomWindow } from "./RoomWindow";
 
-export default function Page({ params }: { params: { id: string } }) {
-  const id = Number.parseInt(params.id);
+export default function RoomPage({ id }: { id: number }) {
   const [room, setRoom] = useState<(DMRoom & PersonalizedDMRoom) | null>(null);
   const [loading, setLoading] = useState(true);
 

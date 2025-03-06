@@ -1,5 +1,5 @@
 import ImageIcon from "@mui/icons-material/Image";
-import { sendImageTo } from "../../api/image";
+import { sendImageTo } from "~/api/image";
 
 import type { DMOverview, SendMessage, UserID } from "common/types";
 import { parseContent } from "common/zod/methods";

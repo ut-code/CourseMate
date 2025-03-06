@@ -22,9 +22,9 @@ export default function Confirmation({
       <div className="px-8 py-2">
         <h1 className="mb-2 text-xl">確認(3/5)</h1>
         <p>以下の内容で登録する場合は「次へ」を押してください。</p>
-        <div className="p-6 space-y-10">
-          <div className="w-6/6 mx-auto">
-            <h3 className="text-xl font-bold mb-2">プロフィール画像</h3>
+        <div className="space-y-10 p-6">
+          <div className="mx-auto w-6/6">
+            <h3 className="mb-2 font-bold text-xl">プロフィール画像</h3>
             <div className="card bg-white p-6">
               <UserAvatar
                 pictureUrl={Step2Data.pictureUrl}
@@ -33,8 +33,8 @@ export default function Confirmation({
               />
             </div>
           </div>
-          <div className="w-6/6 mx-auto">
-            <h3 className="text-xl font-bold mb-2">基本情報</h3>
+          <div className="mx-auto w-6/6">
+            <h3 className="mb-2 font-bold text-xl">基本情報</h3>
             <div className="card bg-white p-6">
               <p>名前：　　{Step1Data.name}</p>
               <p>学年：　　{Step1Data.grade}</p>
@@ -44,8 +44,8 @@ export default function Confirmation({
               </p>
             </div>
           </div>
-          <div className="w-6/6 mx-auto">
-            <h3 className="text-xl font-bold mb-2">自己紹介</h3>
+          <div className="mx-auto w-6/6">
+            <h3 className="mb-2 font-bold text-xl">自己紹介</h3>
             <div className="card bg-white p-6">
               <p className="pt-2">{Step1Data.intro}</p>
             </div>
