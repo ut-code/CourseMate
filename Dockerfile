@@ -10,8 +10,9 @@ FROM base AS build
 
 WORKDIR /build
 ARG SQL_GENERATE_URL
+RUN test -n "${SQL_GENERATE_URL}"
 ENV DATABASE_URL=$SQL_GENERATE_URL
-RUN test -n "${DATABASE_URL}"
+ENV DIRECT_URL=$SQL_GENERATE_URL
 COPY . .
 RUN --mount=type=cache,target=~/.bun/install bun install --frozen-lockfile --ignore-scripts
 RUN cd server; bun prisma generate --sql
