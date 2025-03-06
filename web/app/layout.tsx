@@ -9,9 +9,8 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import BanLandscape from "~/components/BanLandscape";
+import SSEProvider from "~/components/SSEProvider";
 import { AlertProvider } from "~/components/common/alert/AlertProvider";
-import { ModalProvider } from "~/components/common/modal/ModalProvider";
-import AuthProvider from "~/firebase/auth/AuthProvider";
 
 const theme = createTheme({
   palette: {
@@ -34,7 +33,10 @@ export default function RootLayout({
       <head>
         <meta charSet="UTF-8" />
         <link rel="icon" type="image/svg+xml" href="/course-mate-icon.svg" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+        />
         <title>CourseMate</title>
       </head>
       <body className="h-full">
@@ -45,15 +47,13 @@ export default function RootLayout({
             anchorOrigin={{ horizontal: "right", vertical: "top" }}
           >
             <React.StrictMode>
-              <AuthProvider>
-                <CssBaseline />
-                <AlertProvider>
-                  <ModalProvider>
-                    <BanLandscape />
-                    {children}
-                  </ModalProvider>
-                </AlertProvider>
-              </AuthProvider>
+              <CssBaseline />
+              <AlertProvider>
+                {/* <ModalProvider> */}
+                <BanLandscape />
+                <SSEProvider>{children}</SSEProvider>
+                {/* </ModalProvider> */}
+              </AlertProvider>
             </React.StrictMode>
           </SnackbarProvider>
         </ThemeProvider>

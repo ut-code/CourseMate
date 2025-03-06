@@ -1,4 +1,6 @@
-import { error, panic } from "common/lib/panic";
+import { panic } from "common/lib/panic";
+import { error } from "../lib/error";
+
 import type {
   Course,
   GUID,
@@ -29,7 +31,6 @@ export async function getUser(guid: GUID): Promise<UserWithCoursesAndSubjects> {
         include: {
           course: {
             include: {
-              enrollments: true,
               slots: true,
             },
           },
@@ -82,7 +83,6 @@ export async function getUserByID(
         include: {
           course: {
             include: {
-              enrollments: true,
               slots: true,
             },
           },
@@ -145,7 +145,6 @@ export async function getAllUsers(): Promise<
         include: {
           course: {
             include: {
-              enrollments: true,
               slots: true,
             },
           },

@@ -1,8 +1,16 @@
 {
   "name": "course-mate",
   "version": "1.0.0",
-  "description": "",
+  "author": "",
   "main": "index.js",
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.1",
+    "lefthook": "^1.10.10",
+    "lint-staged": "^15.2.10"
+  },
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
   "scripts": {
     "prepare": "lefthook install && (cd server; bun run prepare)",
     "check": "bun type && bun style:check",
@@ -19,23 +27,14 @@
     "watch:web": "cd web; bun run dev",
     "watch:server": "cd server; bun run dev",
     "seed": "cd server; bun prisma db seed",
-    "prepare:deploy:web": "bun install --frozen-lockfile && bun run build:web",
-    "prepare:deploy:server": "bun install --frozen-lockfile",
+    "prepare:deploy:web": "bun install && bun run build:web",
+    "prepare:deploy:server": "bun install",
     "deploy:web": "cd web; bun run start --port $PORT",
-    "deploy:server": "cd server; bun run src/main.ts",
+    "deploy:server": "cd server; bun run src/index.ts",
     "dev-db": "make dev-db",
     "test": "make test",
     "spell": "bunx cspell --quiet ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "workspaces": ["common", "web", "server"],
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.1",
-    "lefthook": "^1.10.10",
-    "lint-staged": "^15.2.10"
-  },
-  "dependencies": {},
-  "trustedDependencies": ["@biomejs/biome", "lefthook"]
+  "trustedDependencies": ["@biomejs/biome", "lefthook"],
+  "workspaces": ["common", "web", "server"]
 }

@@ -78,7 +78,7 @@ export const DaySchema = z.enum([
   "other",
 ]);
 
-export const PeriodSchema = z.number().min(0).max(6);
+export const PeriodSchema = z.coerce.number().min(0).max(6);
 
 export const SlotSchema = z.object({
   day: DaySchema,

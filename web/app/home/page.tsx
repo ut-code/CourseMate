@@ -28,6 +28,7 @@ export default function Home() {
   const [recommended, setRecommended] = useState<
     Queue<UserWithCoursesAndSubjects>
   >(() => new Queue([]));
+  const [loading, setLoading] = useState<boolean>(true);
 
   // コンテナと topCard の DOM 参照を用意
   const containerRef = useRef<HTMLDivElement>(null);
@@ -100,13 +101,13 @@ export default function Home() {
     [recommended, controls, backCardControls, targetPos],
   );
 
-  if (recommended == null) {
+  if (loading) {
     return <FullScreenCircularProgress />;
   }
   if (currentUser == null) {
     return <FullScreenCircularProgress />;
   }
-  if (displayedUser == null) {
+  if (recommended.size() === 0 && loading === false) {
     return <NoMoreUser />;
   }
   if (error) throw error;
@@ -203,5 +204,8 @@ class Queue<T> {
   }
   pop(): T | undefined {
     return this.store.shift();
+  }
+  size(): number {
+    return this.store.length;
   }
 }

@@ -2,7 +2,7 @@
 generator client {
   provider        = "prisma-client-js"
   binaryTargets   = ["native", "debian-openssl-3.0.x"]
-  previewFeatures = ["typedSql"]
+  previewFeatures = ["typedSql","relationJoins"]
 }
 
 datasource db {
@@ -35,7 +35,7 @@ model User {
   faculty    String
   department String
   intro      String
-  pictureUrl String
+  pictureUrl String @default("/avatar.svg")
 
   // bindings to other parts of this app
   enrollments    Enrollment[]
@@ -67,7 +67,7 @@ model InterestSubject {
 // User->Interest->InterestSubject
 model Interest {
   userId    Int
-  user      User            @relation(fields: [userId], references: [id])
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade )
   subjectId Int
   subject   InterestSubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 

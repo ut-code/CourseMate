@@ -8,10 +8,11 @@ export async function uploadImage(path: string, file: File): Promise<URL> {
   if (file.size >= MAX_IMAGE_SIZE) {
     throw new Error("画像のアップロードに失敗しました: 画像が大きすぎます");
   }
-  const res = await fetch(`${path}?token=${await getIdToken()}`, {
+  const res = await fetch(path, {
     method: "POST",
     headers: {
       "Content-Type": "image/png",
+      Authorization: await getIdToken(),
     },
     body: file,
   });
