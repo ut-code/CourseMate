@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+      - deploy
+
 jobs:
   deploy:
     name: Deploy Server to Fly.io
