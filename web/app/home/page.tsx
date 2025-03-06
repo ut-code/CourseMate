@@ -2,7 +2,13 @@
 
 import type { UserWithCoursesAndSubjects } from "common/types";
 import { motion, useAnimation } from "framer-motion";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { MdClose, MdThumbUp } from "react-icons/md";
 import request from "~/api/request";
 import { useAboutMe, useRecommended } from "~/api/user";
@@ -55,6 +61,13 @@ export default function Home() {
 
   useLayoutEffect(() => {
     if (data) setRecommended(new Queue(data));
+  }, [data]);
+
+  useEffect(() => {
+    if (data) {
+      setRecommended(new Queue(data));
+      setLoading(false);
+    }
   }, [data]);
 
   const displayedUser = recommended.peek(0);
