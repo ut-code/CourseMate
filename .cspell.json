@@ -25,7 +25,8 @@
     "rustc",
     "pkgs",
     "nixpkgs",
-    "libquery"
+    "libquery",
+    "replacen"
   ],
   "dictionaries": [
     "softwareTerms",

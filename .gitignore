@@ -3,6 +3,9 @@
 /.direnv
 /.husky
 
+.cache
+data.json
+
 # Logs
 logs
 *.log
