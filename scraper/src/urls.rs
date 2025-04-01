@@ -1,4 +1,8 @@
-pub static URLS: [(&str, &str); 10] = [
+pub static URLS: [(&str, &str); 11] = [
+    (
+      "zenki",
+      "https://catalog.he.u-tokyo.ac.jp/result?q=&type=all&faculty_id=&facet=%7B%22faculty_type%22%3A%5B%22jd%22%5D%7D&page=",
+    ),
     (
         "law",
         "https://catalog.he.u-tokyo.ac.jp/result?type=ug&faculty_id=1&page=",

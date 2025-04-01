@@ -26,7 +26,8 @@
     "pkgs",
     "nixpkgs",
     "libquery",
-    "replacen"
+    "replacen",
+    "zenki"
   ],
   "dictionaries": [
     "softwareTerms",

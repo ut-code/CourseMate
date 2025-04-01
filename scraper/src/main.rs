@@ -62,7 +62,8 @@ async fn get_courses_of(base_url: &str) -> Vec<Course> {
     futures::future::join_all(courses)
         .await
         .into_iter()
-        .collect::<Vec<_>>()
+        .flatten()
+        .collect()
 }
 
 lazy_static! {

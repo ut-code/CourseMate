@@ -1,6 +1,6 @@
 use anyhow::anyhow;
 use lazy_static::lazy_static;
-use scraper::{Html, Selector};
+use scraper::{ElementRef, Html, Selector};
 
 use crate::types::*;
 
@@ -17,19 +17,24 @@ lazy_static! {
         Selector::parse(".catalog-page-detail-table-cell.code-cell").unwrap();
 }
 
-pub fn parse_course_info(html: Html) -> anyhow::Result<Course> {
-    Ok(Course {
-        name: select(&html, &NAME_SELECTOR, 1)?,
-        teacher: select(&html, &TEACHER_SELECTOR, 1)?,
-        semester: select_all(&html, &SEMESTER_SELECTOR, 1)?.join(","),
-        period: select(&html, &PERIOD_SELECTOR, 1)?,
-        code: select_all(&html, &CODE_SELECTOR, 1)?.join(" "),
-    })
+pub fn parse_course_info(html: Html) -> anyhow::Result<Vec<Course>> {
+    html.select(&Selector::parse(".catalog-page-detail-table-row").unwrap())
+        .skip(1)
+        .map(|el| {
+            Ok(Course {
+                name: select(&el, &NAME_SELECTOR)?,
+                teacher: select(&el, &TEACHER_SELECTOR)?,
+                semester: select_all(&el, &SEMESTER_SELECTOR)?.join(","),
+                period: select(&el, &PERIOD_SELECTOR)?,
+                code: select_all(&el, &CODE_SELECTOR)?.join(" "),
+            })
+        })
+        .collect()
 }
 
-fn select(html: &Html, selector: &Selector, nth: usize) -> anyhow::Result<String> {
-    html.select(selector)
-        .nth(nth)
+fn select(el: &ElementRef, selector: &Selector) -> anyhow::Result<String> {
+    el.select(selector)
+        .next()
         .ok_or(anyhow!(
             "Couldn't find matching element for selector {:?}",
             selector,
@@ -38,12 +43,12 @@ fn select(html: &Html, selector: &Selector, nth: usize) -> anyhow::Result<String
 }
 
 fn select_all<'a>(
-    html: &'a Html,
+    html: &'a ElementRef,
     selector: &'static Selector,
-    nth: usize,
+    // nth: usize,
 ) -> anyhow::Result<Vec<&'a str>> {
     html.select(selector)
-        .nth(nth)
+        .next()
         .ok_or(anyhow!(
             "Couldn't find matching element for selector {:?}",
             selector,
