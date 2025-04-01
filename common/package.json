@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "^1.2.8"
   },
   "peerDependencies": {
     "typescript": "^5.0.0",
