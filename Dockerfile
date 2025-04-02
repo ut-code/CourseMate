@@ -14,7 +14,7 @@ RUN test -n "${SQL_GENERATE_URL}"
 ENV DATABASE_URL=$SQL_GENERATE_URL
 ENV DIRECT_URL=$SQL_GENERATE_URL
 COPY . .
-RUN --mount=type=cache,target=~/.bun/install bun install --frozen-lockfile --ignore-scripts
+RUN --mount=type=cache,target=~/.bun/install bun install:production
 RUN cd server; bun prisma generate --sql
 RUN cd server; bun run :build
 
