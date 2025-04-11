@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev -p 5173",
     "build": "next build",
+    "postbuild": "find ./out -type f \\( -name \"*.html\" -o -name \"*.txt\" \\) -exec sed -E -i '' 's/(width=device-width, initial-scale=1)([^,])/\\1, viewport-fit=cover\\2/g' {} +",
     "preview": "next start"
   },
   "dependencies": {

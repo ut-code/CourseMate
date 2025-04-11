@@ -33,10 +33,11 @@ export default function RootLayout({
       <head>
         <meta charSet="UTF-8" />
         <link rel="icon" type="image/svg+xml" href="/course-mate-icon.svg" />
-        <meta
+        {/* TODO: 上書きされる*/}
+        {/* <meta
           name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover"
-        />
+        /> */}
         <title>CourseMate</title>
       </head>
       <body className="h-full">
