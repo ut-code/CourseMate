@@ -35,7 +35,7 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" href="/course-mate-icon.svg" />
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+          content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
         <title>CourseMate</title>
       </head>
