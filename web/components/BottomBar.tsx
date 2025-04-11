@@ -37,9 +37,8 @@ export default function BottomBar(props: Props) {
   const { activeTab } = props;
   return (
     <div
-      className="fixed bottom-0 z-30 flex w-full flex-row items-center justify-around border-gray-200 border-t bg-white"
+      className="fixed bottom-0 z-30 flex h-12 w-full flex-row items-center justify-around border-gray-200 border-t bg-white"
       style={{
-        height: "calc(3rem + env(safe-area-inset-bottom))",
         paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
