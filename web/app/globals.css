@@ -11,3 +11,8 @@
 .cm-li-btn {
   @apply no-animation h-auto w-full justify-start rounded-none border-none bg-white px-6 py-4 text-left font-normal text-base shadow-none hover:bg-zinc-100 focus:bg-zinc-300;
 }
+
+/* Bottom Bar の分の幅 */
+.cm-pb-footer {
+  padding-bottom: calc(3rem + env(safe-area-inset-bottom));
+}

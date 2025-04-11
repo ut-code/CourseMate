@@ -9,7 +9,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <ModalProvider>
         <Header title="フレンド" />
         <NavigateByAuthState type="toLoginForUnauthenticated">
-          <div className="h-full overflow-y-auto pt-12 pb-12">{children}</div>
+          <div className="cm-pb-footer h-full overflow-y-auto pt-12">
+            {children}
+          </div>
         </NavigateByAuthState>
         <BottomBar activeTab="1_friends" />
       </ModalProvider>
