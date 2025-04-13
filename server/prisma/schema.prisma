@@ -92,7 +92,7 @@ model Course {
 // コマ。1つの講義に対して複数存在しうる。
 model Slot {
   id       Int    @id @default(autoincrement())
-  course   Course @relation(fields: [courseId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId String
   period   Int // 1-6. 0 の場合はなし (集中など)
   day      Day // 曜日。other の場合は集中など
@@ -104,7 +104,7 @@ model Enrollment {
   id       Int    @id @default(autoincrement())
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   Int
-  course   Course @relation(fields: [courseId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId String
 
   @@unique([userId, courseId])
