@@ -11,7 +11,9 @@ export default function Layout({
     <>
       <Header title="設定" />
       <NavigateByAuthState type="toLoginForUnauthenticated">
-        <div className="h-full overflow-y-auto pt-12 pb-12">{children}</div>
+        <div className="cm-pb-footer h-full overflow-y-auto pt-12">
+          {children}
+        </div>
       </NavigateByAuthState>
       <BottomBar activeTab="4_settings" />
     </>
