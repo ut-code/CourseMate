@@ -26,5 +26,18 @@ AND NOT EXISTS (
     AND status = 'PENDING'
 )
 
+-- 授業の登録も興味分野の登録も 0 件のユーザは除外
+AND (
+  EXISTS (
+    SELECT 1 FROM "Enrollment" e
+    WHERE e."userId" = recv.id
+  )
+  OR
+  EXISTS (
+    SELECT 1 FROM "Interest" i
+    WHERE i."userId" = recv.id
+  )
+)
+
 ORDER BY overlap DESC
 LIMIT $2 OFFSET $3;
