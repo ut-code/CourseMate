@@ -22,12 +22,12 @@ SELECT
             )
           ) FROM "Slot" WHERE "Slot"."courseId" = c.id)
         )
-      ) AS "courses",
+      ) FILTER (WHERE c.id IS NOT NULL) AS "courses",
     json_agg(DISTINCT jsonb_build_object(
         'id', s.id,
         'name', s.name,
         'group', s.group
-      )) AS "interestSubjects",
+      )) FILTER (WHERE s.id IS NOT NULL) AS "interestSubjects",
     -- course overlap
     (SELECT COUNT(1) FROM "Course" course
         WHERE EXISTS (SELECT 1 FROM "Enrollment" e WHERE e."courseId" = course.id AND e."userId" = recv.id)
@@ -40,11 +40,11 @@ SELECT
     ) AS overlap
 FROM "User" recv
 
-INNER JOIN "Enrollment" ON "Enrollment"."userId" = recv.id
-INNER JOIN "Course" c on c.id = "Enrollment"."courseId"
-INNER JOIN "Slot" ON "Slot"."courseId" = c.id
-INNER JOIN "Interest" ON "Interest"."userId" = recv.id
-INNER JOIN "InterestSubject" s ON s.id = "Interest"."subjectId"
+LEFT JOIN "Enrollment" ON "Enrollment"."userId" = recv.id
+LEFT JOIN "Course" c on c.id = "Enrollment"."courseId"
+LEFT JOIN "Slot" ON "Slot"."courseId" = c.id
+LEFT JOIN "Interest" ON "Interest"."userId" = recv.id
+LEFT JOIN "InterestSubject" s ON s.id = "Interest"."subjectId"
 
 WHERE recv.id <> $1
 
