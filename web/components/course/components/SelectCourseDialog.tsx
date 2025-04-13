@@ -20,6 +20,7 @@ export default function SelectCourseDialog({
   handleCoursesUpdate: (courses: Course[]) => void;
 }) {
   const [availableCourses, setAvailableCourses] = useState<Course[]>([]);
+  const [searchText, setSearchText] = useState("");
   const [filteredAvailableCourses, setFilteredAvailableCourses] = useState<
     Course[]
   >([]);
@@ -48,7 +49,14 @@ export default function SelectCourseDialog({
       onClick={(e) => e.stopPropagation()}
     >
       <form className="modal-backdrop">
-        <button type="button" onClick={onClose}>
+        <button
+          type="button"
+          onClick={() => {
+            setSearchText("");
+            setFilteredAvailableCourses(availableCourses);
+            onClose();
+          }}
+        >
           閉じる
         </button>
       </form>
@@ -64,7 +72,11 @@ export default function SelectCourseDialog({
         <button
           type="button"
           className="btn btn-ghost btn-sm absolute top-3 right-3"
-          onClick={onClose}
+          onClick={() => {
+            setSearchText("");
+            setFilteredAvailableCourses(availableCourses);
+            onClose();
+          }}
         >
           閉じる
         </button>
@@ -102,9 +114,12 @@ export default function SelectCourseDialog({
             type="text"
             placeholder="授業名で検索"
             className="input input-bordered mt-4 w-full"
+            value={searchText}
             onChange={(e) => {
+              const text = e.target.value.trim();
+              setSearchText(text);
               const newFilteredCourses = availableCourses.filter((course) =>
-                course.name.includes(e.target.value.trim()),
+                course.name.includes(text),
               );
               setFilteredAvailableCourses(newFilteredCourses);
             }}
@@ -140,6 +155,8 @@ export default function SelectCourseDialog({
             onClose={() => {
               setConfirmDialogStatus("closed");
               setNewCourse(null);
+              setSearchText("");
+              setFilteredAvailableCourses(availableCourses);
               onClose();
             }}
             onCancel={() => {
