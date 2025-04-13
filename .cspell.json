@@ -54,6 +54,7 @@
     "**/*.svg",
     "**/migration.sql",
     "**/data.json",
+    "**/server/src/seeds/json/**",
     "**/Cargo.*",
     "scraper/target",
     "**/rust-toolchain.toml",
