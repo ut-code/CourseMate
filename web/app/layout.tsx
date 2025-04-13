@@ -1,62 +1,30 @@
-"use client";
-
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import { SnackbarProvider } from "notistack";
-import React from "react";
+import type React from "react";
 import "./globals.css";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import BanLandscape from "~/components/BanLandscape";
-import SSEProvider from "~/components/SSEProvider";
-import { AlertProvider } from "~/components/common/alert/AlertProvider";
+import type { Metadata, Viewport } from "next";
+import Providers from "~/components/Providers";
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#039BE5",
-    },
-    secondary: {
-      main: "#E9F8FF",
-    },
-  },
-});
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
+export const metadata: Metadata = {
+  title: "CourseMate (β版)",
+  description: "同じ授業の人と友達になろう",
+};
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: { children: React.ReactNode }) {
   return (
     <html lang="en" className="h-full">
-      <head>
-        <meta charSet="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/course-mate-icon.svg" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-        />
-        <title>CourseMate</title>
-      </head>
       <body className="h-full">
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <SnackbarProvider
-            autoHideDuration={2000}
-            anchorOrigin={{ horizontal: "right", vertical: "top" }}
-          >
-            <React.StrictMode>
-              <CssBaseline />
-              <AlertProvider>
-                {/* <ModalProvider> */}
-                <BanLandscape />
-                <SSEProvider>{children}</SSEProvider>
-                {/* </ModalProvider> */}
-              </AlertProvider>
-            </React.StrictMode>
-          </SnackbarProvider>
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
