@@ -129,7 +129,7 @@ export default function Step1({ onSave, prev, caller }: StepProps<Step1User>) {
               error={errors?.intro}
             >
               <textarea
-                className="textarea textarea-bordered w-full"
+                className="textarea textarea-bordered w-full text-base"
                 rows={5}
                 placeholder="こんにちは！仲良くしてください！"
                 {...register("intro")}
