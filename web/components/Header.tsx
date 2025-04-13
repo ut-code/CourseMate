@@ -33,7 +33,8 @@ export default function Header(props: Props) {
         </button>
         <div className="dropdown-content z-[1] w-56 rounded-box bg-base-100 p-2 shadow">
           <p className="p-2 text-xs">CourseMate は現在ベータ版です。</p>
-          <ul className="menu p-0">
+          {/* biome-ignore lint/a11y/noNoninteractiveTabindex: daisyUI の仕様。tabIndex を消すとモバイルで開かないなどの問題が起こる */}
+          <ul tabIndex={0} className="menu p-0">
             <li>
               <a
                 href="https://forms.gle/WvFTbsJoHjGp9Qt88"
