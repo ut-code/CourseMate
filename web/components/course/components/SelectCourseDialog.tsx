@@ -1,6 +1,7 @@
 import { DAY_TO_JAPANESE_MAP } from "common/consts";
 import type { Course, Day } from "common/types";
 import { useEffect, useState } from "react";
+import { MdClose, MdSearch } from "react-icons/md";
 import courseApi from "~/api/course";
 import CourseRegisterConfirmDialog from "./CourseRegisterConfirmDialog";
 import TagFilter from "./TagFilter";
@@ -93,7 +94,7 @@ export default function SelectCourseDialog({
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
-      className={`modal ${open ? "modal-open" : ""}`}
+      className={`modal text-start ${open ? "modal-open" : ""}`}
       onClick={(e) => e.stopPropagation()}
     >
       <form className="modal-backdrop">
@@ -110,29 +111,31 @@ export default function SelectCourseDialog({
       </form>
 
       <div className="modal-box">
-        <h2 className="font-bold text-lg">
-          {currentEdit
-            ? `${DAY_TO_JAPANESE_MAP.get(currentEdit.columnName)}曜${
-                currentEdit.rowIndex + 1
-              }限の授業を選択`
-            : "授業を選択"}
-        </h2>
-        <button
-          type="button"
-          className="btn btn-ghost btn-sm absolute top-3 right-3"
-          onClick={() => {
-            setSearchText("");
-            setFilteredAvailableCourses(availableCourses);
-            onClose();
-          }}
-        >
-          閉じる
-        </button>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg">
+            {currentEdit
+              ? `${DAY_TO_JAPANESE_MAP.get(currentEdit.columnName)}曜${
+                  currentEdit.rowIndex + 1
+                }限の授業を編集中`
+              : "編集"}
+          </h2>
+          <button
+            type="button"
+            className="btn btn-circle btn-sm"
+            onClick={() => {
+              setSearchText("");
+              setFilteredAvailableCourses(availableCourses);
+              onClose();
+            }}
+          >
+            <MdClose className="text-2xl" />
+          </button>
+        </div>
         <div className="my-4">
           <div>
-            <h3 className="font-semibold text-sm">現在の授業</h3>
+            <h3 className="text-gray-600 text-sm">現在の授業</h3>
             {currentEdit?.course ? (
-              <div className="flex items-center justify-between rounded-lg border p-2">
+              <div className="my-2 flex items-center justify-between rounded-lg">
                 <div>
                   <p className="text-base">
                     {currentEdit?.course?.name ?? "-"}
@@ -143,7 +146,7 @@ export default function SelectCourseDialog({
                 </div>
                 <button
                   type="button"
-                  className="btn btn-sm"
+                  className="btn btn-sm font-normal"
                   onClick={async () => {
                     if (!currentEdit?.course?.id) return;
                     setNewCourse(currentEdit.course);
@@ -157,20 +160,23 @@ export default function SelectCourseDialog({
               <p className="text-gray-500">未登録</p>
             )}
           </div>
-          <input
-            type="text"
-            placeholder="授業名で検索"
-            className="input input-bordered mt-4 w-full"
-            value={searchText}
-            onChange={(e) => {
-              const text = e.target.value.trim();
-              setSearchText(text);
-              const newFilteredCourses = availableCourses.filter((course) =>
-                course.name.includes(text),
-              );
-              setFilteredAvailableCourses(newFilteredCourses);
-            }}
-          />
+          <label className="input input-bordered mt-4 flex w-full items-center gap-2">
+            <MdSearch className="text-gray-500 text-xl" />
+            <input
+              type="text"
+              className="grow"
+              placeholder="授業名で検索"
+              value={searchText}
+              onChange={(e) => {
+                const text = e.target.value.trim();
+                setSearchText(text);
+                const newFilteredCourses = availableCourses.filter((course) =>
+                  course.name.includes(text),
+                );
+                setFilteredAvailableCourses(newFilteredCourses);
+              }}
+            />
+          </label>
           <div className="my-4 flex flex-row">
             <TagFilter
               keyNameMap={facultyNameMap}
@@ -194,7 +200,7 @@ export default function SelectCourseDialog({
                   <li key={course.id}>
                     <button
                       type="button"
-                      className="w-full cursor-pointer rounded-lg border p-2 hover:bg-gray-100"
+                      className="w-full cursor-pointer border-b p-2 text-start hover:bg-gray-100"
                       onClick={() => {
                         setNewCourse(course);
                         setConfirmDialogStatus("add");
