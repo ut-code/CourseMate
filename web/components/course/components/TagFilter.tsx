@@ -11,7 +11,7 @@ export default function TagFilter<T extends string>({
 }: Props<T>) {
   const tags = Array.from(keyNameMap.keys());
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="scrollbar-hide flex justify-start gap-1 overflow-x-auto whitespace-nowrap">
       {tags.map((tag) => (
         <div key={tag}>
           <input
@@ -23,7 +23,7 @@ export default function TagFilter<T extends string>({
           />
           <label
             htmlFor={tag}
-            className="cursor-pointer rounded-full bg-gray-200 px-3 py-1 text-gray-800 transition-colors duration-200 peer-checked:bg-primary peer-checked:text-white"
+            className="badge badge-lg cursor-pointer bg-gray-200 text-gray-800 transition-colors duration-200 peer-checked:bg-primary peer-checked:text-white"
           >
             {keyNameMap.get(tag)}
           </label>
