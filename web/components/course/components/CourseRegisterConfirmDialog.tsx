@@ -46,9 +46,7 @@ export default function CourseRegisterConfirmDialog({
   return (
     <div className={`modal ${open ? "modal-open" : ""}`}>
       <div className="modal-box">
-        <h3 className="font-bold text-lg">
-          {mode === "add" ? "変更" : "削除"}の確認
-        </h3>
+        <h3 className="text-xl">{mode === "add" ? "変更" : "削除"}の確認</h3>
         <p className="py-4">
           {mode === "add" ? "次のように変更" : "次の授業を削除"}
           します。よろしいですか？

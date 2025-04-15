@@ -32,7 +32,7 @@
       };
       unstable = nixpkgs-unstable.legacyPackages.${system};
 
-      rust-bin = pkgs.rust-bin.fromRustupToolchainFile ./scraper/rust-toolchain.toml;
+      rust-bin = pkgs.rust-bin.beta.latest.default; # pkgs.rust-bin.fromRustupToolchainFile ./scraper/rust-toolchain.toml;
       prisma = pkgs.callPackage ./server/prisma.nix {inherit prisma-utils;};
 
       common = {
@@ -62,8 +62,7 @@
       };
     in {
       packages.scraper = pkgs.callPackage ./scraper {toolchain = rust-bin;};
-      devShells.default = pkgs.mkShell common;
-      devShells.scraper = pkgs.mkShell {
+      devShells.default = pkgs.mkShell {
         inherit (common) env;
         packages =
           common.packages

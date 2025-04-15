@@ -3,6 +3,7 @@
 import { Box, List, Typography } from "@mui/material";
 import type { RoomOverview } from "common/types";
 import { useRouter, useSearchParams } from "next/navigation";
+import BackgroundText from "~/components/common/BackgroundText";
 import { HumanListItem } from "~/components/human/humanListItem";
 import RoomPage from "./RoomPage";
 
@@ -23,93 +24,85 @@ export function RoomList(props: RoomListProps) {
   return (
     <>
       {!friendId ? (
-        <List disablePadding>
-          <p
-            style={{
-              marginLeft: "40px",
-              marginRight: "40px",
-            }}
-          >
-            {roomsData && roomsData.length === 0 && (
-              <>
-                誰ともマッチングしていません。
-                <br />
-                リクエストを送りましょう！
-              </>
-            )}
-          </p>
-          {roomsData?.map((room) => {
-            if (room.isDM) {
-              if (room.matchingStatus === "otherRequest") {
-                return (
-                  <Box
-                    key={room.friendId}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openRoom(room);
-                    }}
-                  >
-                    <HumanListItem
+        <>
+          {roomsData && roomsData.length === 0 ? (
+            <BackgroundText text="まだ誰ともマッチングしていません。リクエストを送りましょう！" />
+          ) : (
+            <List>
+              {roomsData?.map((room) => {
+                if (room.isDM) {
+                  if (room.matchingStatus === "otherRequest") {
+                    return (
+                      <Box
+                        key={room.friendId}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openRoom(room);
+                        }}
+                      >
+                        <HumanListItem
+                          key={room.friendId}
+                          id={room.friendId}
+                          name={room.name}
+                          pictureUrl={room.thumbnail}
+                          rollUpName={true}
+                          lastMessage={room.lastMsg?.content}
+                          statusMessage="リクエストを受けました"
+                          unreadCount={room.unreadMessages}
+                        />
+                      </Box>
+                    );
+                  }
+                  if (room.matchingStatus === "myRequest") {
+                    return (
+                      <Box
+                        key={room.friendId}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openRoom(room);
+                        }}
+                      >
+                        <HumanListItem
+                          key={room.friendId}
+                          id={room.friendId}
+                          name={room.name}
+                          pictureUrl={room.thumbnail}
+                          rollUpName={true}
+                          lastMessage={room.lastMsg?.content}
+                          statusMessage="リクエスト中 メッセージを送りましょう！"
+                          unreadCount={room.unreadMessages}
+                        />
+                      </Box>
+                    );
+                  }
+                  return (
+                    <Box
                       key={room.friendId}
-                      id={room.friendId}
-                      name={room.name}
-                      pictureUrl={room.thumbnail}
-                      rollUpName={true}
-                      lastMessage={room.lastMsg?.content}
-                      statusMessage="リクエストを受けました"
-                      unreadCount={room.unreadMessages}
-                    />
-                  </Box>
-                );
-              }
-              if (room.matchingStatus === "myRequest") {
+                      onClick={() => {
+                        openRoom(room);
+                      }}
+                    >
+                      <HumanListItem
+                        key={room.friendId}
+                        id={room.friendId}
+                        name={room.name}
+                        pictureUrl={room.thumbnail}
+                        rollUpName={true}
+                        lastMessage={room.lastMsg?.content}
+                        unreadCount={room.unreadMessages}
+                      />
+                    </Box>
+                  );
+                }
                 return (
-                  <Box
-                    key={room.friendId}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openRoom(room);
-                    }}
-                  >
-                    <HumanListItem
-                      key={room.friendId}
-                      id={room.friendId}
-                      name={room.name}
-                      pictureUrl={room.thumbnail}
-                      rollUpName={true}
-                      lastMessage={room.lastMsg?.content}
-                      statusMessage="リクエスト中 メッセージを送りましょう！"
-                      unreadCount={room.unreadMessages}
-                    />
-                  </Box>
+                  <Typography key={room.roomId} variant="body2" sx={{ mb: 1 }}>
+                    グループチャット: {room.name}
+                  </Typography>
                 );
-              }
-              return (
-                <Box
-                  key={room.friendId}
-                  onClick={() => {
-                    openRoom(room);
-                  }}
-                >
-                  <HumanListItem
-                    key={room.friendId}
-                    id={room.friendId}
-                    name={room.name}
-                    pictureUrl={room.thumbnail}
-                    rollUpName={true}
-                    lastMessage={room.lastMsg?.content}
-                    unreadCount={room.unreadMessages}
-                  />
-                </Box>
-              );
-            }
-            return (
-              <Typography key={room.roomId} variant="body2" sx={{ mb: 1 }}>
-                グループチャット: {room.name}
-              </Typography>
-            );
-          })}
-        </List>
+              })}
+            </List>
+          )}
+        </>
       ) : (
         <RoomPage id={Number.parseInt(friendId)} />
       )}

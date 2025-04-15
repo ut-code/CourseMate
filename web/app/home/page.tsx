@@ -15,7 +15,7 @@ import { useAboutMe, useRecommended } from "~/api/user";
 import { Card } from "~/components/Card";
 import { DraggableCard } from "~/components/DraggableCard";
 import FullScreenCircularProgress from "~/components/common/FullScreenCircularProgress";
-import NoMoreUser from "./components/NoMoreUser";
+import BackgroundText from "../../components/common/BackgroundText";
 import PersonDetailedMenu from "./components/PersonDetailedMenu";
 import RoundButton from "./components/RoundButton";
 
@@ -121,7 +121,7 @@ export default function Home() {
     return <FullScreenCircularProgress />;
   }
   if (recommended.size() === 0 && loading === false) {
-    return <NoMoreUser />;
+    return <BackgroundText text="「いいね！」を送るユーザーがいません。" />;
   }
   if (error) throw error;
 

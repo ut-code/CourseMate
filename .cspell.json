@@ -21,12 +21,14 @@
     "pkgs",
     "psql",
     "qiita",
+    "replacen",
     "reqwest",
     "rustc",
     "safify",
     "stdenv",
     "supabase",
-    "swiper"
+    "swiper",
+    "zenki"
   ],
   "dictionaries": [
     "softwareTerms",
@@ -52,6 +54,7 @@
     "**/*.svg",
     "**/migration.sql",
     "**/data.json",
+    "**/server/src/seeds/json/**",
     "**/Cargo.*",
     "scraper/target",
     "**/rust-toolchain.toml",
