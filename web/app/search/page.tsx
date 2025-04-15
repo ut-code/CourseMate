@@ -55,10 +55,9 @@ export default function SearchPage({
   );
 
   return (
-    <div className="flex justify-center">
-      <div className="w-full">
-        <h2 className="m-5 mb-4 font-bold text-2xl">ユーザー検索</h2>
-        <Search placeholder="検索" setSearchString={setQuery} />
+    <div className="flex h-full flex-col justify-center gap-2 p-4">
+      <Search placeholder="検索" setSearchString={setQuery} />
+      <div className="flex-1">
         {query !== "" ? (
           users.length > 0 ? (
             <Table users={users} canRequest={canRequest} />
