@@ -1,6 +1,5 @@
 use crate::types::*;
 use anyhow::ensure;
-use sha2::{Digest, Sha256};
 use tokio::fs;
 use tokio::io::AsyncWriteExt;
 
@@ -10,13 +9,20 @@ pub async fn write_to(file: &mut fs::File, content: Entry) -> anyhow::Result<()>
     Ok(())
 }
 
-use crate::CACHE_DIR;
+use crate::cache_dir;
 
 pub async fn request(url: &str) -> anyhow::Result<String> {
     println!("[request] sending request to {}", url);
 
-    let hash = Sha256::digest(url.as_bytes());
-    let path = format!("{CACHE_DIR}/{:x}", hash);
+    let cache_key = url
+        .to_string()
+        .replacen("/", "_", 1000)
+        .replacen(":", "_", 1000)
+        .replacen("?", "_", 1000)
+        .replacen("&", "_", 1000)
+        .replacen("=", "_", 1000)
+        .to_string();
+    let path = format!("{}/{cache_key}", cache_dir());
     if let Ok(bytes) = fs::read(&path).await {
         if let Ok(text) = String::from_utf8(bytes) {
             return Ok(text);

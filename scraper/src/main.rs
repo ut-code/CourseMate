@@ -16,13 +16,16 @@ use scraper::{Html, Selector};
 use urls::URLS;
 
 const RESULT_FILE: &str = "./data.json";
-const CACHE_DIR: &str = "./.cache";
+
+fn cache_dir() -> String {
+    "./.cache".to_string()
+}
 
 #[tokio::main(flavor = "multi_thread")]
 async fn main() {
     println!("[log] starting...");
 
-    let _ = fs::DirBuilder::new().create(CACHE_DIR).await;
+    let _ = fs::DirBuilder::new().create(cache_dir()).await;
 
     let mut file = fs::File::create(RESULT_FILE)
         .await
@@ -59,7 +62,8 @@ async fn get_courses_of(base_url: &str) -> Vec<Course> {
     futures::future::join_all(courses)
         .await
         .into_iter()
-        .collect::<Vec<_>>()
+        .flatten()
+        .collect()
 }
 
 lazy_static! {
