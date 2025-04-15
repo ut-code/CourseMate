@@ -1,6 +1,7 @@
 "use client";
 import { deleteMatch } from "~/api/match";
 import { useMatched } from "~/api/user";
+import BackgroundText from "../common/BackgroundText";
 import FullScreenCircularProgress from "../common/FullScreenCircularProgress";
 import { useModal } from "../common/modal/ModalProvider";
 import { HumanListItem } from "../human/humanListItem";
@@ -15,16 +16,14 @@ export default function Matchings() {
   if (error) throw error;
 
   return (
-    <div>
+    <div className="h-full">
       {data && data.length === 0 && (
-        <p className="p-4 text-lg">
-          誰ともマッチングしていません。 リクエストを送りましょう！
-        </p>
+        <BackgroundText text="まだ誰ともマッチングしていません。リクエストを送りましょう！" />
       )}
       {current === "loading" ? (
         <FullScreenCircularProgress />
       ) : (
-        <ul className="mt-4 space-y-4">
+        <ul className="space-y-4">
           {data?.map((matchedUser) =>
             matchedUser.id === 0 ? (
               //メモ帳
