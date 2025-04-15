@@ -15,7 +15,7 @@ export default function Friends() {
   const [activeTab, setActiveTab] = useState("matching");
 
   return (
-    <div className="relative w-full">
+    <div className="relative h-full w-full">
       <div className="fixed top-12 flex h-10 w-full border-gray-200 border-b bg-white">
         <button
           type="button"
@@ -43,7 +43,7 @@ export default function Friends() {
         </button>
       </div>
 
-      <div className="pt-10 text-center text-gray-700 text-lg">
+      <div className="h-full pt-10 text-center text-gray-700 text-lg">
         {activeTab === "matching" ? <NoSSRMatchings /> : <NoSSRRequests />}
       </div>
     </div>
