@@ -1,2 +1,3 @@
 /common
-/seeds/json/*
+/seeds/data.json
+/seeds/json
