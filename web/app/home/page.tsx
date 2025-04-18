@@ -99,12 +99,13 @@ export default function Home() {
 
       // キューの更新などの処理
       recommended.pop();
+      rerender({});
+
       if (action === "accept") {
-        await request.send(current.id);
-      } else if (action === "reject") {
+        sendAcceptRequest(current.id);
+      } else {
         recommended.push(current);
       }
-      rerender({});
 
       // アニメーション後に位置をリセット（backCard は再び初期レンダリング位置に戻す）
       controls.set({ x: 0 });
@@ -113,6 +114,14 @@ export default function Home() {
     },
     [recommended, controls, backCardControls, targetPos],
   );
+
+  async function sendAcceptRequest(userId: number) {
+    try {
+      await request.send(userId);
+    } catch (error) {
+      console.error("Failed to send accept request:", error);
+    }
+  }
 
   if (loading) {
     return <FullScreenCircularProgress />;
